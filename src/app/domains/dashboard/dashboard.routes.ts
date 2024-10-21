@@ -8,12 +8,12 @@ export const routes: Routes = [
             {
                 path:'',
                 pathMatch:'full',
-                redirectTo:'login',
+                redirectTo:'dashboard',
             },
             {
-                path:'roles',
-                title:'Administrar roles',
-                loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.RolesPageComponent)
+                path:'dashboard',
+                title:'Dashboard',
+                loadComponent:()=>import('@domains/dashboard/dashboard-layout/dashboard-layout.component').then(c=>c.DashboardLayoutComponent)
             }
         ]
     }
