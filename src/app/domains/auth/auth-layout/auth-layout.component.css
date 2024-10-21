@@ -1,0 +1,23 @@
+
+picture{
+    width: max-content;
+    height: max-content;
+
+}
+
+picture img{
+    width: 700px;
+    height: 700px;
+    object-fit: cover;
+}
+
+section {
+    background: url('/sena_background.ico') no-repeat center center;
+    background-size: cover;
+}
+
+@media (max-width: 640px){
+    .py-8{
+        margin-right: 0px;
+    }
+}
