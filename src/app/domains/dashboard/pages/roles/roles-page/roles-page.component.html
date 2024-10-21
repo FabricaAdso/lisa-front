@@ -1,1 +1,72 @@
-<p>roles-page works!</p>
+<!-- <table>
+    <thead>
+      <tr>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.documento }}</td>
+        <td>{{ user.nombre }}</td>
+        <td>{{ user.apellido }}</td>
+        <td>
+          <button (click)="openEditModal(user)">Editar roles</button>
+          <button (click)="toggleActivation(user)">{{ user.isActive ? 'Desactivar' : 'Activar' }}</button>
+          <button (click)="deleteUser(user)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="selectedUser">
+    <h3>Actualizar roles y permisos</h3>
+    <form (ngSubmit)="updateRoles()">
+      <label for="roles">Roles:</label>
+      <select id="roles" multiple [(ngModel)]="selectedUser.roles">
+        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+      </select>
+  
+      <div>
+        <label for="active">Activar usuario</label>
+        <input id="active" type="checkbox" [(ngModel)]="selectedUser.isActive">
+      </div>
+  
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+   -->
+  
+<section>
+    <div class="conetent">
+        <h1>roles</h1>
+        <div>
+            <div>
+                <ul>
+                    <li>Admnistrador</li>
+                    <li>Aprendiz</li>
+                    <li>Instructor</li>
+                    <li>Coordinador Academico</li>
+                </ul>
+                <div class="">
+                    <button>permisos</button>
+                    <button>remover</button>
+                </div>
+                <div>
+                    <form action="">
+                        <label for="">Documeto</label>
+                        <input type="number">
+                        <label for="">Nombre</label>
+                        <input type="text">
+                        <label for="">Apellido</label>
+                        <input type="text">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+</section>
