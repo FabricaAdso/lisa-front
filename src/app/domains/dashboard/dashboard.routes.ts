@@ -13,7 +13,7 @@ export const routes: Routes = [
             {
                 path:'roles',
                 title:'Administrar roles',
-                loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.RolesPageComponent)
+                loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.NzDemoModalBasicComponent)
             }
         ]
     }

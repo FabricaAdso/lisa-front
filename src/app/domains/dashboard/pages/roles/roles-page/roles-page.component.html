@@ -1,3 +1,41 @@
+
+    <nz-modal [(nzVisible)]="isVisible" nzTitle="The first Modal" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+      <ng-container *nzModalContent>
+         <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Roles y Estado</h5>
+
+
+          <button type="button" class="close" (click)="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form>
+            
+            <div class="form-group">
+              <label for="roles">Seleccionar Roles</label>
+              <select id="roles" [(ngModel)]="selectedRoles" name="roles" class="form-control" multiple>
+                <option *ngFor="let role of allRoles" [value]="role">{{ role }}</option>
+              </select>
+            </div>
+
+  
+            <div class="form-check">
+              <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input">
+              <label for="active" class="form-check-label">Usuario Activo</label>
+            </div>
+          </form>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        </div> -->
+      </div>
+    </div>
+      </ng-container>
+    </nz-modal>
+
+
 <section id="all">
   <table class="table">
     <thead>
@@ -15,23 +53,24 @@
         <td>{{ user.nombre }}</td>
         <td>{{ user.apellido }}</td>
         <td>
-          <!-- Mostrar los roles del usuario -->
+   
           <span *ngFor="let role of user.roles; let i = index">
             {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
           </span>
         </td>
         <td>
-          <button (click)="openEditRolesModal(user)" class="btn btn-primary">Editar Roles</button>
+          <button nz-button [nzType]="'primary'" (click)="showModal()"><span>Mostrar modal </span></button>
+          <!-- <button (click)="openEditRolesModal(user)" class="btn btn-primary">Editar Roles</button>
           <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
             {{ user.active ? 'Desactivar' : 'Activar' }}
-          </button>
+          </button> -->
         </td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Modal para editar roles y estado -->
-  <div class="modal" tabindex="-1" role="dialog" *ngIf="isModalOpen">
+
+  <!-- <div class="modal" tabindex="-1" role="dialog" *ngIf="isModalOpen">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -40,7 +79,7 @@
         </div>
         <div class="modal-body">
           <form>
-            <!-- Selector de roles -->
+            
             <div class="form-group">
               <label for="roles">Seleccionar Roles</label>
               <select id="roles" [(ngModel)]="selectedRoles" name="roles" class="form-control" multiple>
@@ -48,7 +87,7 @@
               </select>
             </div>
 
-            <!-- Checkbox para activar/desactivar usuario -->
+  
             <div class="form-check">
               <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input">
               <label for="active" class="form-check-label">Usuario Activo</label>
@@ -61,12 +100,12 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </section>
 
 
-<!--
-<section>
+
+<!-- <section>
     <div class="conetent">
         <h1>roles</h1>
         <div>

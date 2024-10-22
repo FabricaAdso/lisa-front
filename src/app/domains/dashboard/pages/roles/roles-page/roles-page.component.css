@@ -31,7 +31,7 @@
 /* Estilo para la columna Documento */
 .table thead th:nth-child(1) {
   width: 20%;
-  color: #007bff;
+  color: #00af00;
 }
 
 .table thead th:nth-child(2),
@@ -68,7 +68,8 @@
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #00af00;
+  margin-right: 15px;
   color: white;
 }
 
@@ -267,4 +268,11 @@
     font-size: 16px;
     padding: 10px;
   }
+}
+[nz-button]{
+  background-color: #00af00;
+  height: 40px; 
+}
+[nz-button]:hover{
+  background-color: #026802;
 }
