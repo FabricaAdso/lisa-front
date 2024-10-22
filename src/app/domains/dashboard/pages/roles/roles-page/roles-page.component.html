@@ -1,9 +1,11 @@
-<!-- <table>
+<section id="all">
+  <table class="table">
     <thead>
       <tr>
         <th>Documento</th>
         <th>Nombre</th>
         <th>Apellido</th>
+        <th>Roles</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -13,31 +15,57 @@
         <td>{{ user.nombre }}</td>
         <td>{{ user.apellido }}</td>
         <td>
-          <button (click)="openEditModal(user)">Editar roles</button>
-          <button (click)="toggleActivation(user)">{{ user.isActive ? 'Desactivar' : 'Activar' }}</button>
-          <button (click)="deleteUser(user)">Eliminar</button>
+          <!-- Mostrar los roles del usuario -->
+          <span *ngFor="let role of user.roles; let i = index">
+            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
+          </span>
+        </td>
+        <td>
+          <button (click)="openEditRolesModal(user)" class="btn btn-primary">Editar Roles</button>
+          <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
+            {{ user.active ? 'Desactivar' : 'Activar' }}
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
-  <div *ngIf="selectedUser">
-    <h3>Actualizar roles y permisos</h3>
-    <form (ngSubmit)="updateRoles()">
-      <label for="roles">Roles:</label>
-      <select id="roles" multiple [(ngModel)]="selectedUser.roles">
-        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-      </select>
-  
-      <div>
-        <label for="active">Activar usuario</label>
-        <input id="active" type="checkbox" [(ngModel)]="selectedUser.isActive">
+
+  <!-- Modal para editar roles y estado -->
+  <div class="modal" tabindex="-1" role="dialog" *ngIf="isModalOpen">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Roles y Estado</h5>
+          <button type="button" class="close" (click)="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <!-- Selector de roles -->
+            <div class="form-group">
+              <label for="roles">Seleccionar Roles</label>
+              <select id="roles" [(ngModel)]="selectedRoles" name="roles" class="form-control" multiple>
+                <option *ngFor="let role of allRoles" [value]="role">{{ role }}</option>
+              </select>
+            </div>
+
+            <!-- Checkbox para activar/desactivar usuario -->
+            <div class="form-check">
+              <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input">
+              <label for="active" class="form-check-label">Usuario Activo</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        </div>
       </div>
-  
-      <button type="submit">Guardar</button>
-    </form>
+    </div>
   </div>
-   -->
-  
+</section>
+
+
+<!--
 <section>
     <div class="conetent">
         <h1>roles</h1>
@@ -66,7 +94,7 @@
                 </div>
             </div>
         </div>
-        
+
 
     </div>
-</section>
+</section> -->
