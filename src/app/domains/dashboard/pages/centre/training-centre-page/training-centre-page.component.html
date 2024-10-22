@@ -1,0 +1,42 @@
+<p>training-centre-page works!</p>
+
+
+<div class="p-4">
+    <!-- Botón para crear un nuevo centro -->
+    <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
+  
+    <!-- Tabla para listar centros de formación -->
+    <nz-table [nzData]="centres" [nzPageSize]="10">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let centre of centres">
+          <td>{{ centre.id }}</td>
+          <td>{{ centre.name }}</td>
+          <td>
+            <button nz-button nzType="default" (click)="openModal(centre)">Editar</button>
+            <button nz-button nzType="danger" (click)="deleteCentre(centre.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  
+    <!-- Modal para crear o editar un centro de formación -->
+    <nz-modal [(nzVisible)]="isModalVisible" nzTitle="{{ indexCentre !== null ? 'Editar' : 'Crear' }} Centro de Formación"
+      (nzOnCancel)="resetForm()" (nzOnOk)="saveData()">
+   
+      <form *ngIf="formCentres" [formGroup]="formCentres">
+        <label for="name">Nombre del Centro</label>
+        <input nz-input formControlName="name" id="name" placeholder="Nombre del centro" />
+        <div *ngIf="formCentres.controls['name'].invalid && formCentres.controls['name'].touched">
+          <small class="text-red-500">El nombre es requerido y debe tener al menos 5 caracteres</small>
+        </div>
+      </form>
+
+    </nz-modal>
+  </div>
