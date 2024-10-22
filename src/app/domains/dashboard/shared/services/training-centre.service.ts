@@ -5,6 +5,16 @@ import { TrainingCentreModel } from '../models/training-centre-model';
 import { UpdateCentreDTO } from '../dto/update-centreDTO';
 import { CreateCentreDTO } from '../dto/create-centreDTO copy';
 
+
+
+// Datos ficticios
+const mockCentres = [
+  { id: 1, name: 'Training Centre 1' },
+  { id: 2, name: 'Training Centre 2' },
+  { id: 3, name: 'Training Centre 3' }
+];
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +25,8 @@ export class TrainingCentreService {
 
 
   getCentros() {
-    return this.http.get<TrainingCentreModel[]>(this.url);
+    // return this.http.get<TrainingCentreModel[]>(this.url);
+    return mockCentres;
   }
 
   create(data:CreateCentreDTO){

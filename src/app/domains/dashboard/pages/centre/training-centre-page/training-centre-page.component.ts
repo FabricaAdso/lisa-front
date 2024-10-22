@@ -1,22 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { CreateCentreDTO } from '@domains/shared/dto/create-centreDTO copy';
-import { UpdateCentreDTO } from '@domains/shared/dto/update-centreDTO';
-import { TrainingCentreModel } from '@domains/shared/models/training-centre-model';
-import { TrainingCentreService } from '@domains/shared/services/training-centre.service';
+
+import { CreateCentreDTO } from '@domains/dashboard/shared/dto/create-centreDTO copy';
+import { UpdateCentreDTO } from '@domains/dashboard/shared/dto/update-centreDTO';
+import { TrainingCentreModel } from '@domains/dashboard/shared/models/training-centre-model';
+import { TrainingCentreService } from '@domains/dashboard/shared/services/training-centre.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import {NzFormModule} from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-training-centre-page',
   standalone: true,
   imports: [
-    BrowserModule,
+   
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NzModalModule,
-    NzTableModule
+    NzTableModule,
+    NzButtonModule,
+    NzFormModule,
+    NzInputModule
   ],
   templateUrl: './training-centre-page.component.html',
   styleUrl: './training-centre-page.component.css'
@@ -29,14 +37,11 @@ export class TrainingCentrePageComponent {
 
   isModalVisible = false;
 
-
-
   formCentres: FormGroup | null = null;
   indexCentre: number | null = null;
 
   centres: TrainingCentreModel[] = [];
  
-  
 
   // Método que se ejecuta al inicializar el componente
   ngOnInit(): void {
@@ -53,28 +58,40 @@ export class TrainingCentrePageComponent {
 
   // Obtenemos los datos de los centros de formación
   getData(): void {
-    this.trainingCentreService.getCentros().subscribe((data: TrainingCentreModel[]) => {
-      this.centres = data;
-    });
+    // this.trainingCentreService.getCentros().subscribe((data: TrainingCentreModel[]) => {
+    
+    // });
+
+    this.centres = this.trainingCentreService.getCentros();
   }
 
   // Abrimos el formulario para crear o editar
+  // Abrimos el modal para crear o editar un centro de formación
   openModal(centre?: TrainingCentreModel): void {
     this.isModalVisible = true;
     
-    // Inicializar el formulario si aún no lo está
+    // Si el formulario aún no está inicializado, lo inicializamos
     if (!this.formCentres) {
       this.initializeForm();
     }
   
+    // Si estamos editando un centro, cargamos los datos en el formulario
     if (centre) {
+      this.indexCentre = centre.id; // Guardamos el índice del centro que se está editando
       this.formCentres?.patchValue({
         name: centre.name
       });
     } else {
+      this.indexCentre = null;
       this.formCentres?.reset();
     }
   }
+
+  closeModal(): void {
+    this.isModalVisible = false;
+  }
+
+
 
   // Guardamos los datos, ya sea creación o edición
   saveData(): void {
@@ -113,7 +130,8 @@ export class TrainingCentrePageComponent {
   resetForm(): void {
     this.formCentres?.reset();
     this.indexCentre = null;
-    // Aquí cierras el modal
+    this.isModalVisible = false;
+    
   }
 
 
