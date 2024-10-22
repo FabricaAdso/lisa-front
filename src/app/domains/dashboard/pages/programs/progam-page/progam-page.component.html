@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body class="body">
+  <div class="search-box">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text"  nz-input placeholder="input search text" />
+    </nz-input-group>
+    <ng-template #suffixIconButton >
+      <button nz-button nzType="primary"  nzSearch><span class="search-icon" nz-icon nzType="search" nzTheme="outline"></span></button>
+    </ng-template>
+  </div>
+</body>
+</html>
