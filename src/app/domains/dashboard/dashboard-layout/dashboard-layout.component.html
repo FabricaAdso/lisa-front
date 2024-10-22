@@ -1,1 +1,70 @@
-<router-outlet></router-outlet>
+<nz-layout class="h-screen w-screen">
+  <!-- Header principal -->
+  <nz-header class="bg-[#001529] flex justify-between items-center px-[24px]">
+    <!-- Logo -->
+    <div class="w-[120px] h-[31px] bg-[#fff]"></div>
+
+    <!-- Menú horizontal -->
+    <ul nz-menu nzTheme="dark" nzMode="horizontal" class="flex space-x-[24px]">
+      <li nz-menu-item>nav 1</li>
+      <li nz-menu-item>nav 2</li>
+      <li nz-menu-item>nav 3</li>
+    </ul>
+
+    <!-- Icono de usuario o imagen -->
+    <div class="flex items-center">
+      <!-- Puedes usar un ícono de usuario -->
+      <span nz-icon nzType="user" class="text-white text-xl mr-2"></span>
+    </div>
+  </nz-header>
+
+  <!-- Layout con el sider -->
+  <nz-layout>
+    <nz-sider nzCollapsible nzWidth="200px" class="bg-[#001529]">
+      <ul nz-menu nzTheme="dark" nzMode="inline">
+        <li nz-menu-item>
+          <span nz-icon nzType="pie-chart"></span>
+          <span>Option 1</span>
+        </li>
+        <li nz-menu-item>
+          <span nz-icon nzType="desktop"></span>
+          <span>Option 2</span>
+        </li>
+        <li nz-submenu nzTitle="User" nzIcon="user">
+          <ul>
+            <li nz-menu-item>Tom</li>
+            <li nz-menu-item>Bill</li>
+            <li nz-menu-item>Alex</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Team" nzIcon="team">
+          <ul>
+            <li nz-menu-item>Team 1</li>
+            <li nz-menu-item>Team 2</li>
+          </ul>
+        </li>
+        <li nz-menu-item>
+          <span nz-icon nzType="file"></span>
+          <span>File</span>
+        </li>
+      </ul>
+    </nz-sider>
+
+    <!-- Layout principal -->
+    <nz-layout>
+      <!-- Contenido principal -->
+      <nz-content class="m-[16px] p-[0 50px]">
+        <nz-breadcrumb class="m-[16px 0]">
+          <nz-breadcrumb-item>User</nz-breadcrumb-item>
+          <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
+        </nz-breadcrumb>
+        <div class="p-[24px] bg-[#fff] min-h-full">Bill is a cat.</div>
+      </nz-content>
+
+      <!-- Footer -->
+      <nz-footer class="text-center">
+        Ant Design ©2020 Implement By Angular
+      </nz-footer>
+    </nz-layout>
+  </nz-layout>
+</nz-layout>
