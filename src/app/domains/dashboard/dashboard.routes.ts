@@ -24,6 +24,11 @@ export const routes: Routes = [
                 path:'centres',
                 title:'Administrar Training Centres',
                 loadComponent:()=>import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c=>c.TrainingCentrePageComponent)
+            },
+            {
+                path:'headquarters',
+                title:'Administrar sedes',
+                loadComponent:()=>import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c=>c.HeadquarterComponent)
             }
         ]
     }

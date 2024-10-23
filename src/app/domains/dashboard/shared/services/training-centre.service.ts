@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { TrainingCentreModel } from '../models/training-centre-model';
 
 import { UpdateCentreDTO } from '../dto/update-centreDTO';
-import { CreateCentreDTO } from '../dto/create-centreDTO copy';
+import { CreateCentreDTO } from '../dto/create-centreDTO';
 
 
 

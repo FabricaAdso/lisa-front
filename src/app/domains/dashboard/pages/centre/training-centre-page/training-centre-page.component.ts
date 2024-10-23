@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CreateCentreDTO } from '@domains/dashboard/shared/dto/create-centreDTO copy';
+import { CreateCentreDTO } from '@domains/dashboard/shared/dto/create-centreDTO';
 import { UpdateCentreDTO } from '@domains/dashboard/shared/dto/update-centreDTO';
 import { TrainingCentreModel } from '@domains/dashboard/shared/models/training-centre-model';
 import { TrainingCentreService } from '@domains/dashboard/shared/services/training-centre.service';
@@ -35,12 +35,13 @@ export class TrainingCentrePageComponent {
   private formBuilder = inject(FormBuilder);
   private trainingCentreService = inject(TrainingCentreService);
 
+  centres: TrainingCentreModel[] = [];
   isModalVisible = false;
 
   formCentres: FormGroup | null = null;
   indexCentre: number | null = null;
 
-  centres: TrainingCentreModel[] = [];
+  
  
 
   // Método que se ejecuta al inicializar el componente
@@ -66,7 +67,7 @@ export class TrainingCentrePageComponent {
   }
 
   // Abrimos el formulario para crear o editar
-  // Abrimos el modal para crear o editar un centro de formación
+  
   openModal(centre?: TrainingCentreModel): void {
     this.isModalVisible = true;
     
