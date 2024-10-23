@@ -4,14 +4,14 @@ export const routes: Routes = [
     {
         path:'',
         pathMatch:'full',
-        redirectTo:'auth'
+        redirectTo:'Dash'
     },
     {
         path:'auth',
         loadChildren:()=>import('@domains/auth/auth.routes').then(r=>r.routes)
     },
     {
-        path:'auth',
+        path:'Dash',
         loadChildren:()=>import('@domains/dashboard/dashboard.routes').then(r=>r.routes)
     }
 ];

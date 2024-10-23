@@ -1,48 +1,59 @@
 <nz-layout class="h-screen w-screen">
   <!-- Header principal -->
-  <nz-header class="bg-[#001529] flex justify-between items-center px-[24px]">
-    <!-- Logo -->
-    <div class="w-[120px] h-[31px] bg-[#fff]"></div>
-
-    <!-- Menú horizontal -->
-    <ul nz-menu nzTheme="dark" nzMode="horizontal" class="flex space-x-[24px]">
-      <li nz-menu-item>nav 1</li>
-      <li nz-menu-item>nav 2</li>
-      <li nz-menu-item>nav 3</li>
-    </ul>
-
-    <!-- Icono de usuario o imagen -->
-    <div class="flex items-center">
-      <!-- Puedes usar un ícono de usuario -->
-      <span nz-icon nzType="user" class="text-white text-xl mr-2"></span>
-    </div>
-  </nz-header>
+  <app-nav-bar-sidebar></app-nav-bar-sidebar>
 
   <!-- Layout con el sider -->
   <nz-layout>
     <nz-sider nzCollapsible nzWidth="200px" class="bg-[#001529]">
       <ul nz-menu nzTheme="dark" nzMode="inline">
+        <!-- Opción fija 1 -->
         <li nz-menu-item>
           <span nz-icon nzType="pie-chart"></span>
           <span>Option 1</span>
         </li>
+
+        <!-- Opción fija 2 -->
         <li nz-menu-item>
           <span nz-icon nzType="desktop"></span>
           <span>Option 2</span>
         </li>
-        <li nz-submenu nzTitle="User" nzIcon="user">
-          <ul>
-            <li nz-menu-item>Tom</li>
-            <li nz-menu-item>Bill</li>
-            <li nz-menu-item>Alex</li>
+
+        <!-- Iterar sobre los elementos del menú dinámico -->
+        <li *ngFor="let item of menuItems" nz-submenu="item.subMenu ? true : false" nzTitle="{{ item.title }}"
+          nzIcon="item.icon">
+          <!-- Si no tiene submenú, mostrar como elemento simple -->
+          <ng-container *ngIf="!item.subMenu">
+            <a nz-menu-item routerLink="item.route">
+              <span nz-icon nzType="item.icon"></span>
+              <span>{{ item.title }}</span>
+            </a>
+          </ng-container>
+
+          <!-- Si tiene submenú, iterar sobre los elementos del submenú -->
+          <ul *ngIf="item.subMenu">
+            <li *ngFor="let subItem of item.subMenu" nz-submenu="subItem.subMenu ? true : false"
+              nzTitle="{{ subItem.title }}" nzIcon="subItem.icon">
+              <!-- Si no tiene submenú, mostrar como elemento simple -->
+              <ng-container *ngIf="!subItem.subMenu">
+                <a nz-menu-item routerLink="subItem.route">
+                  <span nz-icon nzType="subItem.icon"></span>
+                  <span>{{ subItem.title }}</span>
+                </a>
+              </ng-container>
+
+              <!-- Si tiene submenú, iterar sobre los elementos del submenú -->
+              <ul *ngIf="subItem.subMenu">
+                <li *ngFor="let nestedItem of subItem.subMenu" nz-menu-item routerLink="nestedItem.route"
+                  routerLinkActive="ant-menu-item-selected">
+                  <span nz-icon nzType="nestedItem.icon"></span>
+                  <span>{{ nestedItem.title }}</span>
+                </li>
+              </ul>
+            </li>
           </ul>
         </li>
-        <li nz-submenu nzTitle="Team" nzIcon="team">
-          <ul>
-            <li nz-menu-item>Team 1</li>
-            <li nz-menu-item>Team 2</li>
-          </ul>
-        </li>
+
+        <!-- Opción fija File -->
         <li nz-menu-item>
           <span nz-icon nzType="file"></span>
           <span>File</span>
@@ -52,7 +63,6 @@
 
     <!-- Layout principal -->
     <nz-layout>
-      <!-- Contenido principal -->
       <nz-content class="m-[16px] p-[0 50px]">
         <nz-breadcrumb class="m-[16px 0]">
           <nz-breadcrumb-item>User</nz-breadcrumb-item>
@@ -63,7 +73,7 @@
 
       <!-- Footer -->
       <nz-footer class="text-center">
-        Ant Design ©2020 Implement By Angular
+        Ant Design ©2020 Implemented by Angular
       </nz-footer>
     </nz-layout>
   </nz-layout>

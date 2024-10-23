@@ -1,0 +1,31 @@
+<nav class="flex justify-between items-center bg-[#001529] px-[24px] h-[64px]">
+  <!-- Logo: Un div que representa el logo de la aplicación -->
+  <div class="w-[120px] h-[31px] bg-[#fff]"></div>
+
+  <!-- Menú horizontal: Lista de navegación que se muestra en una fila -->
+  <ul nz-menu nzTheme="dark" nzMode="horizontal" class="flex space-x-[24px]">
+    <!-- Cada 'li' representa un elemento del menú -->
+    <li nz-menu-item>nav 1</li>
+    <li nz-menu-item>nav 2</li>
+    <li nz-menu-item>nav 3</li>
+  </ul>
+
+  <!-- Sección del ícono de usuario o botón de inicio de sesión -->
+  <div class="flex items-center">
+    <!-- Verifica si el usuario está logueado -->
+    @if (isLoggedIn) {
+      <ng-container>
+        <!-- Ícono del usuario cuando está logueado -->
+        <span nz-icon nzType="user" class="text-white text-xl mr-2"></span>
+        <!-- Mensaje de bienvenida con el nombre del usuario -->
+        <span class="text-white">Bienvenido, {{ userName }}</span>
+      </ng-container>
+    } @else {
+      <!-- Plantilla para mostrar cuando el usuario no está logueado -->
+      <ng-template #notLoggedIn>
+        <!-- Botón para iniciar sesión cuando no está logueado -->
+        <button nz-button nzType="primary" (click)="login()">Iniciar sesión</button>
+      </ng-template>
+    }
+  </div>
+</nav>
