@@ -1,67 +1,12 @@
 <nz-layout class="h-screen w-screen">
   <!-- Header principal -->
   <app-nav-bar-sidebar></app-nav-bar-sidebar>
-
   <!-- Layout con el sider -->
   <nz-layout>
+    <!-- Layout con el sider -->
     <nz-sider nzCollapsible nzWidth="200px" class="bg-[#001529]">
-      <ul nz-menu nzTheme="dark" nzMode="inline">
-        <!-- Opción fija 1 -->
-        <li nz-menu-item>
-          <span nz-icon nzType="pie-chart"></span>
-          <span>Option 1</span>
-        </li>
-
-        <!-- Opción fija 2 -->
-        <li nz-menu-item>
-          <span nz-icon nzType="desktop"></span>
-          <span>Option 2</span>
-        </li>
-
-        <!-- Iterar sobre los elementos del menú dinámico -->
-        <li *ngFor="let item of menuItems" nz-submenu="item.subMenu ? true : false" nzTitle="{{ item.title }}"
-          nzIcon="item.icon">
-          <!-- Si no tiene submenú, mostrar como elemento simple -->
-          <ng-container *ngIf="!item.subMenu">
-            <a nz-menu-item routerLink="item.route">
-              <span nz-icon nzType="item.icon"></span>
-              <span>{{ item.title }}</span>
-            </a>
-          </ng-container>
-
-          <!-- Si tiene submenú, iterar sobre los elementos del submenú -->
-          <ul *ngIf="item.subMenu">
-            <li *ngFor="let subItem of item.subMenu" nz-submenu="subItem.subMenu ? true : false"
-              nzTitle="{{ subItem.title }}" nzIcon="subItem.icon">
-              <!-- Si no tiene submenú, mostrar como elemento simple -->
-              <ng-container *ngIf="!subItem.subMenu">
-                <a nz-menu-item routerLink="subItem.route">
-                  <span nz-icon nzType="subItem.icon"></span>
-                  <span>{{ subItem.title }}</span>
-                </a>
-              </ng-container>
-
-              <!-- Si tiene submenú, iterar sobre los elementos del submenú -->
-              <ul *ngIf="subItem.subMenu">
-                <li *ngFor="let nestedItem of subItem.subMenu" nz-menu-item routerLink="nestedItem.route"
-                  routerLinkActive="ant-menu-item-selected">
-                  <span nz-icon nzType="nestedItem.icon"></span>
-                  <span>{{ nestedItem.title }}</span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-
-        <!-- Opción fija File -->
-        <li nz-menu-item>
-          <span nz-icon nzType="file"></span>
-          <span>File</span>
-        </li>
-      </ul>
+      <app-menu-item ></app-menu-item>
     </nz-sider>
-
-    <!-- Layout principal -->
     <nz-layout>
       <nz-content class="m-[16px] p-[0 50px]">
         <nz-breadcrumb class="m-[16px 0]">
@@ -70,8 +15,6 @@
         </nz-breadcrumb>
         <div class="p-[24px] bg-[#fff] min-h-full">Bill is a cat.</div>
       </nz-content>
-
-      <!-- Footer -->
       <nz-footer class="text-center">
         Ant Design ©2020 Implemented by Angular
       </nz-footer>

@@ -30,7 +30,10 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             title: 'Dashboard',
-            loadComponent: () => import('@domains/dashboard/dashboard-layout/dashboard-layout.component').then((c) => c.DashboardLayoutComponent),
+            loadComponent: () =>
+              import(
+                '@domains/dashboard/dashboard-layout/dashboard-layout.component'
+              ).then((c) => c.DashboardLayoutComponent),
           },
         ],
       },

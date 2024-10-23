@@ -1,27 +1,27 @@
 import { Component } from '@angular/core';
-import { NzLayoutModule } from 'ng-zorro-antd/layout'; // Módulo de diseño de Ng Zorro
-import { NzMenuModule } from 'ng-zorro-antd/menu'; // Módulo de menú de Ng Zorro
-import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb'; // Módulo de breadcrumbs de Ng Zorro
-import { NzIconModule } from 'ng-zorro-antd/icon'; // Módulo de iconos de Ng Zorro
-import { RouterOutlet } from '@angular/router'; // Módulo de enrutamiento de Angular
-import { NgIconComponent, provideIcons } from '@ng-icons/core'; // Módulo para manejar iconos
-import { featherAirplay } from '@ng-icons/feather-icons'; // Icono de Feather
-import { heroUsers } from '@ng-icons/heroicons/outline'; // Icono de Heroicons
-import { CommonModule } from '@angular/common'; // Módulo común de Angular
-import { NavBarSidebarComponent } from './nav-bar-sidebar/nav-bar-sidebar.component'; // Importación del componente de barra lateral
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { MenuService, NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { RouterOutlet } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { featherAirplay } from '@ng-icons/feather-icons';
+import { heroUsers } from '@ng-icons/heroicons/outline';
+import { CommonModule } from '@angular/common';
+import { NavBarSidebarComponent } from './nav-bar-sidebar/nav-bar-sidebar.component';
+import { MenuItemsComponent } from './menu-items/menu-item.component';
 
-// Definición de la interfaz MenuItem
 interface MenuItem {
-  title: string; // Título del elemento del menú
-  icon?: string; // Icono opcional del elemento
-  route: string | null; // Ruta a la que enlaza el elemento, puede ser nulo
-  subMenu?: MenuItem[]; // Submenú opcional
+  title: string;
+  icon?: string;
+  route: string | null;
+  subMenu?: MenuItem[];
 }
 
 @Component({
-  selector: 'app-dashboard-layout', // Selector del componente
-  standalone: true, // Componente independiente
-  imports: [ // Importaciones necesarias para el componente
+  selector: 'app-dashboard-layout',
+  standalone: true,
+  imports: [
     RouterOutlet,
     NzLayoutModule,
     NzBreadCrumbModule,
@@ -30,35 +30,11 @@ interface MenuItem {
     NgIconComponent,
     CommonModule,
     NavBarSidebarComponent,
+    MenuItemsComponent,
+    // Importar el componente recursivo
   ],
-  viewProviders: [provideIcons({ featherAirplay, heroUsers })], // Proveer iconos
-  templateUrl: './dashboard-layout.component.html', // URL de la plantilla HTML
-  styleUrls: ['./dashboard-layout.component.css'], // URL de los estilos CSS
+  viewProviders: [provideIcons({ featherAirplay, heroUsers })],
+  templateUrl: './dashboard-layout.component.html',
+  styleUrls: ['./dashboard-layout.component.css'],
 })
-export class DashboardLayoutComponent {
-  menuItems: MenuItem[] = [ // Array de elementos del menú
-    {
-      title: 'Programas', // Título del primer elemento
-      icon: 'desktop', // Icono del primer elemento
-      route: '/programs', // Ruta del primer elemento
-      subMenu: [ // Submenú del primer elemento
-        {
-          title: 'Fichas', // Título del submenú
-          icon: 'file', // Icono del submenú
-          route: null, // Ruta nula, indicando que no tiene ruta directa
-          subMenu: [{ title: 'Sesiones', icon: 'page', route: '/sessions' }], // Submenú anidado
-        },
-      ],
-    },
-    {
-      title: 'Reports', // Título del segundo elemento
-      icon: 'file', // Icono del segundo elemento
-      route: null, // Ruta nula, indicando que no tiene ruta directa
-      subMenu: [ // Submenú del segundo elemento
-        { title: 'Report 1', route: '/reports/report1' }, // Elemento del submenú con ruta
-        { title: 'Report 2', route: '/reports/report2' }, // Elemento del submenú con ruta
-      ],
-    },
-    // Otros elementos...
-  ];
-}
+export class DashboardLayoutComponent {}
