@@ -6,13 +6,53 @@
   <title>Document</title>
 </head>
 <body class="body">
-  <div class="search-box">
-    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-      <input type="text"  nz-input placeholder="input search text" />
-    </nz-input-group>
-    <ng-template #suffixIconButton >
-      <button nz-button nzType="primary"  nzSearch><span class="search-icon" nz-icon nzType="search" nzTheme="outline"></span></button>
-    </ng-template>
+  
+  <div class="content">
+    <div  class="top-content" >
+      <div class="search-box" >
+        <nz-input-group  nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input type="text"  nz-input placeholder="input search text" />
+        </nz-input-group>
+        <ng-template  #suffixIconButton >
+          <button nz-button nzType="primary"  nzSearch><span class="search-icon" nz-icon nzType="search" nzTheme="outline"></span></button>
+        </ng-template>
+      </div>
+    
+      <button nz-button nzType="primary">Añadir nuevo</button>
+    </div>
+    
+    <div class="mid-table">
+      <nz-table  #basicTable nzBordered="" [nzData]="listOfData" nzSize="small">
+        <thead>
+          <tr>
+            <th >ID</th>
+            <th>Nombre</th>
+            <th>Nivel de formación</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (data of basicTable.data; track data) {
+            <tr>
+              <td>{{ data.idprogram }}</td>
+              <td>{{ data.programName }}</td>
+              <td>{{ data.trainingLevel}}</td>
+              <td>
+                <a>Action 一 {{ data.idprogram }}</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="deleteRow(data.idprogram)">Delete</a>
+
+              </td>
+            </tr>
+          }
+        </tbody>
+      </nz-table>
+    </div >
+    <div class="bot-button1">
+      <button nz-button nzType="primary" nzSize="large">Carga masiva</button>
+    </div>
+    
   </div>
+  
 </body>
 </html>
