@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { AuthLayoutComponent } from "../../auth/auth-layout/auth-layout.component";
 import { Router, RouterOutlet } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { log } from 'ng-zorro-antd/core/logger';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,12 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 export class LoginPageComponent {
   constructor(private router: Router) { }
 
+  @ViewChild('buttonView')buttonView: ElementRef = {} as ElementRef;
 
+  document: string  = '';
+  password: string  = '';
+
+  button_value = signal(false);
 
   go() {
     this.router.navigate(['/auth/register']);
@@ -31,12 +37,25 @@ export class LoginPageComponent {
     return this.formLogin.get('document') as FormControl;
   }
 
-  get fielPassword(){
+  get fieldPassword(){
     return this.formLogin.get('password') as FormControl;
   }
 
   login(){
     return console.log(this.formLogin);
   }
+
+  onSubmit() {
+    if (this.formLogin.valid) {
+      console.log(this.formLogin)
+    } else {
+      this.formLogin.markAllAsTouched();    
+    }
+  }
+
+  stateButton(){
+    this.button_value.set(this.formLogin.valid);
+  }
+
 
 }
