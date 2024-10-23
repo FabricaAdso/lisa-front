@@ -1,10 +1,14 @@
+import { TrainingCentreModel } from "./training-centre-model";
+
 export interface HeadquartersModel {
     id: number;
     name: string;
-    department: string;   // Ejemplo: Cauca
-    municipality: string; // Ciudad dentro del departamento
+    department: string;   
+    municipality: string; 
     address: string;
-    trainingCentre_Id: number;  // Referencia al centro de formación
-    openingHour: string;  // Hora de apertura (en formato HH:mm)
-    closingHour: string;  // Hora de cierre (en formato HH:mm)
+    trainingCentre_Id: number;  
+    trainingCentre : TrainingCentreModel;
+
+    openingHour: string;  
+    closingHour: string;  
   }

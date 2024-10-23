@@ -59,11 +59,11 @@ export class TrainingCentrePageComponent {
 
   // Obtenemos los datos de los centros de formación
   getData(): void {
-    // this.trainingCentreService.getCentros().subscribe((data: TrainingCentreModel[]) => {
+    this.trainingCentreService.getCentros().subscribe((data: TrainingCentreModel[]) => {
     
-    // });
+    });
 
-    this.centres = this.trainingCentreService.getCentros();
+    //  this.centres = this.trainingCentreService.getCentros();
   }
 
   // Abrimos el formulario para crear o editar

@@ -20,6 +20,7 @@ export const routes: Routes = [
                 title:'Administrar Areas',
                 loadComponent:()=>import('@domains/dashboard/pages/area/area-page/area-page.component').then(c=>c.AreaPageComponent)
             },
+            // http://127.0.0.1:4200/dashboard/centres
             {
                 path:'centres',
                 title:'Administrar Training Centres',

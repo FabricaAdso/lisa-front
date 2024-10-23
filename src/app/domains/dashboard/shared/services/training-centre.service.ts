@@ -25,8 +25,8 @@ export class TrainingCentreService {
 
 
   getCentros() {
-    // return this.http.get<TrainingCentreModel[]>(this.url);
-    return mockCentres;
+    return this.http.get<TrainingCentreModel[]>(this.url);
+    // return mockCentres;
   }
 
   create(data:CreateCentreDTO){

@@ -1,33 +1,134 @@
-<p>headquarter works!</p>
-<!-- Tabla de sedes -->
+<button nz-button nzType="primary" (click)="openModal()">Ingresa una Sede</button>
+
+
 <nz-table #basicTable [nzData]="headquarters" [nzPageSize]="5">
-    <thead>
-      <tr>
-        <th nzWidth="20%">Name</th>
-        <th nzWidth="15%">Training Centre</th>
-        <th nzWidth="15%">Department</th>
-        <th nzWidth="15%">Municipality</th>
-        <th nzWidth="20%">Address</th>
-        <th nzWidth="10%">Opening Hour</th>
-        <th nzWidth="10%">Closing Hour</th>
-        <th nzWidth="15%">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of headquarters">
-        <td>{{ item.name }}</td>
-        <td>{{ item.trainingCentre_Id }}</td>
-        <td>{{ item.department }}</td>
-        <td>{{ item.municipality }}</td>
-        <td>{{ item.address }}</td>
-        <td>{{ item.openingHour }}</td>
-        <td>{{ item.closingHour }}</td>
-        <td>
-          <button nz-button nzType="primary" (click)="openModal(item)">Edit</button>
-          <button nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
-            Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
+  <thead>
+    <tr>
+      <th nzWidth="18%">Nombre</th>
+      <th nzWidth="15%">Centro de Fotmación</th>
+      <th nzWidth="15%">Departamento</th>
+      <th nzWidth="15%">Municipio</th>
+      <th nzWidth="20%">Dirección</th>
+      <th nzWidth="10%">Hora de Apertura</th>
+      <th nzWidth="10%">Hora de cierre</th>
+      <th nzWidth="15%">acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of headquarters; track $index) {
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>{{ item.trainingCentre_Id }}</td>
+      <td>{{ item.department }}</td>
+      <td>{{ item.municipality }}</td>
+      <td>{{ item.address }}</td>
+      <td>{{ item.openingHour }}</td>
+      <td>{{ item.closingHour }}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="openModal(item)">Edit</button>
+        <button nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
+          Delete
+        </button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</nz-table>
+
+
+<!-- Modal para crear o editar sede -->
+<!-- <nz-modal [(nzVisible)]="isModalVisible" nzTitle="Headquarters" (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formHeadquarters.invalid"> -->
+<nz-modal *ngIf="formHeadquarters" [(nzVisible)]="isModalVisible" nzTitle="Administración de Sedes"
+  (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formHeadquarters?.invalid">
+
+  <ng-container *nzModalContent>
+    <form [formGroup]="formHeadquarters">
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium">Nombre</label>
+        <input id="name" nz-input formControlName="name" placeholder="Ingrese el nombre de la sede" />
+        <div *ngIf="formHeadquarters?.get('name')?.invalid && formHeadquarters?.get('name')?.touched"
+          class="text-red-500 text-sm">
+          El nombre es requerido y debe tener al menos 3 caracteres. </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="department" class="block text-sm font-medium">Departamento</label>
+        <nz-select formControlName="department" placeholder="Seleccione un departamento">
+          <nz-option *ngFor="let department of departments" [nzValue]="department" [nzLabel]="department"></nz-option>
+        </nz-select>
+        <div *ngIf="formHeadquarters?.get('department')?.invalid && formHeadquarters.get('department')?.touched"
+          class="text-red-500 text-sm">
+          Departamento es requerido.
+        </div>
+      </div>
+
+
+      <div class="mb-4">
+        <label for="municipality" class="block text-sm font-medium">Municipio</label>
+        <nz-select formControlName="municipality" placeholder="Seleccione  un municipio">
+          <nz-option *ngFor="let municipality of municipalities" [nzValue]="municipality"
+            [nzLabel]="municipality">
+          </nz-option>
+        </nz-select>
+        @if (formHeadquarters?.get('municipality')?.invalid && formHeadquarters.get('municipality')?.touched) {
+        <div class="text-red-500 text-sm">
+          Municipio es requerido.
+        </div>
+        }
+
+      </div>
+
+      <div class="mb-4">
+        <label for="address" class="block text-sm font-medium">Dirección</label>
+        <input id="address" nz-input formControlName="address" placeholder="Ingrese la Dirección" />
+        <div *ngIf="formHeadquarters?.get('address')?.invalid && formHeadquarters.get('address')?.touched"
+          class="text-red-500 text-sm">
+          Dirección es requerida.
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="mb-4">
+          <label for="openingHour" class="block text-sm font-medium">Hora de Apertura</label>
+          <input id="openingHour" nz-input type="time" formControlName="openingHour" />
+          <div *ngIf="formHeadquarters?.get('openingHour')?.invalid && formHeadquarters.get('openingHour')?.touched"
+            class="text-red-500 text-sm">
+            Se requiere horario de apertura.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="closingHour" class="block text-sm font-medium">Hora de Cierre</label>
+          <input id="closingHour" nz-input type="time" formControlName="closingHour" />
+          <div *ngIf="formHeadquarters?.get('closingHour')?.invalid && formHeadquarters.get('closingHour')?.touched"
+            class="text-red-500 text-sm">
+            Se requiere horario de cierre.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+
+        <label for="centre" class=""> Centro de Formacion</label>
+        <nz-select formControlName="trainingCentre" placeholder="Seleccione un centro">
+          <nz-option></nz-option>
+
+        </nz-select>
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+    </form>
+  </ng-container>
+</nz-modal>
