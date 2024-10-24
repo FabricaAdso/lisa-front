@@ -11,4 +11,7 @@ export interface HeadquartersModel {
 
     openingHour: string;  
     closingHour: string;  
+
+
+    
   }
