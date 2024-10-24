@@ -20,13 +20,12 @@ const mockCentres = [
 })
 export class TrainingCentreService {
   private http= inject(HttpClient);
-  url:string = 'centres';
+  url:string = 'trainingCenters';
   constructor() { }
 
 
   getCentros() {
     return this.http.get<TrainingCentreModel[]>(this.url);
-    // return mockCentres;
   }
 
   create(data:CreateCentreDTO){

@@ -3,12 +3,15 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateHeadquartersDTO } from '@domains/dashboard/shared/dto/create-headquartersDTO';
 import { UpdateHeadquartersDTO } from '@domains/dashboard/shared/dto/update-headquartersDTO';
-import { HeadquartersModel } from '@domains/dashboard/shared/models/headquarters-model';
+import { despartamentosModel } from '@domains/dashboard/shared/models/Departamentos.model';
+import { municipiosModel } from '@domains/dashboard/shared/models/municipios.model';
+import { SedeModel } from '@domains/dashboard/shared/models/Sedemodel';
 import { TrainingCentreModel } from '@domains/dashboard/shared/models/training-centre-model';
 import { HeadquartersService } from '@domains/dashboard/shared/services/headquarters.service';
 import { LocationService } from '@domains/dashboard/shared/services/location.service';
 import { TrainingCentreService } from '@domains/dashboard/shared/services/training-centre.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { log } from 'ng-zorro-antd/core/logger';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -28,7 +31,7 @@ import { forkJoin } from 'rxjs';
     NzButtonModule,
     NzFormModule,
     NzInputModule,
-    NzSelectModule
+    NzSelectModule,
   ],
   templateUrl: './headquarter.component.html',
   styleUrl: './headquarter.component.css'
@@ -38,13 +41,13 @@ export class HeadquarterComponent {
   private fb = inject(FormBuilder);
   private headquarterService = inject(HeadquartersService);
   private locationService = inject(LocationService);
-  private trainingCentreService = inject(TrainingCentreService); 
+  private trainingCentreService = inject(TrainingCentreService);
 
 
-  headquarters: HeadquartersModel[] = [];
-  departments: string[] = [];   
-  municipalities: string[] = []; 
-  trainingCentres: TrainingCentreModel[] = []; 
+  headquarters: SedeModel[] = [];
+  departments: despartamentosModel[] = [];
+  municipalities: municipiosModel[] = [];
+  trainingCentres: TrainingCentreModel[] = [];
 
 
   formHeadquarters!: FormGroup | null;
@@ -58,13 +61,16 @@ export class HeadquarterComponent {
     this.createForm();
   }
 
-  
+
   loadData() {
     const datasub = forkJoin([
+      this.headquarterService.getHeadquartes(),
       this.trainingCentreService.getCentros(),
       this.locationService.getDepartments()
     ]).subscribe({
-      next: ([trainingCentres, departments]) => {
+      next: ([headquarters, trainingCentres, departments]) => {
+        this.headquarters = [...headquarters];
+        console.log(headquarters)
         this.trainingCentres = [...trainingCentres];
         this.departments = [...departments];
       },
@@ -88,11 +94,11 @@ export class HeadquarterComponent {
     this.formHeadquarters = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       department: ['', Validators.required],
-      municipality: ['', Validators.required],
-      address: ['', Validators.required],
-      trainingCentreId: ['', Validators.required],
-      openingHour: ['', Validators.required],
-      closingHour: ['', Validators.required],
+      municipality_id: ['', Validators.required],
+      adress: ['', Validators.required],
+      training_center_id: ['', Validators.required],
+      opening_time: ['', Validators.required],
+      closing_time: ['', Validators.required],
     });
 
     // Escuchar cambios en el campo de departamento para cargar los municipios
@@ -102,43 +108,16 @@ export class HeadquarterComponent {
   }
 
   // Actualizar formulario con datos existentes
-  updateForm(headquarter: HeadquartersModel) {
-    this.formHeadquarters?.patchValue({
-      id: headquarter.id,
-      name: headquarter.name,
-      department: headquarter.department,
-      municipality: headquarter.municipality,
-      address: headquarter.address,
-      trainingCentreId: headquarter.trainingCentre_Id,
-      openingHour: headquarter.openingHour,
-      closingHour: headquarter.closingHour
-    });
-  }
+
 
   // Guardar los datos (creación o edición)
-  saveForm() {
-    if (!this.formHeadquarters || this.formHeadquarters.invalid) {
-      alert("Formulario incompleto");
-      return;
-    }
 
-    const formValues = this.formHeadquarters.value;
 
-    if (this.editingHeadquartersId) {
-      const updatedHeadquarter: UpdateHeadquartersDTO = { id: this.editingHeadquartersId, ...formValues };
-      const saveSub = this.headquarterService.update(updatedHeadquarter).subscribe(() => {
-        this.loadHeadquarters();
-        this.resetForm();
-        saveSub.unsubscribe();
-      });
-    } else {
-      const newHeadquarter: CreateHeadquartersDTO = formValues;
-      const saveSub = this.headquarterService.create(newHeadquarter).subscribe(() => {
-        this.loadHeadquarters();
-        this.resetForm();
-        saveSub.unsubscribe();
-      });
-    }
+  formatHora(hora: string): string {
+    const [hours, minutes] = hora.split(':');
+    const formattedClosingHour = `${hours}:${minutes}`;
+
+    return formattedClosingHour
   }
 
   // Resetear el formulario
@@ -163,19 +142,19 @@ export class HeadquarterComponent {
   }
 
 
-  openModal(headquarter?: HeadquartersModel): void {
+  openModal(headquarter?: SedeModel): void {
     this.isModalVisible = true;
-  
+
     if (!this.formHeadquarters) {
       this.createForm();
     }
-    
+
     if (headquarter) {
       this.editingHeadquartersId = headquarter.id;
-      this.formHeadquarters?.patchValue(headquarter); 
+      this.formHeadquarters?.patchValue(headquarter);
     } else {
       this.editingHeadquartersId = null;
-      this.formHeadquarters?.reset(); 
+      this.formHeadquarters?.reset();
     }
   }
 
@@ -186,12 +165,13 @@ export class HeadquarterComponent {
   }
   saveData(): void {
     if (this.formHeadquarters?.valid) {
-      // Si estamos editando un headquarter existente
       if (this.editingHeadquartersId) {
-        const updatedHeadquarter: UpdateHeadquartersDTO = {
+        const updatedHeadquarter: SedeModel = {
           id: this.editingHeadquartersId,
           ...this.formHeadquarters.value
-        };
+        }; // Crea un nuevo objeto con el id actualizado  
+        updatedHeadquarter.closing_time = this.formatHora(updatedHeadquarter.closing_time)
+        updatedHeadquarter.opening_time = this.formatHora(updatedHeadquarter.opening_time)
         this.headquarterService.update(updatedHeadquarter).subscribe(() => {
           this.loadHeadquarters();  // Recargar la lista de sedes
           this.closeModal();        // Cerrar el modal
@@ -208,10 +188,10 @@ export class HeadquarterComponent {
       alert('Formulario incompleto o con errores.');
     }
   }
-  
 
- 
- 
+
+
+
 
 
 
