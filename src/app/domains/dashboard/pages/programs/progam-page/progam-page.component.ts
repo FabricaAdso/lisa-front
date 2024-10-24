@@ -9,10 +9,16 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFlexModule } from 'ng-zorro-antd/flex'
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzAlign, NzJustify } from 'ng-zorro-antd/flex';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
+import { AddProgramModalComponent } from '../modals/add-program-modal/add-program-modal.component';
+import { BulkUploadModalComponent } from '../modals/bulk-upload-modal/bulk-upload-modal.component';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 @Component({
   selector: 'app-progam-page',
   standalone: true,
-  imports: [CommonModule,NzInputModule,NgIconComponent,NzIconModule,NzTableModule,NzDividerModule,NzButtonModule, NzFlexModule, NzPopconfirmModule ],
+  imports: [CommonModule,NzInputModule,NgIconComponent,NzIconModule,NzTableModule,NzDividerModule,NzButtonModule, NzFlexModule, NzPopconfirmModule,NzUploadModule, AddProgramModalComponent, BulkUploadModalComponent,NzSpaceModule ],
   templateUrl: './progam-page.component.html',
   styleUrl: './progam-page.component.css',
   viewProviders:[provideIcons({ionSearch})]
@@ -24,89 +30,92 @@ export class ProgamPageComponent implements OnInit{
 
 
   deleteRow(id: number): void {
-    this.listOfData = this.listOfData.filter(d => d.idprogram !== id);
+    this.listOfData = this.listOfData.filter(d => d.id !== id);
   }
   listOfData: Person[] = [
     {
       key: '1',
-      idprogram: 1,
-      programName: 'Analisis y desarrollo de sofwware',
-      trainingLevel: 'Tecnologo'
+      id: 1,
+      name: 'Analisis y desarrollo de sofwware',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '2',
-      idprogram: 2,
-      programName: 'Gestión de talento humano',
-      trainingLevel: 'Tecnologo'
+      id: 2,
+      name: 'Gestión de talento humano',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '3',
-      idprogram: 3,
-      programName: 'Animación 3D',
-      trainingLevel: 'Tecnologo'
+      id: 3,
+      name: 'Animación 3D',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '1',
-      idprogram: 4,
-      programName: 'Analisis y desarrollo de sofwware',
-      trainingLevel: 'Tecnologo'
+      id: 4,
+      name: 'Analisis y desarrollo de sofwware',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '2',
-      idprogram: 5,
-      programName: 'Gestión de talento humano',
-      trainingLevel: 'Tecnologo'
+      id: 5,
+      name: 'Gestión de talento humano',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '3',
-      idprogram: 6,
-      programName: 'Animación 3D',
-      trainingLevel: 'Tecnologo'
+      id: 6,
+      name: 'Animación 3D',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '1',
-      idprogram: 6,
-      programName: 'Analisis y desarrollo de sofwware',
-      trainingLevel: 'Tecnologo'
+      id: 6,
+      name: 'Analisis y desarrollo de sofwware',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '2',
-      idprogram: 7,
-      programName: 'Gestión de talento humano',
-      trainingLevel: 'Tecnologo'
+      id: 7,
+      name: 'Gestión de talento humano',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '3',
-      idprogram: 8,
-      programName: 'Animación 3D',
-      trainingLevel: 'Tecnologo'
+      id: 8,
+      name: 'Animación 3D',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '1',
-      idprogram: 9,
-      programName: 'Analisis y desarrollo de sofwware',
-      trainingLevel: 'Tecnologo'
+      id: 9,
+      name: 'Analisis y desarrollo de sofwware',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '2',
-      idprogram: 10,
-      programName: 'Gestión de talento humano',
-      trainingLevel: 'Tecnologo'
+      id: 10,
+      name: 'Gestión de talento humano',
+      education_level_id: 'Tecnologo'
     },
     {
       key: '3',
-      idprogram: 11,
-      programName: 'Animación 3D',
-      trainingLevel: 'Tecnologo'
+      id: 11,
+      name: 'Animación 3D',
+      education_level_id: 'Tecnologo'
     }
   ];
 
+  
+
+  
   
 }
 
 interface Person {
   key: string;
-  idprogram: number;
-  programName: string;
-  trainingLevel: string;
+  id: number;
+  name: string;
+  education_level_id: string;
 }
