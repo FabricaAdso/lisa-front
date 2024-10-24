@@ -1,13 +1,14 @@
 <div class="h-max p-6 space-y-4 md:space-y-6 sm:p-8">
     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-dark">Ingresa tus
         datos</h1>
-    <form (input)="stateButton()" class="space-y-7" nz-form>
+    <form (input)="stateButton()" (submit)="login()" class="space-y-7" nz-form>
         <div>
             <nz-form-label for="number" class="flex flex-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">
                 Numero de documento
             </nz-form-label>
             <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorDoc">
-                <input type="number" name="document" id="number" [formControl]="fieldDocument"
+                <input type="string" name="identity_document" id="number" 
+                [formControl]="fieldDocument"
                     class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="123456789">
                 <ng-template #errorDoc>
