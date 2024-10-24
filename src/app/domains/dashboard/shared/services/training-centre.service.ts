@@ -7,13 +7,6 @@ import { CreateCentreDTO } from '../dto/create-centreDTO';
 
 
 
-// Datos ficticios
-const mockCentres = [
-  { id: 1, name: 'Training Centre 1' },
-  { id: 2, name: 'Training Centre 2' },
-  { id: 3, name: 'Training Centre 3' }
-];
-
 
 @Injectable({
   providedIn: 'root'

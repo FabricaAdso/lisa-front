@@ -43,7 +43,7 @@ export class HeadquarterComponent {
   private locationService = inject(LocationService);
   private trainingCentreService = inject(TrainingCentreService);
 
-
+  // Variables para almacenar datos.
   headquarters: SedeModel[] = [];
   departments: despartamentosModel[] = [];
   municipalities: municipiosModel[] = [];
@@ -52,12 +52,12 @@ export class HeadquarterComponent {
 
   formHeadquarters!: FormGroup | null;
   isModalVisible = false;
-  editingHeadquartersId: number | null = null;
+  editingHeadquartersId: number | null = null;  // ID de la sede en edición.
 
 
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData();// Carga los datos iniciales.
     this.createForm();
   }
 
@@ -107,11 +107,6 @@ export class HeadquarterComponent {
     });
   }
 
-  // Actualizar formulario con datos existentes
-
-
-  // Guardar los datos (creación o edición)
-
 
   formatHora(hora: string): string {
     const [hours, minutes] = hora.split(':');
@@ -120,11 +115,7 @@ export class HeadquarterComponent {
     return formattedClosingHour
   }
 
-  // Resetear el formulario
-  resetForm() {
-    this.formHeadquarters?.reset();
-    this.editingHeadquartersId = null;
-  }
+
 
   // Cargar las sedes existentes
   loadHeadquarters() {
@@ -132,14 +123,13 @@ export class HeadquarterComponent {
       this.headquarters = data;
     });
   }
-
-  // Eliminar una sede
   deleteHeadquarters(id: number) {
     const deleteSub = this.headquarterService.delete(id).subscribe(() => {
-      this.loadHeadquarters();
-      deleteSub.unsubscribe();
+      this.loadHeadquarters(); // Recarga la lista de sedes.
+      deleteSub.unsubscribe(); // Desuscribe del observable.
     });
   }
+
 
 
   openModal(headquarter?: SedeModel): void {
@@ -151,7 +141,13 @@ export class HeadquarterComponent {
 
     if (headquarter) {
       this.editingHeadquartersId = headquarter.id;
-      this.formHeadquarters?.patchValue(headquarter);
+      this.formHeadquarters?.patchValue({
+        ...headquarter,
+        department: headquarter.municipality.departament_id, // Asegúrate de que este campo sea el ID correcto del departamento
+        municipality_id: headquarter.municipality.id
+      });
+      // Cargar municipios según el departamento actual
+      this.onDepartmentChange(headquarter.municipality.departament_id);
     } else {
       this.editingHeadquartersId = null;
       this.formHeadquarters?.reset();
@@ -167,9 +163,11 @@ export class HeadquarterComponent {
     if (this.formHeadquarters?.valid) {
       if (this.editingHeadquartersId) {
         const updatedHeadquarter: SedeModel = {
-          id: this.editingHeadquartersId,
+          id: this.editingHeadquartersId, // Incluye el ID de la sede en la actualización.
           ...this.formHeadquarters.value
-        }; // Crea un nuevo objeto con el id actualizado  
+        };
+
+        // Formatea las horas.
         updatedHeadquarter.closing_time = this.formatHora(updatedHeadquarter.closing_time)
         updatedHeadquarter.opening_time = this.formatHora(updatedHeadquarter.opening_time)
         this.headquarterService.update(updatedHeadquarter).subscribe(() => {

@@ -7,6 +7,7 @@ export interface CreateHeadquartersDTO {
     address: string;
     trainingCentre_Id: number;
     trainingCentreId?:TrainingCentreModel;
-    openingHour: string;
-    closingHour: string;
+    opening_time:string;
+    
+    closing_time:string;
   }

@@ -59,11 +59,16 @@ export class TrainingCentrePageComponent {
 
   // Obtenemos los datos de los centros de formación
   getData(): void {
-    this.trainingCentreService.getCentros().subscribe((data: TrainingCentreModel[]) => {
-    
+    // Llamamos al servicio para obtener los centros de formación
+    this.trainingCentreService.getCentros().subscribe({
+      next: (data: TrainingCentreModel[]) => {
+        this.centres = data; // Asignamos los datos recibidos a la variable centres
+        console.log('Centros de formación cargados:', this.centres); // Log para verificar los datos
+      },
+      error: (err) => {
+        console.error('Error al cargar los centros de formación:', err); // Manejo de errores
+      }
     });
-
-    //  this.centres = this.trainingCentreService.getCentros();
   }
 
   // Abrimos el formulario para crear o editar

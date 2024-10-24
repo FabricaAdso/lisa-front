@@ -11,8 +11,6 @@ export interface SedeModel {
     trainingCentre_Id: number;  
     training_center : TrainingCentreModel;
 
-    openingHour: string;  
-    closingHour: string;  
 
     opening_time:string;
     

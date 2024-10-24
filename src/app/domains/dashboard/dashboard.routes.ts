@@ -22,7 +22,7 @@ export const routes: Routes = [
             },
             // http://127.0.0.1:4200/dashboard/centres
             {
-                path:'centres',
+                path:'trainingCenters',
                 title:'Administrar Training Centres',
                 loadComponent:()=>import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c=>c.TrainingCentrePageComponent)
             },
