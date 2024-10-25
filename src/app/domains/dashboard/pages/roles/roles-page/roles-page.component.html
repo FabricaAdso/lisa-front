@@ -1,5 +1,5 @@
 <section id="all">
-  <nz-table #basicTable [nzData]="listOfData">
+  <nz-table #basicTable [nzData]="users">
     <thead>
       <tr>
         <th>Documento</th>
@@ -15,7 +15,6 @@
         <td>{{ user.nombre }}</td>
         <td>{{ user.apellido }}</td>
         <td>
-
           <span *ngFor="let role of user.roles; let i = index">
             {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
           </span>
@@ -31,44 +30,9 @@
   </nz-table>
 </section>
 
-<!-- <section id="all">
-<table class="table">
-    <thead>
-      <tr>
-        <th>Documento</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Roles</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.documento }}</td>
-        <td>{{ user.nombre }}</td>
-        <td>{{ user.apellido }}</td>
-        <td>
-
-          <span *ngFor="let role of user.roles; let i = index">
-            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
-          </span>
-        </td>
-        <td>
-          <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
-          <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
-            {{ user.active ? 'Desactivar' : 'Activar' }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</section> -->
-
-
-<nz-modal [(nzVisible)]="isVisible" nzTitle="The first Modal" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles y Estado" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
     <div class="modal-content">
-      <h5 class="modal-title">Editar Roles y Estado</h5>
       <div class="modal-body">
         <form>
           <div class="form-group">
@@ -86,107 +50,3 @@
     </div>
   </ng-container>
 </nz-modal>
-
-
-<!-- <section id="all">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Documento</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Roles</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.documento }}</td>
-        <td>{{ user.nombre }}</td>
-        <td>{{ user.apellido }}</td>
-        <td>
-
-          <span *ngFor="let role of user.roles; let i = index">
-            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
-          </span>
-        </td>
-        <td>
-          <button (click)="openEditRolesModal(user)" class="btn btn-primary">Editar Roles</button>
-          <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
-            {{ user.active ? 'Desactivar' : 'Activar' }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-
-</section>
-
-
-<div class="modal" tabindex="-1" role="dialog" *ngIf="isModalOpen">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Editar Roles y Estado</h5>
-        <button type="button" class="close" (click)="closeModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form>
-
-          <div class="form-group">
-            <label for="roles">Seleccionar Roles</label>
-            <select id="roles" [(ngModel)]="selectedRoles" name="roles" class="form-control" multiple>
-              <option *ngFor="let role of allRoles" [value]="role">{{ role }}</option>
-            </select>
-          </div>
-
-
-          <div class="form-check">
-            <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input">
-            <label for="active" class="form-check-label">Usuario Activo</label>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
-        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
-
-<!-- <section>
-    <div class="conetent">
-        <h1>roles</h1>
-        <div>
-            <div>
-                <ul>
-                    <li>Admnistrador</li>
-                    <li>Aprendiz</li>
-                    <li>Instructor</li>
-                    <li>Coordinador Academico</li>
-                </ul>
-                <div class="">
-                    <button>permisos</button>
-                    <button>remover</button>
-                </div>
-                <div>
-                    <form action="">
-                        <label for="">Documeto</label>
-                        <input type="number">
-                        <label for="">Nombre</label>
-                        <input type="text">
-                        <label for="">Apellido</label>
-                        <input type="text">
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-</section> -->
