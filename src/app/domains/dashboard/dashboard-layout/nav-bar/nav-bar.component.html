@@ -1,0 +1,38 @@
+<nav class="flex justify-between items-center bg-[#ffffff] px-[24px] h-[64px] border-[0.5px] border-b-green-500">
+  <!-- Logo -->
+  <div class="w-[31px] h-[31px]">
+    <img src="img/logo.png" alt="Logo de la aplicación" class="h-full w-full" />
+  </div>
+
+  <!-- Menú horizontal -->
+  <!-- <ul
+    nz-menu
+    nzMode="horizontal"
+    class="flex space-x-[24px] bg-[#ffffff] text-green-500"
+  >
+    <li nz-menu-item class="text-green-500 hover:text-gray-300">nav 1</li>
+    <li nz-menu-item class="text-green-500 hover:text-gray-300">nav 2</li>
+    <li nz-menu-item class="text-green-500 hover:text-gray-300">nav 3</li>
+  </ul> -->
+
+  <!-- Sección del ícono de usuario -->
+  <div class="flex items-center">
+    @if (isLoggedIn) {
+    <ng-container>
+      <span nz-icon nzType="user" class="text-black text-4xl mr-2"></span>
+      <span class="text-black text-lg">Bienvenido, {{ userName }}</span>
+    </ng-container>
+    } @else {
+    <ng-template #notLoggedIn>
+      <button
+        nz-button
+        nzType="primary"
+        class="bg-blue-600 hover:bg-blue-700"
+        (click)="login()"
+      >
+        Iniciar sesión
+      </button>
+    </ng-template>
+    }
+  </div>
+</nav>
