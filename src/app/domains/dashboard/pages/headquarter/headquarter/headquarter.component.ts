@@ -19,6 +19,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin } from 'rxjs';
 
+
 @Component({
   selector: 'app-headquarter',
   standalone: true,
@@ -32,6 +33,7 @@ import { forkJoin } from 'rxjs';
     NzFormModule,
     NzInputModule,
     NzSelectModule,
+    
   ],
   templateUrl: './headquarter.component.html',
   styleUrl: './headquarter.component.css'
@@ -82,6 +84,9 @@ export class HeadquarterComponent {
 
   // Cargar los municipios cuando se selecciona un departamento
   onDepartmentChange(departmentId: number) {
+    // Reinicia el campo de municipio en el formulario
+    this.formHeadquarters?.get('municipality_id')?.setValue(null);
+    this.municipalities = []; // Limpia la lista de municipios
     if (departmentId) {
       this.locationService.getMunicipalities(departmentId).subscribe(municipalities => {
         this.municipalities = [...municipalities];

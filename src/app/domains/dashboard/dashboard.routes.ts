@@ -30,6 +30,11 @@ export const routes: Routes = [
                 path:'headquarters',
                 title:'Administrar sedes',
                 loadComponent:()=>import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c=>c.HeadquarterComponent)
+            },
+            {
+                path:'environments',
+                title:'Administrar Ambientes',
+                loadComponent:()=>import('@domains/dashboard/pages/environment/environment.component').then(c=>c.EnvironmentComponent)
             }
         ]
     }

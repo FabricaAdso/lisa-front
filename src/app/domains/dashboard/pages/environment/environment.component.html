@@ -1,1 +1,109 @@
 <p>environment works!</p>
+
+<button nz-button nzType="primary" (click)="openModal()">Ingresa un Ambiente</button>
+
+<nz-table #basicTable [nzData]="headquarters" [nzPageSize]="5">
+    <thead>
+        <tr>
+            <th  nzWidth="18%">
+                Nombre
+
+                <nz-input-group nzSuffixIcon="search" style="margin-top: 8px;">
+                    <input
+                      nz-input
+                      placeholder="Buscar nombre"
+                      [(ngModel)]="nameFilter"
+                      (input)="applyFilter()"
+                    />
+                  </nz-input-group>
+                
+            </th>
+            <th nzWidth="15%">Capacity</th>
+            <th nzWidth="15%">Area</th>
+            <th nzWidth="15%">Sede</th>
+            <th nzWidth="15%">acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of environments; track $index) {
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.capacity}}</td>
+            <td>{{ item.environment_area?.name}}</td>
+            <td>{{ item.headquarters?.name}}</td>
+
+            <td>
+                <button nz-button nzType="primary" (click)="openModal(item)">Edit</button>
+                <button nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</nz-table>
+
+
+
+<nz-modal *ngIf="formEnvironments" [(nzVisible)]="isModalVisible" nzTitle="Administración de Areas"
+    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formEnvironments.invalid">
+
+    <ng-container *nzModalContent>
+        <form [formGroup]="formEnvironments">
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium">Nombre</label>
+                <input id="name" nz-input formControlName="name" placeholder="Ingrese el nombre de la sede" />
+                <div *ngIf="formEnvironments?.get('name')?.invalid && formEnvironments?.get('name')?.touched"
+                    class="text-red-500 text-sm">
+                    El nombre es requerido y debe tener al menos 3 caracteres. </div>
+            </div>
+
+         
+            <div class="mb-4">
+                <label for="capacity" class="block text-sm font-medium">capacity</label>
+                <input id="capacity" nz-input formControlName="capacity" placeholder="Ingrese la capacity" />
+                <div *ngIf="formEnvironments?.get('adress')?.invalid && formEnvironments.get('adress')?.touched"
+                    class="text-red-500 text-sm">
+                    Capacidad es requerida.
+                </div>
+            </div>
+
+       
+
+            <div class="mb-4">
+
+                <label for="environment_area_id" class=""> Area</label>
+                <nz-select formControlName="environment_area_id" placeholder="Seleccione un Area">
+                    <nz-option *ngFor="let area of areas " [nzValue]="area.id"
+                        [nzLabel]="area.name"></nz-option>
+
+                </nz-select>
+                @if (formEnvironments.get('environment_area_id')?.invalid &&
+                formEnvironments.get('environment_area_id')?.touched)
+                {
+                <div class="text-red-500 text-sm">
+                   Area es requerido.
+                </div>
+                }
+            </div>
+
+            <div class="mb-4">
+
+                <label for="headquarters_id" class=""> Sede de Formacion</label>
+                <nz-select formControlName="headquarters_id" placeholder="Seleccione una Sede">
+                    <nz-option *ngFor="let headquarter of headquarters " [nzValue]="headquarter.id"
+                        [nzLabel]="headquarter.name"></nz-option>
+
+                </nz-select>
+                @if (formEnvironments.get('headquarters_id')?.invalid &&
+                formEnvironments.get('headquarters_id')?.touched)
+                {
+                <div class="text-red-500 text-sm">
+                   Sede es requerido.
+                </div>
+                }
+            </div>
+
+        </form>
+    </ng-container>
+</nz-modal>

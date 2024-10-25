@@ -53,8 +53,9 @@
 
       <div>
         <label for="department" class="block text-sm font-medium">Departamento</label>
-        <nz-select formControlName="department" placeholder="Seleccione un departamento">
-          <nz-option *ngFor="let department of departments" [nzValue]="department.id" [nzLabel]="department.name"></nz-option>
+        <nz-select formControlName="department" nzPlaceHolder="Seleccione un departamento" >
+          <nz-option *ngFor="let department of departments" [nzValue]="department.id"
+            [nzLabel]="department.name"></nz-option>
         </nz-select>
         <div *ngIf="formHeadquarters?.get('department')?.invalid && formHeadquarters.get('department')?.touched">
           Departamento es requerido.
@@ -64,7 +65,7 @@
 
       <div class="mb-4">
         <label for="municipality" class="block text-sm font-medium">Municipio</label>
-        <nz-select formControlName="municipality_id" placeholder="Seleccione  un municipio">
+        <nz-select formControlName="municipality_id" nzPlaceHolder="Seleccione  un municipio" [nzDisabled]="!formHeadquarters?.get('department')?.value">
           <nz-option *ngFor="let municipality of municipalities" [nzValue]="municipality.id"
             [nzLabel]="municipality.name">
           </nz-option>
@@ -95,7 +96,7 @@
             Se requiere horario de apertura.
           </div>
         </div>
-        
+
 
         <div class="mb-4">
           <label for="closing_time" class="block text-sm font-medium">Hora de Cierre</label>
@@ -111,29 +112,18 @@
 
         <label for="trainingCentreId" class=""> Centro de Formacion</label>
         <nz-select formControlName="training_center_id" placeholder="Seleccione un centro">
-          <nz-option *ngFor="let centre of trainingCentres "  [nzValue]="centre.id"
-          [nzLabel]="centre.name" ></nz-option>
+          <nz-option *ngFor="let centre of trainingCentres " [nzValue]="centre.id" [nzLabel]="centre.name"></nz-option>
 
         </nz-select>
-        @if (formHeadquarters.get('training_center_id')?.invalid && formHeadquarters.get('training_center_id')?.touched) {
-          <div class="text-red-500 text-sm">
-            Centro de formación es requerido.
-          </div>
+        @if (formHeadquarters.get('training_center_id')?.invalid && formHeadquarters.get('training_center_id')?.touched)
+        {
+        <div class="text-red-500 text-sm">
+          Centro de formación es requerido.
+        </div>
         }
 
 
-
-
-
       </div>
-
-
-
-
-
-
-
-
 
     </form>
   </ng-container>
