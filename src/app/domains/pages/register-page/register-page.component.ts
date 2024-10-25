@@ -77,6 +77,7 @@ export class RegisterPageComponent implements OnInit {
      }
     }, 100);
   }
+
   formRegister = new FormGroup({
     identity_document: new  FormControl('', [Validators.required]),
     option:  new FormControl('', [Validators.required]),
@@ -89,14 +90,6 @@ export class RegisterPageComponent implements OnInit {
 
 
   registrarse(){
-    this.formRegister = this.formBuilder.group({
-      identity_document: new  FormControl('', [Validators.required]),
-      option:  new FormControl('', [Validators.required]),
-      first_name: new FormControl('', [Validators.required]),
-      last_name: new FormControl('',[Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-      confirmation_password:  new FormControl('', [Validators.required, Validators.minLength(8)]),
-    })
+    this.formRegister = this.formBuilder.group()
   }
 }
