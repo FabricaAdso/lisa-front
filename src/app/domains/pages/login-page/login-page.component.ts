@@ -25,6 +25,9 @@ export class LoginPageComponent implements OnDestroy {
   private auth_service = inject(AuthService);
   private token_service = inject(TokenService);
 
+  showModal: boolean = false;
+  errorMessage: string | null = null;
+
   login_sub:Subscription | null = null;
 
   button_value = signal(false);
@@ -83,10 +86,16 @@ export class LoginPageComponent implements OnDestroy {
         console.log(error);
         
         this.router.navigate(['auth/login'])
-        alert('Error de autenticacion')       
+        this.errorMessage = 'Documento o contraseña incorrectos';
+        this.showModal = true;      
       }
     })
 
+  }
+
+  closeModal() {
+    this.showModal = false; // Ocultar el modal
+    this.errorMessage = null; // Reiniciar el mensaje
   }
 
 
