@@ -28,10 +28,7 @@ export class ProgramService {
     return this.http.post<ProgramModel>(this.url, data);
   }
 
- /*  delete(transactionId: number): Observable<any> { 
-    const url = `${this.url}/${transactionId}`;
-    return this.http.delete(url);
-  } */
+
 
   delete(id:number){
     return this.http.delete(`${this.url}/${id}`)

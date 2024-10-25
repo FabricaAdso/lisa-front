@@ -1,4 +1,5 @@
 import { ProgramModel } from "./program.model";
+import { ShiftModel } from "./shift.model";
 
 export interface CourseModel {
     id:number;
@@ -6,5 +7,6 @@ export interface CourseModel {
     star_date:Date;
     end_date:Date;
     program_id:number;
-    program?:ProgramModel
+    program?:ProgramModel;
+    shift:ShiftModel[]
 }

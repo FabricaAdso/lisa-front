@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
+  FormBuilder,
   FormControl,
   FormGroup,
   NonNullableFormBuilder,
@@ -37,32 +38,40 @@ import { NzSelectComponent, NzSelectModule } from 'ng-zorro-antd/select';
   templateUrl: './add-program-form.component.html',
   styleUrl: './add-program-form.component.css'
 })
-export class AddProgramFormComponent {
+export class AddProgramFormComponent implements OnInit{
+
+  private  FormBuilder = inject(FormBuilder);
 
   @Input() isVisible:boolean = false;
 
   @Output() onCancel = new EventEmitter<void>();
 
-  simpleForm: FormGroup<{
-    programa: FormControl<string>;
-    tipo: FormControl<string>;
+  programform: FormGroup<{
+    program: FormControl<string>;
+    education_level: FormControl<string>;
   }>;
 
   constructor(private fb: NonNullableFormBuilder) {
-    this.simpleForm = this.fb.group({
-      programa: ['', [Validators.required]],
-      tipo: ['', [Validators.required]],
+
+    
+
+    this.programform = this.fb.group({
+      program: ['', [Validators.required]],
+      education_level: ['', [Validators.required]],
     });
+  }
+  ngOnInit(): void {
+    
   }
 
   submitForm(): void {
-    console.log('Formulario enviado', this.simpleForm.value);
+    console.log('Formulario enviado', this.programform.value);
   }
 
   resetForm(e: MouseEvent): void {
     e.preventDefault();
     this.onCancel.emit();
-    this.simpleForm.reset();
+    this.programform.reset();
   }
 
 }

@@ -3,7 +3,7 @@
     <h1 class="text-red-100">Mi formulario</h1>
   </ng-container>
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="simpleForm">
+    <form nz-form [formGroup]="programform">
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>Programa</nz-form-label>
         <nz-form-control
@@ -13,7 +13,7 @@
         >
           <input
             nz-input
-            formControlName="programa"
+            formControlName="program"
             placeholder="Ingresa el programa"
           />
         </nz-form-control>
@@ -23,21 +23,21 @@
         <nz-form-control
           [nzSpan]="12"
           nzHasFeedback
-          nzErrorTip="Por favor ingresa el tipo"
+          nzErrorTip="Por favor ingresa el nivel de formación"
         >
           <input
             nz-input
-            formControlName="tipo"
-            placeholder="Ingresa el tipo"
+            formControlName="education_level"
+            placeholder="Ingresa el nivel de formación"
           />
         </nz-form-control>
       </nz-form-item>
     </form>
   </ng-container>
   <ng-container *nzModalFooter>
-    <button nz-button nzType="primary" (click)="submitForm()" [disabled]="!simpleForm.valid">
+    <button nz-button nzType="primary" (click)="submitForm()" [disabled]="!programform.valid">
       Enviar
     </button>
-    <button nz-button (click)="resetForm($event)">Reiniciar</button>
+    <button nz-button (click)="resetForm($event)">Cancelar</button>
   </ng-container>
 </nz-modal>

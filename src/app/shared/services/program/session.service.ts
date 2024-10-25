@@ -28,10 +28,7 @@ export class SessionService {
     return this.http.post<SessionModel>(this.url, data);
   }
 
- /*  delete(transactionId: number): Observable<any> { 
-    const url = `${this.url}/${transactionId}`;
-    return this.http.delete(url);
-  } */
+ 
 
   delete(id:number){
     return this.http.delete(`${this.url}/${id}`)
