@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Inject, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthLayoutComponent } from '@domains/auth/auth-layout/auth-layout.component';
 import { DocumentTypeModel } from '@shared/models/document-type.model';
+import { UserModel } from '@shared/models/user.model';
 import { DocumentTypeService } from '@shared/services/document-type.service';
+import { UserService } from '@shared/services/user.service';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { forkJoin } from 'rxjs';
 
@@ -19,8 +21,15 @@ export class RegisterPageComponent implements OnInit {
   
   constructor(private router: Router){}
 
+  private formBuilder = Inject(FormBuilder);
+
   private document_type_service = inject(DocumentTypeService);
+  private user_service = inject(UserService)
+  
   document_type: DocumentTypeModel[] = [];
+  user:UserModel[] = []
+  
+
 
   ngOnInit(): void {
     this.getData();
@@ -37,40 +46,6 @@ export class RegisterPageComponent implements OnInit {
         data_sub.unsubscribe()
       }
     })
-    console.log(this.document_type)
-  }
-
-  formRegister = new FormGroup({
-    identity_document: new  FormControl('', [Validators.required]),
-    option:  new FormControl('', [Validators.required]),
-    first_name: new FormControl('', [Validators.required]),
-    last_name: new FormControl('',[Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confirmation_password:  new FormControl('', [Validators.required, Validators.minLength(8)]),
-  })
-
-
-  get fieldDocument(){
-    return this.formRegister.get('identity_document') as FormControl;
-  }
-  get fieldOption(){
-    return this.formRegister.get('option') as FormControl;
-  }
-  get fieldName(){
-    return this.formRegister.get('first_name') as FormControl;
-  }
-  get fieldLastName(){
-    return this.formRegister.get('last_name') as FormControl;
-  }
-  get fieldEmail(){
-    return this.formRegister.get('email') as FormControl;
-  }
-  get fieldPassword(){
-    return this.formRegister.get('password') as FormControl;
-  }
-  get fielPasswordConfirmation(){
-    return  this.formRegister.get('confirmation_password') as FormControl;
   }
 
   alert(){
@@ -93,13 +68,35 @@ export class RegisterPageComponent implements OnInit {
 
   valuePassword(){
     setTimeout(() => {
-      let password =  this.fieldPassword.value;
-      let confirmPassword =  this.fielPasswordConfirmation.value;
+      let password =  this.formRegister.get('password')!.value;
+      let confirmPassword =  this.formRegister.get('confirmation_password')!.value;
      if(password === confirmPassword){
       console.log('valido')
      }else{
       console.log('invalido')
      }
     }, 100);
+  }
+  formRegister = new FormGroup({
+    identity_document: new  FormControl('', [Validators.required]),
+    option:  new FormControl('', [Validators.required]),
+    first_name: new FormControl('', [Validators.required]),
+    last_name: new FormControl('',[Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    confirmation_password:  new FormControl('', [Validators.required, Validators.minLength(8)]),
+  })
+
+
+  registrarse(){
+    this.formRegister = this.formBuilder.group({
+      identity_document: new  FormControl('', [Validators.required]),
+      option:  new FormControl('', [Validators.required]),
+      first_name: new FormControl('', [Validators.required]),
+      last_name: new FormControl('',[Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+      confirmation_password:  new FormControl('', [Validators.required, Validators.minLength(8)]),
+    })
   }
 }
