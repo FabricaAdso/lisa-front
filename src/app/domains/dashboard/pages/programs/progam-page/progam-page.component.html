@@ -32,17 +32,18 @@
           </ng-template>
         </div>
         <div *nzSpaceItem>
-          <app-add-program-modal></app-add-program-modal>
+          <app-add-program-modal (programData)="crearPrograma($event)"></app-add-program-modal>
         </div>
       </div>
     </div>
 
-      <div class="mid-table" *nzSpaceItem>
-        <nz-table
+      <div class="mid-table" *nzSpaceItem >
+        <div>
+          <nz-table
           #basicTable
           nzBordered=""
-          [nzData]="listOfData"
-          nzSize="small"
+           [nzPageSize]=10         [nzData]="program"
+  [nzShowPagination]="true"  nzSize="small" 
         >
           <thead>
             <tr>
@@ -57,21 +58,23 @@
             <tr>
               <td>{{ data.id }}</td>
               <td>{{ data.name }}</td>
-              <td>{{ data.education_level_id }}</td>
+              <td>{{ data.education_level?.name}}</td>
               <td>
                 <a>Action 一 {{ data.id }}</a>
                 <nz-divider nzType="vertical"></nz-divider>
-                <a
+                 <a
                   nz-popconfirm
                   nzPopconfirmTitle="Sure to delete?"
-                  (nzOnConfirm)="deleteRow(data.id)"
-                  >Delete</a
+                  (nzOnConfirm)="delectProgram(data.id)"
+                  >Delete</a 
                 >
               </td>
             </tr>
             }
           </tbody>
         </nz-table>
+        </div>
+       
       </div>
 
       <div nz-flex nzJustify="flex-end" nzAlign="center" *nzSpaceItem >

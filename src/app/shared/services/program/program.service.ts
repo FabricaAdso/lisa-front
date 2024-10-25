@@ -1,8 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from '@env/environment.development';
 import { CreateProgramDto } from '@shared/dto/program/create-program-dto';
 import { UpdateProgramDto } from '@shared/dto/program/update-program-dto';
 import { ProgramModel } from '@shared/models/program.model';
+
+const{API_URL} = environment;
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +19,7 @@ export class ProgramService {
   private http = inject(HttpClient);
 
 
-  url:string = `transaccions`;
+  url:string = `programs`;
 
   
 

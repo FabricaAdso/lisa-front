@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { AddProgramFormComponent } from "../../components/add-program-form/add-program-form.component";
+import { ProgramModel } from '@shared/models/program.model';
 
 @Component({
   selector: 'app-add-program-modal',
@@ -15,7 +16,7 @@ import { AddProgramFormComponent } from "../../components/add-program-form/add-p
 export class AddProgramModalComponent {
   isVisible = false;
   isOkLoading = false;
-
+  @Output() programData = new EventEmitter<ProgramModel>();
   showModal(): void {
     this.isVisible = true;
   }
