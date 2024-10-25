@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -6,24 +6,23 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiRolesService{
-  private apiUrl = 'http://localhost:8000/api'; // URL del backend de Laravel
-
-  constructor(private http: HttpClient) {}
+  
+  private http = inject(HttpClient);
 
   // Obtener todos los usuarios
   getUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users`);
+    return this.http.get(`users`);
   }
 
   // Activar o desactivar un usuario
   toggleUserStatus(userId: string, isActive: boolean): Observable<any> {
-    const url = `${this.apiUrl}/users/${userId}/deactivate`;
+    const url = `users/${userId}/deactivate`;
     return this.http.post(url, { active: isActive });
   }
 
   // Asignar roles a un usuario
   toggleUserRole(userId: string, roles: string[]): Observable<any> {
-    const url = `${this.apiUrl}/users/${userId}/toggle-role`;
+    const url = `users/${userId}/toggle-role`;
     return this.http.post(url, { roles });
   }
 }
