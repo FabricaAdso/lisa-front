@@ -16,9 +16,9 @@ export const routes: Routes = [
                 loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.RolesPageComponent)
             },
             {
-                path:'areas',
+                path:'environmentsArea',
                 title:'Administrar Areas',
-                loadComponent:()=>import('@domains/dashboard/pages/area/area-page/area-page.component').then(c=>c.AreaPageComponent)
+                loadComponent:()=>import('@domains/dashboard/pages/area/area.component').then(c=>c.AreaComponent)
             },
             // http://127.0.0.1:4200/dashboard/centres
             {
