@@ -35,10 +35,23 @@ export class NzDemoModalBasicComponent implements OnInit {
     this.getUsers();
   }
 
+  asociar(){
+    for  (let i = 0; i < this.allRoles.length; i++) {
+      console.log(this.allRoles[i], i)
+    }
+
+    this.allRoles[0] 
+    
+
+  }
   // Cargar los usuarios desde el servicio
   getUsers(): void {
     this.userService.getUsers().subscribe({
-      next: (data) => this.users = data,
+      next: (data) =>{
+        this.users = data
+        console.log(data);
+        
+      }, 
       error: (error) => console.error('Error al obtener usuarios', error)
     });
   }
@@ -46,7 +59,7 @@ export class NzDemoModalBasicComponent implements OnInit {
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
-    this.selectedRoles = [...user.roles];
+    this.selectedRoles = {...user.roles};
     this.isActive = user.active;
   }
 
@@ -78,4 +91,6 @@ export class NzDemoModalBasicComponent implements OnInit {
       error: (error) => console.error('Error al actualizar estado de usuario', error)
     });
   }
+
+
 }
