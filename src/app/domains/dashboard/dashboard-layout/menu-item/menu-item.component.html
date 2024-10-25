@@ -1,19 +1,30 @@
-<ul nz-menu nzMode="inline" class="text-green-500 text-lg">
+<ul nz-menu nzMode="inline" class="text-green-500 text-lg hidden mobile:block">
   <!-- Template genérico para la creación de submenús infinitos -->
   <ng-template #renderSubMenu let-subMenuItems>
-    <!-- Itera sobre cada elemento del submenú -->
     <ng-container *ngFor="let subItem of subMenuItems">
-      <!-- Si el elemento no tiene submenú, renderiza un elemento de menú simple -->
-      <li *ngIf="!subItem.subMenu" nz-menu-item class="text-green-500 hover:text-gray-300">
-        <!-- Icono y tema del ítem del menú -->
-        <span nz-icon [nzType]="subItem.icon" [nzTheme]="subItem.theme" class="text-lg mr-2"></span>
-        <!-- Título del ítem del menú -->
+      <!-- Elemento de menú simple -->
+      <li
+        *ngIf="!subItem.subMenu"
+        nz-menu-item
+        class="text-black hover:text-green-500 transition-colors duration-100 after:border-r-green-500"
+      >
+        <span
+          nz-icon
+          [nzType]="subItem.icon"
+          [nzTheme]="subItem.theme"
+          class="text-xl mr-2"
+        ></span>
         <span>{{ subItem.title }}</span>
       </li>
 
-      <!-- Si el elemento tiene submenú, renderiza un submenú -->
-      <li *ngIf="subItem.subMenu" nz-submenu [nzTitle]="subItem.title" [nzIcon]="subItem.icon!" class="text-green-500">
-        <!-- Renderiza de manera recursiva los submenús anidados -->
+      <!-- Submenú -->
+      <li
+        *ngIf="subItem.subMenu"
+        nz-submenu
+        [nzTitle]="subItem.title"
+        [nzIcon]="subItem.icon!"
+        class="text-green-500"
+      >
         <ul>
           <ng-container
             *ngTemplateOutlet="
@@ -26,6 +37,8 @@
     </ng-container>
   </ng-template>
 
-  <!-- Inicializa el menú con los elementos principales, usando el template para iterar sobre los items -->
-  <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"></ng-container>
+  <!-- Inicializa el menú -->
+  <ng-container
+    *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"
+  ></ng-container>
 </ul>

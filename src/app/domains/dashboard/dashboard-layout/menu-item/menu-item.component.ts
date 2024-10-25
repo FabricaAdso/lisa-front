@@ -40,8 +40,8 @@ interface MenuItem {
 export class MenuItemsComponent {
   menuItems: MenuItem[] = [
     {
-      title: 'Dashboard',
-      icon: 'dashboard', // Icono personalizado
+      title: 'Principal',
+      icon: 'home', // Icono personalizado
       route: '/dashboard',
       theme: '',
     },

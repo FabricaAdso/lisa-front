@@ -18,12 +18,14 @@ import { NzMenuModule } from 'ng-zorro-antd/menu'; // Importa el módulo de men�
 })
 export class NavBarComponent {
   isLoggedIn = true; // Estado que indica si el usuario está logueado (true o false)
-  userName = 'Yesid'; // Nombre del usuario logueado, se puede modificar según el usuario
+  userName = 'Yesid Jimenez'; // Nombre del usuario logueado, se puede modificar según el usuario
 
   // Método para simular el inicio de sesión
   login() {
     console.log('Iniciar sesión...'); // Muestra un mensaje en la consola cuando se llama a este método
     // Aquí puedes implementar la lógica de inicio de sesión (por ejemplo, autenticación con API)
-    this.isLoggedIn = false; // Cambia el estado de inicio de sesión a verdadero (simulación)
+    this.isLoggedIn = true; // Cambia el estado de inicio de sesión a verdadero (simulación)
   }
+  Image_logo: string = 'assets/images/logo_lol.png';
+  UserImage: string = 'assets/images/userimage.jpeg'
 }
