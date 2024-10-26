@@ -3,7 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
 import { CreateProgramDto } from '@shared/dto/program/create-program-dto';
 import { UpdateProgramDto } from '@shared/dto/program/update-program-dto';
+import { getQueryUrl } from '@shared/functions/url.functions';
 import { ProgramModel } from '@shared/models/program.model';
+import { QueryUrl } from '@shared/models/query-url.model';
 
 const{API_URL} = environment;
 
@@ -23,10 +25,10 @@ export class ProgramService {
 
   
 
-  getAll(){
-    return this.http.get<ProgramModel[]>(this.url)
-   
-    
+  getAll(data?:QueryUrl){
+    let url:string = getQueryUrl(this.url,data)
+    console.log(url);
+    return this.http.get<ProgramModel[]>(url);
   }
 
   create(data:CreateProgramDto){
