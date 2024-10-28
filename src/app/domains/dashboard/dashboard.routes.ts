@@ -8,12 +8,12 @@ export const routes: Routes = [
             {
                 path:'',
                 pathMatch:'full',
-                redirectTo:'login',
+                redirectTo:'roles',
             },
             {
                 path:'roles',
                 title:'Administrar roles',
-                loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.RolesPageComponent)
+                loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.NzDemoModalBasicComponent)
             },
             {
                 path:'environments-area',

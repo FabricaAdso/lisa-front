@@ -8,11 +8,11 @@ import es from '@angular/common/locales/es';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { apiInterceptor } from '@domains/dashboard/shared/interceptors/api.interceptor';
-import { tokenInterceptor } from '@domains/dashboard/shared/interceptors/token.interceptor';
+import { apiInterceptor } from '@shared/interceptor/api.interceptor';
+import { tokenInterceptor } from '@shared/interceptor/token.interceptor';
 
 registerLocaleData(es);
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideNzI18n(es_ES), importProvidersFrom(FormsModule), provideAnimationsAsync(),provideHttpClient(withInterceptors([apiInterceptor,tokenInterceptor]))]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideNzI18n(es_ES), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient(withInterceptors([apiInterceptor,tokenInterceptor]))]
 };

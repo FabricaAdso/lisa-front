@@ -2,26 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { LoginPageComponent } from "./domains/pages/login-page/login-page.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet, 
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NzModalModule,
-    NzTableModule,
-    NzButtonModule,
-    NzFormModule,
-    NzInputModule
-  ],
+  imports: [RouterOutlet, LoginPageComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

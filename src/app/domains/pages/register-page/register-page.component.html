@@ -1,0 +1,144 @@
+<div class="h-max p-6 space-y-4" >
+    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-dark">
+        Completa el registro
+    </h1>
+    <form [formGroup]="formRegister" class="space-y-7 max-sm:space-y-2 max-xl:space-y-2" (ngSubmit)="onSubmit()">
+        <div class="flex justify-between gap-1 max-sm:items-end">
+            <div class="space-y-3 mb-1">
+                <nz-form-label for="number" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Numero de documento</nz-form-label>
+            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorDoc">
+                <input
+                type="text" name="identity_document" id="identity-document" 
+                formControlName="identity_document"
+                class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="1061701851" required="">
+                <ng-template #errorDoc>
+                    @if (formRegister.controls.identity_document.touched) {
+                        @if (formRegister.controls.identity_document.hasError('required')) {
+                            <span>Ingresa tu documento</span>
+                        }
+                    }
+                </ng-template>
+            </nz-form-control>
+            </div>
+
+            <div class="none flex-col justify-end ">
+                <nz-form-label for="option" class="flex felx-start mb-3 text-sm font-medium text-gray-900 dark:text-dark">Tipo documento</nz-form-label>
+                <nz-form-control nzValidateStatus="error"  nzHasFeedback  [nzErrorTip]="errorOpt">
+                    <select id="option" name="document_type_id" 
+                    formControlName="document_type_id"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        @for (item of document_type; track $index) {
+                            <option [value]="item.id">{{item.name}}</option>
+                        }
+                      </select>
+                <ng-template #errorOpt>
+                    @if (formRegister.controls.document_type_id.touched) {
+                        @if (formRegister.controls.document_type_id.hasError('required')) {
+                            <span>Selecciona tu documento</span>
+                        }
+                    }
+                </ng-template>
+                </nz-form-control>
+            </div>    
+
+        </div>
+        <div class="flex justify-between gap-1 max-sm:items-end">
+            <div>
+                <nz-form-label for="name" class="w-full flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Nombre</nz-form-label>
+                <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorName">
+                    <input type="name" name="first_name" id="first-name" 
+                    formControlName="first_name"
+                    class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Jhon" required="">
+                <ng-template #errorName>
+                    @if (formRegister.controls.first_name.touched) {
+                        @if (formRegister.controls.first_name.hasError('required')) {
+                            <span>Ingresa tu nombre</span>
+                        }
+                    }
+                </ng-template>
+                </nz-form-control>
+            </div>
+            <div>
+                <nz-form-label for="name" class="w-full flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Segundo nombre</nz-form-label>
+                <input type="name" name="name" id="middle-name" class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Alexander">
+            </div>
+        </div>
+        <div class="flex justify-between gap-1 max-sm:items-end">
+            <div>
+                <nz-form-label for="name" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Apellido</nz-form-label>
+                <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorLastName">
+                    <input type="name" name="last_name" id="last-name" 
+                    formControlName="last_name"
+                    class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Urbano" required="">
+                    <ng-template #errorLastName>
+                        @if(formRegister.controls.last_name.touched){
+                            @if(formRegister.controls.last_name.hasError('required')){
+                                <span>Ingresa tu apellido</span>
+                            }
+                        }
+                    </ng-template>
+                </nz-form-control>
+            </div>
+            <div>
+                <nz-form-label for="name" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Segundo apellido</nz-form-label>
+                <input type="name" name="name" id="second-last-name" class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pardo">
+            </div>
+        </div>
+        <div>
+            <nz-form-label for="email" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Correo electronico</nz-form-label>
+            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorEmail">
+                <input type="email" name="email" id="email" 
+                formControlName="email"
+                class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="test@example.com" required="">
+                <ng-template #errorEmail>
+                    @if(formRegister.controls.email.touched){
+                        @if(formRegister.controls.email.hasError('email')){
+                            <span>Ingresa un correo electronico valido</span>
+                        }
+                        @if(formRegister.controls.email.hasError('required')){
+                            <span>Ingresa tu correo electronico</span>
+                        }
+                    }
+                </ng-template>
+            </nz-form-control>                
+        </div>
+        <div>
+            <nz-form-label for="password" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Contraseña</nz-form-label>
+            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorPassword">
+                <input type="password" name="password" id="password" placeholder="••••••••" 
+                formControlName="password"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                <ng-template #errorPassword>
+                    @if(formRegister.controls.password.touched){
+                        @if(formRegister.controls.password.hasError('required')){
+                            <span>Ingresa una contraseña</span>
+                        }@if(formRegister.controls.password.hasError('minlength')){
+                            <span>La contraseña debe tener al menos 8 caracteres</span>
+                            }
+                    }
+                </ng-template>
+            </nz-form-control>
+        </div>
+        <div>
+            <nz-form-label for="password" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Confirmar contraseña</nz-form-label>
+            <nz-form-control>
+                <input [style]="{'borde':'fielPasswordConfirmation.invalid'}" (keypress)="valuePassword()"  type="password" name="password_confirmation" id="confirmation-password" placeholder="••••••••" 
+                formControlName="password_confirmation"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+            </nz-form-control>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                  <input id="remember" aria-describedby="remember" type="checkbox" class=" w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+                </div>
+                <div class="ml-3 text-sm">
+                  <label for="remember" class="text-gray-500 dark:text-gray-300" required=""> Remember me</label>
+                </div>
+            </div>
+            <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+        </div>
+        <button  type="submit" class="border border-black w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg  px-5 py-2.5 text-center dark:bg-primary-600 hover:text-[#00AF00] dark:focus:ring-primary-800 text-lg">Guardar</button>
+    </form>
+</div>
