@@ -1,0 +1,11 @@
+.upload-button{
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+   }
+
+   .bot-button1{
+    display: flex;
+    justify-content: flex-end;
+
+}

@@ -1,0 +1,6 @@
+
+
+<button nz-button nzType="primary" (click)="showModal()">
+    <span>Añadir Nuevo</span>
+  </button>
+<app-add-program-form [isVisible]="isVisible" (onCancel)="handleCancel()" (programData)="programData.emit($event)"></app-add-program-form>

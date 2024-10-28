@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateHeadquartersDTO } from '@domains/dashboard/shared/dto/create-headquartersDTO';
-import { UpdateHeadquartersDTO } from '@domains/dashboard/shared/dto/update-headquartersDTO';
-import { despartamentosModel } from '@domains/dashboard/shared/models/Departamentos.model';
-import { municipiosModel } from '@domains/dashboard/shared/models/municipios.model';
-import { SedeModel } from '@domains/dashboard/shared/models/Sedemodel';
-import { TrainingCentreModel } from '@domains/dashboard/shared/models/training-centre-model';
-import { HeadquartersService } from '@domains/dashboard/shared/services/headquarters.service';
-import { LocationService } from '@domains/dashboard/shared/services/location.service';
-import { TrainingCentreService } from '@domains/dashboard/shared/services/training-centre.service';
+import { CreateHeadquartersDTO } from '@shared/dto/create-headquartersDTO';
+import { UpdateHeadquartersDTO } from '@shared/dto/update-headquartersDTO';
+import { despartamentosModel } from '@shared/models/Departamentos.model';
+import { municipiosModel } from '@shared/models/municipios.model';
+import { SedeModel } from '@shared/models/Sedemodel';
+import { TrainingCentreModel } from '@shared/models/training-centre-model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { log } from 'ng-zorro-antd/core/logger';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -23,6 +20,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 
+import { HeadquartersService } from '@shared/services/headquarters.service';
+import { LocationService } from '@shared/services/location.service';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 
 
 @Component({
