@@ -31,6 +31,7 @@ interface MenuItem {
     CommonModule,
     NavBarComponent,
     MenuItemsComponent,
+    RouterOutlet
   ],
   viewProviders: [provideIcons({ featherAirplay, heroUsers })],
   templateUrl: './dashboard-layout.component.html',
