@@ -10,11 +10,12 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule, NzInputModule ],
+  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule, NzInputModule,NzIconModule ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -26,6 +27,7 @@ export class LoginPageComponent implements OnDestroy {
   private auth_service = inject(AuthService);
   private token_service = inject(TokenService);
 
+  passwordVisible: boolean = true
   showModal: boolean = false;
   errorMessage: string | null = null;
 
@@ -99,9 +101,6 @@ export class LoginPageComponent implements OnDestroy {
     this.errorMessage = null; // Reiniciar el mensaje
   }
 
-  passwordVisible(){
-    const passwordVisible = true
-  }
-
+  
 
 }

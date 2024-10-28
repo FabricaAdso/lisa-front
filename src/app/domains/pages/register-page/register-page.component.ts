@@ -9,13 +9,16 @@ import { UserModel } from '@shared/models/user.model';
 import { DocumentTypeService } from '@shared/services/document-type.service';
 import { UserService } from '@shared/services/user.service';
 import { log } from 'ng-zorro-antd/core/logger';
+import { tuple } from 'ng-zorro-antd/core/types';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule],
+  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule,NzInputModule,NzIconModule],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.css'
 })
@@ -28,8 +31,11 @@ export class RegisterPageComponent implements OnInit {
   private document_type_service = inject(DocumentTypeService);
   private user_service = inject(UserService)
   
+  passwordVisible:boolean = false
   document_type: DocumentTypeModel[] = [];
   user:UserModel[] = []
+  showModal: boolean = false;
+  errorMessage: string | null = null;
   
 
 
@@ -54,8 +60,9 @@ export class RegisterPageComponent implements OnInit {
     alert('Usuario creado correctamente')
   }
 
-  go(){
-    this.router.navigate(['auth/login']);
+  closeModal() {
+    this.showModal = false; // Ocultar el modal
+    this.errorMessage = null; // Reiniciar el mensaje
   }
 
   onSubmit(){
@@ -67,10 +74,13 @@ export class RegisterPageComponent implements OnInit {
     this.user_service.create(register).subscribe({
       next: (data) => {
         let user = [...this.user,data]
+        this.router.navigate(['auth/login']);
       }
     })
     }else{
       this.formRegister.markAllAsTouched()
+      this.errorMessage = 'Registrate y crea un usuario'
+      this.showModal = true
     }
   }
 
