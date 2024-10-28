@@ -11,13 +11,6 @@ import { CommonModule } from '@angular/common';
 import { MenuItemsComponent } from './menu-item/menu-item.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 
-interface MenuItem {
-  title: string;
-  icon?: string;
-  route: string | null;
-  subMenu?: MenuItem[];
-}
-
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
@@ -31,7 +24,8 @@ interface MenuItem {
     CommonModule,
     NavBarComponent,
     MenuItemsComponent,
-    RouterOutlet
+    RouterOutlet,
+    NzBreadCrumbModule
   ],
   viewProviders: [provideIcons({ featherAirplay, heroUsers })],
   templateUrl: './dashboard-layout.component.html',

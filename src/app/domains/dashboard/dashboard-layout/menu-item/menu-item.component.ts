@@ -30,7 +30,7 @@ interface MenuItem {
     NgIconComponent,
     CommonModule,
     NavBarComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.css'], // Corregido el typo en styleUrls
@@ -81,6 +81,12 @@ export class MenuItemsComponent {
       title: 'Curso',
       icon: 'book', // Icono personalizado
       route: 'course',
+      theme: 'outline',
+    },
+    {
+      title: 'Sesiones',
+      icon: 'calendar', // Icono personalizado
+      route: 'session',
       theme: 'outline',
     },
   ];
