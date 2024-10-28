@@ -26,6 +26,6 @@ export class NavBarComponent {
     // Aquí puedes implementar la lógica de inicio de sesión (por ejemplo, autenticación con API)
     this.isLoggedIn = true; // Cambia el estado de inicio de sesión a verdadero (simulación)
   }
-  Image_logo: string = 'assets/images/logo_lol.png';
+  Image_logo: string = 'assets/images/logosena.png';
   UserImage: string = 'assets/images/userimage.jpeg'
 }

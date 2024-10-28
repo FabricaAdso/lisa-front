@@ -8,13 +8,16 @@
         nz-menu-item
         class="text-black hover:text-green-500 transition-colors duration-100 after:border-r-green-500"
       >
-        <span
-          nz-icon
-          [nzType]="subItem.icon"
-          [nzTheme]="subItem.theme"
-          class="text-xl mr-2"
-        ></span>
-        <span>{{ subItem.title }}</span>
+        <a [routerLink]="subItem.route" routerLinkActive="active">
+          <!-- Enlace con routerLink -->
+          <span
+            nz-icon
+            [nzType]="subItem.icon"
+            [nzTheme]="subItem.theme"
+            class="text-xl mr-2"
+          ></span>
+          <span>{{ subItem.title }}</span>
+        </a>
       </li>
 
       <!-- Submenú -->

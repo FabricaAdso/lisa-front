@@ -3,7 +3,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers } from '@ng-icons/heroicons/outline';
@@ -30,6 +30,7 @@ interface MenuItem {
     NgIconComponent,
     CommonModule,
     NavBarComponent,
+    RouterModule
   ],
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.css'], // Corregido el typo en styleUrls
@@ -38,30 +39,49 @@ interface MenuItem {
   ],
 })
 export class MenuItemsComponent {
+  // Ahora menuItems es una propiedad de la clase, accesible en la plantilla
   menuItems: MenuItem[] = [
     {
-      title: 'Principal',
+      title: 'Roles',
+      icon: 'team', // Icono personalizado
+      route: 'roles',
+      theme: 'outline',
+    },
+    {
+      title: 'Administrar Áreas',
+      icon: 'appstore', // Icono personalizado
+      route: 'environments-area',
+      theme: 'outline',
+    },
+    {
+      title: 'Training Centres',
+      icon: 'bank', // Icono personalizado
+      route: 'training-centers',
+      theme: 'outline',
+    },
+    {
+      title: 'Sedes',
       icon: 'home', // Icono personalizado
-      route: '/dashboard',
-      theme: '',
+      route: 'headquarters',
+      theme: 'outline',
+    },
+    {
+      title: 'Ambientes',
+      icon: 'environment', // Icono personalizado
+      route: 'environments',
+      theme: 'outline',
     },
     {
       title: 'Programas',
       icon: 'desktop', // Icono personalizado
-      route: null,
-      theme: '',
+      route: 'programs',
+      theme: 'outline',
     },
     {
-      title: 'Roles',
-      icon: 'team', // Icono personalizado
-      route: null,
-      theme: '',
-    },
-    {
-      title: 'Perfil',
-      icon: 'user', // Icono personalizado
-      route: null,
-      theme: '',
+      title: 'Curso',
+      icon: 'book', // Icono personalizado
+      route: 'course',
+      theme: 'outline',
     },
   ];
 }
