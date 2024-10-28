@@ -1,0 +1,45 @@
+<p>area works!</p>
+
+<button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
+
+<nz-table #basicTable [nzData]="areas">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of basicTable.data">
+            <td>{{data.id}}</td>
+            <td>{{data.name}}</td>
+            <td>
+                <button nz-button nzType="default" (click)="openModal(data)">Editar</button>
+                <button nz-button nzDanger (click)="deleteArea(data.id)" >Eliminar</button>
+
+
+
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isModalVisible" nzTitle="{{indexArea !== null ? 'editar' :'crear'}} Area"
+    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()">
+    <ng-container *nzModalContent>
+
+        <form nz-form *ngIf="formAreas" [formGroup]="formAreas">
+
+            <label for="name">Nombre del Area</label>
+            <input nz-input formControlName="name" id="name" placeholder="Nombre del area" />
+
+            <!-- Validación del campo de nombre -->
+            <div *ngIf="formAreas.controls['name'].invalid && formAreas.controls['name'].touched">
+                <small class="text-red-500">El nombre es requerido y debe tener al menos 5 caracteres</small>
+            </div>
+
+        </form>
+
+    </ng-container>
+</nz-modal>

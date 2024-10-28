@@ -1,0 +1,40 @@
+<button nz-button nzType="primary" (click)="openModal()">Ingresa una Sede</button>
+
+
+<nz-table #basicTable [nzData]="headquarters" [nzPageSize]="5">
+  <thead>
+    <tr>
+      <th nzWidth="18%">Nombre</th>
+      <th nzWidth="15%">Centro de Formación</th>
+      <th nzWidth="15%">Departamento</th>
+      <th nzWidth="15%">Municipio</th>
+      <th nzWidth="15%">Dirección</th>
+      <th nzWidth="10%">Hora de Apertura</th>
+      <th nzWidth="10%">Hora de cierre</th>
+      <th nzWidth="15%">acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of headquarters; track $index) {
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>{{ item.training_center.name}}</td>
+      <td>{{ item.municipality.departament.name }}</td>
+      <td>{{ item.municipality.name }}</td>
+      <td>{{ item.adress }}</td>
+      <td>{{ item.opening_time }}</td>
+      <td>{{ item.closing_time }}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="openModal(item)">Edit</button>
+        <button nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
+          Delete
+        </button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</nz-table>
+
+<app-headcuarter-form></app-headcuarter-form>
+<!-- Modal para crear o editar sede -->
+<!-- <nz-modal [(nzVisible)]="isModalVisible" nzTitle="Headquarters" (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formHeadquarters.invalid"> -->

@@ -1,1 +1,52 @@
-<p>roles-page works!</p>
+<section id="all">
+  <nz-table #basicTable [nzData]="users">
+    <thead>
+      <tr>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Roles</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.identity_document }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>
+          <span *ngFor="let role of user.roles; let i = index" >
+            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
+          </span>
+        </td>
+        <td>
+          <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
+          <button (click)="asociar()" (click)="toggleUserStatus(user)" class="btn btn-secondary">
+            {{ user.active ? 'Desactivar' : 'Activar' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</section>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles y Estado" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <div class="modal-content">
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="roles">Seleccionar Roles</label>
+            <select id="roles" [(ngModel)]="selectedRoles" name="roles" class="form-control" multiple>
+              <option *ngFor="let role of allRoles" [value]="role">{{ role }}</option>
+            </select>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input">
+            <label for="active" class="form-check-label">Usuario Activo</label>
+          </div>
+        </form>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
