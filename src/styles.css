@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-layout-sider-trigger {
+  @apply bg-green-500
+  text-white
+  border
+  border-t-green-500
+  text-2xl
+  p-2;
+}

@@ -5,8 +5,7 @@ export const routes: Routes = [
     {
         path:'',
         pathMatch:'full',
-        redirectTo:'auth'
-        
+        redirectTo:'dashboard'
     },
     {
         path:'auth',
