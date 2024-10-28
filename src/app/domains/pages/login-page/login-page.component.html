@@ -1,0 +1,92 @@
+<div class="h-max p-6 space-y-4 md:space-y-6 sm:p-8">
+    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-dark">Ingresa tus
+        datos</h1>
+    <form (input)="stateButton()" (submit)="login()" class="space-y-7" nz-form>
+        <div>
+            <nz-form-label for="number" class="flex flex-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Numero de documento
+            </nz-form-label>
+            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorDoc">
+                <input type="string" name="identity_document" id="number" 
+                [formControl]="fieldDocument"
+                    class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="123456789">
+                <ng-template #errorDoc>
+                    @if(fieldDocument.touched){
+                    @if(fieldDocument.hasError('required')){
+                    <span>Ingresa tu documento de identidad</span>
+                    }
+                    }
+                </ng-template>
+            </nz-form-control>
+        </div>
+        <div>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                Contraseña
+            </label>
+            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorPassword">
+                <input type="password" name="password" id="password" placeholder="••••••••"
+                    [formControl]="fieldPassword"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required>
+                <ng-template #errorPassword>
+                    @if(fieldPassword.touched){
+                    @if(fieldPassword.hasError('required')){
+                    <span>Ingresa tu contraseña</span>
+                    }
+                    }
+                </ng-template>
+            </nz-form-control>
+        </div>
+        <div class="flex items-center justify-between">
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                    <input id="remember" aria-describedby="remember" type="checkbox"
+                        class=" w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                        required>
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="remember" class="text-gray-500 dark:text-gray-300">
+                        Remember me
+                    </label>
+                </div>
+            </div>
+            <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                Forgot password?
+            </a>
+        </div>
+        <button #buttonView (click)="onSubmit()" id="button-login" type="submit"
+        [ngClass]="{'hover:text-[#00AF00]': button_value(), 'bg-gray-100  hover:text-[#a7a7a7]': !button_value()}"
+            class="border border-black w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-primary-600 hover:text-[#00AF00] dark:focus:ring-primary-800 text-lg">
+            Sign in
+        </button>
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            Don’t have an account yet?
+            <a (click)="go()" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                Sign up
+            </a>
+        </p>
+    </form>
+</div>
+
+@if (showModal) {
+<div class="fixed inset-0 flex items-center justify-center z-50" >
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg z-10 p-6 max-w-sm mx-auto">
+        <div class="flex items-center">
+            <svg class="flex-shrink-0 w-4 h-4 me-2 dark:text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-800 dark:text-gray-300">Error</h3>
+        </div>
+        <div class="mt-2 mb-4 text-sm text-gray-800 dark:text-gray-300">
+            {{errorMessage}}
+        </div>
+        <div class="flex justify-start">
+            <button (click)="closeModal()" type="button" class="text-gray-800 bg-transparent border border-gray-700 hover:bg-gray-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-800 dark:text-gray-300 dark:hover:text-white">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+}
