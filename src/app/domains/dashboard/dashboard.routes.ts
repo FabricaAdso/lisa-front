@@ -1,4 +1,3 @@
-import { group } from '@angular/animations';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -14,7 +13,7 @@ export const routes: Routes = [
             {
                 path: 'roles',
                 title: 'Administrar roles',
-                loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.NzDemoModalBasicComponent)
+                loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent)
             },
             {
                 path: 'environments-area',

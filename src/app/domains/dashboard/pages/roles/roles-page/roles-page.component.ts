@@ -6,34 +6,30 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
-interface Person {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
+import { NzOptionComponent, NzSelectModule} from 'ng-zorro-antd/select';
+
 @Component({
   selector: 'nz-demo-modal-basic',
   standalone: true,
-  imports: [FormsModule, CommonModule, NzButtonModule, NzModalModule,NzTableModule,NzDividerModule,NzOptionComponent],
+  imports: [FormsModule, CommonModule, NzButtonModule, NzModalModule,NzTableModule,NzDividerModule,NzOptionComponent,NzSelectModule],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
-export class NzDemoModalBasicComponent implements OnInit {
+export class RolesComponent implements OnInit {
   isVisible = false;
-  users: any[] = []; // Lista de usuarios para la tabla
+  users: any[] = [];
   selectedUser: any;
   selectedRoles: string[] = [];
-  isActive: boolean = false;
+  isActive: boolean = true;
   allRoles = ['Administrador', 'Aprendiz', 'Instructor', 'Coordinador Academico'];
 
   constructor(private userService: ApiRolesService) {}
 
   ngOnInit(): void {
+  
     this.getUsers();
+   
   }
-
   asociar(){
     for  (let i = 0; i < this.allRoles.length; i++) {
       console.log(this.allRoles[i], i)
@@ -59,7 +55,7 @@ export class NzDemoModalBasicComponent implements OnInit {
     this.isVisible = true;
     this.selectedUser = user;
     this.selectedRoles = {...user.roles};
-    this.isActive = user.active;
+    this.isActive = user.desactive;
   }
 
   handleOk(): void {
@@ -84,8 +80,8 @@ export class NzDemoModalBasicComponent implements OnInit {
   }
 
   toggleUserStatus(user: any): void {
-    user.active = !user.active;
-    this.userService.toggleUserStatus(user.id, user.active).subscribe({
+    user.desactive = !user.desactive;
+    this.userService.toggleUserStatus(user.id, user.desactive).subscribe({
       next: () => console.log('Estado de usuario actualizado'),
       error: (error) => console.error('Error al actualizar estado de usuario', error)
     });

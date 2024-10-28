@@ -127,3 +127,6 @@ button, html [type=button], [type=reset], [type=submit] {
 [nz-button]:hover{
   background-color: #026802;
 }
+nz-select {
+  width: 100%;
+}
