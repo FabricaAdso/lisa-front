@@ -35,6 +35,23 @@ export const routes: Routes = [
                 path:'environments',
                 title:'Administrar Ambientes',
                 loadComponent:()=>import('@domains/dashboard/pages/environment/environment.component').then(c=>c.EnvironmentComponent)
+            },
+            {
+                path:'programs',
+                title:'Programas',
+                loadComponent:()=>import('@domains/dashboard/pages/programs/progam-page/progam-page.component').then(c=>c.ProgamPageComponent)
+            },
+
+            {
+                path:'session',
+                title:'session',
+                loadComponent:()=>import('@domains/dashboard/pages/programs/session-page/session-page.component').then(c=>c.SessionPageComponent)
+            },
+
+            {
+                path:'course',
+                title:'course',
+                loadComponent:()=>import('@domains/dashboard/pages/programs//course-page/course-page.component').then(c=>c.CoursePageComponent)
             }
         ]
     }

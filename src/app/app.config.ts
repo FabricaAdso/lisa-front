@@ -11,6 +11,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiInterceptor } from '@shared/interceptor/api.interceptor';
 import { tokenInterceptor } from '@shared/interceptor/token.interceptor';
 
+
 registerLocaleData(es);
 
 export const appConfig: ApplicationConfig = {
