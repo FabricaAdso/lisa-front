@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
 interface Person {
   key: string;
   name: string;
@@ -13,11 +14,9 @@ interface Person {
   address: string;
 }
 @Component({
-  // selector: 'app-roles-page',
-
   selector: 'nz-demo-modal-basic',
   standalone: true,
-  imports: [FormsModule, CommonModule, NzButtonModule, NzModalModule,NzTableModule,NzDividerModule ],
+  imports: [FormsModule, CommonModule, NzButtonModule, NzModalModule,NzTableModule,NzDividerModule,NzOptionComponent],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })

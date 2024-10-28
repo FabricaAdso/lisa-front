@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { NzDemoModalBasicComponent } from '@domains/dashboard/pages/roles/roles-page/roles-page.component';
 
 export const routes: Routes = [
     {
