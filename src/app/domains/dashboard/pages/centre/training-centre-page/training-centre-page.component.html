@@ -30,7 +30,7 @@
   
     <!-- Modal para crear o editar un centro de formación -->
   <nz-modal [(nzVisible)]="isModalVisible" nzTitle="{{ indexCentre !== null ? 'Editar' : 'Crear' }} Centro de Formación"
-    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()">
+    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formCentres?.invalid" >
      
     <ng-container *nzModalContent>
       <form nz-form *ngIf="formCentres" [formGroup]="formCentres">

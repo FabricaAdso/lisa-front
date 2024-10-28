@@ -16,13 +16,13 @@ export const routes: Routes = [
                 loadComponent:()=>import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c=>c.RolesPageComponent)
             },
             {
-                path:'environments-area',
+                path:'environmentsArea',
                 title:'Administrar Areas',
                 loadComponent:()=>import('@domains/dashboard/pages/area/area.component').then(c=>c.AreaComponent)
             },
             // http://127.0.0.1:4200/dashboard/centres
             {
-                path:'training-centers',
+                path:'trainingCenters',
                 title:'Administrar Training Centres',
                 loadComponent:()=>import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c=>c.TrainingCentrePageComponent)
             },

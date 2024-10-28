@@ -19,6 +19,10 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin } from 'rxjs';
 import { HeadcuarterFormComponent } from '../components/headcuarter-form/headcuarter-form.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+
+
 
 
 @Component({
@@ -34,6 +38,8 @@ import { HeadcuarterFormComponent } from '../components/headcuarter-form/headcua
     NzFormModule,
     NzInputModule,
     NzSelectModule,
+    NzPopconfirmModule,
+
     HeadcuarterFormComponent
   ],
   templateUrl: './headquarter.component.html',
@@ -45,6 +51,7 @@ export class HeadquarterComponent {
   private headquarterService = inject(HeadquartersService);
   private locationService = inject(LocationService);
   private trainingCentreService = inject(TrainingCentreService);
+  private nzMessageService = inject(NzMessageService);
 
   // Variables para almacenar datos.
   headquarters: SedeModel[] = [];
@@ -63,6 +70,22 @@ export class HeadquarterComponent {
     this.loadData();// Carga los datos iniciales.
     this.createForm();
   }
+  cancel(): void {
+    this.nzMessageService.info('click cancel');
+  }
+  confirm(): void {
+  
+
+    this.nzMessageService.info('click confirm');
+  }
+  
+  deleteHeadquarters(id: number) {
+    const deleteSub = this.headquarterService.delete(id).subscribe(() => {
+      this.loadHeadquarters(); // Recarga la lista de sedes.
+      deleteSub.unsubscribe(); // Desuscribe del observable.
+    });
+  }
+
 
 
   loadData() {
@@ -113,7 +136,7 @@ export class HeadquarterComponent {
     });
   }
 
-  get fieldDepartment(){
+  get fieldDepartment() {
     return this.formHeadquarters!.get('department') as FormControl;
   }
 
@@ -131,12 +154,6 @@ export class HeadquarterComponent {
   loadHeadquarters() {
     this.headquarterService.getHeadquartes().subscribe(data => {
       this.headquarters = data;
-    });
-  }
-  deleteHeadquarters(id: number) {
-    const deleteSub = this.headquarterService.delete(id).subscribe(() => {
-      this.loadHeadquarters(); // Recarga la lista de sedes.
-      deleteSub.unsubscribe(); // Desuscribe del observable.
     });
   }
 
