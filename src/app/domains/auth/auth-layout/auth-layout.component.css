@@ -14,16 +14,7 @@ picture img{
 section {
     background: url('/sena_background.ico') no-repeat center center;
     background-size: cover;
+
 }
 
-@media (max-width: 640px){
-    .py-8{
-        margin-right: 0px;
-    }
-}
-
-@media (max-width: 1384px){
     
-}
-
-

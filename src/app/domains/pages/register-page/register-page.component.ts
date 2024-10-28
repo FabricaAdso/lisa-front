@@ -79,9 +79,9 @@ export class RegisterPageComponent implements OnInit {
       let password =  this.formRegister.get('password')!.value;
       let confirmPassword =  this.formRegister.get('password_confirmation')!.value;
      if(password === confirmPassword){
-      console.log('valido')
+      const password_true = true;
      }else{
-      console.log('invalido')
+      const password_false = false;
      }
     }, 100);
   }
