@@ -2,7 +2,7 @@
     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-dark">
         Completa el registro
     </h1>
-    <form [formGroup]="formRegister" class="space-y-7 max-sm:space-y-2 max-xl:space-y-2" action="">
+    <form [formGroup]="formRegister" class="space-y-7 max-sm:space-y-2 max-xl:space-y-2" (ngSubmit)="onSubmit()">
         <div class="flex justify-between gap-1 max-sm:items-end">
             <div class="space-y-3 mb-1">
                 <nz-form-label for="number" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Numero de documento</nz-form-label>
@@ -24,16 +24,16 @@
             <div class="none flex-col justify-end ">
                 <nz-form-label for="option" class="flex felx-start mb-3 text-sm font-medium text-gray-900 dark:text-dark">Tipo documento</nz-form-label>
                 <nz-form-control nzValidateStatus="error"  nzHasFeedback  [nzErrorTip]="errorOpt">
-                    <select id="option" name="option" 
-                    formControlName="option"
+                    <select id="option" name="document_type_id" 
+                    formControlName="document_type_id"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
                         @for (item of document_type; track $index) {
                             <option [value]="item.id">{{item.name}}</option>
                         }
                       </select>
                 <ng-template #errorOpt>
-                    @if (formRegister.controls.option.touched) {
-                        @if (formRegister.controls.option.hasError('required')) {
+                    @if (formRegister.controls.document_type_id.touched) {
+                        @if (formRegister.controls.document_type_id.hasError('required')) {
                             <span>Selecciona tu documento</span>
                         }
                     }
@@ -122,8 +122,8 @@
         <div>
             <nz-form-label for="password" class="flex felx-start mb-2 text-sm font-medium text-gray-900 dark:text-dark">Confirmar contraseña</nz-form-label>
             <nz-form-control>
-                <input [style]="{'borde':'fielPasswordConfirmation.invalid'}" (keypress)="valuePassword()"  type="password" name="confirmation_password" id="confirmation-password" placeholder="••••••••" 
-                formControlName="confirmation_password"
+                <input [style]="{'borde':'fielPasswordConfirmation.invalid'}" (keypress)="valuePassword()"  type="password" name="password_confirmation" id="confirmation-password" placeholder="••••••••" 
+                formControlName="password_confirmation"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex felx-start w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
             </nz-form-control>
         </div>
@@ -139,6 +139,6 @@
             </div>
             <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
         </div>
-        <button (click)="onSubmit()" (click)="getData()" (click)="registrarse()" type="submit" class="border border-black w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg  px-5 py-2.5 text-center dark:bg-primary-600 hover:text-[#00AF00] dark:focus:ring-primary-800 text-lg">Guardar</button>
+        <button  type="submit" class="border border-black w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg  px-5 py-2.5 text-center dark:bg-primary-600 hover:text-[#00AF00] dark:focus:ring-primary-800 text-lg">Guardar</button>
     </form>
 </div>
