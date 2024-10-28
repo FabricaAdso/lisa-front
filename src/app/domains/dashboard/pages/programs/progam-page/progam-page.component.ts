@@ -56,7 +56,7 @@ export class ProgamPageComponent implements OnInit {
 
   private programService = inject(ProgramService);
   ngOnInit(): void {
-    this.obtenerProgramas();
+    this.getPrograms();
   }
 
   ngOnDestroy(): void {
@@ -65,29 +65,29 @@ export class ProgamPageComponent implements OnInit {
     if (this.buscarSub) this.buscarSub.unsubscribe();
   }
 
-  obtenerProgramas() {
+  getPrograms() {
     this.dataSub = this.programService
       .getAll({ included: ['educationLevel'] })
       .subscribe({
-        next: (programas) => {
-          this.program = programas;
+        next: (programs) => {
+          this.program = programs;
         },
       });
   }
 
-  buscarProgramas() {
+  searchProgram() {
     this.buscarSub = this.programService
       .getAll({
         included: ['educationLevel'],
         filter: { ['name']: this.search },
       })
       .subscribe({
-        next: (programas) => {
-          this.program = programas;
+        next: (programs) => {
+          this.program = programs;
         },
       });
   }
-  crearPrograma(item: ProgramModel) {
+  createProgram(item: ProgramModel) {
     this.program = [...this.program, item];
   }
 

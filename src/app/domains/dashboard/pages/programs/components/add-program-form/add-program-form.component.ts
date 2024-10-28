@@ -51,8 +51,7 @@ import { NzSelectComponent, NzSelectModule } from 'ng-zorro-antd/select';
 export class AddProgramFormComponent implements OnInit{
 
   Formprogram!: FormGroup;
-
-  FormNivelFomracion: FormGroup;
+  FormEducationLevel: FormGroup;
 
   predefinedOptions:any =[]
 
@@ -81,17 +80,17 @@ export class AddProgramFormComponent implements OnInit{
       custom_education_level: ['']
     });
 
-    this.FormNivelFomracion = this.Form.group({
+    this.FormEducationLevel = this.Form.group({
       name: new FormControl (null, [Validators.required]),
     });
   }
   
 
   ngOnInit(): void {
-    this.obtenerNivelEducativo()
+    this.getEducationLevel()
     
   }
-  obtenerNivelEducativo(){
+  getEducationLevel(){
     this.educationLevelService.getAll().subscribe({
       next:(level)=>{
         this.education_level = level
@@ -141,15 +140,19 @@ export class AddProgramFormComponent implements OnInit{
     this.isVisible = false
   }
 
-  crearNivelFomracion(){
+  createEducationLevel(){
      this.isVisibleNivel = true
   }
 
-  saveNivel(){
-    this.educationLevelService.createLevel(this.FormNivelFomracion.value).subscribe({
+  handleCancelLevel() {
+    this.isVisibleNivel = false;
+}
+
+  saveLevel(){
+    this.educationLevelService.createLevel(this.FormEducationLevel.value).subscribe({
       next:(level:EducationLevelModel)=>{
         this.education_level = [...this.education_level, level]
-        this.FormNivelFomracion.reset();
+        this.FormEducationLevel.reset();
         this.isVisibleNivel = false
       },
       error: error =>{

@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body class="body">
+
     <div class="content" nz-space nzDirection="vertical" [nzSize]="18">
       <div *nzSpaceItem class="content2" nz-flex [nzJustify]="'center'">
       <div
@@ -21,7 +14,7 @@
             <input type="text" [(ngModel)]="search" nz-input placeholder="input search text" />
           </nz-input-group>
           <ng-template #suffixIconButton>
-            <button nz-button (click)="buscarProgramas()"   nzType="primary" nzSearch>
+            <button nz-button (click)="searchProgram()"   nzType="primary" nzSearch>
               <span
                 class="search-icon"
                 nz-icon
@@ -32,7 +25,7 @@
           </ng-template>
         </div>
         <div *nzSpaceItem>
-          <app-add-program-modal (programData)="crearPrograma($event)"></app-add-program-modal>
+          <app-add-program-modal (programData)="createProgram($event)"></app-add-program-modal>
         </div>
       </div>
     </div>
@@ -64,7 +57,7 @@
                 <nz-divider nzType="vertical"></nz-divider>
                  <a
                   nz-popconfirm
-                  nzPopconfirmTitle="Sure to delete?"
+                  nzPopconfirmTitle="¿Estas seguro?"
                   (nzOnConfirm)="delectProgram(data.id)"
                   >Delete</a 
                 >
@@ -81,5 +74,4 @@
         <app-bulk-upload-modal></app-bulk-upload-modal>
       </div>
     </div>
-  </body>
-</html>
+  
