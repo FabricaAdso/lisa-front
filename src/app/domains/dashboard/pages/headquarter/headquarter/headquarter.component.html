@@ -29,11 +29,11 @@
 
 
 
-        <button nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?" (nzOnConfirm)="confirm()"
-          (nzOnCancel)="cancel()" nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
+        <button nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?" (nzOnConfirm)="confirm(item.id)"
+          (nzOnCancel)="cancel()" nz-button nzType="default" nzDanger >
           Delete
         </button>
-        
+
       </td>
     </tr>
     }

@@ -73,10 +73,9 @@ export class HeadquarterComponent {
   cancel(): void {
     this.nzMessageService.info('click cancel');
   }
-  confirm(): void {
-  
-
-    this.nzMessageService.info('click confirm');
+  confirm(id: number): void {
+    this.deleteHeadquarters(id); // Llama a deleteHeadquarters con el id
+    this.nzMessageService.info('Confirmación de eliminación');
   }
   
   deleteHeadquarters(id: number) {

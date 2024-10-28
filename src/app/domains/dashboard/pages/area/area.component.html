@@ -1,4 +1,4 @@
-<p>area works!</p>
+
 
 <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
 
@@ -16,7 +16,11 @@
             <td>{{data.name}}</td>
             <td>
                 <button nz-button nzType="default" (click)="openModal(data)">Editar</button>
-                <button nz-button nzDanger (click)="deleteArea(data.id)" >Eliminar</button>
+
+
+
+                <button nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?" (nzOnConfirm)="confirm(data.id)"
+                (nzOnCancel)="cancel()" nz-button nzType="default" nzDanger  >Eliminar</button>
 
 
 

@@ -4,6 +4,8 @@ import {  SedeModel} from '../models/Sedemodel';
 import { HttpClient } from '@angular/common/http';
 import { CreateHeadquartersDTO } from '../dto/create-headquartersDTO';
 import { UpdateHeadquartersDTO } from '../dto/update-headquartersDTO';
+import { QueryUrl } from '@shared/models/query-url.model';
+import { getQueryUrl } from '@shared/functions/url.functions';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,12 @@ export class HeadquartersService {
   constructor() { }
 
 
-  getHeadquartes(): Observable<SedeModel[]>{
-    return this.http.get<SedeModel[]>(this.url);
+  getHeadquartes(data?:QueryUrl): Observable<SedeModel[]>{
+
+    let url:string = getQueryUrl(this.url,data)
+    console.log(url);
+    
+    return this.http.get<SedeModel[]>(url);
   }
 
   create(data:CreateHeadquartersDTO): Observable<SedeModel>{

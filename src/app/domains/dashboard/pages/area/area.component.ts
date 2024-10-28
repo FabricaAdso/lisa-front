@@ -8,8 +8,10 @@ import { AreaService } from '@shared/services/area.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'app-area',
@@ -24,7 +26,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzButtonModule,
     NzFormModule,
     NzInputModule,
-
+    NzPopconfirmModule
   ],
   templateUrl: './area.component.html',
   styleUrl: './area.component.css'
@@ -34,6 +36,8 @@ export class AreaComponent {
 
   private formBuilder = inject(FormBuilder);
   private areaService = inject(AreaService);
+  private nzMessageService = inject(NzMessageService);
+
 
   areas: AreaModel[] = [];
   isModalVisible = false;
@@ -45,8 +49,24 @@ export class AreaComponent {
     this.getAreas();
     this.inicializeForm();
 
-
   }
+  cancel(): void {
+    this.nzMessageService.info('click cancel');
+  }
+  confirm(id: number): void {
+    this.deleteArea(id); 
+    this.nzMessageService.info('Confirmación de eliminación');
+  }
+
+  deleteArea(id: number) {
+    const deleteSub = this.areaService.delete(id).subscribe(() => {
+      this.getAreas(); // Recarga la lista de sedes.
+      deleteSub.unsubscribe(); // Desuscribe del observable.
+    });
+  }
+
+
+
 
   inicializeForm(): void {
     this.formAreas = this.formBuilder.group({
@@ -111,14 +131,7 @@ export class AreaComponent {
 
 
   }
-    // Método para eliminar un centro
-    deleteArea(id: number): void {
-      if (confirm('¿Desea eliminar este centro? ')) {
-        this.areaService.delete(id).subscribe(() => {
-          this.getAreas(); // Actualizamos la lista
-        });
-      }
-    }
+
   // Método para resetear el formulario y cerrar el modal
   resetForm(): void {
     this.formAreas?.reset();
