@@ -9,14 +9,7 @@ import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers } from '@ng-icons/heroicons/outline';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
-
-interface MenuItem {
-  title: string;
-  icon?: string;
-  route: string | null;
-  subMenu?: MenuItem[];
-  theme: string;
-}
+import { MenuItem } from '@shared/models/menuItems';
 
 @Component({
   selector: 'app-menu-item',
@@ -30,7 +23,7 @@ interface MenuItem {
     NgIconComponent,
     CommonModule,
     NavBarComponent,
-    RouterModule,
+    RouterModule
   ],
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.css'], // Corregido el typo en styleUrls
@@ -39,6 +32,7 @@ interface MenuItem {
   ],
 })
 export class MenuItemsComponent {
+  isMenuOpen = false;
   // Ahora menuItems es una propiedad de la clase, accesible en la plantilla
   menuItems: MenuItem[] = [
     {
@@ -88,6 +82,9 @@ export class MenuItemsComponent {
       icon: 'calendar', // Icono personalizado
       route: 'session',
       theme: 'outline',
-    },
+    }
   ];
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen; // Alterna el estado del menú desplegable
+  }
 }
