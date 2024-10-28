@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateHeadquartersDTO } from '@domains/dashboard/shared/dto/create-headquartersDTO';
 import { UpdateHeadquartersDTO } from '@domains/dashboard/shared/dto/update-headquartersDTO';
 import { despartamentosModel } from '@domains/dashboard/shared/models/Departamentos.model';
@@ -18,6 +18,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin } from 'rxjs';
+import { HeadcuarterFormComponent } from '../components/headcuarter-form/headcuarter-form.component';
 
 
 @Component({
@@ -33,7 +34,7 @@ import { forkJoin } from 'rxjs';
     NzFormModule,
     NzInputModule,
     NzSelectModule,
-    
+    HeadcuarterFormComponent
   ],
   templateUrl: './headquarter.component.html',
   styleUrl: './headquarter.component.css'
@@ -110,6 +111,10 @@ export class HeadquarterComponent {
     this.formHeadquarters?.get('department')?.valueChanges.subscribe(departmentId => {
       this.onDepartmentChange(departmentId);
     });
+  }
+
+  get fieldDepartment(){
+    return this.formHeadquarters!.get('department') as FormControl;
   }
 
 
