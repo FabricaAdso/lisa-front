@@ -15,7 +15,7 @@
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="education_level_id">
           <nz-option *ngFor="let level of education_level" [nzValue]="level.id" [nzLabel]="level.name"></nz-option>
         </nz-select>
-        <button nz-button nzType="primary" (click)="crearNivelFomracion()">add</button>
+        <button nz-button nzType="primary" (click)="createEducationLevel()">add</button>
       </nz-form-item>
        <nz-form-item *ngIf="isOtherSelected">
         <nz-form-label [nzSpan]="7" nzRequired>Especificar otro nivel</nz-form-label>
@@ -36,12 +36,12 @@
 
 
 
-<nz-modal [(nzVisible)]="isVisibleNivel" (nzOnCancel)="isVisibleNivel = !isVisibleNivel">
+<nz-modal [(nzVisible)]="isVisibleNivel" (nzOnCancel)="handleCancelLevel()">
   <ng-container *nzModalTitle>
     <h1 class="text-red-100">Crear nivel educativo</h1>
   </ng-container>
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="FormNivelFomracion!">
+    <form nz-form [formGroup]="FormEducationLevel!">
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>Nombre</nz-form-label>
         <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Por favor ingresa el programa">
@@ -51,9 +51,9 @@
     </form>
   </ng-container>
   <ng-container *nzModalFooter>
-    <button nz-button nzType="primary" (click)="saveNivel()" [disabled]="!FormNivelFomracion!.valid">
+    <button nz-button nzType="primary" (click)="saveLevel()" [disabled]="!FormEducationLevel!.valid">
       Enviar
     </button>
-    <button nz-button (nzOnCancel)="isVisibleNivel = !isVisibleNivel">Cancelar</button>
+    <button nz-button (click)="handleCancelLevel()">Cancelar</button>
   </ng-container>
 </nz-modal>
