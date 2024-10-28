@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateAreaDTO } from '@domains/dashboard/shared/dto/create-areaDTO';
-import { UpdateAreaDto } from '@domains/dashboard/shared/dto/update-areaDTO';
-import { AreaModel } from '@domains/dashboard/shared/models/area-model';
-import { AreaService } from '@domains/dashboard/shared/services/area.service';
+import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
+import { UpdateAreaDto } from '@shared/dto/update-areaDTO';
+import { AreaModel } from '@shared/models/area-model';
+import { AreaService } from '@shared/services/area.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';

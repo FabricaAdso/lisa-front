@@ -1,5 +1,5 @@
-export interface TokenModel {
+export interface TokenModel{
     access_token:string;
-    expiries_id:number;
+    expires_in:number;
     token_type:string;
 }

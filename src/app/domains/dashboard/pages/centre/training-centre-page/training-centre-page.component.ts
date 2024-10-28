@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CreateCentreDTO } from '@domains/dashboard/shared/dto/create-centreDTO';
-import { UpdateCentreDTO } from '@domains/dashboard/shared/dto/update-centreDTO';
-import { TrainingCentreModel } from '@domains/dashboard/shared/models/training-centre-model';
-import { TrainingCentreService } from '@domains/dashboard/shared/services/training-centre.service';
+import { CreateCentreDTO } from '@shared/dto/create-centreDTO';
+import { UpdateCentreDTO } from '@shared/dto/update-centreDTO';
+import { TrainingCentreModel } from '@shared/models/training-centre-model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import {NzFormModule} from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 
 @Component({
   selector: 'app-training-centre-page',
