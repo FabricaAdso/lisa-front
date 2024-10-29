@@ -1,7 +1,10 @@
 
 
 <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
-<app-area-form [isVisible]="isModalVisible" (create)="create($event)" (cancel)="closeModal()"></app-area-form>
+@if (isModalVisible) {
+    <app-area-form [area]="area" [isVisible]="isModalVisible" (update)="edit($event)" (create)="create($event)" (cancel)="closeModal()"></app-area-form>
+}
+
 <nz-table #basicTable [nzData]="areas">
     <thead>
         <tr>
@@ -15,8 +18,7 @@
             <td>{{data.id}}</td>
             <td>{{data.name}}</td>
             <td>
-                <button nz-button nzType="default" (click)="openEdit()">Editar</button>
-                <app-area-form [isVisible]="isModalEditVisible" [area]="data" (update)="edit($event)" (cancel)="closeModal()" ></app-area-form>
+                <button nz-button nzType="default" (click)="openEdit(data)">Editar</button>
 
 
                 <button nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?" (nzOnConfirm)="confirm(data.id)"

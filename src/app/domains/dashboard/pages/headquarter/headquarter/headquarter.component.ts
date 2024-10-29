@@ -14,8 +14,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { forkJoin } from 'rxjs';
-import { HeadcuarterFormComponent } from '../components/headcuarter-form/headcuarter-form.component';
+import { forkJoin, Subscription } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
@@ -23,6 +22,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { LocationService } from '@shared/services/location.service';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { HeadquarterFormComponent } from '../components/headquarter-form/headquarter-form.component';
 
 
 @Component({
@@ -40,7 +40,7 @@ import { TrainingCentreService } from '@shared/services/training-centre.service'
     NzSelectModule,
     NzPopconfirmModule,
 
-    HeadcuarterFormComponent
+    HeadquarterFormComponent
   ],
   templateUrl: './headquarter.component.html',
   styleUrl: './headquarter.component.css'
@@ -55,6 +55,7 @@ export class HeadquarterComponent {
 
   // Variables para almacenar datos.
   headquarters: SedeModel[] = [];
+  headquarter:SedeModel|undefined = undefined;
   departments: despartamentosModel[] = [];
   municipalities: municipiosModel[] = [];
   trainingCentres: TrainingCentreModel[] = [];
@@ -62,13 +63,19 @@ export class HeadquarterComponent {
 
   formHeadquarters!: FormGroup | null;
   isModalVisible = false;
+  isModalEditVisible = false;
   editingHeadquartersId: number | null = null;  // ID de la sede en edición.
+
+  deleteSub:Subscription|null = null;
 
 
 
   ngOnInit(): void {
     this.loadData();// Carga los datos iniciales.
     this.createForm();
+  }
+  ngOnDestroy(): void {
+    if(this.deleteSub) this.deleteSub.unsubscribe();
   }
   cancel(): void {
     this.nzMessageService.info('click cancel');
@@ -104,6 +111,8 @@ export class HeadquarterComponent {
       }
     });
   }
+
+
 
   // Cargar los municipios cuando se selecciona un departamento
   onDepartmentChange(departmentId: number) {
@@ -151,9 +160,35 @@ export class HeadquarterComponent {
 
   // Cargar las sedes existentes
   loadHeadquarters() {
-    this.headquarterService.getHeadquartes().subscribe(data => {
-      this.headquarters = data;
+    this.headquarterService.getHeadquartes().subscribe({
+      next:(data:SedeModel[])=>{
+        this.headquarters = data;
+      }
     });
+  }
+  openEdit(headquarter:SedeModel){
+    this.headquarter = headquarter;
+    this.isModalVisible = true;
+  }
+
+  edit(new_headquarter:SedeModel){
+    
+    const {id}= new_headquarter;
+    const index_headquarter= this.headquarters.findIndex((headquarter)=>headquarter.id===id);
+
+    if(index_headquarter===null)return;
+
+    let headquarters= [...this.headquarters];
+    headquarters[index_headquarter] = new_headquarter;
+    this.headquarters =  headquarters;
+    this.closeModal()
+
+  }
+  create(headcuarter:SedeModel){
+    console.log('entrando despues de emitir');
+    
+    this.headquarters = [...this.headquarters,headcuarter];
+    this.closeModal();
   }
 
 
@@ -181,6 +216,7 @@ export class HeadquarterComponent {
   }
 
   closeModal(): void {
+    this.headquarter = undefined;
     this.isModalVisible = false;
     this.formHeadquarters?.reset(); // Opcional: resetea el formulario al cerrar el modal
     this.editingHeadquartersId = null; // Limpia el id de edición

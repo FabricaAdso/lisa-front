@@ -40,6 +40,7 @@ export class AreaComponent implements OnInit,OnDestroy{
   private nzMessageService = inject(NzMessageService);
 
   areas: AreaModel[] = [];
+  area:AreaModel|undefined = undefined;
   isModalVisible = false;
   isModalEditVisible = false;
 
@@ -76,8 +77,9 @@ export class AreaComponent implements OnInit,OnDestroy{
     });
   }
 
-  openEdit(){
-    this.isModalEditVisible = true;
+  openEdit(area:AreaModel){
+   this.area = area;
+   this.isModalVisible = true;
   }
 
   edit(area:AreaModel){
@@ -87,7 +89,7 @@ export class AreaComponent implements OnInit,OnDestroy{
     let areas = [...this.areas];
     areas[index_area] = area;
     this.areas = areas;
-    this.isModalEditVisible = false;
+    this.closeModal();
   }
 
   create(area:AreaModel){
@@ -100,6 +102,7 @@ export class AreaComponent implements OnInit,OnDestroy{
   }
   closeModal(): void {
     this.isModalVisible = false;
+    this.area = undefined;
     this.isModalEditVisible = false;
   }
 

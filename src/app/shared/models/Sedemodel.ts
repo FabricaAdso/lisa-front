@@ -6,9 +6,10 @@ export interface SedeModel {
     id: number;
     name: string;
     departament: despartamentosModel;   
-    municipality: municipiosModel; 
+    municipality: municipiosModel;
+    municipality_id:number; 
     adress: string;
-    trainingCentre_Id: number;  
+    training_center_id: number;  
     training_center : TrainingCentreModel;
 
 
