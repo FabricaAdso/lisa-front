@@ -21,7 +21,7 @@
         </td>
         <td>
           <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
-          <button (click)="asociar()" (click)="toggleUserStatus(user)" class="btn btn-secondary">
+          <button  (click)="toggleUserStatus(user)" class="btn btn-secondary">
             {{ user.desactive ? 'desactivar' : 'activar' }}
           </button>
         </td>
@@ -34,26 +34,30 @@
   <ng-container *nzModalContent>
     <div class="modal-content">
       <div class="modal-body">
-        <form>
+        <div>
           <div class="form-group">
-            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-              nzPlaceHolder="Please select" [(ngModel)]="selectedRoles">
-              @for (item of allRoles; track item) {
-              <nz-option [nzLabel]="item" [nzValue]="item"></nz-option>
-              }
-            </nz-select>
-            <ng-template #tagPlaceHolder let-selectedRoles>and {{ selectedRoles.length }} more selected</ng-template>
 
-            <!-- <label for="roles">Seleccionar Roles</label>
-            <select id="roles" [(ngModel)]="selectedRoles" name="roles" class="form-control" multiple>
-              <option *ngFor="let role of allRoles" [value]="role">{{ role }}</option>
-            </select> -->
+
+            <label for="roles">Seleccionar Roles</label>
+
+            <nz-select
+            [nzMaxTagCount]="3"
+            [nzMaxTagPlaceholder]="tagPlaceHolder"
+            nzMode="multiple"
+            nzPlaceHolder="Seleccione roles"
+            [(ngModel)]="selectedRoles"
+            name="roles"
+            (ngModelChange)="onRolesChange($event)">
+
+            <nz-option *ngFor="let role of allRoles" [nzLabel]="role" [nzValue]="role"></nz-option>
+          </nz-select>
+          <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
           </div>
           <div class="form-check">
-            <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input">
-            <label for="active" class="form-check-label">Desactivar usuario</label>
+            <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input" (change)="onStatusChange()">
+            <label for="active" class="form-check-label">{{ isActive ? ' Activar usuario': 'Desactivar usuario'  }}</label>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </ng-container>

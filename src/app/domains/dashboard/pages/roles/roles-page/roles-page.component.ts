@@ -27,27 +27,33 @@ export class RolesComponent implements OnInit {
   constructor(private userService: ApiRolesService) {}
 
   ngOnInit(): void {
-  
+
     this.getUsers();
-   
+
   }
-  asociar(){
-    for  (let i = 0; i < this.allRoles.length; i++) {
-      console.log(this.allRoles[i], i)
+ // Cargar roles y estado desde localStorage
+ loadUserData(): void {
+  this.users.forEach(user => {
+    const storedRoles = localStorage.getItem(`user_roles_${user.id}`);
+    const storedStatus = localStorage.getItem(`user_status_${user.id}`);
+
+    if (storedRoles) {
+      user.roles = JSON.parse(storedRoles);
     }
-
-    this.allRoles[0] 
-    
-
-  }
+    if (storedStatus) {
+      user.desactive = JSON.parse(storedStatus);
+    }
+  });
+}
   // Cargar los usuarios desde el servicio
   getUsers(): void {
     this.userService.getUsers().subscribe({
       next: (data) =>{
         this.users = data
+        this.loadUserData();
         console.log(data);
-        
-      }, 
+
+      },
       error: (error) => console.error('Error al obtener usuarios', error)
     });
   }
@@ -55,25 +61,42 @@ export class RolesComponent implements OnInit {
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
-    this.selectedRoles = {...user.roles};
-    this.isActive = user.desactive;
+    this.selectedRoles = [...user.roles]  ;
+    this.isActive = !user.desactive;
   }
 
   handleOk(): void {
+
+
     // Actualizar roles
     this.userService.toggleUserRole(this.selectedUser.id, this.selectedRoles).subscribe({
-      next: () => console.log('Roles actualizados correctamente'),
+      next: () => {
+        console.log('Roles actualizados correctamente');
+        localStorage.setItem(`user_roles_${this.selectedUser.id}`, JSON.stringify(this.selectedRoles)); // Guardar roles en localStorage
+        this.selectedUser.roles = [...this.selectedRoles];
+        this.getUsers();
+      },
       error: (error) => console.error('Error al actualizar roles', error)
     });
 
     // Actualizar estado
+    this.selectedUser.desactive = !this.isActive;
     this.userService.toggleUserStatus(this.selectedUser.id, this.isActive).subscribe({
-      next: () => console.log('Estado de usuario actualizado correctamente'),
+      next: () => {
+        console.log('Estado de usuario actualizado correctamente');
+        localStorage.setItem(`user_status_${this.selectedUser.id}`, JSON.stringify(this.isActive)); // Guardar estado en localStorage
+        this.getUsers();
+
+      },
       error: (error) => console.error('Error al actualizar estado de usuario', error)
     });
 
     this.isVisible = false;
-    this.getUsers(); // Recargar usuarios para ver cambios en la tabla
+
+  }
+  onStatusChange(): void {
+    this.isActive = !this.isActive; // Actualiza el estado localmente
+    console.log('Estado de checkbox cambiado:', this.isActive);
   }
 
   handleCancel(): void {
@@ -81,11 +104,21 @@ export class RolesComponent implements OnInit {
   }
 
   toggleUserStatus(user: any): void {
-    user.desactive = !user.desactive;
+    user.desactive = !user.desactive; // Cambiar el estado localmente
     this.userService.toggleUserStatus(user.id, user.desactive).subscribe({
-      next: () => console.log('Estado de usuario actualizado'),
+      next: () => {
+        console.log('Estado de usuario actualizado');
+        localStorage.setItem(`user_status_${user.id}`, JSON.stringify(user.desactive)); // Guardar nuevo estado en localStorage
+        if (this.selectedUser && this.selectedUser.id === user.id) {
+          // Sincronizar el estado del checkbox si el usuario en el modal es el mismo
+          this.isActive = !user.desactive;
+        }
+      },
       error: (error) => console.error('Error al actualizar estado de usuario', error)
     });
+  }
+  onRolesChange(selected: string[]): void {
+    this.selectedRoles = selected; // Sincronizar los roles seleccionados
   }
 
 
