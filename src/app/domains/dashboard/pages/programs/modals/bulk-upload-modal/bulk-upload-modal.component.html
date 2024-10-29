@@ -1,14 +1,17 @@
-<nz-upload
+<div class="boton"  >
+  <nz-upload
       nzAction="http://localhost:8000/upload"
       [nzFileList]="fileList"
       [nzLimit]="2"
       (nzChange)="handleChange($event)"
       [nzAccept]="'.xls,.xlsx,.txt'"
       
+      
     >
-      <button nz-button nzSize="large" class="upload-button">
+      <button nz-button nzSize="large" class="upload-button" >
         <span nz-icon nzType="upload"  ></span>
         <strong>Carga masiva</strong>
         
       </button>
     </nz-upload>
+</div>

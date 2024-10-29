@@ -49,6 +49,23 @@ import { NzSelectComponent, NzSelectModule } from 'ng-zorro-antd/select';
   styleUrl: './add-program-form.component.css'
 })
 export class AddProgramFormComponent implements OnInit{
+  fomr:any[] = [
+    {
+      name:"Codigo",
+      type:"number",
+      data:1
+    },
+    {
+      name:"nombre",
+      type:"string",
+      data:1
+    },
+    {
+      name:"nivel",
+      type:"number",
+      data:1
+    }
+  ]
 
   Formprogram!: FormGroup;
   FormEducationLevel: FormGroup;
@@ -75,7 +92,7 @@ export class AddProgramFormComponent implements OnInit{
   ) {
 
     this.Formprogram = this.Form.group({
-      name: new FormControl (null, [Validators.required]),
+      name: new FormControl (null, [Validators.required, Validators.maxLength(50)]),
       education_level_id: new  FormControl(null, [Validators.required]),
       custom_education_level: ['']
     });
@@ -123,7 +140,7 @@ export class AddProgramFormComponent implements OnInit{
       error : error =>{
         this.notification.success(
           'Notification programa',
-          error.error
+          JSON.stringify(error.error)
         );
       }
     });

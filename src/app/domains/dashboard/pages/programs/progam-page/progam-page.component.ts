@@ -15,12 +15,13 @@ import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { AddProgramModalComponent } from '../modals/add-program-modal/add-program-modal.component';
 import { BulkUploadModalComponent } from '../modals/bulk-upload-modal/bulk-upload-modal.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { ProgramModel } from '@shared/models/program.model';
+import { datosTable, ProgramModel, TableModel } from '@shared/models/program.model';
 import { ProgramService } from '@shared/services/program/program.service';
 import { log } from 'ng-zorro-antd/core/logger';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-progam-page',
   standalone: true,
@@ -48,11 +49,27 @@ import { FormsModule } from '@angular/forms';
 export class ProgamPageComponent implements OnInit, OnDestroy {
   program: ProgramModel[] = [];
 
+  ObjTabla:TableModel = {} as TableModel
   search: string = '';
 
   dataSub: Subscription | null = null;
   deleteSub: Subscription | null = null;
   buscarSub: Subscription | null = null;
+  titulos:{titulo:string}[] = [
+    {
+      titulo:"ID"
+    },
+    {
+      titulo:"Nombre"
+    },
+    {
+      titulo:"Nivel de formación"
+    },
+    {
+      titulo:"Action"
+    },
+
+  ]
 
   private programService = inject(ProgramService);
   ngOnInit(): void {
@@ -71,8 +88,23 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (programs) => {
           this.program = programs;
+          this.ObjTabla = this.mapToTable(programs)
         },
       });
+  }
+
+  mapToTable(programas:ProgramModel[]):TableModel{
+    return{
+      titulo:["ID","Nombre","Nivel de formacion","idnivel","Acccion"],
+      dato:programas.map((programa:ProgramModel)=>this.mapToDatosTabla(programa))
+    }
+  }
+  mapToDatosTabla(programa:ProgramModel):datosTable{
+    return{
+      id:programa.id,
+      dato:[programa.id.toString(),programa.name,programa.education_level?.name!,programa.education_level_id.toString()],
+      delete:true,
+    }
   }
 
   searchProgram() {
@@ -88,7 +120,7 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
       });
   }
   createProgram(item: ProgramModel) {
-    this.program = [...this.program, item];
+    this.ObjTabla.dato = [...this.ObjTabla.dato, this.mapToDatosTabla(item)];
   }
 
   indexProgram: number | null = null;

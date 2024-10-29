@@ -6,3 +6,13 @@ export interface ProgramModel {
     education_level_id:number;
     education_level?:EducationLevelModel
 }
+export interface TableModel{
+    titulo:string[],
+    dato:datosTable[],
+}
+export interface datosTable{
+    id:number;
+    dato:Array<string>
+    delete:boolean;
+    
+}
