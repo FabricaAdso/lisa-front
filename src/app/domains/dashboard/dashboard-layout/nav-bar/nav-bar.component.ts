@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, HostListener, ChangeDetectorRef, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
@@ -20,7 +21,9 @@ import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.componen
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css'],
 })
-export class NavBarComponent {
+export class NavBarComponent implements OnInit {
+  private breackpoint_observer = inject(BreakpointObserver);
+
   isLoggedIn = true;
   userName = 'Yesid Jimenez';
   isDropdownOpen1 = false;
@@ -28,6 +31,17 @@ export class NavBarComponent {
 
   Image_logo: string = 'assets/images/logosena.png';
   UserImage: string = 'assets/images/userimage.jpeg';
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.breackpoint_observer.observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
+      .subscribe(() => {
+        this.isDropdownOpen1 = false;
+        this.isDropdownOpen2 = false;
+        this.cdr.detectChanges();
+      });
+  }
 
   login() {
     console.log('Iniciar sesión...');
@@ -40,6 +54,8 @@ export class NavBarComponent {
     if (this.isDropdownOpen2) {
       this.isDropdownOpen2 = false;
     }
+    // Forzar detección de cambios si es necesario
+    this.cdr.detectChanges();
   }
 
   logout() {
@@ -53,6 +69,8 @@ export class NavBarComponent {
     if (this.isDropdownOpen1) {
       this.isDropdownOpen1 = false;
     }
+    // Forzar detección de cambios si es necesario
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:click', ['$event'])
@@ -73,6 +91,7 @@ export class NavBarComponent {
       !dropdownMenu1.contains(target)
     ) {
       this.isDropdownOpen1 = false;
+      this.cdr.detectChanges();
     }
 
     // Cierre del menú 2
@@ -84,6 +103,7 @@ export class NavBarComponent {
       !dropdownMenu2.contains(target)
     ) {
       this.isDropdownOpen2 = false;
+      this.cdr.detectChanges();
     }
   }
 }
