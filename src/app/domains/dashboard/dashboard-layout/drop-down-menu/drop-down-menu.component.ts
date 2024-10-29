@@ -1,20 +1,23 @@
 import { Component } from '@angular/core';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { MenuItem } from '@shared/models/menuItems';
+import { NzDropDownModule, NzPlacementType } from 'ng-zorro-antd/dropdown';
+import { MenuItemComponent } from '../menu-item/menu-item.component';
+import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NgIconComponent } from '@ng-icons/core';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { featherAirplay } from '@ng-icons/feather-icons';
-import { heroUsers } from '@ng-icons/heroicons/outline';
-import { CommonModule } from '@angular/common';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
-import { MenuItem } from '@shared/models/menuItems';
 
 @Component({
-  selector: 'app-menu-item',
+  selector: 'app-drop-down-menu',
   standalone: true,
   imports: [
+    NzDropDownModule,
+    MenuItemComponent,
+    RouterLink,
     RouterOutlet,
     NzLayoutModule,
     NzBreadCrumbModule,
@@ -23,18 +26,22 @@ import { MenuItem } from '@shared/models/menuItems';
     NgIconComponent,
     CommonModule,
     NavBarComponent,
-    RouterModule
+    RouterModule,
   ],
-  templateUrl: './menu-item.component.html',
-  styleUrls: ['./menu-item.component.css'], // Corregido el typo en styleUrls
-  providers: [
-    provideIcons({ featherAirplay, heroUsers }), // Registra los iconos personalizados que se van a usar
-  ],
+  templateUrl: './drop-down-menu.component.html',
+  styleUrl: './drop-down-menu.component.css',
 })
-export class MenuItemComponent {
+export class DropDownMenuComponent {
+  listOfPosition: NzPlacementType[] = [
+    'bottomLeft',
+    'bottomCenter',
+    'bottomRight',
+    'topLeft',
+    'topCenter',
+    'topRight',
+  ];
+  position: NzPlacementType = this.listOfPosition[0]; // Puedes cambiar la posición predeterminada aquí
 
-  isMenuOpen = false;
-  // Ahora menuItems es una propiedad de la clase, accesible en la plantilla
   menuItems: MenuItem[] = [
     {
       title: 'Roles',
@@ -83,9 +90,10 @@ export class MenuItemComponent {
       icon: 'calendar', // Icono personalizado
       route: 'session',
       theme: 'outline',
-    }
+    },
   ];
-  toggleMenu() {
+  isMenuOpen = false;
+  toggleMenu2() {
     this.isMenuOpen = !this.isMenuOpen; // Alterna el estado del menú desplegable
   }
 }

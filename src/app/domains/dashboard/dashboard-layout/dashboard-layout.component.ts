@@ -8,7 +8,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers } from '@ng-icons/heroicons/outline';
 import { CommonModule } from '@angular/common';
-import { MenuItemsComponent } from './menu-item/menu-item.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 
 @Component({
@@ -23,9 +23,9 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
     NgIconComponent,
     CommonModule,
     NavBarComponent,
-    MenuItemsComponent,
+    MenuItemComponent,
     RouterOutlet,
-    NzBreadCrumbModule
+    NzBreadCrumbModule,
   ],
   viewProviders: [provideIcons({ featherAirplay, heroUsers })],
   templateUrl: './dashboard-layout.component.html',
