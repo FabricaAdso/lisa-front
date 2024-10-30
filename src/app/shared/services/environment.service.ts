@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { EnvironmentModel } from '../models/environment-model';
 import { Observable } from 'rxjs';
 import { CreateEvironentDTO } from '../dto/create-environmentDTO';
+import { QueryUrl } from '@shared/models/query-url.model';
+import { getQueryUrl } from '@shared/functions/url.functions';
 
 
 @Injectable({
@@ -15,8 +17,10 @@ export class EnvironmentService {
   constructor() { }
 
 
-  get(): Observable<EnvironmentModel[]>{
-    return this.http.get<EnvironmentModel[]>(this.url);
+  get(data?:QueryUrl): Observable<EnvironmentModel[]>{
+    let url:string = getQueryUrl(this.url,data)
+    console.log(url);
+    return this.http.get<EnvironmentModel[]>(url);
   }
 
   create(data:CreateEvironentDTO): Observable<EnvironmentModel>{
