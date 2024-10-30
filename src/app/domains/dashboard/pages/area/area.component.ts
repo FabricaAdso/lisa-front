@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
 import { UpdateAreaDto } from '@shared/dto/update-areaDTO';
 import { AreaModel } from '@shared/models/area-model';
@@ -8,14 +8,17 @@ import { AreaService } from '@shared/services/area.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { AreaFormComponent } from './components/area-form/area-form.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-area',
   standalone: true,
   imports: [
-
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -24,107 +27,80 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzButtonModule,
     NzFormModule,
     NzInputModule,
-
+    NzPopconfirmModule,
+    AreaFormComponent
   ],
   templateUrl: './area.component.html',
   styleUrl: './area.component.css'
 })
-export class AreaComponent {
+export class AreaComponent implements OnInit,OnDestroy{
 
 
-  private formBuilder = inject(FormBuilder);
   private areaService = inject(AreaService);
+  private nzMessageService = inject(NzMessageService);
 
   areas: AreaModel[] = [];
   isModalVisible = false;
+  isModalEditVisible = false;
 
-  formAreas: FormGroup | null = null;
-  indexArea: number | null = null;
+  deleteSub:Subscription|null = null;
 
   ngOnInit() {
     this.getAreas();
-    this.inicializeForm();
-
-
   }
 
-  inicializeForm(): void {
-    this.formAreas = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5)]]
+  ngOnDestroy(): void {
+    if(this.deleteSub) this.deleteSub.unsubscribe();
+  }
+
+  cancel(): void {
+    this.nzMessageService.info('click cancel');
+  }
+
+  confirm(id: number): void {
+    this.deleteArea(id); 
+    this.nzMessageService.info('Confirmación de eliminación');
+  }
+
+  deleteArea(id: number) {
+    this.deleteSub = this.areaService.delete(id).subscribe(() => {
+      this.getAreas();
     });
   }
+
   getAreas(): void {
     this.areaService.get().subscribe({
       next: (data: AreaModel[]) => {
         this.areas = data;
-
       }
     });
   }
-  openModal(area?: AreaModel): void {
+
+  openEdit(){
+    this.isModalEditVisible = true;
+  }
+
+  edit(area:AreaModel){
+    const {id} = area;
+    const index_area = this.areas.findIndex((area)=>area.id === id);
+    if(!index_area) return;
+    let areas = [...this.areas];
+    areas[index_area] = area;
+    this.areas = areas;
+    this.isModalEditVisible = false;
+  }
+
+  create(area:AreaModel){
+    this.areas = [...this.areas,area];
+    this.isModalVisible = false;
+  }
+
+  openModal(): void {
     this.isModalVisible = true;
-
-    if (!this.formAreas) {
-      this.inicializeForm();
-    }
-    if (area) {
-      this.indexArea = area.id;
-      this.formAreas?.patchValue({
-        name: area.name
-      });
-
-    } else {
-      this.indexArea = null;
-      this.formAreas?.reset();
-
-    }
-
   }
   closeModal(): void {
     this.isModalVisible = false;
-
-  }
-
-  saveData(): void {
-
-    if (this.formAreas?.valid) {
-      if (this.indexArea !== null) {
-        // Editamos el centro existente
-        const updatedCentre: UpdateAreaDto = {
-          id: this.indexArea,
-          ...this.formAreas.value
-        };
-        this.areaService.update(updatedCentre).subscribe(() => {
-          this.getAreas(); // Actualizamos la lista
-          this.resetForm();
-        });
-      } else {
-        // Creamos una nueva area
-        const newArea: CreateAreaDTO = this.formAreas?.value;
-        this.areaService.create(newArea).subscribe(() => {
-          this.getAreas(); // Actualizamos la lista
-          this.resetForm();
-        });
-      }
-    }
-
-
-
-  }
-    // Método para eliminar un centro
-    deleteArea(id: number): void {
-      if (confirm('¿Desea eliminar este centro? ')) {
-        this.areaService.delete(id).subscribe(() => {
-          this.getAreas(); // Actualizamos la lista
-        });
-      }
-    }
-  // Método para resetear el formulario y cerrar el modal
-  resetForm(): void {
-    this.formAreas?.reset();
-    this.indexArea = null;
-    this.isModalVisible = false;
-
+    this.isModalEditVisible = false;
   }
 
 }

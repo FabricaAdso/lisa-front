@@ -4,6 +4,8 @@ import { TrainingCentreModel } from '../models/training-centre-model';
 
 import { UpdateCentreDTO } from '../dto/update-centreDTO';
 import { CreateCentreDTO } from '../dto/create-centreDTO';
+import { QueryUrl } from '@shared/models/query-url.model';
+import { getQueryUrl } from '@shared/functions/url.functions';
 
 
 
@@ -17,8 +19,11 @@ export class TrainingCentreService {
   constructor() { }
 
 
-  getCentros() {
-    return this.http.get<TrainingCentreModel[]>(this.url);
+  getCentros(data?:QueryUrl) {
+
+    let url:string = getQueryUrl(this.url,data)
+    console.log(url);
+    return this.http.get<TrainingCentreModel[]>(url);
   }
 
   create(data:CreateCentreDTO){
