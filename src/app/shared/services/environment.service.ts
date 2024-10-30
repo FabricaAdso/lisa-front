@@ -23,13 +23,15 @@ export class EnvironmentService {
     return this.http.get<EnvironmentModel[]>(url);
   }
 
-  create(data:CreateEvironentDTO): Observable<EnvironmentModel>{
-    return this.http.post<EnvironmentModel>(this.url,data);
+  create(data:CreateEvironentDTO,data_url?:QueryUrl): Observable<EnvironmentModel>{
+    let url:string = getQueryUrl(this.url,data_url);
+    return this.http.post<EnvironmentModel>(url,data);
 
   }
-  update(data:EnvironmentModel): Observable<EnvironmentModel>{
+  update(data:EnvironmentModel,data_url?:QueryUrl): Observable<EnvironmentModel>{
     const {id} = data;
-    return this.http.put<EnvironmentModel>(`${this.url}/${id}`,data);
+    let url:string = getQueryUrl(`${this.url}/${id}`, data_url )
+    return this.http.put<EnvironmentModel>(url,data);
 
   }
   delete(id:number):Observable<void>{

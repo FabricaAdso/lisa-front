@@ -15,7 +15,9 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
+import { EnvironmentFormComponent } from './components/environment-form/environment-form.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-environment',
@@ -31,6 +33,7 @@ import { forkJoin } from 'rxjs';
     NzFormModule,
     NzInputModule,
     NzSelectModule,
+    EnvironmentFormComponent,
   ],
   templateUrl: './environment.component.html',
   styleUrl: './environment.component.css'
@@ -41,16 +44,24 @@ export class EnvironmentComponent {
   private environmentService = inject(EnvironmentService);
   private areaService = inject(AreaService);
   private headquarterService = inject(HeadquartersService);
+  private nzMessageService = inject(NzMessageService);
 
 
   environments: EnvironmentModel[] = [];
+  environment:EnvironmentModel|undefined = undefined;
   areas: AreaModel[] = [];
   headquarters: SedeModel[] = [];
+  included:string[] = ['headquarters','environmentArea'];
 
   formEnvironments!: FormGroup | null;
   isModalVisible = false;
+  isModalEditVisible = false;
   editingEnvironment: number | null = null;
 
+  deleteSub:Subscription|null = null;
+
+
+// ignorar esto
   nameFilter = ''; // Variable para almacenar el valor del filtro de nombre
   filteredEnvironments: EnvironmentModel[] = []; // Arreglo para datos filtrados
 
@@ -58,10 +69,29 @@ export class EnvironmentComponent {
     this.loadData();// Carga los datos iniciales.
     this.createForm();
   }
+  ngOnDestroy():void{
+    if(this.deleteSub)this.deleteSub.unsubscribe();
+
+  }
+  cancel(): void {
+    this.nzMessageService.info('click cancel');
+  }
+  confirm(id: number): void {
+    this.deleteEnvironment(id); // Llama a deleteHeadquarters con el id
+    this.nzMessageService.info('Confirmación de eliminación');
+  }
+
+  deleteEnvironment(id: number) {
+    const deleteSub = this.environmentService.delete(id).subscribe(() => {
+      this.loadEnvironments; // Recarga la lista
+      deleteSub.unsubscribe(); // Desuscribe del observable.
+    });
+  }
+
 
   loadData() {
     const datasub = forkJoin([
-      this.environmentService.get(),
+      this.environmentService.get({included:this.included}),
       this.areaService.get(),
       this.headquarterService.getHeadquartes(),
 
@@ -105,19 +135,44 @@ export class EnvironmentComponent {
 
     });
   }
+  get fieldArea() {
+    return this.formEnvironments!.get('area') as FormControl;
+  }
 
   // Cargar las sedes existentes
   loadEnvironments() {
-    this.environmentService.get().subscribe(data => {
-      this.environments = data;
+    this.environmentService.get({included:['']}).subscribe( {
+      next:(data:EnvironmentModel[])=>{
+        this.environments = data;
+
+      }
+      
     });
   }
-  deleteHeadquarters(id: number) { //para el boton
-    const deleteSub = this.environmentService.delete(id).subscribe(() => {
-      this.loadEnvironments(); // Recarga la lista de sedes.
-      deleteSub.unsubscribe(); // Desuscribe del observable.
-    });
+  openEdit(environment:EnvironmentModel){
+    this.environment = environment;
+    this.isModalVisible = true;
   }
+  edit(new_environment:EnvironmentModel){
+    
+    const {id}= new_environment;
+    const index_environment= this.environments.findIndex((environmet)=>environmet.id===id);
+
+    if(index_environment===null)return;
+
+    let environments= [...this.environments];
+    environments[index_environment]= new_environment;
+    this.environments = environments ;
+    this.closeModal()
+
+  }
+  create(environment:EnvironmentModel){
+    console.log('entrando despues de emitir');
+    
+    this.environments = [...this.environments, environment];
+    this.closeModal();
+  }
+
 
   openModal(enviroment?: EnvironmentModel): void {
     this.isModalVisible = true;

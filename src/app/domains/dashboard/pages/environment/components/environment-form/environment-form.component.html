@@ -1,0 +1,59 @@
+<nz-modal nzMaskClosable="false" nzDraggable [(nzVisible)]="isVisible" nzTitle="Administración de Areas"
+    (nzOnCancel)="cancelForm()" (nzOnOk)="saveData()" [nzOkLoading]="loading" [nzOkDisabled]="form.invalid">
+
+    <ng-container *nzModalContent>
+        <form [formGroup]="form">
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium">Nombre</label>
+                <input id="name" nz-input formControlName="name" placeholder="Ingrese el nombre de la sede" />
+                <div *ngIf="form?.get('name')?.invalid && form?.get('name')?.touched" class="text-red-500 text-sm">
+                    El nombre es requerido y debe tener al menos 3 caracteres. </div>
+            </div>
+
+
+            <div class="mb-4">
+                <label for="capacity" class="block text-sm font-medium">capacity</label>
+                <input id="capacity" nz-input formControlName="capacity" placeholder="Ingrese la capacity" />
+                <div *ngIf="form?.get('adress')?.invalid && form.get('adress')?.touched" class="text-red-500 text-sm">
+                    Capacidad es requerida.
+                </div>
+            </div>
+
+
+
+            <div class="mb-4">
+
+                <label for="environment_area_id" class=""> Area</label>
+                <nz-select formControlName="environment_area_id" placeholder="Seleccione un Area">
+                    <nz-option *ngFor="let area of areas " [nzValue]="area.id" [nzLabel]="area.name"></nz-option>
+
+                </nz-select>
+                @if (form.get('environment_area_id')?.invalid &&
+                form.get('environment_area_id')?.touched)
+                {
+                <div class="text-red-500 text-sm">
+                    Area es requerido.
+                </div>
+                }
+            </div>
+
+            <div class="mb-4">
+
+                <label for="headquarters_id" class=""> Sede de Formacion</label>
+                <nz-select formControlName="headquarters_id" placeholder="Seleccione una Sede">
+                    <nz-option *ngFor="let headquarter of headquarters " [nzValue]="headquarter.id"
+                        [nzLabel]="headquarter.name"></nz-option>
+
+                </nz-select>
+                @if (form.get('headquarters_id')?.invalid &&
+                form.get('headquarters_id')?.touched)
+                {
+                <div class="text-red-500 text-sm">
+                    Sede es requerido.
+                </div>
+                }
+            </div>
+
+        </form>
+    </ng-container>
+</nz-modal>
