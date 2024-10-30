@@ -1,11 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, HostListener, ChangeDetectorRef, OnInit, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {
+  Component,
+  HostListener,
+  ChangeDetectorRef,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.component';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -22,7 +29,11 @@ import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.componen
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit {
+  private router = inject(Router);
+
   private breackpoint_observer = inject(BreakpointObserver);
+
+  private auth_service = inject(AuthService);
 
   isLoggedIn = true;
   userName = 'Yesid Jimenez';
@@ -35,7 +46,8 @@ export class NavBarComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.breackpoint_observer.observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
+    this.breackpoint_observer
+      .observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
       .subscribe(() => {
         this.isDropdownOpen1 = false;
         this.isDropdownOpen2 = false;
@@ -46,6 +58,7 @@ export class NavBarComponent implements OnInit {
   login() {
     console.log('Iniciar sesión...');
     this.isLoggedIn = true;
+    this.router.navigate(['auth/login']);
   }
 
   toggleDropdown1() {
@@ -60,6 +73,13 @@ export class NavBarComponent implements OnInit {
 
   logout() {
     console.log('Cerrando sesión...');
+    this.isLoggedIn = false;
+    this.auth_service.logout().subscribe({
+      next: (value) => {
+        console.log('Sesión cerrada correctamente');
+        console.log(value);
+      },
+    });
   }
 
   toggleDropdown2() {
