@@ -83,7 +83,7 @@ export class LoginPageComponent implements OnDestroy {
     .subscribe({
       next: (token) => {
         this.token_service.setToken(token)
-        this.router.navigate(['/auth/register']);
+        this.router.navigate(['/dashboard']);
       },
       error: error =>{
         console.log(error);
