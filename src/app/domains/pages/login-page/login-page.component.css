@@ -6,3 +6,29 @@
   background-color: rgb(230, 224, 224);
 }
 
+.ant-input-affix-wrapper {
+  position: static !important;  /* Cambia la posición si lo deseas */
+  display: inline-flex !important; /* Mantiene el display inline-flex */       /* Cambia el ancho si lo deseas */
+  min-width: auto !important;     /* Cambia el ancho mínimo si lo deseas */
+  width: 100% !important;
+  display: inline-flex !important;
+  padding: 0 !important;          /* Elimina el padding */
+  color: inherit !important;      /* Mantiene el color heredado */
+  font-size: inherit !important;  /* Mantiene el tamaño de fuente heredado */
+  line-height: inherit !important; /* Mantiene el interlineado heredado */
+  background-color: transparent !important; /* Cambia el fondo */
+  background-image: none !important; /* Elimina la imagen de fondo */
+  border: none !important;        /* Quita el borde */
+  border-radius: 0 !important;   /* Quita el borde redondeado */
+  transition: none !important;    /* Quita la transición */
+}
+
+
+.ant-input-affix-wrapper-focused {
+  border-color: inherit !important;
+  box-shadow: inherit !important;
+  border: inherit !important ;
+  right: inherit !important;
+  width: 100% !important;
+  outline: inherit !important;
+}
