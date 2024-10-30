@@ -95,7 +95,7 @@ export class RolesComponent implements OnInit {
 
   }
   onStatusChange(): void {
-    this.isActive = !this.isActive; // Actualiza el estado localmente
+    this.isActive = !this.isActive; 
     console.log('Estado de checkbox cambiado:', this.isActive);
   }
 
@@ -104,21 +104,22 @@ export class RolesComponent implements OnInit {
   }
 
   toggleUserStatus(user: any): void {
-    user.desactive = !user.desactive; // Cambiar el estado localmente
+    user.desactive = !user.desactive;
     this.userService.toggleUserStatus(user.id, user.desactive).subscribe({
       next: () => {
         console.log('Estado de usuario actualizado');
-        localStorage.setItem(`user_status_${user.id}`, JSON.stringify(user.desactive)); // Guardar nuevo estado en localStorage
+        localStorage.setItem(`user_status_${user.id}`, JSON.stringify(user.desactive));
         if (this.selectedUser && this.selectedUser.id === user.id) {
-          // Sincronizar el estado del checkbox si el usuario en el modal es el mismo
+
           this.isActive = !user.desactive;
         }
       },
       error: (error) => console.error('Error al actualizar estado de usuario', error)
     });
   }
+
   onRolesChange(selected: string[]): void {
-    this.selectedRoles = selected; // Sincronizar los roles seleccionados
+    this.selectedRoles = selected;
   }
 
 

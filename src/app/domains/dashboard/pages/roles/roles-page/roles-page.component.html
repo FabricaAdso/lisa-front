@@ -53,10 +53,7 @@
           </nz-select>
           <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
           </div>
-          <div class="form-check">
-            <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input" (change)="onStatusChange()">
-            <label for="active" class="form-check-label">{{ isActive ? ' Activar usuario': 'Desactivar usuario'  }}</label>
-          </div>
+          
         </div>
       </div>
     </div>
