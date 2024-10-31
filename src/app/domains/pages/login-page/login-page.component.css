@@ -32,3 +32,9 @@
   width: 100% !important;
   outline: inherit !important;
 }
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+

@@ -4,18 +4,18 @@ import { Router, RouterOutlet } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { log } from 'ng-zorro-antd/core/logger';
 import { LoginDTO } from '@shared/dto/login.dto';
 import { Subscription } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule, NzInputModule,NzIconModule ],
+  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -32,6 +32,9 @@ export class LoginPageComponent implements OnDestroy {
   errorMessage: string | null = null;
 
   login_sub:Subscription | null = null;
+  isLoadingOne = false;
+  isLoadingTwo = false;
+
 
   button_value = signal(false);
 
@@ -64,7 +67,7 @@ export class LoginPageComponent implements OnDestroy {
     if (this.formLogin.valid) {
       console.log(this.formLogin)
     } else {
-      this.formLogin.markAllAsTouched();    
+      this.formLogin.markAllAsTouched();
     }
   }
 
@@ -87,10 +90,10 @@ export class LoginPageComponent implements OnDestroy {
       },
       error: error =>{
         console.log(error);
-        
+
         this.router.navigate(['auth/login'])
         this.errorMessage = 'Documento o contraseña incorrectos';
-        this.showModal = true;      
+        this.showModal = true;
       }
     })
 
@@ -101,6 +104,23 @@ export class LoginPageComponent implements OnDestroy {
     this.errorMessage = null; // Reiniciar el mensaje
   }
 
-  
+  password(){
+    this.showModal = true
+  }
+
+  loadOne(): void {
+    this.isLoadingOne = true;
+    setTimeout(() => {
+      this.isLoadingOne = false;
+    }, 5000);
+  }
+
+  loadTwo(): void {
+    this.isLoadingTwo = true;
+    setTimeout(() => {
+      this.isLoadingTwo = false;
+    }, 5000);
+  }
 
 }
+
