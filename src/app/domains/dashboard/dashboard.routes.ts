@@ -1,4 +1,3 @@
-import { group } from '@angular/animations';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -14,7 +13,18 @@ export const routes: Routes = [
             {
                 path: 'roles',
                 title: 'Administrar roles',
-                loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.NzDemoModalBasicComponent)
+                loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent)
+            },
+            {
+                path:'environmentsArea',
+                title:'Administrar Areas',
+                loadComponent:()=>import('@domains/dashboard/pages/area/area.component').then(c=>c.AreaComponent)
+            },
+            // http://127.0.0.1:4200/dashboard/centres
+            {
+                path:'trainingCenters',
+                title:'Administrar Training Centres',
+                loadComponent:()=>import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c=>c.TrainingCentrePageComponent)
             },
             {
                 path: 'environments-area',
