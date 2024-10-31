@@ -63,7 +63,7 @@
             </a>
         </div>
         <button #buttonView (click)="onSubmit()" id="button-login" type="submit"
-            [ngClass]="{'hover:text-[#00AF00]': button_value(), 'bg-gray-100  hover:text-[#a7a7a7]': !button_value()}"
+            [ngClass]="{'hover:text-[#00AF00]': button_value(), 'bg-gray-100  text-[#a7a7a7] cursor-no-drop border-gray-400': !button_value()}"
             class="border border-black w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg px-5 py-2.5 text-center dark:bg-primary-600 hover:text-[#00AF00] dark:focus:ring-primary-800 text-lg">
             Sign in
         </button>

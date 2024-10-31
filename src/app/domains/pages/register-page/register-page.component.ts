@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthLayoutComponent } from '@domains/auth/auth-layout/auth-layout.component';
@@ -8,23 +8,25 @@ import { DocumentTypeModel } from '@shared/models/document-type.model';
 import { UserModel } from '@shared/models/user.model';
 import { DocumentTypeService } from '@shared/services/document-type.service';
 import { UserService } from '@shared/services/user.service';
-import { log } from 'ng-zorro-antd/core/logger';
-import { tuple } from 'ng-zorro-antd/core/types';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule,NzInputModule,NzIconModule],
+  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule,NzInputModule,NzIconModule,NzButtonModule],
   templateUrl: './register-page.component.html',
-  styleUrl: './register-page.component.css'
+  styleUrl: './register-page.component.css',
+  providers:[NzNotificationService]
 })
 export class RegisterPageComponent implements OnInit {
   
-  constructor(private router: Router){}
+  constructor(private router: Router ){}
+  private notification = inject(NzNotificationService)
 
   private formBuilder = Inject(FormBuilder);
 
@@ -34,13 +36,19 @@ export class RegisterPageComponent implements OnInit {
   passwordVisible:boolean = false
   document_type: DocumentTypeModel[] = [];
   user:UserModel[] = []
-  showModal: boolean = false;
-  errorMessage: string | null = null;
-  
+  button_value = signal(false);
 
 
   ngOnInit(): void {
     this.getData();
+  }
+
+  createBasicNotification(): void {
+    this.notification
+      .blank(
+        'Registro exitoso',
+        'Inicie sesion'
+      )
   }
 
   getData(){
@@ -56,13 +64,8 @@ export class RegisterPageComponent implements OnInit {
     })
   }
 
-  alert(){
-    alert('Usuario creado correctamente')
-  }
-
-  closeModal() {
-    this.showModal = false; // Ocultar el modal
-    this.errorMessage = null; // Reiniciar el mensaje
+  stateButton(){
+    this.button_value.set(this.formRegister.valid);
   }
 
   onSubmit(){
@@ -74,13 +77,14 @@ export class RegisterPageComponent implements OnInit {
     this.user_service.create(register).subscribe({
       next: (data) => {
         let user = [...this.user,data]
-        this.router.navigate(['auth/login']);
+        this.createBasicNotification();
+        setTimeout(() => {
+          this.router.navigate(['auth/login']);
+        }, 600);
       }
     })
     }else{
       this.formRegister.markAllAsTouched()
-      this.errorMessage = 'Registrate y crea un usuario'
-      this.showModal = true
     }
   }
 

@@ -12,6 +12,7 @@ import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
+
 @Component({
   selector: 'app-login-page',
   standalone: true,
@@ -61,9 +62,7 @@ export class LoginPageComponent implements OnDestroy {
 
 
   onSubmit() {
-    if (this.formLogin.valid) {
-      console.log(this.formLogin)
-    } else {
+    if (!this.formLogin.valid) {
       this.formLogin.markAllAsTouched();    
     }
   }
@@ -89,8 +88,13 @@ export class LoginPageComponent implements OnDestroy {
         console.log(error);
         
         this.router.navigate(['auth/login'])
-        this.errorMessage = 'Documento o contraseña incorrectos';
-        this.showModal = true;      
+        if(this.formLogin.get('identity_document')!.value! == '' || this.formLogin.get('password')!.value! == ''){
+          
+        }else{
+          this.errorMessage = 'Contraseña o numero de documento incorrectos'
+          this.showModal = true;
+        }
+             
       }
     })
 
