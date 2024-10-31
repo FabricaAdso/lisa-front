@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, output, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, output, Output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -28,6 +28,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectComponent, NzSelectModule } from 'ng-zorro-antd/select';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-program-form',
@@ -35,49 +36,35 @@ import { NzSelectComponent, NzSelectModule } from 'ng-zorro-antd/select';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NzButtonModule, 
-    NzFormModule, 
-    NzInputModule, 
-    NzIconModule, 
-    NzPopconfirmModule, 
-    NzFlexModule, 
+    NzButtonModule,
+    NzFormModule,
+    NzInputModule,
+    NzIconModule,
+    NzPopconfirmModule,
+    NzFlexModule,
     NzSelectModule,
     NzModalModule,
-    FormsModule, 
+    FormsModule,
   ],
   templateUrl: './add-program-form.component.html',
   styleUrl: './add-program-form.component.css'
 })
-export class AddProgramFormComponent implements OnInit{
-  fomr:any[] = [
-    {
-      name:"Codigo",
-      type:"number",
-      data:1
-    },
-    {
-      name:"nombre",
-      type:"string",
-      data:1
-    },
-    {
-      name:"nivel",
-      type:"number",
-      data:1
-    }
-  ]
+export class AddProgramFormComponent implements OnInit,OnDestroy {
 
   Formprogram!: FormGroup;
   FormEducationLevel: FormGroup;
 
-  predefinedOptions:any =[]
+  predefinedOptions: any = []
 
-  @Output() programData = new EventEmitter<ProgramModel>();
+  @Input() programa: ProgramModel | undefined
+
+  @Output() onCreate = new EventEmitter<ProgramModel>();
+  @Output() onUpdate = new EventEmitter<ProgramModel>();
   education_level: EducationLevelModel[] = [];
 
   @Input() isVisible: boolean = false;
   @Output() onCancel = new EventEmitter<void>();
-  
+
   isOtherSelected = false;
 
   @Input() isVisibleNivel: boolean = false;
@@ -85,31 +72,36 @@ export class AddProgramFormComponent implements OnInit{
   private programService = inject(ProgramService);
   private educationLevelService = inject(EducationLevelService);
 
-  
+  private saveSub:Subscription|null = null;
+
   constructor(
     private Form: FormBuilder,
     private notification: NzNotificationService
   ) {
 
     this.Formprogram = this.Form.group({
-      name: new FormControl (null, [Validators.required, Validators.maxLength(50)]),
-      education_level_id: new  FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required, Validators.maxLength(50)]),
+      education_level_id: new FormControl(null, [Validators.required]),
       custom_education_level: ['']
     });
 
     this.FormEducationLevel = this.Form.group({
-      name: new FormControl (null, [Validators.required]),
+      name: new FormControl(null, [Validators.required]),
     });
   }
-  
+
 
   ngOnInit(): void {
     this.getEducationLevel()
-    
   }
-  getEducationLevel(){
+
+  ngOnDestroy(): void {
+    if(this.saveSub) this.saveSub.unsubscribe();
+  }
+
+  getEducationLevel() {
     this.educationLevelService.getAll().subscribe({
-      next:(level)=>{
+      next: (level) => {
         this.education_level = level
       }
     })
@@ -124,60 +116,93 @@ export class AddProgramFormComponent implements OnInit{
       alert("llena todos los datos");
       return;
     }
-  
-    const saveSub = this.programService.create(this.Formprogram.value).subscribe({
-      next: (program) => {
-        this.programData.emit(program)
-      },
-      complete: () => {
-        saveSub.unsubscribe();
-        this.Formprogram.reset();
-        this.notification.success(
-          'Notification programa',
-          'Se creo asigino un programa correctamente'
-        );
-      },
-      error : error =>{
-        this.notification.success(
-          'Notification programa',
-          JSON.stringify(error.error)
-        );
-      }
-    });
+
+    const data = this.programa
+    ? { id: this.programa.id, ...this.Formprogram.value }
+    : this.Formprogram.value;
+
+    if (this.programa) {
+      this.onUpdate.emit(data);
+    } else {
+      this.onCreate.emit(data);
+    }
+    this.programa
+      ? this.update(data)
+      : this.create(data)
+    // saveSub.subscribe({
+    //   next: (program) => {
+    //     this.programData.emit(program)
+    //   },
+    //   complete: () => {
+    //     this.Formprogram.reset();
+    //     this.notification.success(
+    //       'Notification programa',
+    //       this.programa ? 'Se actualizó el programa correctamente' : 'Se creó el programa correctamente'
+    //     );
+    //   },
+    //   error: error => {
+    //     this.notification.success(
+    //       'Notification programa',
+    //       JSON.stringify(error.error)
+    //     );
+    //   }
+    // });
   }
 
+  create(value:CreateProgramDto){
+    this.saveSub = this.programService.create(value)
+    .subscribe({
+      next:(new_program)=>{
+        this.onCreate.emit(new_program);
+      }
+    })
+  }
+
+  update(value:UpdateProgramDto){
+    this.saveSub = this.programService.update(value)
+      .subscribe({
+        next:(new_program)=>{
+          this.onUpdate.emit(new_program);
+        }
+      })
+  }
+
+  
+  
 
   resetForm(event: Event) {
     this.Formprogram.reset();
-    event.preventDefault(); 
+    event.preventDefault();
     this.onCancel.emit();
   }
 
-  handleCancel(){
+  handleCancel() {
     this.isVisible = false
   }
 
-  createEducationLevel(){
-     this.isVisibleNivel = true
+  createEducationLevel() {
+    this.isVisibleNivel = true
   }
 
   handleCancelLevel() {
     this.isVisibleNivel = false;
-}
+  }
 
-  saveLevel(){
+  saveLevel() {
     this.educationLevelService.createLevel(this.FormEducationLevel.value).subscribe({
-      next:(level:EducationLevelModel)=>{
+      next: (level: EducationLevelModel) => {
         this.education_level = [...this.education_level, level]
         this.FormEducationLevel.reset();
         this.isVisibleNivel = false
       },
-      error: error =>{
+      error: error => {
         console.log(error)
       }
     })
   }
 
   
+
+
 }
 

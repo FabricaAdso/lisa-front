@@ -21,6 +21,7 @@ import { log } from 'ng-zorro-antd/core/logger';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { AddProgramFormComponent } from '../components/add-program-form/add-program-form.component';
 
 @Component({
   selector: 'app-progam-page',
@@ -40,18 +41,20 @@ import { FormsModule } from '@angular/forms';
     BulkUploadModalComponent,
     NzSpaceModule,
     NzPaginationModule,
-    FormsModule
+    FormsModule,
+    AddProgramFormComponent
   ],
   templateUrl: './progam-page.component.html',
   styleUrl: './progam-page.component.css',
   viewProviders: [provideIcons({ ionSearch })],
 })
 export class ProgamPageComponent implements OnInit, OnDestroy {
+  private saveSubscription: Subscription | null = null;
   program: ProgramModel[] = [];
-
+  editingProgram: ProgramModel | undefined;
   ObjTabla:TableModel = {} as TableModel
   search: string = '';
-
+  isVisible = false;
   dataSub: Subscription | null = null;
   deleteSub: Subscription | null = null;
   buscarSub: Subscription | null = null;
@@ -100,10 +103,14 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
     }
   }
   mapToDatosTabla(programa:ProgramModel):datosTable{
+    console.log(this.mapToDatosTabla)
+
     return{
       id:programa.id,
       dato:[programa.id.toString(),programa.name,programa.education_level?.name!,programa.education_level_id.toString()],
+      
       delete:true,
+      
     }
   }
 
@@ -120,6 +127,8 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
       });
   }
   createProgram(item: ProgramModel) {
+    console.log('creando');
+    
     this.ObjTabla.dato = [...this.ObjTabla.dato, this.mapToDatosTabla(item)];
   }
 
@@ -138,5 +147,21 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
         this.program = programs;
       },
     });
+  }
+
+  editProgram(idprogram: number) {
+    const item:ProgramModel | undefined =  this.program.find((item:ProgramModel)=> item.id == idprogram)
+    this.editingProgram = { ...item!};
+    this.isVisible = true;
+  }
+
+  saveEditedProgram(updatedProgram: ProgramModel) {
+    console.log('actualizar');
+    
+    const index = this.ObjTabla.dato.findIndex(d => d.id ===updatedProgram.id);
+    if (index > -1) {
+      this.ObjTabla.dato[index]= this.mapToDatosTabla(updatedProgram);
+      this.editingProgram = undefined;
+    }
   }
 }

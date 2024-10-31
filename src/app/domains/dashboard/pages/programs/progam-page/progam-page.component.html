@@ -1,11 +1,5 @@
 <div class="super-content">
-  <div
-    class="content"
-    nz-flex
-    nzAlign="center"
-    nzVertical=""
-    
-  >
+  <div class="content" nz-flex nzAlign="center" nzVertical="">
     <div class="content2" nz-flex [nzJustify]="'center'" [nzAlign]="'center'">
       <div>
         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nz-flex>
@@ -34,7 +28,7 @@
       </div>
     </div>
 
-    <div class="mid-table" style="width: 100%;">
+    <div class="mid-table" style="width: 100%">
       <nz-table
         #basicTable
         nzBordered=""
@@ -56,7 +50,7 @@
             @for (item of items.dato; track $index) {
             <td>{{ item }}</td>
             }
-            <button>editar</button>
+            <button (click)="editProgram(items.id)">Editar</button>
             <nz-divider nzType="vertical"></nz-divider>
             @if (items.delete) {
             <a
@@ -80,3 +74,12 @@
     </div>
   </div>
 </div>
+
+<app-add-program-form
+ [isVisible]="isVisible"
+  *ngIf="editingProgram"
+  (onUpdate)="saveEditedProgram($event)"
+  (onCreate)="createProgram($event)"
+  [programa]="editingProgram"
+  
+></app-add-program-form>

@@ -7,20 +7,20 @@
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>Programa</nz-form-label>
         <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Por favor ingresa el programa">
-          <input nz-input formControlName="name"placeholder="Ingresa el programa"/>
+          <input nz-input formControlName="name"placeholder="Ingresa el programa" [value]="programa? programa.name : '' "/>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>Nivel Educativo</nz-form-label>
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="education_level_id">
-          <nz-option *ngFor="let level of education_level" [nzValue]="level.id" [nzLabel]="level.name"></nz-option>
+          <nz-option *ngFor="let level of education_level" [nzValue]="level.id" [nzLabel]="level.name" ></nz-option>
         </nz-select>
         <button nz-button nzType="primary" (click)="createEducationLevel()">add</button>
       </nz-form-item>
        <nz-form-item *ngIf="isOtherSelected">
         <nz-form-label [nzSpan]="7" nzRequired>Especificar otro nivel</nz-form-label>
         <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Por favor especifica el nivel educativo">
-          <input nz-input formControlName="custom_education_level" placeholder="Especifica el nivel educativo" />
+          <input nz-input formControlName="custom_education_level" placeholder="Especifica el nivel educativo"/>
         </nz-form-control>
       </nz-form-item>
     </form>
