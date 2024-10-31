@@ -41,7 +41,7 @@ export class NavBarComponent implements OnInit {
   isDropdownOpen2 = false;
 
   Image_logo: string = 'assets/images/logosena.png';
-  UserImage: string = 'assets/images/userimage.jpeg';
+  UserImage: string = 'assets/images/logouser.png';
 
   constructor(private cdr: ChangeDetectorRef) {}
 

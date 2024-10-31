@@ -1,0 +1,18 @@
+<main class="flex items-center justify-center h-full bg-gray-100">
+  <nz-card class="w-[90rem] h-[50rem] text-center shadow-lg rounded-lg">
+    <nz-card-meta
+      nzTitle="504 - Tiempo de Espera Agotado"
+      nzDescription="La solicitud tardó demasiado en procesarse y se agotó el tiempo de espera. Intenta recargar la página o revisar tu conexión a Internet."
+      class="text-lg"
+    ></nz-card-meta>
+    <div class="flex items-center justify-center mt-6">
+      <picture class="w-[40rem] h-[40rem]">
+        <img
+          [src]="image_error"
+          class="w-full h-full object-contain"
+          alt="Error 504"
+        />
+      </picture>
+    </div>
+  </nz-card>
+</main>

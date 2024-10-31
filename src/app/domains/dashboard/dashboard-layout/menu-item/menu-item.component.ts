@@ -83,6 +83,38 @@ export class MenuItemComponent {
       icon: 'calendar', // Icono personalizado
       route: 'session',
       theme: 'outline',
+    },
+    {
+      title: 'No Autenticado',
+      icon: 'alert', // Icono personalizado
+      route: 'error_401',
+      theme: 'outline',
+    },
+    {
+      title: 'No Autorizado',
+      icon: 'unlock', // Icono personalizado
+      route: 'error_403',
+      theme: 'outline',
+    },
+    {
+      title: 'No Encontrado',
+      icon: 'file-unknown', // Icono personalizado
+      route: 'error_404',
+      theme: 'outline',
+    },
+
+    {
+      title: 'Error de Servidor',
+      icon: 'warning', // Icono personalizado
+      route: 'error_500',
+      theme: 'outline',
+    },
+
+    {
+      title: 'Tiempo Agotado',
+      icon: 'loading', // Icono personalizado
+      route: 'error_504',
+      theme: 'outline',
     }
   ];
   toggleMenu() {
