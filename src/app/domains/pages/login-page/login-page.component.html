@@ -103,7 +103,7 @@
 }
 
 
-@if (showModal) {
+@if (!showModal) {
   <div class="fixed inset-0 flex items-center justify-center z-50">
     <div class="fixed inset-0 bg-black opacity-50"></div>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 p-6 max-w-md mx-auto">
@@ -119,18 +119,23 @@
       </div>
       <form>
         <div class="mb-4">
-          <label for="identity_document" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Documento de identidad</label>
-          <input id="identity_document" type="text"  name="identity_document"
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Documento de identidad</label>
+          <input
+          [formControl]="fieldEmail"
+          id="email" type="text"  name="email"
                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-gray-300 dark:border-gray-500"
                  required>
         </div>
+        <div class="mb-4">
+            <label for="identity_document" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tu correo es: </label>
+          </div>
       </form>
       <div class="flex justify-between mt-4">
         <button (click)="closeModal()" type="button"
                 class="text-gray-800 bg-transparent border border-gray-700 hover:bg-gray-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-800 dark:text-gray-300 dark:hover:text-white">
           Cerrar
         </button>
-        <button nz-button nzType="primary" (click)="loadOne()" [nzLoading]="isLoadingOne">Enviar</button>
+        <button nz-button (click)="loadOne()" [nzLoading]="isLoadingOne">Enviar</button>
       </div>
     </div>
   </div>

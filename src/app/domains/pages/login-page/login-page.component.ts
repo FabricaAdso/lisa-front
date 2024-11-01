@@ -5,12 +5,16 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginDTO } from '@shared/dto/login.dto';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { UserService } from '@shared/services/user.service';
+import { PasswordEmailService } from '@shared/services/password-email.service';
+import { PasswordEmailModel } from '@shared/models/password-email.model';
+import { PasswordEmailDTO } from '@shared/dto/password-email.dto';
 
 @Component({
   selector: 'app-login-page',
@@ -26,10 +30,13 @@ export class LoginPageComponent implements OnDestroy {
 
   private auth_service = inject(AuthService);
   private token_service = inject(TokenService);
+  private password_email_service = inject(PasswordEmailService);
 
   passwordVisible: boolean = true
   showModal: boolean = false;
   errorMessage: string | null = null;
+  user:any [] = [];
+
 
   login_sub:Subscription | null = null;
   isLoadingOne = false;
@@ -50,7 +57,8 @@ export class LoginPageComponent implements OnDestroy {
 
   formLogin = new FormGroup({
     identity_document: new FormControl('', [Validators.required]),
-    password: new  FormControl('', [Validators.required])
+    password: new  FormControl('', [Validators.required]),
+    email: new FormControl ('', [Validators.required])
   });
 
 
@@ -60,6 +68,10 @@ export class LoginPageComponent implements OnDestroy {
 
   get fieldPassword(){
     return this.formLogin.get('password') as FormControl;
+  }
+
+  get fieldEmail(){
+    return this.formLogin.get('email') as FormControl;
   }
 
 
@@ -112,15 +124,32 @@ export class LoginPageComponent implements OnDestroy {
     this.isLoadingOne = true;
     setTimeout(() => {
       this.isLoadingOne = false;
+      alert('correo enviado')
+      this.sendEmail()
     }, 5000);
   }
 
-  loadTwo(): void {
-    this.isLoadingTwo = true;
-    setTimeout(() => {
-      this.isLoadingTwo = false;
-    }, 5000);
+
+
+  sendEmail(){
+
+    let emailData:PasswordEmailDTO = {
+      email: this.formLogin.get('email')!.value!
+    }
+
+    this.password_email_service.postEmail(emailData).subscribe({
+      next: (response) => {
+        console.log(response);
+      }
+    })
   }
+
+  // loadTwo(): void {
+  //   this.isLoadingTwo = true;
+  //   setTimeout(() => {
+  //     this.isLoadingTwo = false;
+  //   }, 5000);
+  // }
 
 }
 

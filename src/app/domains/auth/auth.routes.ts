@@ -29,6 +29,11 @@ export const routes: Routes = [
             '@domains/pages/register-page/register-page.component'
           ).then((c) => c.RegisterPageComponent),
       },
+      {
+        path: 'password-reset',
+        title: 'password-reset',
+        loadComponent: () => import('@domains/pages/password-reset/password-reset.component').then(c => c.PasswordResetComponent)
+      }
     ],
   },
 ];
