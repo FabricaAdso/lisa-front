@@ -44,6 +44,7 @@ export const routes: Routes = [
                 loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
             },
             {
+                //http://127.0.0.1:4200/dashboard/environments
                 path: 'environments',
                 title: 'Administrar Ambientes',
                 loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
