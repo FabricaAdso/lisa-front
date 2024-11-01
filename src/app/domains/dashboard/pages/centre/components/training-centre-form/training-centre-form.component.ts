@@ -9,6 +9,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { Subscription } from 'rxjs';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-training-centre-form',
@@ -20,8 +21,7 @@ import { Subscription } from 'rxjs';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    ReactiveFormsModule
-    
+    ReactiveFormsModule,
   ],
   templateUrl: './training-centre-form.component.html',
   styleUrl: './training-centre-form.component.css'
@@ -31,24 +31,24 @@ export class TrainingCentreFormComponent {
   private formBuilder = inject(FormBuilder);
   private centreService = inject(TrainingCentreService);
 
-  @Input()centre?: TrainingCentreModel;
-  @Input() isVisibe:boolean = false ;
+  @Input()centre?: TrainingCentreModel | undefined;
+  @Input() isVisible:boolean | undefined ;
 
   @Output() update = new EventEmitter<TrainingCentreModel>();
   @Output() create = new EventEmitter<TrainingCentreModel>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<boolean>();
 
   form:FormGroup;
   saveSub:Subscription|null = null;
   dataSub:Subscription|null = null;
 
-  touched:boolean = false;
-  loading:boolean = false;
 
-  constructor(){
+  constructor(
+    private notification: NzNotificationService
+  ){
     this.form = this.formBuilder.group({
       name:new FormControl(null,[Validators.required,noWhiteSpaceValidator()])
-    });
+    },);
   }
 
   ngOnInit(): void {
@@ -79,8 +79,13 @@ export class TrainingCentreFormComponent {
       .subscribe({
         next:(new_area)=>{
           this.create.emit(new_area);
+          this.notificacion("Se creo el centro "+new_area.name+" correctamente","Centro")
         }
       });
+  }
+
+  notificacion(Mensaje:string,titulo:string){
+    this.notification.blank(titulo, Mensaje);
   }
 
 
@@ -91,6 +96,5 @@ export class TrainingCentreFormComponent {
     }
     this.createCentre();
   }
-
 
 }

@@ -61,9 +61,6 @@ export class EnvironmentComponent {
   deleteSub:Subscription|null = null;
 
 
-// ignorar esto
-  nameFilter = ''; // Variable para almacenar el valor del filtro de nombre
-  filteredEnvironments: EnvironmentModel[] = []; // Arreglo para datos filtrados
 
   ngOnInit(): void {
     this.loadData();// Carga los datos iniciales.
@@ -99,7 +96,7 @@ export class EnvironmentComponent {
     ]).subscribe({
       next: ([enviroments, areas, headquarters]) => {
         this.environments = [...enviroments]
-        this.filteredEnvironments = [...this.environments]; 
+        
         this.areas = [...areas]
         this.headquarters = [...headquarters]
 
@@ -116,15 +113,7 @@ export class EnvironmentComponent {
     });
   }
 
-  applyFilter() {
-    const filterValue = this.nameFilter.trim().toLowerCase();
-    this.filteredEnvironments = this.environments.filter(environment =>
-      environment.name.toLowerCase().includes(filterValue)
-    );
-  }
-  trackById(index: number, item: EnvironmentModel): number {
-    return item.id;
-  }
+
 
   createForm() {
     this.formEnvironments = this.formBuilder.group({

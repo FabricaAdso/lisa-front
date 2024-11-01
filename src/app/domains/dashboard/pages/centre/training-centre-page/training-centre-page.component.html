@@ -1,53 +1,35 @@
+<!-- Botón para crear un nuevo centro -->
+@if (isModalVisible) {
+<app-training-centre-form [isVisible]="isModalVisible" (closeModal)="closeModal()" [centre]="centreUpdate"
+  (create)="actualizarTabla($event)"></app-training-centre-form>
+}
 
+<button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
 
-
-<div class="p-4">
-    <!-- Botón para crear un nuevo centro -->
-    <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
-  
-    <!-- Tabla para listar centros de formación -->
-    <nz-table #centreTables [nzData]="centres" [nzPageSize]="5">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (centre of centreTables.data; track $index) {
-        <tr >
-          <td>{{ centre.id }}</td>
-          <td>{{ centre.name }}</td>
-          <td>
-            <button nz-button nzType="default" (click)="openModal(centre)">Editar</button>
-            <button nz-button nzDanger (click)="deleteCentre(centre.id)">Eliminar</button>
-          </td>
-        </tr>
+<!-- Tabla para listar centros de formación -->
+<nz-table [nzData]="Datetable.Datos" [nzPageSize]="5">
+  <thead>
+    <tr>
+      @for (titulo of Datetable.Titles; track $index) {
+      <th>{{titulo}}</th>
       }
-      </tbody>
-    </nz-table>
-  
-    <!-- Modal para crear o editar un centro de formación -->
-  <nz-modal [(nzVisible)]="isModalVisible" nzTitle="{{ indexCentre !== null ? 'Editar' : 'Crear' }} Centro de Formación"
-    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formCentres?.invalid" >
-     
-    <ng-container *nzModalContent>
-      <form nz-form *ngIf="formCentres" [formGroup]="formCentres">
-  
-        <label for="name">Nombre del Centro</label>
-        <input nz-input formControlName="name" id="name" placeholder="Nombre del centro" />
-    
-        <!-- Validación del campo de nombre -->
-        <div *ngIf="formCentres.controls['name'].invalid && formCentres.controls['name'].touched">
-          <small class="text-red-500">El nombre es requerido y debe tener al menos 5 caracteres</small>
-        </div>
-    
-      </form>
-    </ng-container>
-  
-    
-
-  
-  </nz-modal>
-  </div>
+    </tr>
+  </thead>
+  <tbody>
+    @for (centre of Datetable.Datos; track $index) {
+    <tr>
+      @for (item of centre.Datos; track $index) {
+      <td>{{ item }}</td>
+      }
+      
+      <td>
+        <button nz-button nzType="default" (click)="update(centre.idItem)">Editar</button>
+        <button nz-popconfirm  (click)="deleteCentre(centre.idItem)">
+          Delete
+        </button>
+      </td>
+      
+    </tr>
+    }
+  </tbody>
+</nz-table>
