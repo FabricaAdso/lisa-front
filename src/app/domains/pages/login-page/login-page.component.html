@@ -104,29 +104,37 @@
 
 
 @if (showModal) {
-    <div class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="fixed inset-0 bg-black opacity-50"></div>
-      <div class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg z-10 p-6 max-w-sm mx-auto">
-          <div class="flex items-center">
-              <svg class="flex-shrink-0 w-4 h-4 me-2 dark:text-gray-300" aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                      d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-              </svg>
-              <h3 class="text-lg font-medium text-gray-800 dark:text-gray-300">Error</h3>
-          </div>
-          <div class="mt-2 mb-4 text-sm text-gray-800 dark:text-gray-300">
-              {{errorMessage}}
-          </div>
-          <div class="flex justify-start">
-            <button nz-button nzType="primary" (click)="loadOne()" [nzLoading]="isLoadingOne">Click me!</button>
-              <button (click)="closeModal()" type="button"
-                  class="text-gray-800 bg-transparent border border-gray-700 hover:bg-gray-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-800 dark:text-gray-300 dark:hover:text-white">
-                  Cerrar
-              </button>
-          </div>
+  <div class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 p-6 max-w-md mx-auto">
+      <div class="flex items-center mb-4">
+        <svg class="flex-shrink-0 w-5 h-5 me-2 text-red-500" aria-hidden="true"
+             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-300">Recuperación de Contraseña</h3>
       </div>
+      <div class="mt-4 mb-6">
+        <p class="text-sm text-gray-600 dark:text-gray-400">Por favor, ingresa tu documento de identidad para solicitar la recuperación de tu cuenta.</p>
+      </div>
+      <form>
+        <div class="mb-4">
+          <label for="identity_document" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Documento de identidad</label>
+          <input id="identity_document" type="text"  name="identity_document"
+                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-gray-300 dark:border-gray-500"
+                 required>
+        </div>
+      </form>
+      <div class="flex justify-between mt-4">
+        <button (click)="closeModal()" type="button"
+                class="text-gray-800 bg-transparent border border-gray-700 hover:bg-gray-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-800 dark:text-gray-300 dark:hover:text-white">
+          Cerrar
+        </button>
+        <button nz-button nzType="primary" (click)="loadOne()" [nzLoading]="isLoadingOne">Enviar</button>
+      </div>
+    </div>
   </div>
 }
+
 
 
