@@ -21,13 +21,13 @@ import { Subscription } from 'rxjs';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     NzModalModule,
     NzTableModule,
     NzButtonModule,
     NzFormModule,
     NzInputModule,
     NzPopconfirmModule,
+    ReactiveFormsModule,
     AreaFormComponent
   ],
   templateUrl: './area.component.html',

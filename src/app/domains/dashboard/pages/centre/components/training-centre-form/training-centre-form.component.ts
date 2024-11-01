@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AreaModel } from '@shared/models/area-model';
-import { AreaService } from '@shared/services/area.service';
+import { TrainingCentreModel } from '@shared/models/training-centre-model';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 import { noWhiteSpaceValidator } from '@shared/validators/no-wite-space.validator';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -11,7 +11,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-area-form',
+  selector: 'app-training-centre-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,26 +20,30 @@ import { Subscription } from 'rxjs';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
     
   ],
-  templateUrl: './area-form.component.html',
-  styleUrl: './area-form.component.css'
+  templateUrl: './training-centre-form.component.html',
+  styleUrl: './training-centre-form.component.css'
 })
-export class AreaFormComponent implements OnInit, OnDestroy{
+export class TrainingCentreFormComponent {
 
   private formBuilder = inject(FormBuilder);
-  private areaService = inject(AreaService);
+  private centreService = inject(TrainingCentreService);
 
-  @Input() area?:AreaModel;
-  @Input() isVisible:boolean = false;
+  @Input()centre?: TrainingCentreModel;
+  @Input() isVisibe:boolean = false ;
 
-  @Output() update = new EventEmitter<AreaModel>();
-  @Output() create = new EventEmitter<AreaModel>();
+  @Output() update = new EventEmitter<TrainingCentreModel>();
+  @Output() create = new EventEmitter<TrainingCentreModel>();
   @Output() cancel = new EventEmitter<void>();
 
   form:FormGroup;
   saveSub:Subscription|null = null;
+  dataSub:Subscription|null = null;
+
+  touched:boolean = false;
+  loading:boolean = false;
 
   constructor(){
     this.form = this.formBuilder.group({
@@ -48,39 +52,30 @@ export class AreaFormComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    if(this.area){
-      this.form.addControl('id',new FormControl(this.area.id));
-      this.form.get('name')!.setValue(this.area.name);
+    if(this.centre){
+      this.form.addControl('id',new FormControl(this.centre.id));
+      this.form.get('name')!.setValue(this.centre.name);
     }
   }
-
   ngOnDestroy(): void {
     if(this.saveSub) this.saveSub.unsubscribe();
   }
 
-  saveData(){
-    if (this.area) {
-      this.editArea();
-      return;
-    }
-    this.createArea();
-  }
-
-  editArea(){
+  editCentre(){
     if(this.form.invalid) return; 
     const {value} = this.form;
-    this.saveSub = this.areaService.update(value)
+    this.saveSub = this.centreService.update(value)
       .subscribe({
-        next:(new_area)=>{
-          this.update.emit(new_area);
+        next:(new_centre)=>{
+          this.update.emit(new_centre);
         }
       });
   }
 
-  createArea(){
+  createCentre(){
     if(this.form.invalid) return; 
     const {value} = this.form;
-    this.saveSub = this.areaService.create(value)
+    this.saveSub = this.centreService.create(value)
       .subscribe({
         next:(new_area)=>{
           this.create.emit(new_area);
@@ -88,7 +83,14 @@ export class AreaFormComponent implements OnInit, OnDestroy{
       });
   }
 
-  cancelForm(){
-    this.cancel.emit();
+
+  saveData(){
+    if (this.centre) {
+      this.editCentre();
+      return;
+    }
+    this.createCentre();
   }
+
+
 }

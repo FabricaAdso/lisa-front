@@ -11,6 +11,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import {NzFormModule} from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { TrainingCentreFormComponent } from '../components/training-centre-form/training-centre-form.component';
 
 @Component({
   selector: 'app-training-centre-page',
@@ -24,7 +25,8 @@ import { TrainingCentreService } from '@shared/services/training-centre.service'
     NzTableModule,
     NzButtonModule,
     NzFormModule,
-    NzInputModule
+    NzInputModule,
+    TrainingCentreFormComponent
   ],
   templateUrl: './training-centre-page.component.html',
   styleUrl: './training-centre-page.component.css'
@@ -36,7 +38,9 @@ export class TrainingCentrePageComponent {
   private trainingCentreService = inject(TrainingCentreService);
 
   centres: TrainingCentreModel[] = [];
+  centre:TrainingCentreModel|undefined = undefined;
   isModalVisible = false;
+  isModalEditVisible = false;
 
   formCentres: FormGroup | null = null;
   indexCentre: number | null = null;
