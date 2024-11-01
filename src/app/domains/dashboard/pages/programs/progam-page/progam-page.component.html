@@ -81,5 +81,5 @@
   (onUpdate)="saveEditedProgram($event)"
   (onCreate)="createProgram($event)"
   [programa]="editingProgram"
-  
-></app-add-program-form>
+  (onCancel)="handleCancel()"
+  ></app-add-program-form>

@@ -15,13 +15,18 @@ import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { AddProgramModalComponent } from '../modals/add-program-modal/add-program-modal.component';
 import { BulkUploadModalComponent } from '../modals/bulk-upload-modal/bulk-upload-modal.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { datosTable, ProgramModel, TableModel } from '@shared/models/program.model';
+import {
+  datosTable,
+  ProgramModel,
+  TableModel,
+} from '@shared/models/program.model';
 import { ProgramService } from '@shared/services/program/program.service';
 import { log } from 'ng-zorro-antd/core/logger';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AddProgramFormComponent } from '../components/add-program-form/add-program-form.component';
+import { UpdateProgramDto } from '@shared/dto/program/update-program-dto';
 
 @Component({
   selector: 'app-progam-page',
@@ -42,7 +47,7 @@ import { AddProgramFormComponent } from '../components/add-program-form/add-prog
     NzSpaceModule,
     NzPaginationModule,
     FormsModule,
-    AddProgramFormComponent
+    AddProgramFormComponent,
   ],
   templateUrl: './progam-page.component.html',
   styleUrl: './progam-page.component.css',
@@ -52,29 +57,33 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
   private saveSubscription: Subscription | null = null;
   program: ProgramModel[] = [];
   editingProgram: ProgramModel | undefined;
-  ObjTabla:TableModel = {} as TableModel
+  ObjTabla: TableModel = {} as TableModel;
   search: string = '';
   isVisible = false;
   dataSub: Subscription | null = null;
   deleteSub: Subscription | null = null;
   buscarSub: Subscription | null = null;
-  titulos:{titulo:string}[] = [
+  titulos: { titulo: string }[] = [
     {
-      titulo:"ID"
+      titulo: 'ID',
     },
     {
-      titulo:"Nombre"
+      titulo: 'Nombre',
     },
     {
-      titulo:"Nivel de formación"
+      titulo: 'Nivel de formación',
     },
     {
-      titulo:"Action"
+      titulo: 'Action',
     },
+  ];
 
-  ]
 
-  private programService = inject(ProgramService);
+  constructor(
+    private programService:ProgramService
+  ){
+
+  }
   ngOnInit(): void {
     this.getPrograms();
   }
@@ -91,27 +100,32 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (programs) => {
           this.program = programs;
-          this.ObjTabla = this.mapToTable(programs)
+          this.ObjTabla = this.mapToTable(programs);
         },
       });
   }
 
-  mapToTable(programas:ProgramModel[]):TableModel{
-    return{
-      titulo:["ID","Nombre","Nivel de formacion","idnivel","Acccion"],
-      dato:programas.map((programa:ProgramModel)=>this.mapToDatosTabla(programa))
-    }
+  mapToTable(programas: ProgramModel[]): TableModel {
+    return {
+      titulo: ['ID', 'Nombre', 'Nivel de formacion', 'idnivel', 'Acccion'],
+      dato: programas.map((programa: ProgramModel) =>
+        this.mapToDatosTabla(programa)
+      ),
+    };
   }
-  mapToDatosTabla(programa:ProgramModel):datosTable{
-    console.log(this.mapToDatosTabla)
+  mapToDatosTabla(programa: ProgramModel): datosTable {
+    return {
+      id: programa.id,
+      dato: [
+        programa.id.toString(),
+        programa.name,
+        programa.education_level?.name|| '',
+        programa.education_level_id?.toString(),
+        'Action'
+      ],
 
-    return{
-      id:programa.id,
-      dato:[programa.id.toString(),programa.name,programa.education_level?.name!,programa.education_level_id.toString()],
-      
-      delete:true,
-      
-    }
+      delete: true,
+    };
   }
 
   searchProgram() {
@@ -128,7 +142,7 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
   }
   createProgram(item: ProgramModel) {
     console.log('creando');
-    
+
     this.ObjTabla.dato = [...this.ObjTabla.dato, this.mapToDatosTabla(item)];
   }
 
@@ -150,18 +164,21 @@ export class ProgamPageComponent implements OnInit, OnDestroy {
   }
 
   editProgram(idprogram: number) {
-    const item:ProgramModel | undefined =  this.program.find((item:ProgramModel)=> item.id == idprogram)
-    this.editingProgram = { ...item!};
+    const item: ProgramModel | undefined = this.program.find(
+      (item: ProgramModel) => item.id == idprogram
+    );
+    this.editingProgram = { ...item! };
     this.isVisible = true;
   }
 
-  saveEditedProgram(updatedProgram: ProgramModel) {
-    console.log('actualizar');
-    
-    const index = this.ObjTabla.dato.findIndex(d => d.id ===updatedProgram.id);
+  saveEditedProgram( updatedProgram: ProgramModel) {
+    const index = this.ObjTabla.dato.findIndex((d) => d.id === updatedProgram.id);
     if (index > -1) {
-      this.ObjTabla.dato[index]= this.mapToDatosTabla(updatedProgram);
-      this.editingProgram = undefined;
+      this.ObjTabla.dato[index] = {...this.mapToDatosTabla(updatedProgram)};
     }
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
   }
 }

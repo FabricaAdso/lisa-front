@@ -92,7 +92,10 @@ export class AddProgramFormComponent implements OnInit,OnDestroy {
 
 
   ngOnInit(): void {
-    this.getEducationLevel()
+    this.getEducationLevel();
+    if (this.programa) {
+      this.Formprogram.patchValue(this.programa);
+    }
   }
 
   ngOnDestroy(): void {
@@ -121,11 +124,6 @@ export class AddProgramFormComponent implements OnInit,OnDestroy {
     ? { id: this.programa.id, ...this.Formprogram.value }
     : this.Formprogram.value;
 
-    if (this.programa) {
-      this.onUpdate.emit(data);
-    } else {
-      this.onCreate.emit(data);
-    }
     this.programa
       ? this.update(data)
       : this.create(data)
@@ -159,10 +157,16 @@ export class AddProgramFormComponent implements OnInit,OnDestroy {
   }
 
   update(value:UpdateProgramDto){
-    this.saveSub = this.programService.update(value)
+    const saveSub = this.programService.update(value)
       .subscribe({
         next:(new_program)=>{
-          this.onUpdate.emit(new_program);
+          this.onUpdate.emit(new_program)
+        },
+        error : error =>{
+          console.log(error)
+        },
+        complete(){
+          saveSub.unsubscribe()
         }
       })
   }

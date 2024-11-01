@@ -43,7 +43,8 @@ export class ProgramService {
 
   update(data:UpdateProgramDto){
     const {id}= data;
-    return this.http.put<ProgramModel>(`${this.url}/${id}`,data)
+    let url = `${this.url}/${id}`
+    return this.http.put<ProgramModel>(url,data)
   }
 
   
