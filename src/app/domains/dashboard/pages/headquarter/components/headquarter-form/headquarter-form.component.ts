@@ -10,6 +10,7 @@ import { HeadquartersService } from '@shared/services/headquarters.service';
 import { LocationService } from '@shared/services/location.service';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
 import { noWhiteSpaceValidator } from '@shared/validators/no-wite-space.validator';
+import { timeRangeValidator } from '@shared/validators/time-validator';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -72,11 +73,16 @@ export class HeadquarterFormComponent {
       training_center_id:new FormControl(null,[Validators.required]),
       opening_time:new FormControl(null,[Validators.required]),
       closing_time:new FormControl(null,[Validators.required]),
-    });
+    }, { validators: timeRangeValidator });
   }
   ngOnInit(): void {
     this.loadData();
-    console.log('modal');
+    this.form.valueChanges.subscribe(() => {
+      if (this.form.errors) { // Solo imprime si hay errores
+        console.log('Errores del formulario:', this.form.errors);
+      }
+    
+    });
     
   }
 

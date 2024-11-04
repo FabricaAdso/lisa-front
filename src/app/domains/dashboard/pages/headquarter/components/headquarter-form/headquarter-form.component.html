@@ -77,6 +77,11 @@
             Se requiere horario de cierre.
           </div>
         </div>
+        
+        <div *ngIf="form.hasError('invalidTime')" class="text-red-500 text-sm mt-2">
+          La hora de apertura no puede ser mayor o igual a la hora de cierre.
+        </div>
+        
       </div>
 
       <div class="mb-4">
