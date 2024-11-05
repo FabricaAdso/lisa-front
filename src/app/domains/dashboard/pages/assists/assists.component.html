@@ -5,6 +5,7 @@
       <button nz-button nzType="primary" (click)="openModal('instructor')">
         Asignar Instructor
       </button>
+
       <nz-table #instructorTable [nzData]="instructores" [nzBordered]="true">
         <thead>
           <tr>
@@ -29,6 +30,7 @@
       <button nz-button nzType="primary" (click)="openModal('aprendiz')">
         Asignar Aprendiz
       </button>
+
       <nz-table #aprendizTable [nzData]="aprendices" [nzBordered]="true">
         <thead>
           <tr>
@@ -49,6 +51,9 @@
       </nz-table>
     </nz-tab>
   </nz-tabset>
+  <button nz-button nzType="default" (click)="openUploadModal()">
+    Subir Archivos
+  </button>
 
   <!-- Modal único para Asignar Instructor o Aprendiz -->
   <nz-modal [(nzVisible)]="isModalVisible"
@@ -74,15 +79,18 @@
       </ng-container>
     </ng-container>
   </nz-modal>
-</div>
-<!-- modal subir archivos -->
-<div>
-  <nz-modal>
-    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" [nzFileList]="fileList">
-      <button nz-button>
-        <span nz-icon nzType="upload"></span>
-        subir
-      </button>
-    </nz-upload>
-  </nz-modal>
+  <!-- modal subir archivos -->
+  <div>
+    <nz-modal [(nzVisible)]="isUploadModalVisible" nzTitle="Subir Archivos" (nzOnCancel)="handleUploadCancel()"
+      (nzOnOk)="handleUploadOk()">
+      <ng-container *nzModalContent>
+        <nz-upload [nzFileList]="fileList" nzListType="picture">
+          <button nz-button>
+            <i nz-icon nzType="upload"></i> Subir Archivo
+          </button>
+        </nz-upload>
+      </ng-container>
+    </nz-modal>
+
+  </div>
 </div>

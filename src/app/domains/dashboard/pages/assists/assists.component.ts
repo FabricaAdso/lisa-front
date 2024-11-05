@@ -22,18 +22,18 @@ interface Persona {
   selector: 'app-assists',
   standalone: true,
   imports: [
-    CommonModule, 
-    NzTableComponent, 
-    NzTabSetComponent, 
+    CommonModule,
+    NzTableComponent,
+    NzTabSetComponent,
     NzTabComponent,
-    NzModalModule, 
-    NzAlertModule, 
-    NzFormLabelComponent, 
-    NzFormModule, 
-    NzFormModule, 
+    NzModalModule,
+    NzAlertModule,
+    NzFormLabelComponent,
+    NzFormModule,
+    NzFormModule,
     NzSelectComponent,
-    NzOptionComponent, 
-    FormsModule, 
+    NzOptionComponent,
+    FormsModule,
     ReactiveFormsModule,
     NzUploadModule
 
@@ -72,6 +72,7 @@ export class AssistsComponent implements OnInit {
   ];
   instructores: Persona[] = [];
   aprendices: Persona[] = [];
+  isUploadModalVisible = false;
   isModalVisible = false;
   modalType: 'instructor' | 'aprendiz' |'archivos'| null = null;
   form: FormGroup;
@@ -88,23 +89,22 @@ export class AssistsComponent implements OnInit {
       persona: [null, Validators.required],
     });
   }
-  
+
 
   ngOnInit(): void { }
 
-  openModal(type: 'instructor' | 'aprendiz'): void {
+  openModal(type: 'instructor' | 'aprendiz' ): void {
     this.modalType = type;
     this.isModalVisible = true;
     this.errorMessage = null; // Limpiar cualquier mensaje de error previo
-    
-
-
   }
-
+  openUploadModal(): void {
+    this.isUploadModalVisible = true;
+  }
   handleOk(): void {
     if (this.form.valid) {
-      const selectedPersona = this.listaPersonas.find(
-        (p) => p.id === this.form.value.persona
+      const selectedPersona = this.listaPersonas.find
+        (p => p.id === this.form.value.persona
       );
 
       if (selectedPersona) {
@@ -113,7 +113,6 @@ export class AssistsComponent implements OnInit {
           fechaInicio: new Date(),
           fechaFin: new Date(new Date().setMonth(new Date().getMonth() + 6))
         };
-
         if (this.modalType === 'instructor') {
           this.instructores = [...this.instructores, personaConFecha];
         } else if (this.modalType === 'aprendiz') {
@@ -132,6 +131,14 @@ export class AssistsComponent implements OnInit {
       this.errorMessage = 'Por favor selecciona una persona.';
     }
   }
+  handleUploadOk(): void {
+    this.isUploadModalVisible = false;
+    this.message.success('Archivo(s) subido(s) exitosamente.');
+  }
+  handleUploadCancel(): void {
+    this.isUploadModalVisible = false;
+  }
+
 
   handleCancel(): void {
     this.isModalVisible = false;
