@@ -31,8 +31,9 @@ export class ProgramService {
     return this.http.get<ProgramModel[]>(url);
   }
 
-  create(data:CreateProgramDto){
-    return this.http.post<ProgramModel>(this.url, data);
+  create(data:CreateProgramDto,data_url?:QueryUrl){
+    let url:string = getQueryUrl(this.url,data_url)
+    return this.http.post<ProgramModel>(url, data);
   }
 
 

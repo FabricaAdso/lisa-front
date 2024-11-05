@@ -148,7 +148,7 @@ export class AddProgramFormComponent implements OnInit,OnDestroy {
   }
 
   create(value:CreateProgramDto){
-    this.saveSub = this.programService.create(value)
+    this.saveSub = this.programService.create(value,{included:['educationLevel']})
     .subscribe({
       next:(new_program)=>{
         this.onCreate.emit(new_program);
