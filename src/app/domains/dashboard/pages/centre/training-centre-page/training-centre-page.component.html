@@ -1,7 +1,14 @@
+
+<!-- training-centre-page.component.html -->
 <!-- Botón para crear un nuevo centro -->
 @if (isModalVisible) {
-<app-training-centre-form [centre]="centreUpdate" [isVisible]="isModalVisible" (update)="actualizarTabla($event)"
-  (create)="actualizarTabla($event)" (cancel)="closeModal()">
+<app-training-centre-form 
+[centre]="centreUpdate" 
+[isVisible]="isModalVisible" 
+(update)="actualizarTabla($event)"
+(create)="actualizarTabla($event)" 
+
+(closeModal)="closeModal()">
 </app-training-centre-form>
 }
 

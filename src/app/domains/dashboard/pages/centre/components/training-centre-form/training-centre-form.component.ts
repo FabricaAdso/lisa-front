@@ -36,7 +36,7 @@ export class TrainingCentreFormComponent {
 
   @Output() update = new EventEmitter<TrainingCentreModel>();
   @Output() create = new EventEmitter<TrainingCentreModel>();
-  @Output() closeModal = new EventEmitter<boolean>();
+  @Output() closeModal = new EventEmitter<void>();
 
   form:FormGroup;
   saveSub:Subscription|null = null;
@@ -72,16 +72,16 @@ export class TrainingCentreFormComponent {
       });
   }
 
-  createCentre(){
-    if(this.form.invalid) return; 
-    const {value} = this.form;
-    this.saveSub = this.centreService.create(value)
-      .subscribe({
-        next:(new_area)=>{
-          this.create.emit(new_area);
-          this.notificacion("Se creo el centro "+new_area.name+" correctamente","Centro")
-        }
-      });
+  createCentre() {
+    if (this.form.invalid) return;
+    const { value } = this.form;
+    this.saveSub = this.centreService.create(value).subscribe({
+      next: (new_centre) => {
+        this.create.emit(new_centre); // Emite el evento de creación
+        this.closeModal.emit(); // Emite el cierre para que el padre oculte el modal
+        this.notificacion("Se creó el centro " + new_centre.name + " correctamente", "Centro");
+      }
+    });
   }
 
   notificacion(Mensaje:string,titulo:string){

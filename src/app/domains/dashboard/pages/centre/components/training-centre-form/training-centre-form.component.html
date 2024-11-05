@@ -1,6 +1,10 @@
+<!-- training-centre-form.component.html -->
 <!-- Modal para crear o editar un centro de formación -->
-<nz-modal [nzVisible]="isVisible" nzTitle="{{centre ?  'editar':'crear'}} Centro" (nzOnCancel)="closeModal.emit()"
-    (nzOnOk)="saveData()" [nzOkDisabled]="form.invalid">
+<nz-modal [nzVisible]="isVisible" 
+nzTitle="{{centre ?  'editar':'Crear'}} Centro" 
+(nzOnCancel)="closeModal.emit()"
+(nzOnOk)="saveData()" 
+[nzOkDisabled]="form.invalid">
     <ng-container *nzModalContent>
         <form nz-form [formGroup]="form">
             <label for="name">Nombre del Centro</label>

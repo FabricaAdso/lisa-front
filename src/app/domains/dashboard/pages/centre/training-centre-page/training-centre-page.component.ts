@@ -16,6 +16,7 @@ import { log } from 'ng-zorro-antd/core/logger';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { tableComponteModel, tableDataComponteModel } from '@shared/models/table.model';
 import { ThisReceiver } from '@angular/compiler';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'app-training-centre-page',
@@ -29,6 +30,7 @@ import { ThisReceiver } from '@angular/compiler';
     NzButtonModule,
     NzFormModule,
     NzInputModule,
+    NzPopconfirmModule,
     TrainingCentreFormComponent
   ],
   templateUrl: './training-centre-page.component.html',
@@ -124,10 +126,6 @@ export class TrainingCentrePageComponent {
     this.centreUpdate = undefined; // Limpia el objeto en edición al cerrar el modal
   }
 
-
-
-
-  
 
 
 
