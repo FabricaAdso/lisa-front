@@ -2,7 +2,13 @@
 
 <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
 @if (isModalVisible) {
-    <app-area-form [area]="area" [isVisible]="isModalVisible" (update)="edit($event)" (create)="create($event)" (cancel)="closeModal()"></app-area-form>
+    <app-area-form 
+        [area]="area" 
+        [isVisible]="isModalVisible" 
+        (update)="edit($event)" 
+        (create)="create($event)" 
+        (cancel)="closeModal()">
+    </app-area-form>
 }
 
 <nz-table #basicTable [nzData]="areas">

@@ -85,11 +85,11 @@ export class AreaComponent implements OnInit,OnDestroy{
   edit(area:AreaModel){
     const {id} = area;
     const index_area = this.areas.findIndex((area)=>area.id === id);
-    if(!index_area) return;
+    if(index_area===null) return;
     let areas = [...this.areas];
     areas[index_area] = area;
     this.areas = areas;
-    this.closeModal();
+    this.isModalVisible = false;
   }
 
   create(area:AreaModel){
@@ -98,6 +98,7 @@ export class AreaComponent implements OnInit,OnDestroy{
   }
 
   openModal(): void {
+    this.area = undefined;
     this.isModalVisible = true;
   }
   closeModal(): void {

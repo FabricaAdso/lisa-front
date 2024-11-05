@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AreaModel } from '@shared/models/area-model';
 import { AreaService } from '@shared/services/area.service';
@@ -26,7 +26,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './area-form.component.html',
   styleUrl: './area-form.component.css'
 })
-export class AreaFormComponent implements OnInit, OnDestroy{
+export class AreaFormComponent implements OnInit, OnDestroy,OnChanges{
 
   private formBuilder = inject(FormBuilder);
   private areaService = inject(AreaService);
@@ -56,6 +56,11 @@ export class AreaFormComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     if(this.saveSub) this.saveSub.unsubscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    
   }
 
   saveData(){
