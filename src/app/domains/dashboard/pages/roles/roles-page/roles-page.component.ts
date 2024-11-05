@@ -18,7 +18,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 })
 export class RolesComponent implements OnInit {
   isVisible = false;
-  users: any[] = [];
+  users: any[] = [];  
   selectedUser: any;
   selectedRoles: string[] = [];
   isActive: boolean = true;
