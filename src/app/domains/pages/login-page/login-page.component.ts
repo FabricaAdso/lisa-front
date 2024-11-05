@@ -129,10 +129,7 @@ export class LoginPageComponent implements OnDestroy {
     }, 5000);
   }
 
-
-
   sendEmail(){
-
     let emailData:PasswordEmailDTO = {
       email: this.formLogin.get('email')!.value!
     }
