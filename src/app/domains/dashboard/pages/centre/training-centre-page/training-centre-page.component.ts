@@ -71,10 +71,21 @@ export class TrainingCentrePageComponent {
     }
   }
 
-  actualizarTabla(centro:TrainingCentreModel){
-    this.centres = [...this.centres,centro]
-    this.Datetable.Datos = [...this.Datetable.Datos,this.mapToTableDatos(centro)]
-    this.isModalVisible = false;
+  actualizarTabla(centro: TrainingCentreModel) {
+    const index = this.centres.findIndex(c => c.id === centro.id);
+    
+    if (index !== -1) {
+      // Actualiza el elemento existente
+      this.centres[index] = centro;
+      this.Datetable.Datos[index] = this.mapToTableDatos(centro);
+    } else {
+      // Agrega un nuevo elemento si es una creación
+      this.centres = [...this.centres, centro];
+      this.Datetable.Datos = [...this.Datetable.Datos, this.mapToTableDatos(centro)];
+    }
+    
+    // Cierra el modal y limpia la referencia de `centreUpdate`
+    this.closeModal();
   }
 
   cancel(): void {
@@ -93,7 +104,9 @@ export class TrainingCentrePageComponent {
     }
   }
 
-  deleteCentre(idCentre: number) {
+  deleteCentre(idCentre: number) {  
+    console.log('Eliminar centro con ID:', idCentre); 
+
     const deleteSub = this.trainingCentreService.delete(idCentre).subscribe(() => {
       this.centres = this.centres.filter((centre: TrainingCentreModel) => centre.id !== idCentre)
       this.Datetable.Datos = this.Datetable.Datos.filter((centre:tableDataComponteModel ) => centre.idItem !== idCentre)
@@ -108,6 +121,7 @@ export class TrainingCentrePageComponent {
 
   closeModal() {
     this.isModalVisible = false;
+    this.centreUpdate = undefined; // Limpia el objeto en edición al cerrar el modal
   }
 
 

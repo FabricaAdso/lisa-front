@@ -1,7 +1,8 @@
 <!-- Botón para crear un nuevo centro -->
 @if (isModalVisible) {
-<app-training-centre-form [isVisible]="isModalVisible" (closeModal)="closeModal()" [centre]="centreUpdate"
-  (create)="actualizarTabla($event)"></app-training-centre-form>
+<app-training-centre-form [centre]="centreUpdate" [isVisible]="isModalVisible" (update)="actualizarTabla($event)"
+  (create)="actualizarTabla($event)" (cancel)="closeModal()">
+</app-training-centre-form>
 }
 
 <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
@@ -21,14 +22,27 @@
       @for (item of centre.Datos; track $index) {
       <td>{{ item }}</td>
       }
-      
+
       <td>
         <button nz-button nzType="default" (click)="update(centre.idItem)">Editar</button>
-        <button nz-popconfirm  (click)="deleteCentre(centre.idItem)">
+
+        <button 
+  nz-popconfirm 
+  nzPopconfirmTitle="¿Está seguro que desea eliminar?" 
+  (nzOnConfirm)="deleteCentre(centre.idItem)" 
+  (nzOnCancel)="cancel()"
+  nz-button 
+  nzType="default" 
+  nzDanger>
+  Delete
+</button>
+        
+        
+        <!-- <button nz-popconfirm (click)="deleteCentre(centre.idItem)">
           Delete
-        </button>
+        </button> -->
       </td>
-      
+
     </tr>
     }
   </tbody>
