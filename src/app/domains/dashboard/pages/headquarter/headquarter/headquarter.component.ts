@@ -96,7 +96,7 @@ export class HeadquarterComponent {
 
   loadData() {
     const datasub = forkJoin([
-      this.headquarterService.getHeadquartes(),
+      this.headquarterService.getHeadquartes({included:['trainingCenter', 'municipality.departament']}),
       this.trainingCentreService.getCentros(),
       this.locationService.getDepartments()
     ]).subscribe({
