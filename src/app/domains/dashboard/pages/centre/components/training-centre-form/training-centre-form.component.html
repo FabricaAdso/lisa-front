@@ -4,6 +4,7 @@
 nzTitle="{{centre ?  'editar':'Crear'}} Centro" 
 (nzOnCancel)="closeModal.emit()"
 (nzOnOk)="saveData()" 
+[nzOkLoading]="loading"
 [nzOkDisabled]="form.invalid">
     <ng-container *nzModalContent>
         <form nz-form [formGroup]="form">

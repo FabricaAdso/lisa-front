@@ -41,6 +41,7 @@ export class TrainingCentreFormComponent {
   form:FormGroup;
   saveSub:Subscription|null = null;
   dataSub:Subscription|null = null;
+  loading:boolean  = false;
 
 
   constructor(
@@ -63,6 +64,7 @@ export class TrainingCentreFormComponent {
 
   editCentre(){
     if(this.form.invalid) return; 
+    this.loading = true;
     const {value} = this.form;
     this.saveSub = this.centreService.update(value)
       .subscribe({
@@ -74,6 +76,7 @@ export class TrainingCentreFormComponent {
 
   createCentre() {
     if (this.form.invalid) return;
+    this.loading = true;
     const { value } = this.form;
     this.saveSub = this.centreService.create(value).subscribe({
       next: (new_centre) => {

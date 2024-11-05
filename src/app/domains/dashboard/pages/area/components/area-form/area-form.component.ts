@@ -40,6 +40,7 @@ export class AreaFormComponent implements OnInit, OnDestroy,OnChanges{
 
   form:FormGroup;
   saveSub:Subscription|null = null;
+  loading:boolean = false;
 
   constructor(){
     this.form = this.formBuilder.group({
@@ -73,6 +74,7 @@ export class AreaFormComponent implements OnInit, OnDestroy,OnChanges{
 
   editArea(){
     if(this.form.invalid) return; 
+    this.loading = true;
     const {value} = this.form;
     this.saveSub = this.areaService.update(value)
       .subscribe({
@@ -84,6 +86,7 @@ export class AreaFormComponent implements OnInit, OnDestroy,OnChanges{
 
   createArea(){
     if(this.form.invalid) return; 
+    this.loading = true;
     const {value} = this.form;
     this.saveSub = this.areaService.create(value)
       .subscribe({

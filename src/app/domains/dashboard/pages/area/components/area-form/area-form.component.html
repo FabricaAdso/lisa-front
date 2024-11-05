@@ -1,5 +1,5 @@
 <nz-modal nzDraggable [(nzVisible)]="isVisible" nzTitle="{{area ? 'editar' :'crear'}} Area"
-    (nzOnCancel)="cancelForm()" (nzOnOk)="saveData()"  [nzOkDisabled]="form.invalid">
+    (nzOnCancel)="cancelForm()" [nzOkLoading]="loading" (nzOnOk)="saveData()"  [nzOkDisabled]="form.invalid">
     <ng-container *nzModalContent>
 
         <form nz-form [formGroup]="form">
