@@ -4,10 +4,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzFormLabelComponent, NzFormModule } from 'ng-zorro-antd/form';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalComponent, NzModalService } from 'ng-zorro-antd/modal';
+import {  NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { NzTabComponent, NzTabSetComponent } from 'ng-zorro-antd/tabs';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+
 interface Persona {
   id: number;
   documento: string;
@@ -18,16 +21,51 @@ interface Persona {
 @Component({
   selector: 'app-assists',
   standalone: true,
-  imports: [CommonModule, NzTableComponent, NzTabSetComponent, NzTabComponent,
-    NzModalComponent, NzAlertModule, NzFormLabelComponent, NzFormModule, NzFormModule, NzSelectComponent,
-    NzOptionComponent, FormsModule, ReactiveFormsModule
+  imports: [
+    CommonModule, 
+    NzTableComponent, 
+    NzTabSetComponent, 
+    NzTabComponent,
+    NzModalModule, 
+    NzAlertModule, 
+    NzFormLabelComponent, 
+    NzFormModule, 
+    NzFormModule, 
+    NzSelectComponent,
+    NzOptionComponent, 
+    FormsModule, 
+    ReactiveFormsModule,
+    NzUploadModule
 
   ],
+
   providers: [NzModalService, NzMessageService],
   templateUrl: './assists.component.html',
   styleUrl: './assists.component.css'
 })
 export class AssistsComponent implements OnInit {
+  fileList: NzUploadFile[] = [
+    {
+      uid: '1',
+      name: 'xxx.png',
+      status: 'done',
+      response: 'Server Error 500', // custom error message to show
+      url: 'http://www.baidu.com/xxx.png'
+    },
+    {
+      uid: '2',
+      name: 'yyy.png',
+      status: 'done',
+      url: 'http://www.baidu.com/yyy.png'
+    },
+    {
+      uid: '3',
+      name: 'zzz.png',
+      status: 'error',
+      response: 'Server Error 500', // custom error message to show
+      url: 'http://www.baidu.com/zzz.png'
+    }
+  ];
   listaPersonas: Persona[] = [
     { id: 1, documento: '123456789', nombreCompleto: 'Juan Perez' },
     { id: 2, documento: '987654321', nombreCompleto: 'Maria Garcia' },
@@ -35,21 +73,32 @@ export class AssistsComponent implements OnInit {
   instructores: Persona[] = [];
   aprendices: Persona[] = [];
   isModalVisible = false;
-  modalType: 'instructor' | 'aprendiz' | null = null;
+  modalType: 'instructor' | 'aprendiz' |'archivos'| null = null;
   form: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private message: NzMessageService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private fb: FormBuilder,
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
+
+  )
+   {
     this.form = this.fb.group({
       persona: [null, Validators.required],
     });
   }
+  
 
   ngOnInit(): void { }
 
   openModal(type: 'instructor' | 'aprendiz'): void {
     this.modalType = type;
     this.isModalVisible = true;
+    this.errorMessage = null; // Limpiar cualquier mensaje de error previo
+    
+
+
   }
 
   handleOk(): void {
@@ -66,28 +115,27 @@ export class AssistsComponent implements OnInit {
         };
 
         if (this.modalType === 'instructor') {
-          this.instructores = [...this.instructores, personaConFecha]; // Crear un nuevo arreglo para forzar la detección
+          this.instructores = [...this.instructores, personaConFecha];
         } else if (this.modalType === 'aprendiz') {
-          this.aprendices = [...this.aprendices, personaConFecha]; // Crear un nuevo arreglo para forzar la detección
+          this.aprendices = [...this.aprendices, personaConFecha];
         }
 
         this.isModalVisible = false;
         this.errorMessage = null;
         this.message.success(`${this.modalType} asignado exitosamente.`);
-        this.form.reset();
+        this.form.reset(); // Limpiar el formulario para la próxima vez
         this.cdr.detectChanges(); // Forzar la detección de cambios
       } else {
         this.errorMessage = 'Persona no encontrada en la lista.';
       }
     } else {
-      this.errorMessage = 'Formulario incompleto o inválido.';
+      this.errorMessage = 'Por favor selecciona una persona.';
     }
-    console.log('Instructores:', this.instructores);
-    console.log('Aprendices:', this.aprendices);
   }
 
   handleCancel(): void {
     this.isModalVisible = false;
-    this.form.reset();
+    this.errorMessage = null; // Limpiar cualquier mensaje de error previo
+    this.form.reset(); // Limpiar el formulario para la próxima vez
   }
 }
