@@ -1,31 +1,129 @@
-import { CommonModule } from '@angular/common'; // Importa el módulo común de Angular para usar directivas comunes
-import { Component } from '@angular/core'; // Importa el decorador Component para crear componentes de Angular
-import { RouterOutlet } from '@angular/router'; // Importa RouterOutlet para permitir la navegación entre rutas
-import { NzIconModule } from 'ng-zorro-antd/icon'; // Importa el módulo de iconos de Ng Zorro
-import { NzMenuModule } from 'ng-zorro-antd/menu'; // Importa el módulo de menús de Ng Zorro
+import { CommonModule } from '@angular/common';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {
+  Component,
+  HostListener,
+  ChangeDetectorRef,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { MenuItemComponent } from '../menu-item/menu-item.component';
+import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.component';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
-  selector: 'app-nav-bar', // Selector del componente, usado en HTML para referenciarlo
-  standalone: true, // Indica que este componente es autónomo y no requiere un módulo Ng
+  selector: 'app-nav-bar',
+  standalone: true,
   imports: [
-    CommonModule, // Agrega el módulo común para acceder a directivas como *ngIf, *ngFor, etc.
-    RouterOutlet, // Permite la inclusión de componentes basados en la ruta
-    NzIconModule, // Agrega el módulo de iconos para usar en el menú
-    NzMenuModule, // Agrega el módulo de menús para crear un menú de navegación
+    CommonModule,
+    RouterOutlet,
+    NzIconModule,
+    NzMenuModule,
+    MenuItemComponent,
+    DropDownMenuComponent,
   ],
-  templateUrl: './nav-bar.component.html', // Ruta del archivo de plantilla HTML
-  styleUrls: ['./nav-bar.component.css'], // Ruta del archivo de estilos CSS
+  templateUrl: './nav-bar.component.html',
+  styleUrls: ['./nav-bar.component.css'],
 })
-export class NavBarComponent {
-  isLoggedIn = true; // Estado que indica si el usuario está logueado (true o false)
-  userName = 'Yesid Jimenez'; // Nombre del usuario logueado, se puede modificar según el usuario
+export class NavBarComponent implements OnInit {
+  private router = inject(Router);
 
-  // Método para simular el inicio de sesión
-  login() {
-    console.log('Iniciar sesión...'); // Muestra un mensaje en la consola cuando se llama a este método
-    // Aquí puedes implementar la lógica de inicio de sesión (por ejemplo, autenticación con API)
-    this.isLoggedIn = true; // Cambia el estado de inicio de sesión a verdadero (simulación)
+  private breackpoint_observer = inject(BreakpointObserver);
+
+  private auth_service = inject(AuthService);
+
+  isLoggedIn = true;
+  userName = 'Yesid Jimenez';
+  isDropdownOpen1 = false;
+  isDropdownOpen2 = false;
+
+  Image_logo: string = 'assets/images/logosena.png';
+  UserImage: string = 'assets/images/logouser.png';
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.breackpoint_observer
+      .observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
+      .subscribe(() => {
+        this.isDropdownOpen1 = false;
+        this.isDropdownOpen2 = false;
+        this.cdr.detectChanges();
+      });
   }
-  Image_logo: string = 'assets/images/logo_lol.png';
-  UserImage: string = 'assets/images/userimage.jpeg'
+
+  login() {
+    console.log('Iniciar sesión...');
+    this.isLoggedIn = true;
+    this.router.navigate(['auth/login']);
+  }
+
+  toggleDropdown1() {
+    this.isDropdownOpen1 = !this.isDropdownOpen1;
+    // Cierra el segundo menú si está abierto
+    if (this.isDropdownOpen2) {
+      this.isDropdownOpen2 = false;
+    }
+    // Forzar detección de cambios si es necesario
+    this.cdr.detectChanges();
+  }
+
+  logout() {
+    console.log('Cerrando sesión...');
+    this.isLoggedIn = false;
+    this.auth_service.logout().subscribe({
+      next: (value) => {
+        console.log('Sesión cerrada correctamente');
+        console.log(value);
+      },
+    });
+  }
+
+  toggleDropdown2() {
+    console.log('yesid', this.isDropdownOpen2);
+    this.isDropdownOpen2 = !this.isDropdownOpen2;
+    // Cierra el primer menú si está abierto
+    if (this.isDropdownOpen1) {
+      this.isDropdownOpen1 = false;
+    }
+    // Forzar detección de cambios si es necesario
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    const dropdownButton1 = document.querySelector('.dropdown-button1'); // Selector para el primer botón
+    const dropdownMenu1 = document.querySelector('.dropdown-menu1'); // Selector para el menú del primer botón
+    const dropdownButton2 = document.querySelector('.dropdown-button2'); // Selector para el segundo botón
+    const dropdownMenu2 = document.querySelector('.app-drop-down-menu'); // Selector para el segundo menú
+
+    // Cierre del menú 1
+    if (
+      this.isDropdownOpen1 &&
+      dropdownButton1 &&
+      !dropdownButton1.contains(target) &&
+      dropdownMenu1 &&
+      !dropdownMenu1.contains(target)
+    ) {
+      this.isDropdownOpen1 = false;
+      this.cdr.detectChanges();
+    }
+
+    // Cierre del menú 2
+    if (
+      this.isDropdownOpen2 &&
+      dropdownButton2 &&
+      !dropdownButton2.contains(target) &&
+      dropdownMenu2 &&
+      !dropdownMenu2.contains(target)
+    ) {
+      this.isDropdownOpen2 = false;
+      this.cdr.detectChanges();
+    }
+  }
 }

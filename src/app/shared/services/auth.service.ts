@@ -17,4 +17,8 @@ export class AuthService {
     return this.http.post<TokenModel>(`login`,data)
   }
 
+  logout(){
+    localStorage.removeItem('token')
+    return this.http.post('logout',null)
+  }
 }

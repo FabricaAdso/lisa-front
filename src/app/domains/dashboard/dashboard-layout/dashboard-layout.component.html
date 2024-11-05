@@ -6,32 +6,16 @@
   <nz-layout>
     <!-- Layout con el sider -->
     <nz-sider
-    nzCollapsible
-    nzWidth="200px"
-    class="bg-[#ffffff] border border-r-green-500 hidden desktop:block"
-  >
+      nzCollapsible
+      nzWidth="200px"
+      class="bg-[#ffffff] border border-r-green-500 hidden desktop:block"
+    >
       <app-menu-item></app-menu-item>
     </nz-sider>
 
     <nz-layout>
       <nz-content class="m-[16px] p-[0 50px]">
-        <nz-breadcrumb class="m-[16px 0]">
-          <nz-breadcrumb-item>User</nz-breadcrumb-item>
-          <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
-        </nz-breadcrumb>
-
-        <!-- <div class="p-[24px] bg-[#fff] min-h-full max-h-[400px] overflow-y-auto">
-          Hola Aqui va un texto gigante de bienvenida
-          <p
-            class="text-[#333] text-[16px] leading-[24px] text-left p-[16px] m-[0 0 16px 0]"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit
-            amet nulla auctor, vestibulum magna sed, convallis ex. Cum sociis
-            natoque penatibus et magnis dis parturient montes, nascetur
-            ridiculus mus. Donec rutrum congue est, eget vestibulum augue
-            vestibulum eu. [...continúa tu texto aquí...]
-          </p>
-        </div> -->
+        <nz-breadcrumb [nzAutoGenerate]="true" class="mb-2"></nz-breadcrumb>
         <router-outlet></router-outlet>
       </nz-content>
 

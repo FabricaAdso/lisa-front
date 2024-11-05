@@ -1,0 +1,18 @@
+<main class="flex items-center justify-center h-full bg-gray-100">
+  <nz-card class="w-[90rem] h-[50rem] text-center shadow-lg rounded-lg">
+    <nz-card-meta
+      nzTitle="403 - Autorización Requerida"
+      nzDescription="No tienes permisos para acceder a este recurso. Si necesitas ayuda, comunícate con el soporte técnico o el administrador del sistema."
+      class="text-lg"
+    ></nz-card-meta>
+    <div class="flex items-center justify-center mt-6">
+      <picture class="w-[40rem] h-[40rem]">
+        <img
+          [src]="image_error"
+          class="w-full h-full object-contain"
+          alt="Error 403"
+        />
+      </picture>
+    </div>
+  </nz-card>
+</main>
