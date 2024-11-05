@@ -75,37 +75,21 @@ export const routes: Routes = [
             {
               path: 'error_401',
               title: 'Autenticación Requerida',
-              data: {breadcrumb: '/'},
               loadComponent: () => import('@domains/dashboard/pages/errors/error_401/error-401.component').then(c => c.Error401Component)
-          },
+            },
+            {
+              path: 'error_500',
+              title: 'Error de Servidor',
+              loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
+            },
 
-          {
-            path: 'error_403',
-            title: 'Autorización Requerida',
-            data: {breadcrumb: '/ '},
-            loadComponent: () => import('@domains/dashboard/pages/errors/error-403/error-403.component').then(c => c.Error403Component)
-          },
+            //No se porque pero cuando la puse sobre el error 500 se ejecutaba el 404
+            {
+              path: '**',
+              title: 'Página no encontrada',
+              loadComponent: () => import('@domains/dashboard/pages/errors/error-404/error-404.component').then(c => c.Error404Component)
+            },
 
-          {
-            path: 'error_404',
-            title: 'Pagina no Encontrada',
-            data: {breadcrumb: '/ '},
-            loadComponent: () => import('@domains/dashboard/pages/errors/error-404/error-404.component').then(c => c.Error404Component)
-          },
-
-          {
-            path: 'error_500',
-            title: 'Error de Serividor Interno',
-            data: {breadcrumb: '/ '},
-            loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
-          },
-
-          {
-            path: 'error_504',
-            title: 'Tiempo de Espera Agotado',
-            data: {breadcrumb: '/ '},
-            loadComponent: () => import('@domains/dashboard/pages/errors/error-504/error-504.component').then(c => c.Error504Component)
-          },
         ]
     }
 ];

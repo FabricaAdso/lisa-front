@@ -23,101 +23,96 @@ import { MenuItem } from '@shared/models/menuItems';
     NgIconComponent,
     CommonModule,
     NavBarComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './menu-item.component.html',
-  styleUrls: ['./menu-item.component.css'], // Corregido el typo en styleUrls
+  styleUrls: ['./menu-item.component.css'],
   providers: [
     provideIcons({ featherAirplay, heroUsers }), // Registra los iconos personalizados que se van a usar
   ],
 })
 export class MenuItemComponent {
-
   isMenuOpen = false;
-  // Ahora menuItems es una propiedad de la clase, accesible en la plantilla
+
   menuItems: MenuItem[] = [
-    {
-      title: 'Roles',
-      icon: 'team', // Icono personalizado
+    { title: 'Roles',
+      icon: 'team',
       route: 'roles',
-      theme: 'outline',
+      theme: 'outline'
     },
+
     {
       title: 'Administrar Áreas',
-      icon: 'appstore', // Icono personalizado
+
+      icon: 'appstore',
       route: 'environments-area',
       theme: 'outline',
     },
+
     {
       title: 'Training Centres',
-      icon: 'bank', // Icono personalizado
+
+      icon: 'bank',
       route: 'training-centers',
       theme: 'outline',
     },
-    {
-      title: 'Sedes',
-      icon: 'home', // Icono personalizado
+
+    { title: 'Sedes',
+      icon: 'home',
       route: 'headquarters',
-      theme: 'outline',
+      theme: 'outline'
     },
+
     {
       title: 'Ambientes',
-      icon: 'environment', // Icono personalizado
+      icon: 'environment',
       route: 'environments',
       theme: 'outline',
     },
+
     {
       title: 'Programas',
-      icon: 'desktop', // Icono personalizado
+
+      icon: 'desktop',
       route: 'programs',
       theme: 'outline',
     },
-    {
-      title: 'Curso',
-      icon: 'book', // Icono personalizado
+
+    { title: 'Curso',
+      icon: 'book',
       route: 'course',
-      theme: 'outline',
+      theme: 'outline'
     },
-    {
-      title: 'Sesiones',
-      icon: 'calendar', // Icono personalizado
+
+    { title: 'Sesiones',
+      icon: 'calendar',
       route: 'session',
-      theme: 'outline',
+      theme: 'outline'
     },
+
     {
       title: 'No Autenticado',
-      icon: 'alert', // Icono personalizado
+      icon: 'alert',
       route: 'error_401',
       theme: 'outline',
     },
-    {
-      title: 'No Autorizado',
-      icon: 'unlock', // Icono personalizado
-      route: 'error_403',
-      theme: 'outline',
-    },
+
     {
       title: 'No Encontrado',
-      icon: 'file-unknown', // Icono personalizado
+      icon: 'file-unknown',
       route: 'error_404',
       theme: 'outline',
     },
 
     {
       title: 'Error de Servidor',
-      icon: 'warning', // Icono personalizado
+      icon: 'warning',
       route: 'error_500',
       theme: 'outline',
     },
 
-    {
-      title: 'Tiempo Agotado',
-      icon: 'loading', // Icono personalizado
-      route: 'error_504',
-      theme: 'outline',
-    }
   ];
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen; // Alterna el estado del menú desplegable
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }
