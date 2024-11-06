@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { NgIconComponent } from '@ng-icons/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -13,6 +13,13 @@ import { AddProgramModalComponent } from '../modals/add-program-modal/add-progra
 import { BulkUploadModalComponent } from '../modals/bulk-upload-modal/bulk-upload-modal.component';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { SessionModel } from '@shared/models/session.model';
+import { SessionService } from '@shared/services/program/session.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { noWhiteSpaceValidator } from '@shared/validators/no-wite-space.validator';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-session-page',
@@ -22,98 +29,95 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
   styleUrl: './session-page.component.css'
 })
 export class SessionPageComponent implements OnInit{
+  
+  private sessionService = inject(SessionService);
+  private nzMessageService = inject(NzMessageService);
+
+  sessions : SessionModel[] = [];
+  Datetable:tableComponteModel  = {} as tableComponteModel;
+  centreUpdate:SessionModel | undefined;
+  isModalVisible = false;
+
+
   ngOnInit(): void {
+    this.sessionService.getSession().subscribe({
+      next: (sessions) => {
+        this.sessions = sessions
+          this.Datetable = this.mapToTable(sessions)
+
+      },
+      error:error =>{
+        this.nzMessageService.error(error);
+      }
+    })
   }
-
-
-
-  deleteRow(id: number): void {
-    this.listOfData = this.listOfData.filter(d => d.id !== id);
-  }
-  listOfData: Person[] = [
-    {
-      key: '1',
-      id: 1,
-      name: 'Analisis y desarrollo de sofwware',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '2',
-      id: 2,
-      name: 'Gestión de talento humano',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '3',
-      id: 3,
-      name: 'Animación 3D',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '1',
-      id: 4,
-      name: 'Analisis y desarrollo de sofwware',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '2',
-      id: 5,
-      name: 'Gestión de talento humano',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '3',
-      id: 6,
-      name: 'Animación 3D',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '1',
-      id: 6,
-      name: 'Analisis y desarrollo de sofwware',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '2',
-      id: 7,
-      name: 'Gestión de talento humano',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '3',
-      id: 8,
-      name: 'Animación 3D',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '1',
-      id: 9,
-      name: 'Analisis y desarrollo de sofwware',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '2',
-      id: 10,
-      name: 'Gestión de talento humano',
-      education_level_id: 'Tecnologo'
-    },
-    {
-      key: '3',
-      id: 11,
-      name: 'Animación 3D',
-      education_level_id: 'Tecnologo'
+  mapToTable(sessions:SessionModel[]):tableComponteModel{
+    return{
+      Titles:["ID","Nombre","Acciones"],
+      Datos:sessions.map((centre:SessionModel)=>this.mapToTableDatos(centre)) 
     }
-  ];
+  }
+  mapToTableDatos(centres:SessionModel):tableDataComponteModel{
+    return{
+      Datos:[centres.id.toString(),centres.name],
+      idItem:centres.id,
+      acciones:true,
+    }
+  }
 
-  
+  actualizarTabla(centro: SessionModel) {
+    const index = this.centres.findIndex(c => c.id === centro.id);
+    
+    if (index !== -1) {
+      // Actualiza el elemento existente
+      this.sessions[index] = session;
+      this.Datetable.Datos[index] = this.mapToTableDatos(session);
+    } else {
+      // Agrega un nuevo elemento si es una creación
+      this.sessions = [...this.sessions, session];
+      this.Datetable.Datos = [...this.Datetable.Datos, this.mapToTableDatos(session)];
+    }
+    
+    // Cierra el modal y limpia la referencia de `centreUpdate`
+    this.closeModal();
+  }
 
-  
-  
+  cancel(): void {
+    this.nzMessageService.info('click cancel');
+  }
+  confirm(): void {
+    this.nzMessageService.info('Eliminado Correctamente');
+ 
+    
+  }
+  update(idItemTable?:number){
+    const item = this.sessions.find((session:SessionModel)=>session.id == idItemTable)
+    if(item){
+      this.sessionUpdate = item
+      this.isModalVisible = true;
+    }
+  }
+
+  deleteCentre(idCentre: number) {  
+    //console.log('Eliminar centro con ID:', idCentre); 
+
+    const deleteSub = this.sessionService.delete(idSession).subscribe(() => {
+      this.sessions = this.sessions.filter((session: SessionModel) => session.id !== idSession)
+      this.Datetable.Datos = this.Datetable.Datos.filter((session:tableDataComponteModel ) => session.idItem !== idSession)
+      deleteSub.unsubscribe();
+    });
+  }
+
+  openModal(item?:tableDataComponteModel){
+    this.sessionUpdate = undefined
+    this.isModalVisible = true;
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
+    this.sessionUpdate = undefined; // Limpia el objeto en edición al cerrar el modal
+  }
+
+
 }
 
-interface Person {
-  key: string;
-  id: number;
-  name: string;
-  education_level_id: string;
-}
