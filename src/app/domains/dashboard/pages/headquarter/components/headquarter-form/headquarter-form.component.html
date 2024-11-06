@@ -23,8 +23,15 @@
 
       <div>
         <label for="department" class="block text-sm font-medium">Departamento</label>
-        <nz-select formControlName="department" (ngModelChange)="onDepartmentChange()" nzPlaceHolder="Seleccione un departamento">
-          <nz-option *ngFor="let department of departments" [nzValue]="department.id"
+        <nz-select formControlName="department" 
+        (ngModelChange)="onDepartmentChange()" 
+        nzPlaceHolder="Seleccione un departamento"
+        nzShowSearch>
+      
+        
+        
+
+        <nz-option *ngFor="let department of departments" [nzValue]="department.id"
             [nzLabel]="department.name"></nz-option>
         </nz-select>
         <div *ngIf="form?.get('department')?.invalid && form.get('department')?.touched">
@@ -36,7 +43,7 @@
       <div class="mb-4">
         <label for="municipality" class="block text-sm font-medium">Municipio</label>
         <nz-select formControlName="municipality_id" nzPlaceHolder="Seleccione  un municipio"
-          [nzDisabled]="!fieldDepartment.value">
+          [nzDisabled]="!fieldDepartment.value" nzShowSearch>
           <nz-option *ngFor="let municipality of municipalities" [nzValue]="municipality.id"
             [nzLabel]="municipality.name">
           </nz-option>

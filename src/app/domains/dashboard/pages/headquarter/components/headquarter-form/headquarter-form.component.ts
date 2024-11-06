@@ -33,7 +33,7 @@ import { forkJoin, Subscription } from 'rxjs';
     NzFormModule,
     NzInputModule,
     NzSelectModule,
-   
+
   ],
   templateUrl: './headquarter-form.component.html',
   styleUrl: './headquarter-form.component.css'
@@ -44,34 +44,34 @@ export class HeadquarterFormComponent {
   private headquarterService = inject(HeadquartersService);
   private locationService = inject(LocationService);
   private trainingCentreService = inject(TrainingCentreService);
-  
-  @Input() headquarter?:SedeModel;
-  @Input() isVisible:boolean = false;
+
+  @Input() headquarter?: SedeModel;
+  @Input() isVisible: boolean = false;
 
   @Output() update = new EventEmitter<SedeModel>();
   @Output() create = new EventEmitter<SedeModel>();
   @Output() cancel = new EventEmitter<void>();
 
-  form:FormGroup;
-  saveSub:Subscription|null = null;
-  dataSub:Subscription|null = null;
-  municipalitySub:Subscription|null = null;
-  touched:boolean = false;
-  loading:boolean = false;
+  form: FormGroup;
+  saveSub: Subscription | null = null;
+  dataSub: Subscription | null = null;
+  municipalitySub: Subscription | null = null;
+  touched: boolean = false;
+  loading: boolean = false;
 
   departments: despartamentosModel[] = [];
   municipalities: municipiosModel[] = [];
   trainingCentres: TrainingCentreModel[] = [];
 
-  constructor(){
+  constructor() {
     this.form = this.formBuilder.group({
-      name:new FormControl(null,[Validators.required,noWhiteSpaceValidator()]),
-      department:new FormControl(null,[Validators.required]),
-      municipality_id:new FormControl(null,[Validators.required]),
-      adress:new FormControl(null,[Validators.required,noWhiteSpaceValidator()]),
-      training_center_id:new FormControl(null,[Validators.required]),
-      opening_time:new FormControl(null,[Validators.required]),
-      closing_time:new FormControl(null,[Validators.required]),
+      name: new FormControl(null, [Validators.required, noWhiteSpaceValidator()]),
+      department: new FormControl(null, [Validators.required]),
+      municipality_id: new FormControl(null, [Validators.required]),
+      adress: new FormControl(null, [Validators.required, noWhiteSpaceValidator()]),
+      training_center_id: new FormControl(null, [Validators.required]),
+      opening_time: new FormControl(null, [Validators.required]),
+      closing_time: new FormControl(null, [Validators.required]),
     }, { validators: timeRangeValidator });
   }
   ngOnInit(): void {
@@ -80,19 +80,24 @@ export class HeadquarterFormComponent {
       if (this.form.errors) { // Solo imprime si hay errores
         //console.log('Errores del formulario:', this.form.errors);
       }
-    
+
     });
-    
+
   }
 
-  get fieldDepartment(){
+  get fieldDepartment() {
     return this.form.get('department') as FormControl;
   }
 
-  configForm(){
+  filterOption = (input: string, option: any): boolean => {
+    return option.nzLabel.toLowerCase().includes(input.toLowerCase());
+  };
 
-    if(this.headquarter){
-      this.form.addControl('id',new FormControl(this.headquarter.id));
+
+  configForm() {
+
+    if (this.headquarter) {
+      this.form.addControl('id', new FormControl(this.headquarter.id));
       this.form.get('name')!.setValue(this.headquarter.name);
       this.form.get('department')!.setValue(this.headquarter.municipality.departament_id);
       this.loadMunicipalities();
@@ -110,14 +115,14 @@ export class HeadquarterFormComponent {
     this.loadMunicipalities();
   }
 
-  loadMunicipalities(){
-    const {value:departmentId} = this.form.get('department') as FormControl;
+  loadMunicipalities() {
+    const { value: departmentId } = this.form.get('department') as FormControl;
     if (departmentId) {
-      this.municipalitySub= this.locationService.getMunicipalities(departmentId).subscribe(municipalities => {
+      this.municipalitySub = this.locationService.getMunicipalities(departmentId).subscribe(municipalities => {
         this.municipalities = [...municipalities];
         console.log(this.touched);
-        
-        if (!this.touched&&this.headquarter) {
+
+        if (!this.touched && this.headquarter) {
           this.touched = true;
           this.form.get('municipality_id')!.setValue(this.headquarter.municipality_id);
         }
@@ -143,11 +148,11 @@ export class HeadquarterFormComponent {
 
   ngOnDestroy(): void {
     this.dataSub!.unsubscribe();
-    if(this.saveSub) this.saveSub.unsubscribe();
-    if(this.municipalitySub) this.municipalitySub.unsubscribe();
+    if (this.saveSub) this.saveSub.unsubscribe();
+    if (this.municipalitySub) this.municipalitySub.unsubscribe();
   }
 
-  saveData(){
+  saveData() {
     if (this.headquarter) {
       this.editHeadquarter();
       return;
@@ -157,43 +162,43 @@ export class HeadquarterFormComponent {
 
 
 
-  editHeadquarter(){
-    if(this.form.invalid) return;
-    this.loading = true; 
-    const {value} = this.form;
-    let update_value:SedeModel = {
-      id:this.headquarter!.id,
+  editHeadquarter() {
+    if (this.form.invalid) return;
+    this.loading = true;
+    const { value } = this.form;
+    let update_value: SedeModel = {
+      id: this.headquarter!.id,
       ...value
     }
     update_value.closing_time = formatTime(update_value.closing_time);
     update_value.opening_time = formatTime(update_value.opening_time);
-    
+
     this.saveSub = this.headquarterService.update(update_value)
       .subscribe({
-        next:(new_headquarter)=>{
+        next: (new_headquarter) => {
           this.update.emit(new_headquarter);
         }
       });
   }
-  createQuarter(){
-    if(this.form.invalid) return;
-    this.loading = true; 
-    const {value} = this.form;
+  createQuarter() {
+    if (this.form.invalid) return;
+    this.loading = true;
+    const { value } = this.form;
     this.saveSub = this.headquarterService.create(value)
       .subscribe({
-        next:(new_headquarter)=>{
+        next: (new_headquarter) => {
           this.create.emit(new_headquarter);
         }
       });
   }
 
-  cancelForm(){
+  cancelForm() {
     this.cancel.emit();
-    
-    
+
+
   }
 
- 
+
 
 
 }
