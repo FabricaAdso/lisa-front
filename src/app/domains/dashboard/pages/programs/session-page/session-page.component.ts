@@ -20,6 +20,7 @@ import { SessionService } from '@shared/services/program/session.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { noWhiteSpaceValidator } from '@shared/validators/no-wite-space.validator';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { tableComponteModel, tableDataComponteModel } from '@shared/models/table.model';
 
 @Component({
   selector: 'app-session-page',
@@ -65,8 +66,8 @@ export class SessionPageComponent implements OnInit{
     }
   }
 
-  actualizarTabla(centro: SessionModel) {
-    const index = this.centres.findIndex(c => c.id === centro.id);
+  actualizarTabla(session: SessionModel) {
+    const index = this.sessions.findIndex(c => c.id === session.id);
     
     if (index !== -1) {
       // Actualiza el elemento existente
