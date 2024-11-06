@@ -82,7 +82,7 @@ export class TrainingCentreFormComponent {
       next: (new_centre) => {
         this.create.emit(new_centre); // Emite el evento de creación
         this.closeModal.emit(); // Emite el cierre para que el padre oculte el modal
-        this.notificacion("Se creó el centro " + new_centre.name + " correctamente", "Centro");
+        //this.notificacion("Se creó el centro " + new_centre.name + " correctamente", "Centro");
       }
     });
   }

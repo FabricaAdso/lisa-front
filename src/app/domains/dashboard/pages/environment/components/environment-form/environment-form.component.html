@@ -13,8 +13,8 @@
 
             <div class="mb-4">
                 <label for="capacity" class="block text-sm font-medium">capacity</label>
-                <input id="capacity" nz-input formControlName="capacity" placeholder="Ingrese la capacity" />
-                <div *ngIf="form?.get('adress')?.invalid && form.get('adress')?.touched" class="text-red-500 text-sm">
+                <input id="capacity" nz-input type="number" formControlName="capacity" placeholder="Capasidad - ingrese un numero" />
+                <div *ngIf="form?.get('capacity')?.invalid && form.get('capacity')?.touched" class="text-red-500 text-sm">
                     Capacidad es requerida.
                 </div>
             </div>
@@ -23,8 +23,8 @@
 
             <div class="mb-4">
 
-                <label for="environment_area_id" class=""> Area</label>
-                <nz-select formControlName="environment_area_id" placeholder="Seleccione un Area">
+                <label for="environment_area_id" class="block text-sm font-medium"> Area</label>
+                <nz-select formControlName="environment_area_id" nzPlaceHolder="Seleccione un Area">
                     <nz-option *ngFor="let area of areas " [nzValue]="area.id" [nzLabel]="area.name"></nz-option>
 
                 </nz-select>
@@ -39,8 +39,8 @@
 
             <div class="mb-4">
 
-                <label for="headquarters_id" class=""> Sede de Formacion</label>
-                <nz-select formControlName="headquarters_id" placeholder="Seleccione una Sede">
+                <label for="headquarters_id" class="block text-sm font-medium"> Sede de Formacion</label>
+                <nz-select formControlName="headquarters_id" nzPlaceHolder="Seleccione una Sede">
                     <nz-option *ngFor="let headquarter of headquarters " [nzValue]="headquarter.id"
                         [nzLabel]="headquarter.name"></nz-option>
 

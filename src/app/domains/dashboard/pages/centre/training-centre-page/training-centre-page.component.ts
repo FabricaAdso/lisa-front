@@ -94,7 +94,7 @@ export class TrainingCentrePageComponent {
     this.nzMessageService.info('click cancel');
   }
   confirm(): void {
-    this.nzMessageService.info('Confirmación de eliminación');
+    this.nzMessageService.info('Eliminado Correctamente');
  
     
   }
@@ -107,7 +107,7 @@ export class TrainingCentrePageComponent {
   }
 
   deleteCentre(idCentre: number) {  
-    console.log('Eliminar centro con ID:', idCentre); 
+    //console.log('Eliminar centro con ID:', idCentre); 
 
     const deleteSub = this.trainingCentreService.delete(idCentre).subscribe(() => {
       this.centres = this.centres.filter((centre: TrainingCentreModel) => centre.id !== idCentre)

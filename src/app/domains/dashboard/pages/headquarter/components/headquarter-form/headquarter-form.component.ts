@@ -44,7 +44,6 @@ export class HeadquarterFormComponent {
   private headquarterService = inject(HeadquartersService);
   private locationService = inject(LocationService);
   private trainingCentreService = inject(TrainingCentreService);
-  private nzMessageService = inject(NzMessageService);
   
   @Input() headquarter?:SedeModel;
   @Input() isVisible:boolean = false;
@@ -79,7 +78,7 @@ export class HeadquarterFormComponent {
     this.loadData();
     this.form.valueChanges.subscribe(() => {
       if (this.form.errors) { // Solo imprime si hay errores
-        console.log('Errores del formulario:', this.form.errors);
+        //console.log('Errores del formulario:', this.form.errors);
       }
     
     });

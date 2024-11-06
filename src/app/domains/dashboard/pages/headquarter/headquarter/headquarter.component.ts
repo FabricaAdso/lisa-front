@@ -85,12 +85,14 @@ export class HeadquarterComponent {
   }
   confirm(id: number): void {
     this.deleteHeadquarters(id); // Llama a deleteHeadquarters con el id
-    this.nzMessageService.info('Confirmación de eliminación');
+    this.nzMessageService.info('registro  eliminado');
   }
   
   deleteHeadquarters(id: number) {
     this.deleteSub = this.headquarterService.delete(id).subscribe(() => {
-        this.loadHeadquarters();
+        // Elimina el elemento localmente sin recargar toda la lista
+        this.headquarters = this.headquarters.filter(item => item.id !== id);
+
         this.deleteSub?.unsubscribe(); // Desuscribe y limpia `deleteSub`
         this.deleteSub = null; // Evita reutilizar una suscripción antigua
     });
@@ -106,7 +108,7 @@ export class HeadquarterComponent {
     ]).subscribe({
       next: ([headquarters, trainingCentres, departments]) => {
         this.headquarters = [...headquarters];
-        console.log(headquarters)
+        //console.log(headquarters)
         this.trainingCentres = [...trainingCentres];
         this.departments = [...departments];
       },
