@@ -75,7 +75,10 @@ export class HeadquarterComponent {
     this.createForm();
   }
   ngOnDestroy(): void {
-    if(this.deleteSub) this.deleteSub.unsubscribe();
+    // if(this.deleteSub) this.deleteSub.unsubscribe();
+    this.deleteSub?.unsubscribe();
+    this.deleteSub = null;
+  
   }
   cancel(): void {
     this.nzMessageService.info('click cancel');
@@ -86,17 +89,18 @@ export class HeadquarterComponent {
   }
   
   deleteHeadquarters(id: number) {
-    const deleteSub = this.headquarterService.delete(id).subscribe(() => {
-      this.loadHeadquarters(); // Recarga la lista de sedes.
-      deleteSub.unsubscribe(); // Desuscribe del observable.
+    this.deleteSub = this.headquarterService.delete(id).subscribe(() => {
+        this.loadHeadquarters();
+        this.deleteSub?.unsubscribe(); // Desuscribe y limpia `deleteSub`
+        this.deleteSub = null; // Evita reutilizar una suscripción antigua
     });
-  }
+}
 
 
 
   loadData() {
     const datasub = forkJoin([
-      this.headquarterService.getHeadquartes({included:['trainingCenter', 'municipality.departament']}),
+      this.headquarterService.getHeadquartes({included:['trainingCenter', 'municipality.departament', 'municipality']}),
       this.trainingCentreService.getCentros(),
       this.locationService.getDepartments()
     ]).subscribe({
