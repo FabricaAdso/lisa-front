@@ -43,7 +43,6 @@ export class MenuItemComponent {
 
     {
       title: 'Administrar Áreas',
-
       icon: 'appstore',
       route: 'environments-area',
       theme: 'outline',
@@ -51,7 +50,6 @@ export class MenuItemComponent {
 
     {
       title: 'Training Centres',
-
       icon: 'bank',
       route: 'training-centers',
       theme: 'outline',
@@ -89,28 +87,6 @@ export class MenuItemComponent {
       route: 'session',
       theme: 'outline'
     },
-
-    {
-      title: 'No Autenticado',
-      icon: 'alert',
-      route: 'error_401',
-      theme: 'outline',
-    },
-
-    {
-      title: 'No Encontrado',
-      icon: 'file-unknown',
-      route: 'error_404',
-      theme: 'outline',
-    },
-
-    {
-      title: 'Error de Servidor',
-      icon: 'warning',
-      route: 'error_500',
-      theme: 'outline',
-    },
-
   ];
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

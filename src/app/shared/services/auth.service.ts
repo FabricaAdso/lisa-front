@@ -9,6 +9,8 @@ import { TokenModel } from '@shared/models/token.model';
 })
 export class AuthService {
 
+  token = '';
+
   constructor() { }
 
   private http = inject(HttpClient);
@@ -21,4 +23,9 @@ export class AuthService {
     localStorage.removeItem('token')
     return this.http.post('logout',null)
   }
+
+  isAuth(){
+    return this.token.length > 0;
+  }
+
 }

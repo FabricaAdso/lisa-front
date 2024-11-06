@@ -6,9 +6,10 @@
       <li
         *ngIf="!subItem.subMenu"
         nz-menu-item
-        class="text-black hover:text-green-500 transition-colors duration-100"
+        class="text-black hover:text-green-500 transition-colors duration-100 after:border-r-green-500"
       >
         <a [routerLink]="subItem.route" routerLinkActive="active">
+          <!-- Enlace con routerLink -->
           <span
             nz-icon
             [nzType]="subItem.icon"
