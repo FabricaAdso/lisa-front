@@ -44,7 +44,7 @@ export class AreaFormComponent implements OnInit, OnDestroy,OnChanges{
 
   constructor(){
     this.form = this.formBuilder.group({
-      name:new FormControl(null,[Validators.required,noWhiteSpaceValidator()])
+      name:new FormControl(null,[Validators.required,Validators.minLength(2), noWhiteSpaceValidator()])
     });
   }
 

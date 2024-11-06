@@ -34,7 +34,7 @@
         <nz-option *ngFor="let department of departments" [nzValue]="department.id"
             [nzLabel]="department.name"></nz-option>
         </nz-select>
-        <div *ngIf="form?.get('department')?.invalid && form.get('department')?.touched">
+        <div *ngIf="form?.get('department')?.invalid && form.get('department')?.touched" class="text-red-500 text-sm">
           Departamento es requerido.
         </div>
       </div>

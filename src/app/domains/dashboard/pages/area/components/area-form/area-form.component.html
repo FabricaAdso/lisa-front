@@ -1,4 +1,4 @@
-<nz-modal nzDraggable [(nzVisible)]="isVisible" nzTitle="{{area ? 'editar' :'crear'}} Area"
+<nz-modal nzMaskClosable="false" nzDraggable [(nzVisible)]="isVisible" nzTitle="{{area ? 'editar' :'crear'}} Area"
     (nzOnCancel)="cancelForm()" [nzOkLoading]="loading" (nzOnOk)="saveData()"  [nzOkDisabled]="form.invalid">
     <ng-container *nzModalContent>
 
@@ -8,8 +8,8 @@
             <input nz-input formControlName="name" id="name" placeholder="Nombre del area" />
 
             <!-- Validación del campo de nombre -->
-            <div *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
-                <small class="text-red-500">El nombre es requerido y debe tener al menos 5 caracteres</small>
+            <div *ngIf="form.controls['name'].errors?.['minlength'] || form.controls['name'].errors?.['required']">
+                <small class="text-red-500">El nombre es requerido y debe tener al menos 2 caracteres</small>
             </div>
 
         </form>

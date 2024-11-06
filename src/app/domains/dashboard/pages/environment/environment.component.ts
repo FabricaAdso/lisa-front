@@ -18,6 +18,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin, Subscription } from 'rxjs';
 import { EnvironmentFormComponent } from './components/environment-form/environment-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'app-environment',
@@ -33,6 +34,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzFormModule,
     NzInputModule,
     NzSelectModule,
+    NzPopconfirmModule,
     EnvironmentFormComponent,
   ],
   templateUrl: './environment.component.html',
@@ -74,16 +76,29 @@ export class EnvironmentComponent {
     this.nzMessageService.info('click cancel');
   }
   confirm(id: number): void {
-    this.deleteEnvironment(id); // Llama a deleteHeadquarters con el id
-    this.nzMessageService.info('Confirmación de eliminación');
+    
+    this.deleteEnvironment(id); 
+    
   }
 
   deleteEnvironment(id: number) {
-    const deleteSub = this.environmentService.delete(id).subscribe(() => {
-      this.loadEnvironments; // Recarga la lista
-      deleteSub.unsubscribe(); // Desuscribe del observable.
+    this.deleteSub = this.environmentService.delete(id).subscribe({
+      next: () => {
+        // Filtra el registro eliminado de la lista `environments`
+        this.environments = this.environments.filter(env => env.id !== id);
+        this.nzMessageService.success('Registro eliminado correctamente');
+      },
+      error: (err) => {
+        console.error('Error eliminando el entorno:', err);
+        this.nzMessageService.error('Error al eliminar el entorno');
+      },
+      complete: () => {
+        this.deleteSub?.unsubscribe(); // Limpia la suscripción al finalizar
+      }
     });
   }
+
+
 
 
   loadData() {

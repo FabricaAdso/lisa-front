@@ -149,6 +149,12 @@ export class EnvironmentFormComponent {
     
     
   }
+  onlyNumbers(event: KeyboardEvent) {
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+      event.preventDefault();
+    }
+  }
+
 
  
 

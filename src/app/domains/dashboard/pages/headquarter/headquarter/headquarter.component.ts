@@ -135,6 +135,7 @@ export class HeadquarterComponent {
   // Crear el formulario
   createForm() {
     this.formHeadquarters = this.fb.group({
+      id: [null],
       name: ['', [Validators.required, Validators.minLength(3)]],
       department: ['', Validators.required],
       municipality_id: ['', Validators.required],

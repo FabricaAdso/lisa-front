@@ -48,7 +48,7 @@ export class TrainingCentreFormComponent {
     private notification: NzNotificationService
   ){
     this.form = this.formBuilder.group({
-      name:new FormControl(null,[Validators.required,noWhiteSpaceValidator()])
+      name:new FormControl(null,[Validators.required, Validators.minLength(5),noWhiteSpaceValidator()])
     },);
   }
 
