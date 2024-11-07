@@ -21,7 +21,7 @@ export class HeadquartersService {
   getHeadquartes(data?:QueryUrl): Observable<SedeModel[]>{
 
     let url:string = getQueryUrl(this.url,data)
-    console.log(url);
+    //console.log(url);
     
     return this.http.get<SedeModel[]>(url);
   }

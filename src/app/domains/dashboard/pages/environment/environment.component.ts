@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
 import { CreateEvironentDTO } from '@shared/dto/create-environmentDTO';
@@ -19,6 +19,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { EnvironmentFormComponent } from './components/environment-form/environment-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { log } from 'ng-zorro-antd/core/logger';
 
 @Component({
   selector: 'app-environment',
@@ -117,9 +118,9 @@ export class EnvironmentComponent {
 
 
 
-        console.log(enviroments)
-        console.log('Sedes:', this.headquarters);
-        console.log('Áreas:', this.areas);
+        // console.log(enviroments)
+        // console.log('Sedes:', this.headquarters);
+        // console.log('Áreas:', this.areas);
 
       },
       complete: () => {
@@ -153,12 +154,12 @@ export class EnvironmentComponent {
       
     });
   }
-  openEdit(environment:EnvironmentModel){
+  openEdit(environment?:EnvironmentModel){
     this.environment = environment;
     this.isModalVisible = true;
   }
   edit(new_environment:EnvironmentModel){
-    
+    console.log(new_environment);
     const {id}= new_environment;
     const index_environment= this.environments.findIndex((environmet)=>environmet.id===id);
 
@@ -171,32 +172,10 @@ export class EnvironmentComponent {
 
   }
   create(environment:EnvironmentModel){
-    console.log('entrando despues de emitir');
-    
     this.environments = [...this.environments, environment];
     this.closeModal();
   }
 
-
-  openModal(enviroment?: EnvironmentModel): void {
-    this.isModalVisible = true;
-
-    if (!this.formEnvironments) {
-      this.createForm();
-    }
-
-    if (enviroment) {
-      this.editingEnvironment = enviroment.id;
-      this.formEnvironments?.patchValue({
-        ...enviroment,
-
-      });
-
-    } else {
-      this.editingEnvironment = null;
-      this.formEnvironments?.reset();
-    }
-  }
   closeModal(): void {
     this.isModalVisible = false;
     this.formEnvironments?.reset();

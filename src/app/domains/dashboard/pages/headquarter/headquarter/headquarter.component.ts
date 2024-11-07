@@ -200,7 +200,7 @@ export class HeadquarterComponent {
 
   }
   create(headcuarter: SedeModel) {
-    console.log('entrando despues de emitir');
+    //console.log('entrando despues de emitir');
 
     this.headquarters = [...this.headquarters, headcuarter];
     this.closeModal();

@@ -60,7 +60,7 @@ export class AreaFormComponent implements OnInit, OnDestroy,OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    //console.log(changes);
     
   }
 

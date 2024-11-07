@@ -19,7 +19,7 @@ export class EnvironmentService {
 
   get(data?:QueryUrl): Observable<EnvironmentModel[]>{
     let url:string = getQueryUrl(this.url,data)
-    console.log(url);
+    //console.log(url);
     return this.http.get<EnvironmentModel[]>(url);
   }
 

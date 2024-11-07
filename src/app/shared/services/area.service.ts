@@ -17,7 +17,7 @@ constructor() { }
 
 get(data?:QueryUrl){
   let url:string = getQueryUrl(this.url,data)
-  console.log(url);
+  //console.log(url);
 
   return this.http.get<AreaModel[]>(url);
 }
