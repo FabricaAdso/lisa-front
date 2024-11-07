@@ -1,5 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+/* Estilo para el menú principal */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+.ant-menu-item {
+  @apply
+  text-sm
+  bg-transparent
+  items-start
+  justify-start
+}
+
+.ant-menu-item:hover {
+  @apply bg-green-100;
+}
+
+.ant-menu-item .anticon {
+  @apply text-black
+  text-lg
+}
+
+
+.ant-menu-item .anticon:hover {
+  @apply text-green-500;
+}
+
+
+.ant-menu-item a {
+  @apply flex items-center;
+}
+
+
+.ant-menu-item a:hover {
+  @apply text-green-500;
+}
+
+.ant-menu-item a:hover .anticon {
+  @apply text-green-500;
+}
+
+
+.ant-menu-item a.active,
+.ant-menu-item .anticon {
+  @apply text-black
+}
+
+
+.ant-menu-item a.active .anticon {
+  @apply text-black;
+}
+
+
+.ant-menu-item::after {
+  @apply border-r-4 border-green-500
+}
+
+
+.ant-menu-item span:hover {
+  @apply text-green-500;
+}

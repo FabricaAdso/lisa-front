@@ -38,7 +38,8 @@ export class MenuItemComponent {
     { title: 'Roles',
       icon: 'team',
       route: 'roles',
-      theme: 'outline'
+      theme: 'outline',
+      
     },
 
     {
