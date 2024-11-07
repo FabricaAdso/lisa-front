@@ -21,16 +21,17 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
   styleUrl: './login-page.component.css'
 })
 export class LoginPageComponent implements OnDestroy {
-  constructor(private router: Router) { }
+  
 
   @ViewChild('buttonView')buttonView: ElementRef = {} as ElementRef;
 
   private auth_service = inject(AuthService);
   private token_service = inject(TokenService);
+  private router = inject(Router);
 
   passwordVisible: boolean = true
-  showModal: boolean = false;
-  errorMessage: string | null = null;
+  showModalLogin: boolean = false;
+  errorMessageLogin: string | null = null;
 
   login_sub:Subscription | null = null;
 
@@ -42,7 +43,7 @@ export class LoginPageComponent implements OnDestroy {
     }
 }
 
-  go() {
+  goRegister() {
     this.router.navigate(['/auth/register']);
   }
 
@@ -91,8 +92,8 @@ export class LoginPageComponent implements OnDestroy {
         if(this.formLogin.get('identity_document')!.value! == '' || this.formLogin.get('password')!.value! == ''){
           
         }else{
-          this.errorMessage = 'Contraseña o numero de documento incorrectos'
-          this.showModal = true;
+          this.errorMessageLogin = 'Contraseña o numero de documento incorrectos'
+          this.showModalLogin = true;
         }
              
       }
@@ -100,9 +101,9 @@ export class LoginPageComponent implements OnDestroy {
 
   }
 
-  closeModal() {
-    this.showModal = false; // Ocultar el modal
-    this.errorMessage = null; // Reiniciar el mensaje
+  closeModalLogin() {
+    this.showModalLogin = false; // Ocultar el modal
+    this.errorMessageLogin = null; // Reiniciar el mensaje
   }
 
   
