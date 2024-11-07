@@ -42,14 +42,14 @@ export class MenuItemComponent {
     },
 
     {
-      title: 'Administrar Áreas',
+      title: 'Areas',
       icon: 'appstore',
       route: 'environments-area',
       theme: 'outline',
     },
 
     {
-      title: 'Training Centres',
+      title: 'Centro Formativo',
       icon: 'bank',
       route: 'training-centers',
       theme: 'outline',

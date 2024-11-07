@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   OnInit,
   inject,
+  signal,
 } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -13,6 +14,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.component';
 import { AuthService } from '@shared/services/auth.service';
+import { UserModel } from '@shared/models/user.model';
 
 @Component({
   selector: 'app-nav-bar',
@@ -33,10 +35,9 @@ export class NavBarComponent implements OnInit {
 
   private breackpoint_observer = inject(BreakpointObserver);
 
-  private auth_service = inject(AuthService);
+  user = signal<UserModel | null>(null);  // Signal para almacenar el usuario logueado
+  isLoggedIn: boolean = false;
 
-  isLoggedIn = true;
-  userName = 'Yesid Jimenez';
   isDropdownOpen1 = false;
   isDropdownOpen2 = false;
 
@@ -45,6 +46,7 @@ export class NavBarComponent implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef) {}
 
+  private auth_service = inject(AuthService);
   ngOnInit(): void {
     this.breackpoint_observer
       .observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
@@ -53,11 +55,32 @@ export class NavBarComponent implements OnInit {
         this.isDropdownOpen2 = false;
         this.cdr.detectChanges();
       });
+
+      this.isLoggedIn = this.auth_service.isAuth();
+
+      if (this.isLoggedIn) {
+        // Suscribimos al signal con la respuesta del método 'me()' para obtener los datos del usuario
+        this.auth_service.me().subscribe({
+          next: (user: UserModel) => {
+            this.user.set(user);  // Actualizamos el signal con el objeto de usuario
+            console.log('Hola', user.first_name, user.first_name);
+          },
+          error: (err) => {
+            console.error('Error al obtener el usuario:', err);
+          }
+        });
+      }
   }
 
   login() {
     console.log('Iniciar sesión...');
-    this.isLoggedIn = true;
+    this.router.navigate(['auth/login']);
+  }
+
+  logout(){
+    console.log('Cerrar sesión...');
+    this.auth_service.logout();
+    // Re dirigir a login
     this.router.navigate(['auth/login']);
   }
 
@@ -69,17 +92,6 @@ export class NavBarComponent implements OnInit {
     }
     // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
-  }
-
-  logout() {
-    console.log('Cerrando sesión...');
-    this.isLoggedIn = false;
-    this.auth_service.logout().subscribe({
-      next: (value) => {
-        console.log('Sesión cerrada correctamente');
-        console.log(value);
-      },
-    });
   }
 
   toggleDropdown2() {

@@ -64,7 +64,7 @@ export class LoginPageComponent implements OnDestroy {
     if (this.formLogin.valid) {
       console.log(this.formLogin)
     } else {
-      this.formLogin.markAllAsTouched();    
+      this.formLogin.markAllAsTouched();
     }
   }
 
@@ -83,14 +83,14 @@ export class LoginPageComponent implements OnDestroy {
     .subscribe({
       next: (token) => {
         this.token_service.setToken(token)
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard/roles']);
       },
       error: error =>{
         console.log(error);
-        
+
         this.router.navigate(['auth/login'])
         this.errorMessage = 'Documento o contraseña incorrectos';
-        this.showModal = true;      
+        this.showModal = true;
       }
     })
 
@@ -101,6 +101,6 @@ export class LoginPageComponent implements OnDestroy {
     this.errorMessage = null; // Reiniciar el mensaje
   }
 
-  
+
 
 }

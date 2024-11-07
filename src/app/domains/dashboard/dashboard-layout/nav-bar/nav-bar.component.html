@@ -9,22 +9,23 @@
   <!-- Sección del usuario -->
   <div class="flex items-center space-x-2">
     <ng-container *ngIf="isLoggedIn">
-      <!-- Nombre del usuario para pantallas desktop y desktop_xl -->
-      <span class="hidden desktop:inline text-black text-lg mr-2">{{
-        userName
-      }}</span>
+      <!-- Nombre completo del usuario -->
+      <span class="hidden desktop:inline text-black text-lg mr-2"
+        >{{ user()?.first_name }} {{ user()?.last_name }}</span
+      >
 
-      <!-- Imagen del usuario alineada a la derecha (solo para pantallas desktop) -->
+      <!-- Imagen del usuario alineada a la derecha -->
       <img
         [src]="UserImage"
         alt="Imagen de usuario"
         class="hidden desktop:inline w-[40px] h-[40px] rounded-full object-cover cursor-pointer dropdown-button1"
         (click)="toggleDropdown1()"
       />
-      <!-- Menú desplegable para la imagen del usuario -->
+
+      <!-- Cerrar Sesión -->
       <div
         *ngIf="isDropdownOpen1"
-        class="absolute right-0 mt-[7.5rem] w-48 bg-transparent rounded bg-black dropdown-menu1"
+        class="absolute right-0 mt-[7.5rem] w-48 bg-transparent rounded bg-black dropdown-menu1 z-50"
       >
         <button
           (click)="logout()"
