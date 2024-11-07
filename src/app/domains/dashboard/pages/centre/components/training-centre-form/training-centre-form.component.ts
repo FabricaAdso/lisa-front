@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TrainingCentreModel } from '@shared/models/training-centre-model';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
@@ -44,13 +44,13 @@ export class TrainingCentreFormComponent {
   loading:boolean  = false;
 
 
-  constructor(
-    private notification: NzNotificationService
-  ){
+  constructor(private notification: NzNotificationService){
     this.form = this.formBuilder.group({
       name:new FormControl(null,[Validators.required, Validators.minLength(5),noWhiteSpaceValidator()])
     },);
   }
+
+  @ViewChild('firstInput', { static: false }) firstInput!: ElementRef;
 
   ngOnInit(): void {
     if(this.centre){
@@ -98,6 +98,13 @@ export class TrainingCentreFormComponent {
       return;
     }
     this.createCentre();
+  }
+  submitForm() {
+    if (this.form.valid) {
+      this.saveData(); // Llama a la función de guardado o envío
+    } else {
+      this.form.markAllAsTouched(); // Marca todos los campos para mostrar errores
+    }
   }
 
 }

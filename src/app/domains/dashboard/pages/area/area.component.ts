@@ -60,12 +60,13 @@ export class AreaComponent implements OnInit,OnDestroy{
 
   confirm(id: number): void {
     this.deleteArea(id); 
-    this.nzMessageService.info('Confirmación de eliminación');
+    
   }
 
   deleteArea(id: number) {
     this.deleteSub = this.areaService.delete(id).subscribe(() => {
       this.getAreas();
+      this.nzMessageService.success('Registro Eliminado Correctamente');
     });
   }
 

@@ -94,7 +94,7 @@ export class TrainingCentrePageComponent {
     this.nzMessageService.info('click cancel');
   }
   confirm(): void {
-    this.nzMessageService.info('Eliminado Correctamente');
+    
  
     
   }
@@ -112,6 +112,7 @@ export class TrainingCentrePageComponent {
     const deleteSub = this.trainingCentreService.delete(idCentre).subscribe(() => {
       this.centres = this.centres.filter((centre: TrainingCentreModel) => centre.id !== idCentre)
       this.Datetable.Datos = this.Datetable.Datos.filter((centre:tableDataComponteModel ) => centre.idItem !== idCentre)
+      this.nzMessageService.success('Registro Eliminado Correctamente');
       deleteSub.unsubscribe();
     });
   }

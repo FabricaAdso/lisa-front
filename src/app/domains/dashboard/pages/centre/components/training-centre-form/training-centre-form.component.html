@@ -5,9 +5,10 @@ nzTitle="{{centre ?  'Editar':'Crear'}} Centro"
 (nzOnCancel)="closeModal.emit()"
 (nzOnOk)="saveData()" 
 [nzOkLoading]="loading"
-[nzOkDisabled]="form.invalid">
+[nzOkDisabled]="form.invalid"
+>
     <ng-container *nzModalContent>
-        <form nz-form [formGroup]="form">
+        <form nz-form [formGroup]="form" (keydown.enter)="submitForm()">
             <label for="name">Nombre del Centro</label>
             <input nz-input formControlName="name" id="name" placeholder="Nombre del centro" />
           

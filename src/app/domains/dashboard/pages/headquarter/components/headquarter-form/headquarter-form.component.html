@@ -1,37 +1,29 @@
-
-
-
-
-
 <!-- Modal para crear o editar sede -->
 <!-- <nz-modal [(nzVisible)]="isModalVisible" nzTitle="Headquarters" (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formHeadquarters.invalid"> -->
 
 
 
 <nz-modal nzMaskClosable="false" nzDraggable [(nzVisible)]="isVisible" nzTitle="Administración de Sedes"
-    (nzOnCancel)="cancelForm()" (nzOnOk)="saveData()" [nzOkLoading]="loading" [nzOkDisabled]="form.invalid">
+  (nzOnCancel)="cancelForm()" (nzOnOk)="saveData()" [nzOkLoading]="loading" [nzOkDisabled]="form.invalid">
 
   <ng-container *nzModalContent>
     <form [formGroup]="form">
       <div class="mb-4">
         <label for="name" class="block text-sm font-medium">Nombre</label>
         <input id="name" nz-input formControlName="name" placeholder="Ingrese el nombre de la sede" />
-        <div *ngIf="form?.get('name')?.invalid && form?.get('name')?.touched"
-          class="text-red-500 text-sm">
-          El nombre es requerido y debe tener al menos 3 caracteres. </div>
+        <div *ngIf="form?.get('name')?.invalid && form?.get('name')?.touched" class="text-red-500 text-sm">
+          El nombre es requerido. </div>
       </div>
 
       <div>
         <label for="department" class="block text-sm font-medium">Departamento</label>
-        <nz-select formControlName="department" 
-        (ngModelChange)="onDepartmentChange()" 
-        nzPlaceHolder="Seleccione un departamento"
-        nzShowSearch>
-      
-        
-        
+        <nz-select formControlName="department" (ngModelChange)="onDepartmentChange()"
+          nzPlaceHolder="Seleccione un departamento" nzShowSearch>
 
-        <nz-option *ngFor="let department of departments" [nzValue]="department.id"
+
+
+
+          <nz-option *ngFor="let department of departments" [nzValue]="department.id"
             [nzLabel]="department.name"></nz-option>
         </nz-select>
         <div *ngIf="form?.get('department')?.invalid && form.get('department')?.touched" class="text-red-500 text-sm">
@@ -59,8 +51,7 @@
       <div class="mb-4">
         <label for="adress" class="block text-sm font-medium">Dirección</label>
         <input id="adress" nz-input formControlName="adress" placeholder="Ingrese la Dirección" />
-        <div *ngIf="form?.get('adress')?.invalid && form.get('adress')?.touched"
-          class="text-red-500 text-sm">
+        <div *ngIf="form?.get('adress')?.invalid && form.get('adress')?.touched" class="text-red-500 text-sm">
           Dirección es requerida.
         </div>
       </div>
@@ -84,16 +75,14 @@
             Se requiere horario de cierre.
           </div>
         </div>
-        
-        <div *ngIf="form.hasError('invalidTime')" class="text-red-500 text-sm mt-2">
-          La hora de apertura no puede ser mayor o igual a la hora de cierre.
-        </div>
-        
+      </div>
+      <div *ngIf="form.hasError('invalidTime')" class="text-red-500 text-sm mt-2">
+        La hora de apertura no puede ser mayor o igual a la hora de cierre.
       </div>
 
-      <div class="mb-4">
+      <div class="mb-4"><br>
 
-        <label for="trainingCentreId" class=""> Centro de Formacion</label>
+        <label for="trainingCentreId" class="block text-sm font-medium"> Centro de Formacion</label>
         <nz-select formControlName="training_center_id" nzPlaceHolder="Seleccione un centro">
           <nz-option *ngFor="let centre of trainingCentres " [nzValue]="centre.id" [nzLabel]="centre.name"></nz-option>
 

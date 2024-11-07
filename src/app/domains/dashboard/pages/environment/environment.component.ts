@@ -89,7 +89,7 @@ export class EnvironmentComponent {
         this.nzMessageService.success('Registro eliminado correctamente');
       },
       error: (err) => {
-        console.error('Error eliminando el entorno:', err);
+        
         this.nzMessageService.error('Error al eliminar el entorno');
       },
       complete: () => {

@@ -55,7 +55,7 @@ export class HeadquarterComponent {
 
   // Variables para almacenar datos.
   headquarters: SedeModel[] = [];
-  headquarter:SedeModel|undefined = undefined;
+  headquarter: SedeModel | undefined = undefined;
   departments: despartamentosModel[] = [];
   municipalities: municipiosModel[] = [];
   trainingCentres: TrainingCentreModel[] = [];
@@ -66,7 +66,7 @@ export class HeadquarterComponent {
   isModalEditVisible = false;
   editingHeadquartersId: number | null = null;  // ID de la sede en edición.
 
-  deleteSub:Subscription|null = null;
+  deleteSub: Subscription | null = null;
 
 
 
@@ -78,31 +78,39 @@ export class HeadquarterComponent {
     // if(this.deleteSub) this.deleteSub.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.deleteSub = null;
-  
+
   }
   cancel(): void {
     this.nzMessageService.info('click cancel');
   }
   confirm(id: number): void {
     this.deleteHeadquarters(id); // Llama a deleteHeadquarters con el id
-    this.nzMessageService.info('registro  eliminado');
+    
   }
-  
-  deleteHeadquarters(id: number) {
-    this.deleteSub = this.headquarterService.delete(id).subscribe(() => {
-        // Elimina el elemento localmente sin recargar toda la lista
-        this.headquarters = this.headquarters.filter(item => item.id !== id);
 
-        this.deleteSub?.unsubscribe(); // Desuscribe y limpia `deleteSub`
-        this.deleteSub = null; // Evita reutilizar una suscripción antigua
+  deleteHeadquarters(id: number) {
+    this.deleteSub = this.headquarterService.delete(id).subscribe({
+      next: () => {
+        this.headquarters = this.headquarters.filter(h => h.id !== id);
+        this.nzMessageService.success('Registro Eliminado Correctamente');
+
+      },
+      error: (err) => {
+        this.nzMessageService.error('Error al eliminar el registro');
+
+      },
+      complete: () => {
+        this.deleteSub?.unsubscribe();
+      }
+
     });
-}
+  }
 
 
 
   loadData() {
     const datasub = forkJoin([
-      this.headquarterService.getHeadquartes({included:['trainingCenter', 'municipality.departament', 'municipality']}),
+      this.headquarterService.getHeadquartes({ included: ['trainingCenter', 'municipality.departament', 'municipality'] }),
       this.trainingCentreService.getCentros(),
       this.locationService.getDepartments()
     ]).subscribe({
@@ -168,33 +176,33 @@ export class HeadquarterComponent {
   // Cargar las sedes existentes
   loadHeadquarters() {
     this.headquarterService.getHeadquartes().subscribe({
-      next:(data:SedeModel[])=>{
+      next: (data: SedeModel[]) => {
         this.headquarters = data;
       }
     });
   }
-  openEdit(headquarter:SedeModel){
+  openEdit(headquarter: SedeModel) {
     this.headquarter = headquarter;
     this.isModalVisible = true;
   }
 
-  edit(new_headquarter:SedeModel){
-    
-    const {id}= new_headquarter;
-    const index_headquarter= this.headquarters.findIndex((headquarter)=>headquarter.id===id);
+  edit(new_headquarter: SedeModel) {
 
-    if(index_headquarter===null)return;
+    const { id } = new_headquarter;
+    const index_headquarter = this.headquarters.findIndex((headquarter) => headquarter.id === id);
 
-    let headquarters= [...this.headquarters];
+    if (index_headquarter === null) return;
+
+    let headquarters = [...this.headquarters];
     headquarters[index_headquarter] = new_headquarter;
-    this.headquarters =  headquarters;
+    this.headquarters = headquarters;
     this.closeModal()
 
   }
-  create(headcuarter:SedeModel){
+  create(headcuarter: SedeModel) {
     console.log('entrando despues de emitir');
-    
-    this.headquarters = [...this.headquarters,headcuarter];
+
+    this.headquarters = [...this.headquarters, headcuarter];
     this.closeModal();
   }
 
