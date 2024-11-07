@@ -1,6 +1,7 @@
 <!-- training-centre-form.component.html -->
 <!-- Modal para crear o editar un centro de formación -->
-<nz-modal [nzVisible]="isVisible" 
+<nz-modal nzMaskClosable="false"
+[nzVisible]="isVisible" 
 nzTitle="{{centre ?  'Editar':'Crear'}} Centro" 
 (nzOnCancel)="closeModal.emit()"
 (nzOnOk)="saveData()" 
