@@ -14,11 +14,18 @@ nzTitle="{{centre ?  'Editar':'Crear'}} Centro"
             <input nz-input formControlName="name" id="name" placeholder="Nombre del centro" />
           
             <!-- Mostrar mensaje si el campo está vacío o tiene menos de 5 caracteres -->
-            <div *ngIf="form.controls['name'].errors?.['minlength'] || form.controls['name'].errors?.['required']">
-              <small class="text-red-500">
-                El nombre debe tener al menos 5 caracteres.
-              </small>
-            </div>
+             @if (form.controls['name'].touched) {
+              @if (form.controls['name'].errors?.['minlength']) {
+                <small class="text-red-500">
+                  El nombre debe tener al menos 5 caracteres.
+                </small>
+              }
+              @if (form.controls['name'].errors?.['required']) {
+                <small class="text-red-500">
+                  El nombre es obligatorio
+                </small>
+              }
+             }
           </form>
  
     </ng-container>
