@@ -1,20 +1,25 @@
 <!-- training-centre-form.component.html -->
 <!-- Modal para crear o editar un centro de formación -->
-<nz-modal [nzVisible]="isVisible" 
-nzTitle="{{centre ?  'editar':'Crear'}} Centro" 
+<nz-modal nzMaskClosable="false"
+[nzVisible]="isVisible" 
+nzTitle="{{centre ?  'Editar':'Crear'}} Centro" 
 (nzOnCancel)="closeModal.emit()"
 (nzOnOk)="saveData()" 
 [nzOkLoading]="loading"
-[nzOkDisabled]="form.invalid">
+[nzOkDisabled]="form.invalid"
+>
     <ng-container *nzModalContent>
-        <form nz-form [formGroup]="form">
+        <form nz-form [formGroup]="form" (keydown.enter)="submitForm()">
             <label for="name">Nombre del Centro</label>
             <input nz-input formControlName="name" id="name" placeholder="Nombre del centro" />
-
-            <!-- Validación del campo de nombre -->
-            <div *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
-                <small class="text-red-500">El nombre es requerido y debe tener al menos 5 caracteres</small>
+          
+            <!-- Mostrar mensaje si el campo está vacío o tiene menos de 5 caracteres -->
+            <div *ngIf="form.controls['name'].errors?.['minlength'] || form.controls['name'].errors?.['required']">
+              <small class="text-red-500">
+                El nombre debe tener al menos 5 caracteres.
+              </small>
             </div>
-        </form>
+          </form>
+ 
     </ng-container>
 </nz-modal>

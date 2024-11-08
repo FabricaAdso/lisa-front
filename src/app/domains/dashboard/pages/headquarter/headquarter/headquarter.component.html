@@ -13,6 +13,7 @@
 <nz-table #basicTable [nzData]="headquarters" [nzPageSize]="5">
   <thead>
     <tr>
+      <th nzWidth="5%">ID</th>
       <th nzWidth="18%">Nombre</th>
       <th nzWidth="15%">Centro de Formación</th>
       <th nzWidth="15%">Departamento</th>
@@ -26,6 +27,7 @@
   <tbody>
     @for (item of headquarters; track $index) {
     <tr>
+      <td>{{ item.id }}</td>  
       <td>{{ item.name }}</td>
       <td>{{ item.training_center.name}}</td>
       <td>{{ item.municipality.departament.name }}</td>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
 import { CreateEvironentDTO } from '@shared/dto/create-environmentDTO';
@@ -18,6 +18,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin, Subscription } from 'rxjs';
 import { EnvironmentFormComponent } from './components/environment-form/environment-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { log } from 'ng-zorro-antd/core/logger';
 
 @Component({
   selector: 'app-environment',
@@ -33,6 +35,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzFormModule,
     NzInputModule,
     NzSelectModule,
+    NzPopconfirmModule,
     EnvironmentFormComponent,
   ],
   templateUrl: './environment.component.html',
@@ -74,16 +77,29 @@ export class EnvironmentComponent {
     this.nzMessageService.info('click cancel');
   }
   confirm(id: number): void {
-    this.deleteEnvironment(id); // Llama a deleteHeadquarters con el id
-    this.nzMessageService.info('Confirmación de eliminación');
+    
+    this.deleteEnvironment(id); 
+    
   }
 
   deleteEnvironment(id: number) {
-    const deleteSub = this.environmentService.delete(id).subscribe(() => {
-      this.loadEnvironments; // Recarga la lista
-      deleteSub.unsubscribe(); // Desuscribe del observable.
+    this.deleteSub = this.environmentService.delete(id).subscribe({
+      next: () => {
+        // Filtra el registro eliminado de la lista `environments`
+        this.environments = this.environments.filter(env => env.id !== id);
+        this.nzMessageService.success('Registro eliminado correctamente');
+      },
+      error: (err) => {
+        
+        this.nzMessageService.error('Error al eliminar el entorno');
+      },
+      complete: () => {
+        this.deleteSub?.unsubscribe(); // Limpia la suscripción al finalizar
+      }
     });
   }
+
+
 
 
   loadData() {
@@ -102,9 +118,9 @@ export class EnvironmentComponent {
 
 
 
-        console.log(enviroments)
-        console.log('Sedes:', this.headquarters);
-        console.log('Áreas:', this.areas);
+        // console.log(enviroments)
+        // console.log('Sedes:', this.headquarters);
+        // console.log('Áreas:', this.areas);
 
       },
       complete: () => {
@@ -138,12 +154,12 @@ export class EnvironmentComponent {
       
     });
   }
-  openEdit(environment:EnvironmentModel){
+  openEdit(environment?:EnvironmentModel){
     this.environment = environment;
     this.isModalVisible = true;
   }
   edit(new_environment:EnvironmentModel){
-    
+    console.log(new_environment);
     const {id}= new_environment;
     const index_environment= this.environments.findIndex((environmet)=>environmet.id===id);
 
@@ -156,32 +172,10 @@ export class EnvironmentComponent {
 
   }
   create(environment:EnvironmentModel){
-    console.log('entrando despues de emitir');
-    
     this.environments = [...this.environments, environment];
     this.closeModal();
   }
 
-
-  openModal(enviroment?: EnvironmentModel): void {
-    this.isModalVisible = true;
-
-    if (!this.formEnvironments) {
-      this.createForm();
-    }
-
-    if (enviroment) {
-      this.editingEnvironment = enviroment.id;
-      this.formEnvironments?.patchValue({
-        ...enviroment,
-
-      });
-
-    } else {
-      this.editingEnvironment = null;
-      this.formEnvironments?.reset();
-    }
-  }
   closeModal(): void {
     this.isModalVisible = false;
     this.formEnvironments?.reset();

@@ -1,4 +1,4 @@
-<button nz-button nzType="primary" (click)="openModal()">Ingresa un Ambiente</button>
+<button nz-button nzType="primary" (click)="openEdit()">Crear Ambiente</button>
 
 @if (isModalVisible) {
 <app-environment-form
@@ -19,8 +19,8 @@
                 Nombre
 
             </th>
-            <th nzWidth="15%">Capacity</th>
-            <th nzWidth="15%">Area</th>
+            <th nzWidth="15%">Capacidad</th>
+            <th nzWidth="15%">Área</th>
             <th nzWidth="15%">Sede</th>
             <th nzWidth="15%">acciones</th>
         </tr>

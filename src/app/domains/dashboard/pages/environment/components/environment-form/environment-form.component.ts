@@ -73,7 +73,7 @@ export class EnvironmentFormComponent {
   }
   ngOnInit(): void {
     this.loadData();
-    console.log('modal');
+    
     
   }
   loadData() {
@@ -128,6 +128,7 @@ export class EnvironmentFormComponent {
       .subscribe({
         next:(new_environment)=>{
           this.update.emit(new_environment);
+          
         }
       });
   }
@@ -140,6 +141,7 @@ export class EnvironmentFormComponent {
       .subscribe({
         next:(new_environmet)=>{
           this.create.emit(new_environmet);
+          
         }
       });
 
@@ -149,6 +151,12 @@ export class EnvironmentFormComponent {
     
     
   }
+  onlyNumbers(event: KeyboardEvent) {
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+      event.preventDefault();
+    }
+  }
+
 
  
 

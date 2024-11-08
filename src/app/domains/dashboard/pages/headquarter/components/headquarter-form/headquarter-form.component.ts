@@ -120,7 +120,7 @@ export class HeadquarterFormComponent {
     if (departmentId) {
       this.municipalitySub = this.locationService.getMunicipalities(departmentId).subscribe(municipalities => {
         this.municipalities = [...municipalities];
-        console.log(this.touched);
+        //console.log(this.touched);
 
         if (!this.touched && this.headquarter) {
           this.touched = true;
