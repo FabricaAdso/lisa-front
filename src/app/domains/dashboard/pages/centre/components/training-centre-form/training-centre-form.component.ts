@@ -53,6 +53,8 @@ export class TrainingCentreFormComponent {
   @ViewChild('firstInput', { static: false }) firstInput!: ElementRef;
 
   ngOnInit(): void {
+    //console.log(this.form.get('name'));
+    
     if(this.centre){
       this.form.addControl('id',new FormControl(this.centre.id));
       this.form.get('name')!.setValue(this.centre.name);

@@ -15,10 +15,13 @@
 <nz-table #basicTable [nzData]="headquarters" [nzPageSize]="5">
     <thead>
         <tr>
+            <th nzWidth="5%">ID</th>
             <th nzWidth="18%">
                 Nombre
 
             </th>
+            
+            
             <th nzWidth="15%">Capacidad</th>
             <th nzWidth="15%">Área</th>
             <th nzWidth="15%">Sede</th>
@@ -28,6 +31,7 @@
     <tbody>
         @for (item of environments; track $index) {
         <tr>
+            <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.capacity}}</td>
             <td>{{ item.environment_area?.name}}</td>

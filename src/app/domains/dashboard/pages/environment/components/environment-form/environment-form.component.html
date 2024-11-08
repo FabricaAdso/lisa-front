@@ -7,24 +7,20 @@
                 <label for="name" class="block text-sm font-medium">Nombre</label>
                 <input id="name" nz-input formControlName="name" placeholder="Ingrese el nombre de la sede" />
                 <div *ngIf="form?.get('name')?.invalid && form?.get('name')?.touched" class="text-red-500 text-sm">
-                    El nombre es requerido y debe tener al menos 3 caracteres. </div>
+                    El nombre es requerido.
+                </div>
             </div>
 
 
             <div class="mb-4">
                 <label for="capacity" class="block text-sm font-medium">Capacidad</label>
-                <input 
-                  id="capacity" 
-                  nz-input 
-                  type="number" 
-                  formControlName="capacity" 
-                  placeholder="Capacidad - ingrese un número" 
-                  (keydown)="onlyNumbers($event)" 
-                />
-                <div *ngIf="form?.get('capacity')?.invalid && form.get('capacity')?.touched" class="text-red-500 text-sm">
-                  Capacidad es requerida.
+                <input id="capacity" nz-input type="number" formControlName="capacity"
+                    placeholder="Capacidad - ingrese un número" (keydown)="onlyNumbers($event)" />
+                <div *ngIf="form?.get('capacity')?.invalid && form.get('capacity')?.touched"
+                    class="text-red-500 text-sm">
+                    Capacidad es requerida.
                 </div>
-              </div>
+            </div>
 
 
 
