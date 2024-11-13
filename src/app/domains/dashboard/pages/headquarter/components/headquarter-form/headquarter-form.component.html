@@ -3,7 +3,7 @@
 
 
 
-<nz-modal nzMaskClosable="false" nzDraggable [(nzVisible)]="isVisible" nzTitle="Administración de Sedes"
+<nz-modal nzMaskClosable="false" nzDraggable [(nzVisible)]="isVisible" nzTitle="Añadir sede"
   (nzOnCancel)="cancelForm()" (nzOnOk)="saveData()" [nzOkLoading]="loading" [nzOkDisabled]="form.invalid">
 
   <ng-container *nzModalContent>
@@ -29,7 +29,7 @@
         <div *ngIf="form?.get('department')?.invalid && form.get('department')?.touched" class="text-red-500 text-sm">
           Departamento es requerido.
         </div>
-      </div>
+      </div> <br>
 
 
       <div class="mb-4">

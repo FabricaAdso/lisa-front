@@ -74,6 +74,8 @@ export class HeadquarterFormComponent {
       closing_time: new FormControl(null, [Validators.required]),
     }, { validators: timeRangeValidator });
   }
+
+  
   ngOnInit(): void {
     this.loadData();
     this.form.valueChanges.subscribe(() => {

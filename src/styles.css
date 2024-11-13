@@ -11,3 +11,18 @@
   text-2xl
   p-2;
 }
+
+.ant-modal-title{
+  color: #7DD353;
+}
+
+.ant-btn-primary{
+  color: rgb(255, 255, 255) !important;
+  border: solid 1px #7DD353;
+  background-color: #7DD353 !important;
+}
+
+.ant-btn-primary[disabled]{
+  color: rgba(255, 255, 255, 0.432) !important;
+  background-color: rgba(0, 128, 0, 0.349) !important;
+}
