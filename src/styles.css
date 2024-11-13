@@ -13,13 +13,13 @@
 }
 
 .ant-modal-title{
-  color: #7DD353;
+  color: #22c55e;
 }
 
 .ant-btn-primary{
   color: rgb(255, 255, 255) !important;
-  border: solid 1px #7DD353;
-  background-color: #7DD353 !important;
+  border: solid 1px #22c55e;
+  background-color: #22c55e !important;
 }
 
 .ant-btn-primary[disabled]{
