@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { TokenPasswordModel } from '@shared/models/token-password.model';
+import { PasswordResetDTO } from '@shared/dto/password-reset.dto';
+import { PasswordResetModel } from '@shared/models/password-reset.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,20 +10,13 @@ import { TokenPasswordModel } from '@shared/models/token-password.model';
 export class PasswordResetService {
 
   constructor() { }
-  url:string = 'password/reset';
 
-  private http = inject(HttpClient)
+  private http = inject(HttpClient);
 
-  setToken(token_access: TokenPasswordModel){
-    const {token} = token_access;
+  private url: string = 'password/reset';
 
-    const new_token = `${token}`
-
-    localStorage.setItem('token' , new_token);
+  resetPassword(data:PasswordResetDTO): Observable<PasswordResetModel> {
+    // return this.http.post(this.URL, { token, password });
+    return this.http.post<PasswordResetModel>(this.url, data)
   }
-
-  getToken(){
-    return this.http.get('token')
-  }
-
 }

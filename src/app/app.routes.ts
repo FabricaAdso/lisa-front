@@ -20,5 +20,5 @@ export const routes: Routes = [
         path: 'password/reset/:token',
         title: 'Reset password',
         loadComponent: () => import('@domains/pages/password-reset/password-reset.component').then(c => c.PasswordResetComponent)
-      }
+    }
 ];
