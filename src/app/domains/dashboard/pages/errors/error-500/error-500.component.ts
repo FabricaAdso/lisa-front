@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
 
 @Component({
@@ -15,7 +15,13 @@ import { NzCardModule } from 'ng-zorro-antd/card';
   styleUrl: './error-500.component.css'
 })
 export class Error500Component {
-
+  errorMessage: string = '';
   image_error: string = 'assets/images/error_500.svg'
+  constructor(private route: ActivatedRoute) {}
 
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.errorMessage = params['message'] || 'Error desconocido';
+    });
+  }
 }

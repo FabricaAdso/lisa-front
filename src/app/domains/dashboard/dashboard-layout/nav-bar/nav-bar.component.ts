@@ -86,23 +86,27 @@ export class NavBarComponent implements OnInit {
 
   toggleDropdown1() {
     this.isDropdownOpen1 = !this.isDropdownOpen1;
-    // Cierra el segundo menú si está abierto
+    console.log('Abriendo Togglemenu');
+// Cierra el segundo menú si está abierto
     if (this.isDropdownOpen2) {
       this.isDropdownOpen2 = false;
     }
     // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
+    console.log('Detectando Cambios');
   }
 
   toggleDropdown2() {
-    console.log('yesid', this.isDropdownOpen2);
+    console.log( this.isDropdownOpen2);
     this.isDropdownOpen2 = !this.isDropdownOpen2;
     // Cierra el primer menú si está abierto
     if (this.isDropdownOpen1) {
+      console.log('Abriendo Togglemenu 2');
       this.isDropdownOpen1 = false;
     }
     // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
+    console.log('Detectando cambios x2');
   }
 
   @HostListener('document:click', ['$event'])
@@ -122,6 +126,7 @@ export class NavBarComponent implements OnInit {
       dropdownMenu1 &&
       !dropdownMenu1.contains(target)
     ) {
+      console.log('Cerrando Togglemenu'),
       this.isDropdownOpen1 = false;
       this.cdr.detectChanges();
     }
@@ -134,6 +139,7 @@ export class NavBarComponent implements OnInit {
       dropdownMenu2 &&
       !dropdownMenu2.contains(target)
     ) {
+      console.log('Cerrando Togglemenu 2'),
       this.isDropdownOpen2 = false;
       this.cdr.detectChanges();
     }

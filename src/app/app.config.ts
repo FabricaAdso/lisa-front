@@ -11,9 +11,11 @@ import { registerLocaleData } from '@angular/common';
 import es from '@angular/common/locales/es';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiInterceptor } from '@shared/interceptor/api.interceptor';
 import { tokenInterceptor } from '@shared/interceptor/token.interceptor';
+import { HttpErrorInterceptor } from '@shared/interceptor/http-error.interceptor';
+import { serverErrorInterceptor } from '@shared/interceptor/server-error.interceptor';
 
 
 registerLocaleData(es);
@@ -25,6 +27,6 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(es_ES),
     importProvidersFrom(FormsModule),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([apiInterceptor,tokenInterceptor])),
+    provideHttpClient(withInterceptors([apiInterceptor,tokenInterceptor,serverErrorInterceptor])),
   ],
 };
