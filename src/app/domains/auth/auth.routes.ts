@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { PasswordResetComponent } from '@domains/pages/password-reset/password-reset.component';
 
 export const routes: Routes = [
   {
@@ -30,9 +31,9 @@ export const routes: Routes = [
           ).then((c) => c.RegisterPageComponent),
       },
       {
-        path: 'password-reset',
-        title: 'password-reset',
-        loadComponent: () => import('@domains/pages/password-reset/password-reset.component').then(c => c.PasswordResetComponent)
+        path: 'password/reset/:token',
+        component: PasswordResetComponent,
+        title: 'Restablecer Contraseña'
       }
     ],
   },

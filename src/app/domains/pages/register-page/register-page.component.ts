@@ -23,20 +23,20 @@ import { forkJoin } from 'rxjs';
   styleUrl: './register-page.component.css'
 })
 export class RegisterPageComponent implements OnInit {
-  
+
   constructor(private router: Router){}
 
   private formBuilder = Inject(FormBuilder);
 
   private document_type_service = inject(DocumentTypeService);
   private user_service = inject(UserService)
-  
+
   passwordVisible:boolean = false
   document_type: DocumentTypeModel[] = [];
   user:UserModel[] = []
   showModal: boolean = false;
   errorMessage: string | null = null;
-  
+
 
 
   ngOnInit(): void {
