@@ -1,0 +1,51 @@
+<section class="attendance">
+  <header class="page-header">
+    <nz-page-header nzBackIcon [nzGhost]="false">
+      <nz-page-header-title>Analisis y desarrollo de software</nz-page-header-title>
+
+      <nz-page-header-content>
+        <nz-descriptions nzSize="small" [nzColumn]="2">
+          <nz-descriptions-item nzTitle="Lider de ficha" [nzSpan]="1">Mariani Dorado</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Duracion del programa" [nzSpan]="1">: 06/06/2023 -
+            06/08/2024</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Sede" [nzSpan]="1"><a>Inem</a></nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Ambiente" [nzSpan]="1">105</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Vocero de ficha" [nzSpan]="1">Juan Andres</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Vocero suplente" [nzSpan]="1">Antonio Rodriguez</nz-descriptions-item>
+        </nz-descriptions>
+      </nz-page-header-content>
+    </nz-page-header>
+  </header>
+<div class="buttons">
+  <button nz-button nzType="primary">Primary Button</button>
+
+</div>
+  <div class="content">
+    <div class="table">
+      <nz-table #basicTable [nzData]="listOfData">
+        <thead>
+          <tr>
+            <th>Nombres y Apellidos</th>
+            <th>Documento</th>
+            <th>Correo</th>
+            <th>Telefono</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (data of basicTable.data; track data) {
+          <tr>
+            <td>{{ data.nombre }} {{data.apellido}}</td>
+            <td>{{ data.documento }}</td>
+            <td>{{ data.correo }}</td>
+            <td>{{ data.telefono }}</td>
+            <td>
+              <button nz-button nzType="primary">Justificacion</button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</section>

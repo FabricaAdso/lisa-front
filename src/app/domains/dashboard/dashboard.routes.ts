@@ -15,6 +15,12 @@ export const routes: Routes = [
                 title: 'Administrar roles',
                 loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent)
             },
+            {
+              path:'attendance',
+              title:'Asistencia',
+              loadComponent:() => import('@domains/dashboard/pages/attendance/attendance.component').then(c=> c.AttendanceComponent)
+
+            },
 
             {
                 path: 'assists',

@@ -1,0 +1,14 @@
+.attendance{
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+.buttons{
+  padding: 10px;
+  display: flex;
+  justify-content:right;
+}
+
