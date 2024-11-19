@@ -1,0 +1,15 @@
+.fichas-container {
+    padding: 16px;
+  }
+  
+  .ficha-header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .ficha-content p {
+    margin: 4px 0;
+  }
