@@ -25,6 +25,8 @@
     "laravel-echo": "^1.16.1",
     "ng-zorro-antd": "^18.1.1",
     "pusher-js": "^8.4.0-rc2",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

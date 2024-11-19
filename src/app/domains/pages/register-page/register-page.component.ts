@@ -32,7 +32,7 @@ export class RegisterPageComponent implements OnInit {
 
   private document_type_service = inject(DocumentTypeService);
   private user_service = inject(UserService)
-  
+
   passwordVisible:boolean = false
   document_type: DocumentTypeModel[] = [];
   user:UserModel[] = []

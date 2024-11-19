@@ -4,6 +4,7 @@
 
 #button-login.value{
   background-color: rgb(230, 224, 224);
+  background-color: var(--primary-color);
 }
 
 .ant-input-affix-wrapper {
@@ -32,3 +33,9 @@
   width: 100% !important;
   outline: inherit !important;
 }
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+

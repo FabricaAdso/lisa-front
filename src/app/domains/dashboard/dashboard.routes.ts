@@ -68,7 +68,7 @@ export const routes: Routes = [
                 path: 'environments',
                 title: 'Administrar Ambientes',
                 loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
-            }
+            },
         ]
     }
 ];

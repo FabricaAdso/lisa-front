@@ -4,19 +4,23 @@ import { Router, RouterOutlet } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { log } from 'ng-zorro-antd/core/logger';
 import { LoginDTO } from '@shared/dto/login.dto';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { UserService } from '@shared/services/user.service';
+import { PasswordEmailService } from '@shared/services/password-email.service';
+import { PasswordEmailModel } from '@shared/models/password-email.model';
+import { PasswordEmailDTO } from '@shared/dto/password-email.dto';
 
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule, NzInputModule,NzIconModule ],
+  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -32,8 +36,17 @@ export class LoginPageComponent implements OnDestroy {
   passwordVisible: boolean = true
   showModalLogin: boolean = false;
   errorMessageLogin: string | null = null;
+  private password_email_service = inject(PasswordEmailService);
+
+  showModal: boolean = false;
+  errorMessage: string | null = null;
+  user:any [] = [];
+
 
   login_sub:Subscription | null = null;
+  isLoadingOne = false;
+  isLoadingTwo = false;
+
 
   button_value = signal(false);
 
@@ -49,8 +62,12 @@ export class LoginPageComponent implements OnDestroy {
 
   formLogin = new FormGroup({
     identity_document: new FormControl('', [Validators.required]),
-    password: new  FormControl('', [Validators.required])
+    password: new  FormControl('', [Validators.required]),
   });
+
+  formEmail = new FormGroup({
+    email: new FormControl('', [Validators.required]),
+  })
 
 
   get fieldDocument(){
@@ -59,6 +76,10 @@ export class LoginPageComponent implements OnDestroy {
 
   get fieldPassword(){
     return this.formLogin.get('password') as FormControl;
+  }
+
+  get fieldEmail(){
+    return this.formEmail.get('email') as FormControl;
   }
 
 
@@ -87,16 +108,16 @@ export class LoginPageComponent implements OnDestroy {
       },
       error: error =>{
         console.log(error);
-        
+
         this.router.navigate(['auth/login'])
         if(this.formLogin.get('identity_document')!.value! == '' || this.formLogin.get('password')!.value! == ''){
           
         }else{
           this.errorMessageLogin = 'Contraseña o numero de documento incorrectos'
           this.showModalLogin = true;
-        }
-             
       }
+    }
+
     })
 
   }
@@ -104,8 +125,41 @@ export class LoginPageComponent implements OnDestroy {
   closeModalLogin() {
     this.showModalLogin = false; // Ocultar el modal
     this.errorMessageLogin = null; // Reiniciar el mensaje
+    this.showModal = false; // Ocultar el modal
+    this.errorMessage = null; // Reiniciar el mensaje
   }
 
-  
+  password(){
+    this.showModal = true
+  }
+
+  loadOne(): void {
+    this.isLoadingOne = true;
+    setTimeout(() => {
+      this.isLoadingOne = false;
+      alert('correo enviado')
+      this.sendEmail()
+    }, 5000);
+  }
+
+  sendEmail(){
+    let emailData:PasswordEmailDTO = {
+      email: this.formLogin.get('email')!.value!
+    }
+
+    this.password_email_service.postEmail(emailData).subscribe({
+      next: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
+  // loadTwo(): void {
+  //   this.isLoadingTwo = true;
+  //   setTimeout(() => {
+  //     this.isLoadingTwo = false;
+  //   }, 5000);
+  // }
 
 }
+
