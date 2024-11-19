@@ -1,3 +1,25 @@
+<div class="buscador">
+<!-- barra de busqueda -->
+  <div class="barra-busqueda">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input placeholder="input search text" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+    </ng-template>
+  </div>
+  <!-- boton upload -->
+  <div>
+    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" >
+      <button nz-button>
+        <span nz-icon nzType="upload"></span>
+        subir archivos
+      </button>
+    </nz-upload>
+
+  </div>
+
+</div>
 <section id="all">
   <nz-table #basicTable [nzData]="users">
     <thead>
@@ -21,7 +43,7 @@
         </td>
         <td>
           <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
-          <button  (click)="toggleUserStatus(user)" class="btn btn-secondary">
+          <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
             {{ user.desactive ? 'desactivar' : 'activar' }}
           </button>
         </td>
@@ -40,22 +62,13 @@
 
             <label for="roles">Seleccionar Roles</label>
 
-            <nz-select
-            [nzMaxTagCount]="3"
-            [nzMaxTagPlaceholder]="tagPlaceHolder"
-            nzMode="multiple"
-            nzPlaceHolder="Seleccione roles"
-            [(ngModel)]="selectedRoles"
-            name="roles"
-            (ngModelChange)="onRolesChange($event)">
+            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+              nzPlaceHolder="Seleccione roles" [(ngModel)]="selectedRoles" name="roles"
+              (ngModelChange)="onRolesChange($event)">
 
-            <nz-option *ngFor="let role of allRoles" [nzLabel]="role" [nzValue]="role"></nz-option>
-          </nz-select>
-          <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
-          </div>
-          <div class="form-check">
-            <input type="checkbox" id="active" [(ngModel)]="isActive" name="active" class="form-check-input" (change)="onStatusChange()">
-            <label for="active" class="form-check-label">{{ isActive ? ' Activar usuario': 'Desactivar usuario'  }}</label>
+              <nz-option *ngFor="let role of allRoles" [nzLabel]="role" [nzValue]="role"></nz-option>
+            </nz-select>
+            <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
           </div>
         </div>
       </div>

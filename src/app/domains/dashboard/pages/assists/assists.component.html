@@ -1,11 +1,30 @@
+<div class="buscador">
+  <!-- barra de busqueda -->
+    <div class="barra-busqueda">
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input type="text" nz-input placeholder="input search text" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+      </ng-template>
+    </div>
+    <!-- boton upload -->
+    <div>
+      <button nz-button nzType="default" (click)="openUploadModal()">
+        Subir Archivos
+      </button>
+   
+    </div>
+  </div>
+
 <div class="all">
   <nz-tabset>
     <!-- Tab de Instructores -->
     <nz-tab nzTitle="Instructores">
+     
       <button nz-button nzType="primary" (click)="openModal('instructor')">
         Asignar Instructor
       </button>
-
       <nz-table #instructorTable [nzData]="instructores" [nzBordered]="true">
         <thead>
           <tr>
@@ -51,10 +70,8 @@
       </nz-table>
     </nz-tab>
   </nz-tabset>
-  <button nz-button nzType="default" (click)="openUploadModal()">
-    Subir Archivos
-  </button>
-
+  
+  
   <!-- Modal único para Asignar Instructor o Aprendiz -->
   <nz-modal [(nzVisible)]="isModalVisible"
     [nzTitle]="modalType === 'instructor' ? 'Asignar Instructor' : 'Asignar Aprendiz'" (nzOnCancel)="handleCancel()"

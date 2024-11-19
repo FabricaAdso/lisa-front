@@ -10,6 +10,8 @@ import { NzTableComponent } from 'ng-zorro-antd/table';
 import { NzTabComponent, NzTabSetComponent } from 'ng-zorro-antd/tabs';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';;
 
 interface Persona {
   id: number;
@@ -35,7 +37,12 @@ interface Persona {
     NzOptionComponent,
     FormsModule,
     ReactiveFormsModule,
-    NzUploadModule
+    NzUploadModule,
+    NzInputModule,
+    NzIconModule
+
+
+    
 
   ],
 
@@ -69,6 +76,10 @@ export class AssistsComponent implements OnInit {
   listaPersonas: Persona[] = [
     { id: 1, documento: '123456789', nombreCompleto: 'Juan Perez' },
     { id: 2, documento: '987654321', nombreCompleto: 'Maria Garcia' },
+    { id: 3, documento: '123456789', nombreCompleto: 'Juan camilo' },
+    { id: 4, documento: '987654321', nombreCompleto: 'Maria antonieta' }, 
+    { id: 5, documento: '123456789', nombreCompleto: 'Esteban Perez' },
+    { id: 6,documento: '987654321', nombreCompleto: 'Pedro Garcia' },
   ];
   instructores: Persona[] = [];
   aprendices: Persona[] = [];
@@ -77,6 +88,7 @@ export class AssistsComponent implements OnInit {
   modalType: 'instructor' | 'aprendiz' |'archivos'| null = null;
   form: FormGroup;
   errorMessage: string | null = null;
+search: any;
 
   constructor(
     private fb: FormBuilder,

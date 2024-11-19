@@ -1,14 +1,94 @@
-.attendance{
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+.page-header {
+  width: 100%;
+  margin-top: 40px;
+  border: solid 0.5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+.title-icon {
+  align-items: center;
+  width: 100%;
+  display: flex;
+}
+.attendance {
   background-color: #fff;
+  padding: 5px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: auto;
 }
-.buttons{
+.buttons {
+  width: 80%;
   padding: 10px;
+  margin-bottom: 20px;
   display: flex;
-  justify-content:right;
+  justify-content: right;
+}
+.button {
+  display: flex;
+  gap: 20px;
 }
 
+.content {
+  display: flex;
+  justify-content: center;
+  width: 80%;
+}
+.table {
+  width: 100%;
+}
+.contenet {
+  height: 100px;
+}
+
+.page-header-title {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 15px;
+}
+
+::ng-deep .ant-descriptions-item-container {
+  @apply flex flex-col;
+}
+
+@screen tablet {
+  ::ng-deep .ant-descriptions-item-container {
+    @apply flex flex-row;
+  }
+  .page-header {
+    width: 60%;
+    margin-top: 40px;
+    border: solid 0.5px;
+    padding: 10px 45px;
+    border-radius: 10px;
+  }
+  .page-header-title {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    font-size: 15px;
+  }
+}
+
+@screen laptop {
+  ::ng-deep .ant-descriptions-item-container {
+    @apply flex flex-row;
+  }
+}
+
+/* ::ng-deep .ant-descriptions-item-label{
+  @apply w-full;
+}
+
+::ng-deep .ant-descriptions-item-content{
+  @apply w-full;
+} */

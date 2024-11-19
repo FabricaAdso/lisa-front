@@ -1,3 +1,13 @@
+.buscador{
+  display:flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 10px;
+}
+.barra-busqueda{
+ width: 40%;
+}
+
 #all {
   display: flex;
   justify-content: center;
@@ -5,6 +15,10 @@
 .ant-table-wrapper {
   clear: both;
   width: 98%;
+}
+[nz-button][_ngcontent-ng-c4024495835] {
+  background-color: #00af00;
+  /* height: 40px; */
 }
 button, html [type=button], [type=reset], [type=submit] {
   background: #00af00;
@@ -105,25 +119,6 @@ button, html [type=button], [type=reset], [type=submit] {
   margin-bottom: 20px;
 }
 
-.form-check {
-  margin-bottom: 20px;
-}
-
-/* Estilo para el selector de roles */
-.form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.form-check-input {
-  margin-right: 10px;
-}
-[nz-button]{
-  background-color: #00af00;
-  height: 40px;
-}
 [nz-button]:hover{
   background-color: #026802;
 }
