@@ -29,10 +29,211 @@ export class FichaComponent {
       session: '7:00 - 13:00',
       date: '13/09/2024'
     },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+
     
   ];
 
   historialFichas = [
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
+    {
+      number: 2774315,
+      program: 'Análisis y desarrollo de software',
+      site: 'Inem',
+      environment: 105,
+      session: '7:00 - 13:00',
+      date: '13/09/2024'
+    },
     {
       number: 2774315,
       program: 'Análisis y desarrollo de software',
