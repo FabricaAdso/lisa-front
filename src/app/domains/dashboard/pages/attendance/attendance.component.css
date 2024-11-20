@@ -36,6 +36,14 @@
   display: flex;
   gap: 20px;
 }
+button[_ngcontent-ng-c1677234187], [role=button][_ngcontent-ng-c1677234187] {
+  display: flex;
+  align-items: center;
+  background-color: #7CB305;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+}
 
 .content {
   display: flex;
