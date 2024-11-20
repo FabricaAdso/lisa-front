@@ -1,6 +1,9 @@
-<div class="h-full desktop_xl:w-[30rem] desktop:w-[25rem] laptop:w-[20rem] p-6 space-y-4 md:space-y-6 sm:p-8">
+<div class="h-full desktop_xl:w-[30rem] desktop:w-[25rem] laptop:w-[20rem] p-6 sm:p-8">
+    <div class="flex justify-center h-[11.5rem]">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEH201NeYvXg0rXsxfAlHw8tAj7xHYawvTzWXiLzCDDjPA8GDdKXFl76qLg80DAc-1l0G-EH4lGc1tHyOt0ECoOyW6AAtCG8wmlH4fwiHE6hJzmomWU3H2dSgdu2Fuyfj1StpF89H14vGf1dUSV3FIA9DeHwhSSqSGilBldmtZkpla0YpIqz7qC5cd/s422/Logosimbolo-SENA-PRINCIPAL.PNG" alt="Imagen del evento" class="w-[14rem] h-[14rem] object-cover" />
+    </div>
     <h1 class="text-3xl font-semibold text-gray-800 text-center mb-6">Ingresa tus
-        datos</h1>
+        datos</h1> 
     <form (input)="stateButton()" (submit)="login()" class="space-y-7" nz-form>
         <div>
             <nz-form-label for="number" class="flex flex-start text-gray-700">
@@ -80,21 +83,21 @@
 @if (showModalLogin) {
 <div class="fixed inset-0 flex items-center justify-center z-50">
     <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg z-10 p-6 max-w-sm mx-auto">
+    <div class="bg-gray-50 dark:bg-white rounded-lg shadow-lg z-10 p-6 max-w-sm mx-auto">
         <div class="flex items-center">
-            <svg class="flex-shrink-0 w-4 h-4 me-2 dark:text-gray-300" aria-hidden="true"
+            <svg class="flex-shrink-0 w-4 h-4 me-2 dark:text-black" aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <path
                     d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
             </svg>
-            <h3 class="text-lg font-medium text-gray-800 dark:text-gray-300">Error</h3>
+            <h3 class="text-lg font-medium text-black dark:text-black">Error</h3>
         </div>
-        <div class="mt-2 mb-4 text-sm text-gray-800 dark:text-gray-300">
+        <div class="mt-2 mb-4 text-sm text-black dark:text-black">
             {{errorMessageLogin}}
         </div>
         <div class="flex justify-start">
             <button (click)="closeModalLogin()" type="button"
-                class="text-gray-800 bg-transparent border border-gray-700 hover:bg-gray-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-800 dark:text-gray-300 dark:hover:text-white">
+                class="text-black bg-transparent border border-gray-700 hover:bg-gray-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-800 dark:text-bl dark:hover:text-white">
                 Cerrar
             </button>
         </div>

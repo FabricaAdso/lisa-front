@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, Inject, inject, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthLayoutComponent } from '@domains/auth/auth-layout/auth-layout.component';
@@ -18,24 +18,26 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule,ReactiveFormsModule,NzInputModule,NzIconModule,NzButtonModule],
+  imports: [NzFormModule, CommonModule, FormsModule,ReactiveFormsModule,NzInputModule,NzIconModule,NzButtonModule],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.css',
   providers:[NzNotificationService]
 })
 export class RegisterPageComponent implements OnInit {
   
-  constructor(private router: Router ){}
-  private notification = inject(NzNotificationService)
+  @Output() switchView = new EventEmitter<void>();
+
+  private router = inject(Router);
+  private notification = inject(NzNotificationService);
 
   private formBuilder = Inject(FormBuilder);
 
   private document_type_service = inject(DocumentTypeService);
   private user_service = inject(UserService)
 
-  passwordVisible:boolean = false
+  passwordVisible:boolean = false;
   document_type: DocumentTypeModel[] = [];
-  user:UserModel[] = []
+  user:UserModel[] = [];
   button_value = signal(false);
 
 
@@ -110,8 +112,12 @@ export class RegisterPageComponent implements OnInit {
     password_confirmation:  new FormControl('', [Validators.required, Validators.minLength(8)]),
   })
 
+  goLogin(){
+    this.router.navigate(['auth/login']);
+  }
 
   registrarse(){
     this.formRegister = this.formBuilder.group()
-  }
+  } 
+  
 }

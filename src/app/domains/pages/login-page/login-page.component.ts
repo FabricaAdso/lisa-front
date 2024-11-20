@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, Output, signal, ViewChild } from '@angular/core';
 import { AuthLayoutComponent } from "../../auth/auth-layout/auth-layout.component";
 import { Router, RouterOutlet } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -20,7 +20,7 @@ import { PasswordEmailDTO } from '@shared/dto/password-email.dto';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [AuthLayoutComponent, RouterOutlet, NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule],
+  imports: [NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
