@@ -1,5 +1,89 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Estilo para los elementos del menú */
+.ant-menu-item {
+  @apply px-4 py-2
+  text-[1rem]
+  items-start
+  justify-center
+  bg-transparent
+}
+/* Estilo para los elementos del menú */
+.ant-menu-item {
+  @apply px-4 py-2 text-[1rem] items-start justify-center bg-transparent;
+}
+
+/* Hover de los elementos del menú */
+.ant-menu-item:hover {
+  @apply bg-green-100; /* Fondo verde al pasar el cursor */
+}
+
+/* Estilo para los íconos dentro del menú */
+.ant-menu-item .anticon {
+  @apply text-black text-[1.5rem] flex-shrink-0; /* Asegurar tamaño constante */
+}
+
+/* Hover en los íconos */
+.ant-menu-item .anticon:hover {
+  @apply text-green-500; /* Íconos en verde al hacer hover */
+}
+
+/* Estilo para el texto del menú */
+.ant-menu-item a {
+  @apply flex items-center;
+}
+
+/* Estilo para el texto dentro del menú */
+.ant-menu-item a span {
+  @apply ml-2;
+}
+
+/* Hover en el texto */
+.ant-menu-item a:hover {
+  @apply text-green-500; /* Texto verde al pasar el cursor */
+}
+
+/* Hover en el texto cuando el ícono también tiene hover */
+.ant-menu-item a:hover .anticon {
+  @apply text-green-500; /* Ícono verde al pasar el cursor */
+}
+
+/* Estilo para el elemento activo */
+.ant-menu-item a.active,
+.ant-menu-item .anticon {
+  @apply text-black; /* Texto e íconos en negro cuando está activo */
+}
+
+/* Estilo para el icono activo */
+.ant-menu-item a.active .anticon {
+  @apply text-black; /* Ícono negro cuando el elemento está activo */
+}
+
+/* Estilo para el separador entre elementos (si es necesario) */
+.ant-menu-item::after {
+  @apply border-r-4 border-green-500; /* Línea verde entre elementos */
+}
+
+/* Estilo para el texto al pasar el cursor */
+.ant-menu-item span:hover {
+  @apply text-green-500; /* Texto verde al pasar el cursor */
+}
+
+/* Ajustes para el estado colapsado */
+.ant-layout-sider[nz-collapsed="true"] .ant-menu-item {
+  @apply justify-center; /* Centrar los elementos */
+}
+
+.ant-layout-sider[nz-collapsed="true"] .ant-menu-item a span {
+  @apply hidden; /* Ocultar el texto */
+}
+
+.ant-layout-sider[nz-collapsed="true"] .ant-menu-item .anticon {
+  @apply text-black text-[1.5rem]; /* Mantener el tamaño constante */
+}
+
+.ant-layout-sider[nz-collapsed="true"] .ant-menu-item:hover .anticon {
+  @apply text-green-500; /* Cambiar íconos a verde al hacer hover */
+}

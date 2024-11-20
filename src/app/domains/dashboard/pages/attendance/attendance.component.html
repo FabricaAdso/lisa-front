@@ -56,9 +56,9 @@
         </nz-table>
       </div>
     </ng-container>
-    
-      <ng-container *ngIf="!showDefaultTable">
-        <div class="table">
+
+    <ng-container *ngIf="!showDefaultTable">
+      <div class="table">
         <!-- Aquí defines la tabla personalizada -->
         <nz-table #attendanceTable [nzData]="listOfData">
           <thead>
@@ -72,13 +72,11 @@
             <tr class="data">
               <td>{{ data.nombre }} {{ data.apellido }}</td>
               <td>{{ data.documento }}</td>
-             
+
             </tr>}
           </tbody>
         </nz-table>
       </div>
-      </ng-container>
-    
-    </div>
-  
+    </ng-container>
+  </div>
 </section>

@@ -10,6 +10,9 @@
   padding: 5px;
   border-radius: 10px;
 }
+.table{
+  height: 40px;
+}
 .title-icon {
   align-items: center;
   width: 100%;
@@ -18,12 +21,13 @@
 .attendance {
   background-color: #fff;
   padding: 5px;
+  height: 100%n;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: auto;
+
 }
 .buttons {
   width: 80%;
@@ -35,6 +39,15 @@
 .button {
   display: flex;
   gap: 20px;
+}
+button[_ngcontent-ng-c31616406], [role=button][_ngcontent-ng-c31616406] {
+
+  display: flex;
+  align-items: center;
+  background-color: #7CB305;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
 }
 button[_ngcontent-ng-c1677234187], [role=button][_ngcontent-ng-c1677234187] {
   display: flex;
@@ -48,14 +61,14 @@ button[_ngcontent-ng-c1677234187], [role=button][_ngcontent-ng-c1677234187] {
 .content {
   display: flex;
   justify-content: center;
+  height: 438px;
+  overflow: auto;
   width: 80%;
 }
 .table {
   width: 100%;
 }
-.contenet {
-  height: 100px;
-}
+
 
 .page-header-title {
   display: flex;

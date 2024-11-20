@@ -1,0 +1,18 @@
+<main class="flex items-center justify-center h-full bg-gray-100">
+  <nz-card class="w-[90rem] h-[50rem] text-center shadow-lg rounded-lg">
+    <nz-card-meta
+      nzTitle="401 - Autenticación Requerida"
+      nzDescription="Para acceder a esta sección, debes estar autenticado. Por favor, inicia sesión con tus credenciales o ponte en contacto con el administrador."
+      class="text-lg"
+    ></nz-card-meta>
+    <div class="flex items-center justify-center mt-6">
+      <picture class="w-[40rem] h-[40rem]">
+        <img
+          [src]="image_error"
+          class="w-full h-full object-contain"
+          alt="Error 401"
+        />
+      </picture>
+    </div>
+  </nz-card>
+</main>

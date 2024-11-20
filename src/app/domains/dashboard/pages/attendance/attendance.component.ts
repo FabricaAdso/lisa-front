@@ -40,6 +40,7 @@ export class AttendanceComponent {
     telefono:32154894,
     correo:'stiwar@gmail.com'
   }
+  listDAtos:any[] =[]
   listOfData: Person[] = [];
   showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
 
@@ -51,6 +52,9 @@ export class AttendanceComponent {
       this.listOfData.push(this.person);
     }
   }
-
-
+  evaluarCantidadTablas(){
+    for (let i = 0; i < this.listOfData.length; i += 6) {
+      this.listDAtos.push(this.listOfData.slice(i, i + 6));
+    }
+  }
 }
