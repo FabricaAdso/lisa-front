@@ -28,7 +28,7 @@
 .buttons {
   width: 80%;
   padding: 10px;
-  margin-bottom: 20px;
+  margin: 20px 0px;
   display: flex;
   justify-content: right;
 }
@@ -100,3 +100,7 @@ button[_ngcontent-ng-c1677234187], [role=button][_ngcontent-ng-c1677234187] {
 ::ng-deep .ant-descriptions-item-content{
   @apply w-full;
 } */
+
+.data{
+  width: max-content;
+}

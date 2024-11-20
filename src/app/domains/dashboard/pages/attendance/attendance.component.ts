@@ -5,6 +5,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NgIf } from '@angular/common';
 
 interface Person {
   key: string;
@@ -23,37 +24,33 @@ interface Person {
     NzSpaceModule,
     NzDividerModule,
     NzTableModule,
-    NzButtonModule
+    NzButtonModule,
+    NgIf
   ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
 })
 export class AttendanceComponent {
-  listOfData: Person[] = [
-    {
-      key: '1',
-      nombre: 'John',
-      apellido:'stiwar',
-      documento: 254481,
-      telefono:32154894,
-      correo:'stiwar@gmail.com'
-    },
-    {
-      key: '2',
-      nombre: 'John',
-      apellido:'stiwar',
-      documento: 254481,
-      telefono:32154894,
-      correo:'stiwar@gmail.com'
-    },
-    {
-      key: '3',
-      nombre: 'John',
-      apellido:'stiwar',
-      documento: 254481,
-      telefono:32154894,
-      correo:'stiwar@gmail.com'
+
+  person = {
+    key: '1',
+    nombre: 'John',
+    apellido:'stiwar',
+    documento: 254481,
+    telefono:32154894,
+    correo:'stiwar@gmail.com'
+  }
+  listOfData: Person[] = [];
+  showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
+
+  toggleTable() {
+    this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
+  }
+  ngOnInit(): void {
+    for (let index = 0; index < 50; index++) {
+      this.listOfData.push(this.person);
     }
-  ];
+  }
+
 
 }
