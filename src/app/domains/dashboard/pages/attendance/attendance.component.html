@@ -48,34 +48,71 @@
               <td>{{ data.correo }}</td>
               <td>{{ data.telefono }}</td>
               <td>
-                <button nz-button nzType="primary">Justificacion</button>
+                <button nz-button nzType="primary" (click)="showModal()">Justificacion</button>
               </td>
             </tr>
             }
           </tbody>
+          <div>
+            <nz-modal [(nzVisible)]="isVisible" nzTitle="Inasistencias" (nzOnCancel)="handleCancel()"
+              (nzOnOk)="handleOk()">
+              <ng-container *nzModalContent>
+                <div class="modal-content">
+      <div class="filter-section">
+        <button nz-button nzType="default" class="filter-btn">
+          <i nz-icon nzType="filter" nzTheme="outline"></i> Filtrar
+        </button>
+        <div class="filter-date">
+          <label for="filter-date">Fecha</label>
+          <input nz-input type="date" id="filter-date" />
+        </div>
+        <button nz-button nzType="primary" class="all-btn">todas</button>
+      </div>
+
+      <div class="attendance-list">
+        <div class="attendance-item">
+          <div class="status-indicator status-green"></div>
+          <span>Fecha: 10/07/2024 Hora: 7:00 - 13:00</span>
+          <a href="#" class="action-link">👁️ Examinar</a>
+        </div>
+        
+      </div>
+    </div>
+
+              </ng-container>
+            </nz-modal>
+          </div>
         </nz-table>
       </div>
     </ng-container>
 
     <ng-container *ngIf="!showDefaultTable">
       <div class="table">
-        <!-- Aquí defines la tabla personalizada -->
-        <nz-table #attendanceTable [nzData]="listOfData">
-          <thead>
-            <tr>
-              <th>Nombres y Apellidos</th>
-              <th>Documento</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (data of attendanceTable.data; track data) {
-            <tr class="data">
-              <td>{{ data.nombre }} {{ data.apellido }}</td>
-              <td>{{ data.documento }}</td>
+        <div class="grid-table">
+          <div class="table-column" *ngFor="let column of [1, 2, 3]">
+            <!-- Aquí defines la tabla personalizada -->
+            <nz-table #attendanceTable [nzData]="listOfData">
+              <thead>
+                <tr>
+                  <th>Asistió</th>
+                  <th>Nombres y Apellidos</th>
+                  <th>Documento</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (data of attendanceTable.data; track data) {
+                <tr class="data">
+                  <td>
+                    <input type="checkbox" />
+                  </td>
+                  <td>{{ data.nombre }} {{ data.apellido }}</td>
+                  <td>{{ data.documento }}</td>
 
-            </tr>}
-          </tbody>
-        </nz-table>
+                </tr>}
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
       </div>
     </ng-container>
   </div>

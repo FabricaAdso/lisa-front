@@ -5,7 +5,9 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+
 
 interface Person {
   key: string;
@@ -25,7 +27,9 @@ interface Person {
     NzDividerModule,
     NzTableModule,
     NzButtonModule,
-    NgIf
+    NgIf,
+    NgFor,
+    NzModalModule
   ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
@@ -56,5 +60,20 @@ export class AttendanceComponent {
     for (let i = 0; i < this.listOfData.length; i += 6) {
       this.listDAtos.push(this.listOfData.slice(i, i + 6));
     }
+  }
+  isVisible = false;
+
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    console.log('Button ok clicked!');
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
   }
 }
