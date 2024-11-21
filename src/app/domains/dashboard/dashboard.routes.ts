@@ -77,6 +77,14 @@ export const routes: Routes = [
       },
 
       {
+        path: 'calendar',
+        title: 'Sesiónes',
+        data: { breadcrumb: 'Sesiónes' },
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
+      },
+
+      {
         path: 'error_401',
         title: 'Autenticación Requerida',
         loadComponent: () => import('@domains/dashboard/pages/errors/error_401/error-401.component').then(c => c.Error401Component)
