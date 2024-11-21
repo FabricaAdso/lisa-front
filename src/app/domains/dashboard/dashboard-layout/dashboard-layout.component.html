@@ -1,10 +1,10 @@
-<nz-layout class="h-screen w-screen">
+<nz-layout class="h-screen w-screen flex flex-col bg-gray-100">
   <!-- Header principal -->
-  <app-nav-bar></app-nav-bar>
+  <app-nav-bar class="h-16 bg-white shadow-md"></app-nav-bar>
 
-  <!-- Layout con el sider -->
-  <nz-layout>
-    <!-- Layout con el sider -->
+  <!-- Layout con el sider y contenido -->
+  <nz-layout class="flex flex-1">
+    <!-- Sider -->
     <nz-sider
       nzCollapsible
       nzWidth="200px"
@@ -13,9 +13,10 @@
       <app-menu-item></app-menu-item>
     </nz-sider>
 
-    <nz-layout>
-      <nz-content class="m-[16px] p-[0 50px]">
-        <nz-breadcrumb [nzAutoGenerate]="true" class="mb-2"></nz-breadcrumb>
+    <!-- Contenido principal -->
+    <nz-layout class="flex-1">
+      <nz-content class="m-4 p-6 bg-white rounded-lg shadow-md">
+        <nz-breadcrumb [nzAutoGenerate]="true" class="mb-4"></nz-breadcrumb>
         <router-outlet></router-outlet>
       </nz-content>
 
