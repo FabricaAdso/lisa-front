@@ -2,13 +2,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+:root{
+  --fc-border-color:gray
+}
 .ant-layout-sider-trigger {
   @apply
-  bg-green-500
+  bg-[#38a901]
   text-white
   border
-  border-t-green-500
+  border-t-[#38a901]
   text-2xl
   p-2
 }
@@ -16,6 +18,6 @@
 .ant-breadcrumb > nz-breadcrumb-item:last-child a
 {
   @apply
-  text-green-500
+  text-[#38a901]
   text-lg
 }
