@@ -1,13 +1,12 @@
 <div class="h-max p-6 space-y-4">
-
     <h1 class="text-3xl font-semibold text-gray-800 text-center mb-2">
         Completa el registro
     </h1>
-    <form (input)="stateButton()" (ngSubmit)="onSubmit()" [formGroup]="formRegister" class="space-y-5" >
+    <form (input)="stateButton()" (ngSubmit)="onSubmit()" [formGroup]="formRegister" class="space-y-5 " >
         <div class="flex justify-between gap-1 max-sm:items-end">
-            <div>
+            <div class="max-mobile:w-1/2">
                 <nz-form-label for="number"
-                    class="flex felx-start text-gray-700">*Numero de
+                    class="flex felx-start text-gray-700">*Numero
                     documento</nz-form-label>
                 <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorDoc">
                     <input type="text" name="identity_document" id="identity-document"
@@ -17,7 +16,7 @@
                     <ng-template #errorDoc>
                         @if (formRegister.controls.identity_document.touched) { @if
                         (formRegister.controls.identity_document.hasError('required')) {
-                        <span>Ingresa tu documento</span>
+                        <span class="span-error">Ingresa tu documento</span>
                         } }
                     </ng-template>
                 </nz-form-control>
@@ -30,7 +29,8 @@
                 <nz-form-control nzValidateStatus="error" nzHasFeedback [nzErrorTip]="errorOpt">
                     <select id="option" name="document_type_id" formControlName="document_type_id"
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
-                        required="">
+                        required="" >
+                        <option value="" disabled selected class="text-gray-400">Documentos</option>
                         @for (item of document_type; track $index) {
                         <option [value]="item.id">{{ item.name }}</option>
                         }
@@ -38,7 +38,7 @@
                     <ng-template #errorOpt>
                         @if (formRegister.controls.document_type_id.touched) { @if
                         (formRegister.controls.document_type_id.hasError('required')) {
-                        <span>Selecciona tu documento</span>
+                        <span class="span-error inline-block">Selecciona un documento</span>
                         } }
                     </ng-template>
                 </nz-form-control>
@@ -55,7 +55,7 @@
                     <ng-template #errorName>
                         @if (formRegister.controls.first_name.touched) { @if
                         (formRegister.controls.first_name.hasError('required')) {
-                        <span>Ingresa tu nombre</span>
+                        <span class="span-error">Ingresa tu nombre</span>
                         } }
                     </ng-template>
                 </nz-form-control>
@@ -80,7 +80,7 @@
                     <ng-template #errorLastName>
                         @if(formRegister.controls.last_name.touched){
                         @if(formRegister.controls.last_name.hasError('required')){
-                        <span>Ingresa tu apellido</span>
+                        <span class="span-error">Ingresa tu apellido</span>
                         } }
                     </ng-template>
                 </nz-form-control>
@@ -107,7 +107,7 @@
                     @if(formRegister.controls.email.hasError('email')){
                     <span>Ingresa un correo electronico valido</span>
                     } @if(formRegister.controls.email.hasError('required')){
-                    <span>Ingresa tu correo electronico</span>
+                    <span class="span-error">Ingresa tu correo electronico</span>
                     } }
                 </ng-template>
             </nz-form-control>
@@ -133,9 +133,9 @@
                 <ng-template #errorPassword>
                     @if(formRegister.controls.password.touched){
                     @if(formRegister.controls.password.hasError('required')){
-                    <span>Ingresa una contraseña</span>
+                    <span class="span-error">Ingresa una contraseña</span>
                     }@if(formRegister.controls.password.hasError('minlength')){
-                    <span>La contraseña debe tener al menos 8 caracteres</span>
+                    <span class="span-error">La contraseña debe tener al menos 8 caracteres</span>
                     } }
                 </ng-template>
             </nz-form-control>
@@ -161,7 +161,7 @@
                 <ng-template #errorPasswordConfirmation>
                     @if (formRegister.get('password')!.value! !=
                     formRegister.get('password_confirmation')!.value! ) {
-                    <span>La contraseña no coincide</span>
+                    <span class="span-error">La contraseña no coincide</span>
                     }
                 </ng-template>
             </nz-form-control>
@@ -169,7 +169,7 @@
         <button #buttonView id="button-save"  type="submit"
             [ngClass]="{'hover:text-lime-500 hover:bg-lime-600': button_value(), 'bg-gray-100  text-[#a7a7a7] cursor-no-drop border-gray-400 hover:bg-green-700': !button_value()}"
             class="w-full py-2 px-4 bg-lime-600 text-white rounded-md focus:outline-none focus:bg-green-700">
-            Sign in
+            Guardar
         </button>
     </form>
 </div>

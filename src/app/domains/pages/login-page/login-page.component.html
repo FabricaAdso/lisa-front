@@ -1,10 +1,10 @@
-<div class="h-full desktop_xl:w-[30rem] desktop:w-[25rem] laptop:w-[20rem] p-6 sm:p-8">
+<div class="h-full desktop_xl:w-[30rem] desktop:w-[25rem] laptop:w-[20rem] desktop_xl:p-6 desktop:p-6 laptop:p-6 sm:p-8">
     <div class="flex justify-center h-[11.5rem]">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEH201NeYvXg0rXsxfAlHw8tAj7xHYawvTzWXiLzCDDjPA8GDdKXFl76qLg80DAc-1l0G-EH4lGc1tHyOt0ECoOyW6AAtCG8wmlH4fwiHE6hJzmomWU3H2dSgdu2Fuyfj1StpF89H14vGf1dUSV3FIA9DeHwhSSqSGilBldmtZkpla0YpIqz7qC5cd/s422/Logosimbolo-SENA-PRINCIPAL.PNG" alt="Imagen del evento" class="w-[14rem] h-[14rem] object-cover" />
     </div>
     <h1 class="text-3xl font-semibold text-gray-800 text-center mb-6">Ingresa tus
         datos</h1> 
-    <form (input)="stateButton()" (submit)="login()" class="space-y-7" nz-form>
+    <form (input)="stateButton()" (submit)="login()" class="desktop_xl:space-y-7 desktop:space-y-7 laptop:space-y-5 tablet:space-y-6 mobile:space-y-5 alex:space-y-5" nz-form>
         <div>
             <nz-form-label for="number" class="flex flex-start text-gray-700">
                 Numero de documento
@@ -16,7 +16,25 @@
                 <ng-template #errorDoc>
                     @if(fieldDocument.touched){
                     @if(fieldDocument.hasError('required')){
-                    <span>Ingresa tu documento de identidad</span>
+                    <span class="span-error">Ingresa tu documento de identidad</span>
+                    }
+                    }
+                </ng-template>
+            </nz-form-control>
+        </div>
+        <div class="none flex-col justify-end">
+            <nz-form-label for="option"
+                class="flex felx-start text-gray-700">Selecciona tu regional</nz-form-label>
+            <nz-form-control nzValidateStatus="" nzHasFeedback [nzErrorTip]="errorRegional">
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selecciona tu regional" class="">
+                    @for (item of regional; track $index) {
+                      <nz-option nzCustomContent [nzLabel]="item.name" [nzValue]="item.id">{{item.name}}</nz-option>
+                    }
+                  </nz-select>
+                  <ng-template #errorRegional>
+                    @if(fieldDocument.touched){
+                    @if(fieldDocument.hasError('required')){
+                    <span class="span-error">Ingresa tu documento de identidad</span>
                     }
                     }
                 </ng-template>
@@ -42,7 +60,7 @@
                 <ng-template #errorPassword>
                     <ng-container *ngIf="fieldPassword.touched">
                         <ng-container *ngIf="fieldPassword.hasError('required')">
-                            <span>Ingresa tu contraseña</span>
+                            <span class="span-error">Ingresa tu contraseña</span>
                         </ng-container>
                     </ng-container>
                 </ng-template>
@@ -57,23 +75,23 @@
                 </div>
                 <div class="ml-3 text-sm">
                     <label for="remember" class="text-gray-500 dark:text-gray-300">
-                        Remember me
+                        Recordarme
                     </label>
                 </div>
             </div>
             <a (click)="password()" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                Forgot password?
+                ¿Olvido su contraseña?
             </a>
         </div>
         <button #buttonView (click)="onSubmit()" id="button-login" type="submit"
             [ngClass]="{'hover:text-lime-500 hover:bg-lime-600': button_value(), 'bg-gray-100  text-[#a7a7a7] cursor-no-drop border-gray-400 hover:bg-green-700': !button_value()}"
             class="w-full py-2 px-4 bg-lime-600 text-white rounded-md focus:outline-none focus:bg-green-700">
-            Sign in
+            Iniciar sesion
         </button>
         <p class="text-sm text-green-600 hover:underline">
-            Don’t have an account yet?
+            ¿No tienes cuenta?
             <a (click)="goRegister()" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                Sign up
+                Registrate
             </a>
         </p>
     </form>

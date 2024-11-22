@@ -25,7 +25,7 @@
 }
 
 
-.ant-input-affix-wrapper-focused {
+::ng-deep .ant-input-affix-wrapper-focused {
   border-color: inherit !important;
   box-shadow: inherit !important;
   border: inherit !important ;

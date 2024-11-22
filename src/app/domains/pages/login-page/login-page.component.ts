@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, OnDestroy, Output, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { AuthLayoutComponent } from "../../auth/auth-layout/auth-layout.component";
 import { Router, RouterOutlet } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -15,16 +15,19 @@ import { UserService } from '@shared/services/user.service';
 import { PasswordEmailService } from '@shared/services/password-email.service';
 import { PasswordEmailModel } from '@shared/models/password-email.model';
 import { PasswordEmailDTO } from '@shared/dto/password-email.dto';
+import { RegionalService } from '@shared/services/regional.service';
+import { RegionalModel } from '@shared/models/regional.model';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule],
+  imports: [NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule, NzSelectModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
-export class LoginPageComponent implements OnDestroy {
+export class LoginPageComponent implements OnDestroy, OnInit {
   
 
   @ViewChild('buttonView')buttonView: ElementRef = {} as ElementRef;
@@ -32,11 +35,14 @@ export class LoginPageComponent implements OnDestroy {
   private auth_service = inject(AuthService);
   private token_service = inject(TokenService);
   private router = inject(Router);
+  private regional_service = inject(RegionalService);
+  private password_email_service = inject(PasswordEmailService);
+
+  regional:RegionalModel[] = [];
 
   passwordVisible: boolean = true
   showModalLogin: boolean = false;
   errorMessageLogin: string | null = null;
-  private password_email_service = inject(PasswordEmailService);
 
   showModal: boolean = false;
   errorMessage: string | null = null;
@@ -50,11 +56,28 @@ export class LoginPageComponent implements OnDestroy {
 
   button_value = signal(false);
 
+  ngOnInit(): void {
+    this.getData()
+  }
+
   ngOnDestroy(): void {
     if(this.login_sub){
       this.login_sub.unsubscribe();
     }
 }
+
+  getData(){
+    const data_sub = forkJoin([
+      this.regional_service.getAllRegional()
+    ]).subscribe({
+      next: ([regional]) =>{
+        this.regional = [...regional];
+      },
+      complete(){
+        data_sub.unsubscribe();
+      }
+    })
+  }
 
   goRegister() {
     this.router.navigate(['/auth/register']);

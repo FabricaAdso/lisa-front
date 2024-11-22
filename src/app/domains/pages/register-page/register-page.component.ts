@@ -58,7 +58,7 @@ export class RegisterPageComponent implements OnInit {
       this.document_type_service.getAll()
     ]).subscribe({
       next: ([document_type]) => {
-        this.document_type = [...document_type];
+        this.document_type = [...document_type];  
       },
       complete(){
         data_sub.unsubscribe()
