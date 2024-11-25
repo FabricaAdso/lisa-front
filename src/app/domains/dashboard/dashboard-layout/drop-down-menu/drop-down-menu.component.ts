@@ -88,7 +88,7 @@ export class DropDownMenuComponent {
     {
       title: 'Sesiones',
       icon: 'calendar', // Icono personalizado
-      route: 'session',
+      route: 'calendar',
       theme: 'outline',
     },
   ];

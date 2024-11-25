@@ -22,7 +22,7 @@
 
 
 .ant-menu-item .anticon:hover {
-  @apply text-green-500;
+  @apply text-[#38a901];
 }
 
 
@@ -32,11 +32,11 @@
 
 
 .ant-menu-item a:hover {
-  @apply text-green-500;
+  @apply text-[#38a901];
 }
 
 .ant-menu-item a:hover .anticon {
-  @apply text-green-500;
+  @apply text-[#38a901];
 }
 
 
@@ -52,10 +52,10 @@
 
 
 .ant-menu-item::after {
-  @apply border-r-4 border-green-500
+  @apply border-r-4 border-[#38a901]
 }
 
 
 .ant-menu-item span:hover {
-  @apply text-green-500;
+  @apply text-[#38a901];
 }

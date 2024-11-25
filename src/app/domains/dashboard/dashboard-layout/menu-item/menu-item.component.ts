@@ -39,7 +39,7 @@ export class MenuItemComponent {
       icon: 'team',
       route: 'roles',
       theme: 'outline',
-      
+
     },
 
     {
@@ -85,7 +85,7 @@ export class MenuItemComponent {
 
     { title: 'Sesiones',
       icon: 'calendar',
-      route: 'session',
+      route: 'calendar',
       theme: 'outline'
     },
 

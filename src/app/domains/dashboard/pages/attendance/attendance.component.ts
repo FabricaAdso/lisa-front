@@ -52,7 +52,9 @@ export class AttendanceComponent {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
   ngOnInit(): void {
-    for (let index = 0; index < 50; index++) {
+    for (let index = 0; index < 20
+      
+      ; index++) {
       this.listOfData.push(this.person);
     }
   }
