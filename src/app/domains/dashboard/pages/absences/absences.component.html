@@ -1,0 +1,24 @@
+<nz-table [nzBordered]="true" [nzData]="absences" [nzBordered]="true" [nzSize]="'middle'" [nzShowPagination]="true">
+    <thead>
+      <tr>
+        <th>Sesión</th>
+        <th>Jornada</th>
+        <th>Justificación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let absence of absences">
+        <td>{{ absence.session }}</td>
+        <td>{{ absence.shift }}</td>
+        <td>
+          <button *ngIf="absence.status === 'approved' || absence.status === 'expired'" nz-button nzType="link" (click)="onExamine(absence)">
+            Examinar
+          </button>
+          <button *ngIf="absence.status === 'pending' || absence.status === 'rejected'" nz-button nzType="primary" (click)="onReview(absence)">
+            Revisar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  
