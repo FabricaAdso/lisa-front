@@ -25,7 +25,7 @@
 }
 
 
-::ng-deep .ant-input-affix-wrapper-focused {
+.ant-input-affix-wrapper-focused {
   border-color: inherit !important;
   box-shadow: inherit !important;
   border: inherit !important ;
@@ -39,3 +39,14 @@
   margin-bottom: 12px;
 }
 
+.ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  cursor: text;
+}
+
+::ng-deep .ant-select .ant-select-selector{
+  border:none !important;
+}
+
+::ng-deep .ant-select .ant-select-selector:focus:disabled{
+  border:none !important;
+}
