@@ -10,18 +10,20 @@
 
 
 
-<nz-table [nzBordered]="true" [nzData]="absences" [nzSize]="'middle'" [nzShowPagination]="true">
+  <nz-table #basicTable [nzData]="filteredAbsences" [nzBordered]="true" [nzSize]="'middle'" [nzShowPagination]="true">
     <thead>
       <tr>
         <th>Sesión</th>
         <th>Jornada</th>
         <th>Justificación</th>
+        <th>status</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let absence of absences">
+      <tr *ngFor="let absence of basicTable.data">
         <td>{{ absence.session }}</td> <!-- Siempre muestra todas las fechas -->
         <td>{{ absence.shift }}</td>
+        <td>{{ absence.status }}</td>
         <td>
           <!-- Mostrar botones dinámicos en base al estado -->
           <button *ngIf="absence.status === 'approved' || absence.status === 'expired'" nz-button nzType="link" (click)="onExamine(absence)">

@@ -23,7 +23,7 @@ export const routes: Routes = [
       {
         path: 'absences',
         title: 'Administrar Inasistencias',
-        data: { breadcrumb: 'Administrar Areas' },
+        data: { breadcrumb: '' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/absences/absences.component').then(c => c.AbsencesComponent)
       },

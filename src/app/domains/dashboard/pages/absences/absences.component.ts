@@ -59,18 +59,21 @@ absences = [
 ];
 
 // Lista filtrada por estado
-filteredAbsences = [...this.absences];
+filteredAbsences = this.absences;
 
 
 
 
 // Método para filtrar por estado
 filterByStatus(status: string): void {
-  if (status === 'all') {
+
+  console.log('Filtering by status:', status); // Verifica si entra aquí
+  if (status == 'all') {
     this.filteredAbsences = [...this.absences];
   } else {
-    this.filteredAbsences = this.absences.filter(absence => absence.status === status);
+    this.filteredAbsences = this.absences.filter(absence => absence.status == status);
+    this.filteredAbsences = [...this.filteredAbsences]
   }
-} // Lógica para modal de revisar
+}
   
 }
