@@ -18,9 +18,8 @@ export class RegionalService {
   getAllRegional(): Observable<RegionalModel[]>{
     return this.http.get<RegionalModel[]>(this.URL)
     .pipe(
-      map((regional: RegionalModel[]) => regional),
-      catchError((error: string ) => {
-        console.log('Error al obtener las regionales culpa de maca excel(hace eso bien)',error);
+      catchError((error) => {
+        console.error('Error al obtener las regionales:', error);
         return of([]);
       })
     )
