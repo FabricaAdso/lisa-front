@@ -4,31 +4,14 @@
     </div>
     <h1 class="text-3xl font-semibold text-gray-800 text-center mb-6">Ingresa tus
         datos</h1> 
-    <form (input)="stateButton()" (submit)="login()" class="desktop_xl:space-y-7 desktop:space-y-7 laptop:space-y-5 tablet:space-y-6 mobile:space-y-5 alex:space-y-5" nz-form>
-        <div>
-            <nz-form-label for="number" class="flex flex-start text-gray-700">
-                Numero de documento
-            </nz-form-label>
-            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorDoc">
-                <input type="string" name="identity_document" id="number" [formControl]="fieldDocument"
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
-                    placeholder="123456789">
-                <ng-template #errorDoc>
-                    @if(fieldDocument.touched){
-                    @if(fieldDocument.hasError('required')){
-                    <span class="span-error"></span>
-                    }
-                    }
-                </ng-template>
-            </nz-form-control>
-        </div>
-        <div class="none flex-col justify-end" >
+    <form [formGroup]="formLogin" (input)="stateButton()" (submit)="login()" class="desktop_xl:space-y-7 desktop:space-y-7 laptop:space-y-5 tablet:space-y-6 mobile:space-y-5 alex:space-y-5" nz-form>
+        <div class="none flex-col justify-end" >  
             <nz-form-label for="option"
             >Selecciona tu regional</nz-form-label>
             <nz-form-control nzValidateStatus="" nzHasFeedback [nzErrorTip]="errorRegional">
-                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selecciona tu regional" class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500">
+                <nz-select (ngModelChange)="changeRegional()" formControlName="reguinal" nzShowSearch nzAllowClear  nzPlaceHolder="Selecciona tu regional" class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500">
                     @for (item of regional; track $index) {
-                      <nz-option style="border: 1PX green solid" nzCustomContent [nzLabel]="item.name" [nzValue]="item.id" >{{item.name}}</nz-option>
+                      <nz-option  style="border: 1PX green solid" nzCustomContent [nzLabel]="item.name" [nzValue]="item.id" >{{item.name}}</nz-option>
                     }
                   </nz-select>
                   <ng-template #errorRegional>
@@ -44,16 +27,33 @@
             <nz-form-label for="option"
             >Selecciona tu centro de formacion</nz-form-label>
             <nz-form-control nzValidateStatus="" nzHasFeedback [nzErrorTip]="errorRegional">
-                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selecciona tu regional" class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500"
-                [nzDisabled]="" >
-                    @for (item of regional; track $index) {
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selecciona tu regional" name="  " class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500"
+                    [formControl]="fieldTrainingCenter" >
+                    @for (item of trainingCenters; track $index) {
                       <nz-option style="border: 1PX green solid" nzCustomContent [nzLabel]="item.name" [nzValue]="item.id" >{{item.name}}</nz-option>
                     }
                   </nz-select>
                   <ng-template #errorRegional>
                     @if(fieldDocument.touched){
                     @if(fieldDocument.hasError('required')){
-                    <span class="span-error">Ingresa tu documento de identidad</span>
+                    <span class="span-error"></span>
+                    }
+                    }
+                </ng-template>
+            </nz-form-control>
+        </div>
+        <div>
+            <nz-form-label for="number" class="flex flex-start text-gray-700">
+                Numero de documento
+            </nz-form-label>
+            <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorDoc">
+                <input type="string" name="identity_document" id="number" [formControl]="fieldDocument"
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
+                    placeholder="123456789">
+                <ng-template #errorDoc>
+                    @if(fieldDocument.touched){
+                    @if(fieldDocument.hasError('required')){
+                    <span class="span-error"></span>
                     }
                     }
                 </ng-template>

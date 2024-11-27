@@ -1,43 +1,24 @@
-<nz-layout class="h-screen w-screen">
+<nz-layout class="h-screen w-screen flex flex-col bg-gray-100">
   <!-- Header principal -->
-  <app-nav-bar></app-nav-bar>
+  <app-nav-bar class="h-16 bg-white shadow-md"></app-nav-bar>
 
-  <!-- Layout con el sider -->
-  <nz-layout>
-    <!-- Layout con el sider -->
+  <!-- Layout con el sider y contenido -->
+  <nz-layout class="flex flex-1">
+    <!-- Sider -->
     <nz-sider
-    nzCollapsible
-    nzWidth="200px"
-    class="bg-[#ffffff] border border-r-green-500 hidden desktop:block"
-  >
+      nzCollapsible
+      nzWidth="200px"
+      class="bg-[#ffffff] hidden desktop:block"
+    >
       <app-menu-item></app-menu-item>
     </nz-sider>
 
-    <nz-layout>
-      <nz-content class="m-[16px] p-[0 50px]">
-        <nz-breadcrumb class="m-[16px 0]">
-          <nz-breadcrumb-item>User</nz-breadcrumb-item>
-          <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
-        </nz-breadcrumb>
-
-        <!-- <div class="p-[24px] bg-[#fff] min-h-full max-h-[400px] overflow-y-auto">
-          Hola Aqui va un texto gigante de bienvenida
-          <p
-            class="text-[#333] text-[16px] leading-[24px] text-left p-[16px] m-[0 0 16px 0]"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit
-            amet nulla auctor, vestibulum magna sed, convallis ex. Cum sociis
-            natoque penatibus et magnis dis parturient montes, nascetur
-            ridiculus mus. Donec rutrum congue est, eget vestibulum augue
-            vestibulum eu. [...continúa tu texto aquí...]
-          </p>
-        </div> -->
+    <!-- Contenido principal -->
+    <nz-layout class="flex-1">
+      <nz-content class="m-4 p-6 bg-white rounded-lg shadow-md">
+        <nz-breadcrumb [nzAutoGenerate]="true" class="mb-4"></nz-breadcrumb>
         <router-outlet></router-outlet>
       </nz-content>
-
-      <nz-footer class="text-center">
-        Ant Design ©2020 Implemented by Angular
-      </nz-footer>
     </nz-layout>
   </nz-layout>
 </nz-layout>

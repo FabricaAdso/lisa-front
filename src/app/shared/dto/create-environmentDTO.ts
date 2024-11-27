@@ -1,5 +1,5 @@
 import { AreaModel } from "../models/area-model";
-import { SedeModel } from "../models/Sedemodel"
+import { SedeModel } from "../models/sede.model"
 export interface CreateEvironentDTO{
     name:string;
     capacity:number

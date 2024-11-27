@@ -1,5 +1,5 @@
 import { AreaModel } from "./area-model";
-import { SedeModel } from "./Sedemodel";
+import { SedeModel } from "./sede.model";
 
 export interface EnvironmentModel{
     id:number;

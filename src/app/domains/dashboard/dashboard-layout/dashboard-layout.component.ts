@@ -8,15 +8,8 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers } from '@ng-icons/heroicons/outline';
 import { CommonModule } from '@angular/common';
-import { MenuItemsComponent } from './menu-item/menu-item.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
-
-interface MenuItem {
-  title: string;
-  icon?: string;
-  route: string | null;
-  subMenu?: MenuItem[];
-}
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -30,8 +23,9 @@ interface MenuItem {
     NgIconComponent,
     CommonModule,
     NavBarComponent,
-    MenuItemsComponent,
-    RouterOutlet
+    MenuItemComponent,
+    RouterOutlet,
+    NzBreadCrumbModule,
   ],
   viewProviders: [provideIcons({ featherAirplay, heroUsers })],
   templateUrl: './dashboard-layout.component.html',

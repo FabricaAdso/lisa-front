@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {  SedeModel} from '../models/Sedemodel';
+import {  SedeModel} from '../models/sede.model';
 import { HttpClient } from '@angular/common/http';
 import { CreateHeadquartersDTO } from '../dto/create-headquartersDTO';
 import { UpdateHeadquartersDTO } from '../dto/update-headquartersDTO';

@@ -5,7 +5,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginDTO } from '@shared/dto/login.dto';
-import { forkJoin, Subscription } from 'rxjs';
+import { filter, forkJoin, Subscription, switchMap, tap } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -18,6 +18,8 @@ import { PasswordEmailDTO } from '@shared/dto/password-email.dto';
 import { RegionalService } from '@shared/services/regional.service';
 import { RegionalModel } from '@shared/models/regional.model';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { TrainingCenterModel } from '@shared/models/training-center.model';
+import { TrainingCentreService } from '@shared/services/training-center.service';
 
 
 @Component({
@@ -37,8 +39,10 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   private router = inject(Router);
   private regional_service = inject(RegionalService);
   private password_email_service = inject(PasswordEmailService);
+  private training_center_service = inject(TrainingCentreService)
 
   regional:RegionalModel[] = [];
+  trainingCenters:TrainingCenterModel[] = [];
 
   passwordVisible: boolean = true
   showModalLogin: boolean = false;
@@ -58,6 +62,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.getData()
+    this.changeRegional()
   }
 
   ngOnDestroy(): void {
@@ -67,16 +72,37 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 }
 
   getData(){
-    const data_sub = forkJoin([
-      this.regional_service.getAllRegional()
-    ]).subscribe({
-      next: ([regional]) =>{
-        this.regional = [...regional];
-      },
-      complete(){
-        data_sub.unsubscribe();
-      }
-    })
+    const regionalData$ = this.regional_service.getAllRegional().subscribe({
+        next: (regional) => {
+          this.regional = regional;
+        },
+        error: (err) => {
+          console.error('Error fetching data:', err);
+        },
+        complete: () => {
+          regionalData$.unsubscribe()
+        }
+      });
+
+  }
+
+  changeRegional(): void {
+    this.fielReguional.valueChanges.pipe(
+      filter((value): value is number => value !== null), 
+      switchMap((regional: number) => {
+        this.fieldTrainingCenter.reset();
+        return this.training_center_service.getTrainigCentersByRegional(regional).pipe(
+          tap((trainingCenters) => {
+            if (trainingCenters.length === 0) {
+              alert('Data not found');
+            }
+            this.trainingCenters = trainingCenters
+          })
+        );
+      })
+    ).subscribe({
+      error: (err) => console.error('Error fetching training centers:', err),
+    });
   }
 
   goRegister() {
@@ -86,12 +112,18 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   formLogin = new FormGroup({
     identity_document: new FormControl('', [Validators.required]),
     password: new  FormControl('', [Validators.required]),
+    training_center_id: new FormControl('',[Validators.required]),
+    reguinal: new FormControl('',[Validators.required]),
+
   });
 
   formEmail = new FormGroup({
     email: new FormControl('', [Validators.required]),
   })
 
+  get fieldTrainingCenter(){
+    return this.formLogin.get('training_center_id') as FormControl;
+  }
 
   get fieldDocument(){
     return this.formLogin.get('identity_document') as FormControl;
@@ -104,7 +136,9 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   get fieldEmail(){
     return this.formEmail.get('email') as FormControl;
   }
-
+  get fielReguional(){
+      return this.formLogin.get('reguinal') as FormControl;
+    }
 
   onSubmit() {
     if (!this.formLogin.valid) {
@@ -119,7 +153,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   login(){
     let data:LoginDTO = {
       identity_document: this.formLogin.get('identity_document')!.value!,
-      password: this.formLogin.get('password')!.value!
+      password: this.formLogin.get('password')!.value!,
+      training_center_id: this.formLogin.get('training_center_id')!.value!
     }
 
 
@@ -127,7 +162,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     .subscribe({
       next: (token) => {
         this.token_service.setToken(token)
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard/roles']);
       },
       error: error =>{
         console.log(error);
@@ -176,13 +211,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
       }
     })
   }
-
-  // loadTwo(): void {
-  //   this.isLoadingTwo = true;
-  //   setTimeout(() => {
-  //     this.isLoadingTwo = false;
-  //   }, 5000);
-  // }
 
 }
 

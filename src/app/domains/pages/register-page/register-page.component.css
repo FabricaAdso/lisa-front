@@ -24,3 +24,12 @@
   width: 100% !important;
   outline: inherit !important;
 }
+
+::ng-deep .ant-select .ant-select-selector{
+  border:none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ant-select .ant-select-selector:focus:disabled{
+  border:none !important;
+}

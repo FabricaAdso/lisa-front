@@ -1,4 +1,4 @@
-import { TrainingCentreModel } from "../models/training-centre-model";
+import { TrainingCenterModel } from "../models/training-center.model";
 
 export interface CreateHeadquartersDTO {
     name: string;
@@ -6,7 +6,7 @@ export interface CreateHeadquartersDTO {
     municipality: string;
     address: string;
     trainingCentre_Id: number;
-    trainingCentreId?:TrainingCentreModel;
+    trainingCentreId?:TrainingCenterModel;
     opening_time:string;
     
     closing_time:string;

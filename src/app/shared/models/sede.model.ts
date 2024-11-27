@@ -1,6 +1,6 @@
 import { despartamentosModel } from "./Departamentos.model";
 import { municipiosModel } from "./municipios.model";
-import { TrainingCentreModel } from "./training-centre-model";
+import { TrainingCenterModel } from "./training-center.model";
 
 export interface SedeModel {
     id: number;
@@ -9,7 +9,7 @@ export interface SedeModel {
     municipality: municipiosModel; 
     adress: string;
     trainingCentre_Id: number;  
-    training_center : TrainingCentreModel;
+    training_center : TrainingCenterModel;
 
 
     opening_time:string;
