@@ -5,8 +5,8 @@ import { CreateHeadquartersDTO } from '@shared/dto/create-headquartersDTO';
 import { UpdateHeadquartersDTO } from '@shared/dto/update-headquartersDTO';
 import { despartamentosModel } from '@shared/models/Departamentos.model';
 import { municipiosModel } from '@shared/models/municipios.model';
-import { SedeModel } from '@shared/models/Sedemodel';
-import { TrainingCentreModel } from '@shared/models/training-centre-model';
+import { SedeModel } from '@shared/models/sede.model';
+import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { log } from 'ng-zorro-antd/core/logger';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -22,7 +22,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { LocationService } from '@shared/services/location.service';
-import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { TrainingCentreService } from '@shared/services/training-center.service';
 
 
 @Component({
@@ -57,7 +57,7 @@ export class HeadquarterComponent {
   headquarters: SedeModel[] = [];
   departments: despartamentosModel[] = [];
   municipalities: municipiosModel[] = [];
-  trainingCentres: TrainingCentreModel[] = [];
+  trainingCentres: TrainingCenterModel[] = [];
 
 
   formHeadquarters!: FormGroup | null;

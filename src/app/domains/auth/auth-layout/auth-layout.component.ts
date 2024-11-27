@@ -1,44 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginPageComponent } from "../../pages/login-page/login-page.component";
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { RegisterPageComponent } from '../../pages/register-page/register-page.component';
 
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [RouterOutlet,FormsModule, CommonModule, ReactiveFormsModule, LoginPageComponent,RegisterPageComponent],
+  imports: [RouterOutlet,FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './auth-layout.component.html',
   styleUrl: './auth-layout.component.css'
 })
 export class AuthLayoutComponent {
-  @ViewChild('form')form: ElementRef = {} as ElementRef;
 
-    email:string  = '';
-    password:string =  '';
+  RegisterView:boolean = false;
+  private router = inject(Router);
 
-    addFocus(){
-      let formulario = this.form.nativeElement
-      let contenedores = this.form.nativeElement.querySelectorAll('.container-input');
-      
-      contenedores.forEach((element:any) => {
-  
-        if(element.classList.contains('focus')){
-          element.classList.remove('focus')
-        }else{
-          element.classList.add('focus')
-        }
-        console.log(element)
-  
-    })
-  }
-  constructor(private router: Router) {}
+  ngOnInit(): void {
 
-  go(){
-    
+    // Verifica la ruta activa al cargar el componente
+    this.RegisterView = this.router.url.includes('auth/register');
+
+    // Escucha cambios en la ruta
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Cambia la vista basado en la ruta actual
+        this.RegisterView = event.urlAfterRedirects.includes('auth/register');
+      }
+    });
   }
 
-  
-  
 }

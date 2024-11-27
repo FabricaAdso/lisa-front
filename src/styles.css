@@ -21,3 +21,31 @@
   text-[#38a901]
   text-lg
 }
+
+/* auth-layout */
+.flex-container{
+  @apply desktop_xl:flex desktop:flex laptop:flex tablet:flex mobile:flex alex:flex desktop_xl:flex-row desktop:flex-row laptop:flex-row tablet:justify-around mobile:justify-around alex:justify-around items-center min-h-screen mx-auto 
+}
+
+.card{
+  @apply desktop_xl:flex desktop:flex laptop:flex desktop_xl:h-[50rem] desktop:h-[45rem] laptop:h-[45rem] shadow-lg m-20 alex:m-3
+}
+
+.img-container{
+  @apply w-2/3 tablet:hidden mobile:hidden alex:hidden desktop_xl:block desktop:block laptop:block
+}
+
+.form-container{
+  @apply desktop_xl:w-1/3 desktop:w-1/3 laptop:w-1/3 flex justify-center items-center desktop_xl:p-6 desktop:p-6 laptop:p-6 tablet:p-6 mobile:p-3 alex:p-3
+}
+
+/* login */
+.span-error{
+  @apply text-[12px]
+}
+
+/* register */
+.ant-form-item-explain, .ant-form-item-extra {
+
+  line-height: 1.3 !important; 
+}
