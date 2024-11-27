@@ -99,13 +99,7 @@ button[_ngcontent-ng-c2623682195], [role=button][_ngcontent-ng-c2623682195] {
   }
 }
 
-/* ::ng-deep .ant-descriptions-item-label{
-  @apply w-full;
-}
 
-::ng-deep .ant-descriptions-item-content{
-  @apply w-full;
-} */
 
 .data{
   width: max-content;
@@ -113,11 +107,11 @@ button[_ngcontent-ng-c2623682195], [role=button][_ngcontent-ng-c2623682195] {
 .grid-table {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px; /* Espacio entre columnas */
+  gap: 5px; 
 }
 
 .table-column {
-  border: 1px solid #d9d9d9; /* Bordes similares a ng-zorro */
+  border: 1px solid #d9d9d9; 
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
