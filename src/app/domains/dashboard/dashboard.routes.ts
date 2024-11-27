@@ -11,7 +11,21 @@ export const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'environtments',
       },
-
+      {
+        path: 'attendance',
+        title: 'Asistencia',
+        loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
+      },
+      {
+        path: 'assists',
+        title: 'Administrar asistencias',
+        loadComponent: () => import('@domains/dashboard/pages/assists/assists.component').then(c => c.AssistsComponent)
+      },
+      {
+        path: 'environmentsArea',
+        title: 'Administrar Areas',
+        loadComponent: () => import('@domains/dashboard/pages/area/area.component').then(c => c.AreaComponent)
+      },
       {
         path: 'roles',
         title: 'Administrar roles',

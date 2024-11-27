@@ -88,6 +88,12 @@ export class MenuItemComponent {
       route: 'calendar',
       theme: 'outline'
     },
+
+    { title: 'Asistencia',
+      icon: 'warning',
+      route: 'attendance',
+      theme: 'outline'
+    },
   ];
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
