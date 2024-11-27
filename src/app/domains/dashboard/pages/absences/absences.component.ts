@@ -60,6 +60,7 @@ absences = [
 
 // Lista filtrada por estado
 filteredAbsences = this.absences;
+activeFilter = 'all';
 
 
 
@@ -67,8 +68,8 @@ filteredAbsences = this.absences;
 // Método para filtrar por estado
 filterByStatus(status: string): void {
 
-  console.log('Filtering by status:', status); // Verifica si entra aquí
-  if (status == 'all') {
+  this.activeFilter = status;
+  if (status === 'all') {
     this.filteredAbsences = [...this.absences];
   } else {
     this.filteredAbsences = this.absences.filter(absence => absence.status == status);
