@@ -45,9 +45,8 @@ export class TrainingCentreService {
   getTrainigCentersByRegional(regional_id:number): Observable<TrainingCenterModel[]>{
     return this.http.get<TrainingCenterModel[]>(`${this.urlLogin}/?included=regional&filter[regional_id]=${regional_id}`)
     .pipe(
-      map((centers:TrainingCenterModel[]) => centers),
-      catchError((error: string ) => {
-        console.log('Error al obtener los centros de formacion culpa de maca excel(hace eso bien)',error);
+      catchError((error) => {
+        console.error('Error al obtener los centros de formación:', error);
         return of([]);
       })
     )

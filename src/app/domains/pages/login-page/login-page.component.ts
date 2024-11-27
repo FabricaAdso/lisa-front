@@ -5,7 +5,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginDTO } from '@shared/dto/login.dto';
-import { filter, forkJoin, Subscription, switchMap, tap } from 'rxjs';
+import { filter, forkJoin, Subject, Subscription, switchMap, takeUntil, tap } from 'rxjs';
 import { AuthService } from '@shared/services/auth.service';
 import { TokenService } from '@shared/services/token.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -30,19 +30,22 @@ import { TrainingCentreService } from '@shared/services/training-center.service'
   styleUrl: './login-page.component.css'
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
-  
 
-  @ViewChild('buttonView')buttonView: ElementRef = {} as ElementRef;
+  private regionalSelection$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
+
+  @ViewChild('buttonView') buttonView: ElementRef = {} as ElementRef;
 
   private auth_service = inject(AuthService);
   private token_service = inject(TokenService);
   private router = inject(Router);
   private regional_service = inject(RegionalService);
   private password_email_service = inject(PasswordEmailService);
-  private training_center_service = inject(TrainingCentreService)
+  private training_center_service = inject(TrainingCentreService);
 
-  regional:RegionalModel[] = [];
-  trainingCenters:TrainingCenterModel[] = [];
+
+  regional: RegionalModel[] = [];
+  trainingCenters: TrainingCenterModel[] = [];
 
   passwordVisible: boolean = true
   showModalLogin: boolean = false;
@@ -50,60 +53,70 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 
   showModal: boolean = false;
   errorMessage: string | null = null;
-  user:any [] = [];
+  user: any[] = [];
 
 
-  login_sub:Subscription | null = null;
+  login_sub: Subscription | null = null;
   isLoadingOne = false;
   isLoadingTwo = false;
-
 
   button_value = signal(false);
 
   ngOnInit(): void {
-    this.getData()
-    this.changeRegional()
+    this.getData();
+    this.changeRegional();
   }
 
   ngOnDestroy(): void {
-    if(this.login_sub){
-      this.login_sub.unsubscribe();
-    }
-}
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.regionalSelection$.next();
+    this.regionalSelection$.complete();
+  }
 
-  getData(){
-    const regionalData$ = this.regional_service.getAllRegional().subscribe({
-        next: (regional) => {
-          this.regional = regional;
-        },
-        error: (err) => {
-          console.error('Error fetching data:', err);
-        },
-        complete: () => {
-          regionalData$.unsubscribe()
-        }
-      });
-
+  // Carga de regionales al iniciar
+  getData(): void {
+    this.regional_service.getAllRegional().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (regional) => {
+        this.regional = regional;
+      },
+      error: (err) => {
+        console.error('Error fetching data:', err);
+      }
+    });
   }
 
   changeRegional(): void {
-    this.fielReguional.valueChanges.pipe(
-      filter((value): value is number => value !== null), 
+    this.fieldRegional.valueChanges.pipe(
+      tap(() => {
+        // Emitimos un valor en regionalSelection$ para cancelar la petición actual
+        this.regionalSelection$.next();
+        // Limpiamos los datos de los centros de formación anteriores
+        this.trainingCenters = [];
+      }),
+      filter((value): value is number => value !== null),
       switchMap((regional: number) => {
-        this.fieldTrainingCenter.reset();
+        this.fieldTrainingCenter.reset(); // Resetea el campo del centro
         return this.training_center_service.getTrainigCentersByRegional(regional).pipe(
+          takeUntil(this.regionalSelection$), // Cancela si hay un cambio en regional
           tap((trainingCenters) => {
             if (trainingCenters.length === 0) {
-              alert('Data not found');
+              alert('No se encontraron centros de formación');
             }
-            this.trainingCenters = trainingCenters
+            // Filtramos duplicados si los hay
+            this.trainingCenters = [...new Set([...this.trainingCenters, ...trainingCenters])];
           })
         );
-      })
+      }),
+      takeUntil(this.destroy$) // Se asegura de que todo se limpie al destruir el componente
     ).subscribe({
-      error: (err) => console.error('Error fetching training centers:', err),
+      error: (err) => console.error('Error al obtener los centros de formación:', err),
     });
   }
+  
+
 
   goRegister() {
     this.router.navigate(['/auth/register']);
@@ -111,9 +124,9 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 
   formLogin = new FormGroup({
     identity_document: new FormControl('', [Validators.required]),
-    password: new  FormControl('', [Validators.required]),
-    training_center_id: new FormControl('',[Validators.required]),
-    reguinal: new FormControl('',[Validators.required]),
+    password: new FormControl('', [Validators.required]),
+    training_center_id: new FormControl('', [Validators.required]),
+    regional: new FormControl('', [Validators.required]),
 
   });
 
@@ -121,37 +134,37 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     email: new FormControl('', [Validators.required]),
   })
 
-  get fieldTrainingCenter(){
+  get fieldTrainingCenter() {
     return this.formLogin.get('training_center_id') as FormControl;
   }
 
-  get fieldDocument(){
+  get fieldDocument() {
     return this.formLogin.get('identity_document') as FormControl;
   }
 
-  get fieldPassword(){
+  get fieldPassword() {
     return this.formLogin.get('password') as FormControl;
   }
 
-  get fieldEmail(){
+  get fieldEmail() {
     return this.formEmail.get('email') as FormControl;
   }
-  get fielReguional(){
-      return this.formLogin.get('reguinal') as FormControl;
-    }
+  get fieldRegional() {
+    return this.formLogin.get('regional') as FormControl;
+  }
 
   onSubmit() {
     if (!this.formLogin.valid) {
-      this.formLogin.markAllAsTouched();    
+      this.formLogin.markAllAsTouched();
     }
   }
 
-  stateButton(){
+  stateButton() {
     this.button_value.set(this.formLogin.valid);
   }
 
-  login(){
-    let data:LoginDTO = {
+  login() {
+    let data: LoginDTO = {
       identity_document: this.formLogin.get('identity_document')!.value!,
       password: this.formLogin.get('password')!.value!,
       training_center_id: this.formLogin.get('training_center_id')!.value!
@@ -159,24 +172,24 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 
 
     this.login_sub = this.auth_service.login(data)
-    .subscribe({
-      next: (token) => {
-        this.token_service.setToken(token)
-        this.router.navigate(['/dashboard/roles']);
-      },
-      error: error =>{
-        console.log(error);
+      .subscribe({
+        next: (token) => {
+          this.token_service.setToken(token)
+          this.router.navigate(['/dashboard/roles']);
+        },
+        error: error => {
+          console.log(error);
 
-        this.router.navigate(['auth/login'])
-        if(this.formLogin.get('identity_document')!.value! == '' || this.formLogin.get('password')!.value! == ''){
-          
-        }else{
-          this.errorMessageLogin = 'Contraseña o numero de documento incorrectos'
-          this.showModalLogin = true;
-      }
-    }
+          this.router.navigate(['auth/login'])
+          if (this.formLogin.get('identity_document')!.value! == '' || this.formLogin.get('password')!.value! == '') {
 
-    })
+          } else {
+            this.errorMessageLogin = 'Contraseña o numero de documento incorrectos'
+            this.showModalLogin = true;
+          }
+        }
+
+      })
 
   }
 
@@ -187,7 +200,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     this.errorMessage = null; // Reiniciar el mensaje
   }
 
-  password(){
+  password() {
     this.showModal = true
   }
 
@@ -200,8 +213,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     }, 5000);
   }
 
-  sendEmail(){
-    let emailData:PasswordEmailDTO = {
+  sendEmail() {
+    let emailData: PasswordEmailDTO = {
       email: this.formLogin.get('email')!.value!
     }
 

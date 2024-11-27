@@ -9,7 +9,7 @@
             <nz-form-label for="option"
             >Selecciona tu regional</nz-form-label>
             <nz-form-control nzValidateStatus="" nzHasFeedback [nzErrorTip]="errorRegional">
-                <nz-select (ngModelChange)="changeRegional()" formControlName="reguinal" nzShowSearch nzAllowClear  nzPlaceHolder="Selecciona tu regional" class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500">
+                <nz-select (change)="changeRegional()" formControlName="regional" nzShowSearch nzAllowClear  nzPlaceHolder="Selecciona tu regional" class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500">
                     @for (item of regional; track $index) {
                       <nz-option  style="border: 1PX green solid" nzCustomContent [nzLabel]="item.name" [nzValue]="item.id" >{{item.name}}</nz-option>
                     }

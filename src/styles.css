@@ -28,7 +28,7 @@
 }
 
 .card{
-  @apply desktop_xl:flex desktop:flex laptop:flex desktop_xl:h-[50rem] desktop:h-[45rem] laptop:h-[45rem] shadow-lg m-20 alex:m-3
+  @apply desktop_xl:flex desktop:flex laptop:flex desktop_xl:h-[55rem] desktop:h-[55rem] laptop:h-[53rem] shadow-lg m-20 alex:m-3
 }
 
 .img-container{
