@@ -1,1 +1,10 @@
-<p>correct-modal works!</p>
+<div *ngIf="data">
+    <p><strong>Archivo Justificación:</strong> {{ data.fileName }}</p>
+    <p><strong>Motivo:</strong> {{ data.reason }}</p>
+    <p><strong>Mensaje:</strong></p>
+    <p>{{ data.message }}</p>
+</div>
+<form>
+    <label for="fileUpload">Adjuntar un archivo PDF:</label>
+    <input type="file" id="fileUpload" accept=".pdf" (change)="onFileChange($event)" />
+</form>

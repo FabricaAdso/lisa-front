@@ -47,26 +47,41 @@
       <tr>
         <th>Sesión</th>
         <th>Jornada</th>
-        <!-- <th>Estado</th> -->
         <th>Justificación</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let absence of basicTable.data">
-        <td>{{ absence.session }}</td> <!-- Siempre muestra todas las fechas -->
+        <td>{{ absence.session }}</td>
         <td>{{ absence.shift }}</td>
-        <!-- <td>{{ absence.status }}</td> -->
         <td>
-          <!-- Mostrar botones dinámicos en base al estado -->
-          <button *ngIf="absence.status === 'approved' || absence.status === 'expired'" nz-button nzType="link" (click)="onExamine(absence)"
-          class="text-yellow-500 border-b-2  bg-transparent px-0 cursor-pointer">
+          <!-- Mostrar botón Corregir solo para rechazados -->
+          <button 
+            *ngIf="absence.status === 'rejected'" 
+            nz-button 
+            nzType="link" 
+            (click)="onCorrect(absence)">
+            Corregir
+          </button>
+  
+          <!-- Mostrar botón Examinar solo para aprobados o vencidos -->
+          <button 
+            *ngIf="absence.status === 'approved' || absence.status === 'expired'" 
+            nz-button 
+            nzType="link" 
+            (click)="onExamine(absence)">
             Examinar
           </button>
-          <button *ngIf="absence.status === 'pending' || absence.status === 'rejected'" nz-button nzType="primary" (click)="onReview(absence)">
+  
+          <!-- Mostrar botón Revisar solo para pendientes -->
+          <button 
+            *ngIf="absence.status === 'pending'" 
+            nz-button 
+            nzType="primary" 
+            (click)="onReview(absence)">
             Revisar
           </button>
         </td>
       </tr>
     </tbody>
   </nz-table>
-  

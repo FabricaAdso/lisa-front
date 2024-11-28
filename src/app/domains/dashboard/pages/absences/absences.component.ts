@@ -6,6 +6,7 @@ import { ExamineModalComponent } from './examine-modal/examine-modal.component';
 import { ReviewModalComponent } from './review-modal/review-modal.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { CorrectModalComponent } from './correct-modal/correct-modal.component';
 
 @Component({
   selector: 'app-absences',
@@ -16,7 +17,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     NzTableModule, 
     NzButtonModule, 
     ExamineModalComponent, 
-    ReviewModalComponent
+    ReviewModalComponent,
+    CorrectModalComponent
   ],
   providers: [NzModalService],
   templateUrl: './absences.component.html',
@@ -48,6 +50,26 @@ export class AbsencesComponent {
   
     const instance = modalRef.getContentComponent() as ReviewModalComponent;
     instance.data = absence;
+  }
+  onCorrect(absence: any): void {
+    var habilitar:boolean = false;
+    const modalRef = this.modal.create({
+      nzTitle: 'Justificación Rechazada',
+      nzContent: CorrectModalComponent,
+      nzOkDisabled:habilitar,
+      nzOkText:"Renviar",
+      nzOnCancel:(item)=> console.log(item),
+      nzOnOk: (item) =>  enviarDoc(),
+    });
+    const instance = modalRef.getContentComponent() as CorrectModalComponent;
+    instance.data = absence
+    instance.habilitar.subscribe((item:boolean)=>{
+      habilitar=item;
+    })
+
+    function enviarDoc(){
+      console.log(instance.selectedFile)
+    }
   }
 
 // Lista completa de inasistencias
