@@ -1,7 +1,6 @@
 /* Contenedor principal */
 .calendar-container {
-  @apply
-  w-full
+  @apply w-full
   h-full
   max-w-screen-desktop_xl
 }
@@ -15,7 +14,7 @@
 /* Hover: Fondo más oscuro */
 ::ng-deep .fc-direction-ltr .fc-button-group > .fc-button:hover,
 ::ng-deep .fc-direction-ltr .fc-today-button:hover {
-  @apply bg-green-600
+  @apply bg-white text-[#38a901]
 }
 
 /* Activo persistente: Colores invertidos */
@@ -30,14 +29,15 @@
 }
 
 /* Estilo para los eventos */
-::ng-deep .fc-event {
-  @apply bg-[#38a901] text-white text-sm rounded-lg shadow-md
-}
+/* ::ng-deep .fc-daygrid-dot-event {
+  @apply text-[#38a901] bg-white text-sm rounded-sm shadow-md h-[30px] text-center p-2
+  @apply flex gap-2
+} */
 
 /* Hover: Fondo más oscuro al pasar el ratón */
-::ng-deep .fc-event:hover {
-  @apply bg-green-600
-}
+/* ::ng-deep .fc-event:hover {
+  @apply bg-[#38a901] text-white
+} */
 
 /* Estilo para el evento cuando es arrastrado o redimensionado */
 ::ng-deep .fc-event.fc-event-draggable,
@@ -47,14 +47,82 @@
 
 /* Opcional: Estilo para el texto dentro del evento */
 ::ng-deep .fc-event .fc-event-main i {
-  @apply text-white font-semibold
+  @apply text-white font-semibold cursor-default
 }
 
 ::ng-deep .fc-col-header-cell-cushion {
   @apply text-center
 }
 
-::ng-deep .fc-col-header{
+::ng-deep .fc-col-header {
   @apply text-white
   bg-[#38a901]
+}
+
+::ng-deep .fc-list-event {
+  @apply text-black text-sm rounded-sm shadow-md h-[30px] p-2 text-start border-white border-2 cursor-default
+}
+
+::ng-deep .fc-list-event:hover {
+@apply text-black bg-transparent
+}
+
+/* ::ng-deep  .no-bullet {
+  list-style-type: none
+} */
+
+::ng-deep .fc-event-time{
+  @apply hidden
+}
+
+::ng-deep .fc-event {
+  @apply bg-white border-[#38a901] h-8 text-center p-1 rounded-xl
+}
+
+::ng-deep .fc-event-title
+{
+  @apply text-[#38a901] text-sm font-semibold
+}
+
+::ng-deep .ant-modal-content {
+  @apply  w-[36rem] h-[26rem]
+}  
+
+::ng-deep .ant-modal-body {
+  @apply h-[19rem] p-4 overflow-y-auto;
+}
+
+::ng-deep .ant-modal-body p
+{
+  @apply text-lg mb-4 font-light underline
+}
+
+/* Estilo general del timeline */
+::ng-deep .ant-timeline {
+  @apply text-xl h-[20rem]
+}
+
+/* Personalización de los puntos (círculos) */
+::ng-deep .ant-timeline-item-head {
+  @apply w-4 h-4 bg-white
+}
+
+/* Estilo de los separadores (líneas) */
+::ng-deep .ant-timeline-item-tail {
+  @apply ml-[0.20rem]
+}
+
+/* Ajuste de la separación entre el círculo y el texto */
+::ng-deep .ant-timeline-item-content {
+  @apply ml-6
+}
+
+/* Mejor visualización del texto y los íconos */
+::ng-deep .ant-timeline-item-content {
+  @apply text-lg
+}
+
+/* Opcional: Aumentar la altura de los ítems */
+::ng-deep .ant-timeline-item {
+  @apply h-[4rem]
 }

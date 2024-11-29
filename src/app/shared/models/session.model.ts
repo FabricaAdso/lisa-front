@@ -1,10 +1,10 @@
-import { CourseModel } from "./course.model";
-
 export interface SessionModel {
-    id:number;
-    name:string;
-    start_date:Date;
-    end_date:Date
-    course_id:number;
-    course?:CourseModel;
+  id: number;
+  date: string; // Fecha de la sesión
+  start_time: string; // Hora de inicio
+  end_time: string; // Hora de finalización
+  instructor_id?: number | null; // ID del primer instructor (opcional)
+  instructor2_id?: number | null; // ID del segundo instructor (opcional)
+  course_id?: number | null; // ID del curso (opcional)
+  attendanceTaken?: boolean | null; // Asistencia tomada
 }
