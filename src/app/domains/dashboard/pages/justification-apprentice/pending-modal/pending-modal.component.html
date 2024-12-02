@@ -1,0 +1,16 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Cargar Justificación"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+>
+<ng-container *nzModalContent>
+  <div>
+    <button nz-button nzType="primary" nzShape="round" (click)="handleOpenSecondModal()" >
+      <i nz-icon nzType="upload"></i>
+      Subir
+    </button>
+    <p>El documento debe ser en formato PDF y su tamaño menor a 5MB.</p>
+  </div>
+</ng-container>
+</nz-modal>

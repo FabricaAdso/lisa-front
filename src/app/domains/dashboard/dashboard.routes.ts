@@ -21,7 +21,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'justificatios',
+        path: 'justification',
         title: 'Administrar Asistencias',
         data: { breadcrumb: '' },
         canActivate: [authGuard],

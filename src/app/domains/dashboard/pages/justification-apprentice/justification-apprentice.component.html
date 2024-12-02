@@ -18,6 +18,7 @@
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
+      <th nzWidth="20%">Estado</th> <!-- Nueva columna -->
       <th nzWidth="25%">Justificación</th>
     </tr>
   </thead>
@@ -26,9 +27,23 @@
       <td>{{ data.session }}</td>
       <td>{{ data.instructor }}</td>
       <td>{{ data.shift }}</td>
+      <td>{{ data.state }}</td> <!-- Mostrar el estado -->
       <td>
-        <button nz-button nzType="primary" (click)="openModal(data)">Ver</button>
+        <button nz-button nzType="link" (click)="openModal()">Revisar</button>
       </td>
     </tr>
   </tbody>
 </nz-table>
+
+
+<!-- Primer Modal -->
+<app-pending-modal
+[isVisible]="isModalVisible"
+(close)="closeModal($event)"
+></app-pending-modal>
+
+<!-- Segundo Modal -->
+<app-up-pdfpending
+  [isVisible]="isSecondModalVisible"
+  (close)="closeSecondModal()"
+></app-up-pdfpending>
