@@ -107,6 +107,13 @@ export const routes: Routes = [
       },
 
       {
+        path: 'justification',
+        title: 'justicaciones',
+        data: { breadcrumb: 'justificaciones' },
+        
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+      },
+      {
         path: 'error_401',
         title: 'Autenticación Requerida',
         loadComponent: () => import('@domains/dashboard/pages/errors/error_401/error-401.component').then(c => c.Error401Component)
