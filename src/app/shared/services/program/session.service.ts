@@ -14,21 +14,21 @@ export class SessionService {
   private http = inject(HttpClient);
 
 
-  url:string = `transaccions`;
+  url:string = `sessions`;
 
-  
+
 
   getAll(){
     return this.http.get<SessionModel[]>(this.url)
-   
-    
+
+
   }
 
   create(data:CreateSessionDto){
     return this.http.post<SessionModel>(this.url, data);
   }
 
- 
+
 
   delete(id:number){
     return this.http.delete(`${this.url}/${id}`)

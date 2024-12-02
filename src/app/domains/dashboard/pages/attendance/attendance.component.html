@@ -1,0 +1,116 @@
+<section class="attendance">
+  <header class="page-header">
+    <div class="title-icon">
+      <nz-page-header nzBackIcon [nzGhost]="false" nzSize="large"></nz-page-header>
+      <nz-page-header-title class="page-header-title">Analisis y desarrollo de software</nz-page-header-title>
+
+    </div>
+
+    <nz-page-header-content>
+      <nz-descriptions nzSize="middle" [nzColumn]="2">
+        <nz-descriptions-item nzTitle="Lider de ficha" [nzSpan]="1">Mariani Dorado</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Duracion del programa" [nzSpan]="1">06/06/2023 -
+          06/08/2024</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Sede" [nzSpan]="1"><a>Inem</a></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Ambiente" [nzSpan]="1">105</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero de ficha" [nzSpan]="1">Juan Andres</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero suplente" [nzSpan]="1">Antonio Rodriguez</nz-descriptions-item>
+      </nz-descriptions>
+    </nz-page-header-content>
+
+  </header>
+  <div class="buttons">
+    <div class="button">
+      <button nz-button nzType="primary" (click)="toggleTable()"> {{showDefaultTable ? 'Tomar asistencia' : 'Volver a tabla original' }}</button>
+      <button nz-button nzType="primary">Sesiones</button>
+    </div>
+
+  </div>
+  <div class="content">
+    <ng-container *ngIf="showDefaultTable">
+      <div class="table">
+        <nz-table #basicTable [nzData]="listOfData">
+          <thead>
+            <tr>
+              <th>Nombres y Apellidos</th>
+              <th>Documento</th>
+              <th>Correo</th>
+              <th>Telefono</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (data of basicTable.data; track data) {
+            <tr>
+              <td>{{ data.nombre }} {{data.apellido}}</td>
+              <td>{{ data.documento }}</td>
+              <td>{{ data.correo }}</td>
+              <td>{{ data.telefono }}</td>
+              <td>
+                <button nz-button nzType="primary" (click)="showModal()">Justificacion</button>
+              </td>
+            </tr>
+            }
+          </tbody>
+          <div>
+            <nz-modal [(nzVisible)]="isVisible" nzTitle="Inasistencias" (nzOnCancel)="handleCancel()"
+              (nzOnOk)="handleOk()">
+              <ng-container *nzModalContent>
+                <div class="modal-content">
+      <div class="filter-section">
+        <button nz-button nzType="default" class="filter-btn">
+          <i nz-icon nzType="filter" nzTheme="outline"></i> Filtrar
+        </button>
+        <div class="filter-date">
+          <label for="filter-date">Fecha</label>
+          <input nz-input type="date" id="filter-date" />
+        </div>
+        <button nz-button nzType="primary" class="all-btn">todas</button>
+      </div>
+
+      <div class="attendance-list">
+        <div class="attendance-item">
+          <div class="status-indicator status-green"></div>
+          <span>Fecha: 10/07/2024 Hora: 7:00 - 13:00</span>
+          <a href="#" class="action-link">👁️ Examinar</a>
+        </div>
+        
+      </div>
+    </div>
+
+              </ng-container>
+            </nz-modal>
+          </div>
+        </nz-table>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!showDefaultTable">
+      <div class="table">
+        <div class="grid-table">
+          <div class="table-column" *ngFor="let column of [1, 2, 3]">
+            <nz-table #attendanceTable [nzData]="listOfData">
+              <thead>
+                <tr>
+                  <th>Asistió</th>
+                  <th>Nombres y Apellidos</th>
+                  <th>Documento</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (data of attendanceTable.data; track data) {
+                <tr class="data">
+                  <td>
+                    <input type="checkbox" />
+                  </td>
+                  <td>{{ data.nombre }} {{ data.apellido }}</td>
+                  <td>{{ data.documento }}</td>
+                </tr>}
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  </section>

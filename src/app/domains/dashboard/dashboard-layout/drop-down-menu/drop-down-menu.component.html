@@ -1,29 +1,50 @@
-<ul nz-menu nzMode="inline">
-  <!-- Template genérico para la creación de submenús infinitos -->
-  <ng-template #renderSubMenu let-subMenuItems>
-    <ng-container *ngFor="let subItem of subMenuItems">
-      <!-- Elemento de menú simple -->
-      <li *ngIf="!subItem.subMenu" nz-menu-item >
-        <a [routerLink]="subItem.route" routerLinkActive="active">
-          <!-- Enlace con routerLink -->
-          <span
-            nz-icon
-            [nzType]="subItem.icon"
-            [nzTheme]="subItem.theme"
-          ></span>
-          <span>{{ subItem.title }}</span>
-        </a>
-      </li>
+<div class="flex flex-col items-center bg-white shadow-md space-y-4 ">
+  <!-- Foto y nombre del usuario -->
+  <div class="flex flex-col items-center space-y-2">
+    <img 
+      src="https://via.placeholder.com/80" 
+      alt="Foto de usuario" 
+      class="w-24 h-24 rounded-full border-2 border-gray-300"
+    />
+    <span class="text-xl font-bold text-gray-700">Nombre Usuario</span>
+  </div>
 
-      <!-- Submenú -->
-      <li *ngIf="subItem.subMenu" nz-submenu [nzTitle]="subItem.title" [nzIcon]="subItem.icon!">
-        <ul>
-          <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: subItem.subMenu }"></ng-container>
-        </ul>
-      </li>
-    </ng-container>
-  </ng-template>
+  <ul nz-menu nzMode="inline">
+    <!-- Template genérico para la creación de submenús infinitos -->
+    <ng-template #renderSubMenu let-subMenuItems>
+      <ng-container *ngFor="let subItem of subMenuItems">
+        <!-- Elemento de menú simple -->
+        <li *ngIf="!subItem.subMenu" nz-menu-item >
+          <a [routerLink]="subItem.route" routerLinkActive="active">
+            <!-- Enlace con routerLink -->
+            <span
+              nz-icon
+              [nzType]="subItem.icon"
+              [nzTheme]="subItem.theme"
+            ></span>
+            <span>{{ subItem.title }}</span>
+          </a>
+        </li>
+  
+        <!-- Submenú -->
+        <li *ngIf="subItem.subMenu" nz-submenu [nzTitle]="subItem.title" [nzIcon]="subItem.icon!">
+          <ul>
+            <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: subItem.subMenu }"></ng-container>
+          </ul>
+        </li>
+      </ng-container>
+    </ng-template>
+  
+    <!-- Inicializa el menú -->
+    <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"></ng-container>
+  </ul>
+  
 
-  <!-- Inicializa el menú -->
-  <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"></ng-container>
-</ul>
+  <!-- Botón de cerrar sesión -->
+  <button
+    class="w-full py-2 bg-white font-semibold rounded-lg border-2 border-green-500 text-[#38a901] hover:bg-green-500 hover:text-white transition-colors duration-300"
+    (click)="logout()"
+  >
+    Cerrar sesión
+  </button>
+</div>

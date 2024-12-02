@@ -5,7 +5,7 @@ import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
 import { CreateEvironentDTO } from '@shared/dto/create-environmentDTO';
 import { AreaModel } from '@shared/models/area-model';
 import { EnvironmentModel } from '@shared/models/environment-model';
-import { SedeModel } from '@shared/models/Sedemodel';
+import { SedeModel } from '@shared/models/sede.model';
 import { AreaService } from '@shared/services/area.service';
 import { EnvironmentService } from '@shared/services/environment.service';
 import { HeadquartersService } from '@shared/services/headquarters.service';
