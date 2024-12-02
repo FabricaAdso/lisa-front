@@ -1,0 +1,34 @@
+<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+  <nz-tab nzTitle="Inasistencias"></nz-tab>
+  <nz-tab nzTitle="Pendientes"></nz-tab>
+  <nz-tab nzTitle="Rechazadas"></nz-tab>
+  <nz-tab nzTitle="Aprobadas"></nz-tab>
+  <nz-tab nzTitle="Vencidas"></nz-tab>
+</nz-tabset>
+
+<nz-table
+  #basicTable
+  [nzBordered]="true"
+  [nzSize]="'middle'"
+  [nzData]="filteredData"
+  [nzScroll]="{ x: '1200px' }"
+>
+  <thead>
+    <tr>
+      <th nzWidth="25%">Sesión</th>
+      <th nzWidth="25%">Instructor</th>
+      <th nzWidth="25%">Jornada</th>
+      <th nzWidth="25%">Justificación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of filteredData">
+      <td>{{ data.session }}</td>
+      <td>{{ data.instructor }}</td>
+      <td>{{ data.shift }}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="openModal(data)">Ver</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

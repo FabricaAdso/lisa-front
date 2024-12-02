@@ -21,11 +21,11 @@ export const routes: Routes = [
       },
 
       {
-        path: 'absences',
-        title: 'Administrar Inasistencias',
+        path: 'justificatios',
+        title: 'Administrar Asistencias',
         data: { breadcrumb: '' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/absences/absences.component').then(c => c.AbsencesComponent)
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
 
       {
