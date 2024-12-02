@@ -78,8 +78,8 @@ export const routes: Routes = [
         path: 'session',
         title: 'session',
         data: { breadcrumb: 'Sesiones' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/session-page/session-page.component').then(c => c.SessionPageComponent)
+        //canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
       {
@@ -108,7 +108,7 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
-
+ 
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',

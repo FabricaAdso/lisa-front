@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MenuItem } from '@shared/models/menuItems';
 import { NzDropDownModule, NzPlacementType } from 'ng-zorro-antd/dropdown';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
-import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent } from '@ng-icons/core';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
@@ -10,6 +10,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-drop-down-menu',
@@ -41,6 +42,8 @@ export class DropDownMenuComponent {
     'topRight',
   ];
   position: NzPlacementType = this.listOfPosition[0]; // Puedes cambiar la posición predeterminada aquí
+  private auth_service = inject(AuthService)
+  private router = inject(Router);
 
   menuItems: MenuItem[] = [
     {
@@ -96,4 +99,12 @@ export class DropDownMenuComponent {
   toggleMenu2() {
     this.isMenuOpen = !this.isMenuOpen; // Alterna el estado del menú desplegable
   }
-}
+
+  logout(){
+    console.log('Cerrar sesión...');
+    this.auth_service.logout();
+    // Re dirigir a login
+    this.router.navigate(['auth/login']);
+  }
+  }
+
