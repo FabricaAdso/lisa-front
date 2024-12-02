@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 import { CreateCentreDTO } from '@shared/dto/create-centreDTO';
 import { UpdateCentreDTO } from '@shared/dto/update-centreDTO';
-import { TrainingCentreModel } from '@shared/models/training-centre-model';
+import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import {NzFormModule} from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { TrainingCentreService } from '@shared/services/training-center.service';
 
 @Component({
   selector: 'app-training-centre-page',
@@ -35,7 +35,7 @@ export class TrainingCentrePageComponent {
   private formBuilder = inject(FormBuilder);
   private trainingCentreService = inject(TrainingCentreService);
 
-  centres: TrainingCentreModel[] = [];
+  centres: TrainingCenterModel[] = [];
   isModalVisible = false;
 
   formCentres: FormGroup | null = null;
@@ -61,7 +61,7 @@ export class TrainingCentrePageComponent {
   getData(): void {
     // Llamamos al servicio para obtener los centros de formación
     this.trainingCentreService.getCentros().subscribe({
-      next: (data: TrainingCentreModel[]) => {
+      next: (data: TrainingCenterModel[]) => {
         this.centres = data; // Asignamos los datos recibidos a la variable centres
         console.log('Centros de formación cargados:', this.centres); // Log para verificar los datos
       },
@@ -73,7 +73,7 @@ export class TrainingCentrePageComponent {
 
   // Abrimos el formulario para crear o editar
   
-  openModal(centre?: TrainingCentreModel): void {
+  openModal(centre?: TrainingCenterModel): void {
     this.isModalVisible = true;
     
     // Si el formulario aún no está inicializado, lo inicializamos

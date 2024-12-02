@@ -14,7 +14,6 @@ export class UserService {
   private http = inject(HttpClient)
 
   URL:string = 'register'
-
   getAll(){
     return this.http.get<UserModel[]>(this.URL);
   }

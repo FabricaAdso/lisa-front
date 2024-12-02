@@ -8,17 +8,52 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzOptionComponent, NzSelectModule} from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
 
 @Component({
   selector: 'nz-demo-modal-basic',
   standalone: true,
-  imports: [FormsModule, CommonModule, NzButtonModule, NzModalModule,NzTableModule,NzDividerModule,NzOptionComponent,NzSelectModule,NzIconModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    NzButtonModule,
+    NzModalModule,
+    NzTableModule,
+    NzDividerModule,
+    NzOptionComponent,
+    NzSelectModule,
+    NzIconModule,
+    NzInputModule,
+    NzUploadModule],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
 export class RolesComponent implements OnInit {
+  fileList: NzUploadFile[] = [
+    {
+      uid: '1',
+      name: 'xxx.png',
+      status: 'done',
+      response: 'Server Error 500', // custom error message to show
+      url: 'http://www.baidu.com/xxx.png'
+    },
+    {
+      uid: '2',
+      name: 'yyy.png',
+      status: 'done',
+      url: 'http://www.baidu.com/yyy.png'
+    },
+    {
+      uid: '3',
+      name: 'zzz.png',
+      status: 'error',
+      response: 'Server Error 500', // custom error message to show
+      url: 'http://www.baidu.com/zzz.png'
+    }
+  ];
   isVisible = false;
-  users: any[] = [];
+  users: any[] = [];  
   selectedUser: any;
   selectedRoles: string[] = [];
   isActive: boolean = true;
