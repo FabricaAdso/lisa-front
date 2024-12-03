@@ -11,7 +11,21 @@ export const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'environtments',
       },
-
+      {
+        path: 'attendance',
+        title: 'Asistencia',
+        loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
+      },
+      {
+        path: 'assists',
+        title: 'Administrar asistencias',
+        loadComponent: () => import('@domains/dashboard/pages/assists/assists.component').then(c => c.AssistsComponent)
+      },
+      {
+        path: 'environmentsArea',
+        title: 'Administrar Areas',
+        loadComponent: () => import('@domains/dashboard/pages/area/area.component').then(c => c.AreaComponent)
+      },
       {
         path: 'roles',
         title: 'Administrar roles',
@@ -72,8 +86,8 @@ export const routes: Routes = [
         path: 'session',
         title: 'session',
         data: { breadcrumb: 'Sesiones' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/session-page/session-page.component').then(c => c.SessionPageComponent)
+        //canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
       {
@@ -93,6 +107,13 @@ export const routes: Routes = [
       },
 
       {
+        path: 'justification',
+        title: 'justicaciones',
+        data: { breadcrumb: 'justificaciones' },
+        
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+      },
+      {
         path: 'error_401',
         title: 'Autenticación Requerida',
         loadComponent: () => import('@domains/dashboard/pages/errors/error_401/error-401.component').then(c => c.Error401Component)
@@ -102,7 +123,7 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
-
+ 
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',

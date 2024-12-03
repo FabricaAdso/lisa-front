@@ -1,18 +1,18 @@
 .ant-input-affix-wrapper {
-  position: static !important;  /* Cambia la posición si lo deseas */
-  display: inline-flex !important; /* Mantiene el display inline-flex */       /* Cambia el ancho si lo deseas */
-  min-width: auto !important;     /* Cambia el ancho mínimo si lo deseas */
+  position: static !important;  
+  display: inline-flex !important; 
+  min-width: auto !important;    
   width: 100% !important;
   display: inline-flex !important;
-  padding: 0 !important;          /* Elimina el padding */
-  color: inherit !important;      /* Mantiene el color heredado */
-  font-size: inherit !important;  /* Mantiene el tamaño de fuente heredado */
-  line-height: inherit !important; /* Mantiene el interlineado heredado */
-  background-color: transparent !important; /* Cambia el fondo */
-  background-image: none !important; /* Elimina la imagen de fondo */
-  border: none !important;        /* Quita el borde */
-  border-radius: 0 !important;   /* Quita el borde redondeado */
-  transition: none !important;    /* Quita la transición */
+  padding: 0 !important;         
+  color: inherit !important;      
+  font-size: inherit !important;  
+  line-height: inherit !important; 
+  background-color: transparent !important; 
+  background-image: none !important; 
+  border: none !important;       
+  border-radius: 0 !important;   
+  transition: none !important;    
 }
 
 
@@ -23,4 +23,13 @@
   right: inherit !important;
   width: 100% !important;
   outline: inherit !important;
+}
+
+::ng-deep .ant-select .ant-select-selector{
+  border:none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ant-select .ant-select-selector:focus:disabled{
+  border:none !important;
 }

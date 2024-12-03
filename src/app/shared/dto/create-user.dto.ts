@@ -8,4 +8,5 @@ export interface CreateUserDTO {
      password:string;
      password_confirmation:string;
      document_type_id?:number;
+     training_center_id?:number;
 }
