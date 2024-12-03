@@ -5,9 +5,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { PendingModalComponent } from './pending-modal/pending-modal.component';
-import { JustificationModel } from '@shared/models/justificationModel';
-import { SessionModel } from '@shared/models/session.model';
-import { UpPDFPendingComponent } from "./up-pdfpending/up-pdfpending.component";
 
 
 @Component({
@@ -21,7 +18,7 @@ import { UpPDFPendingComponent } from "./up-pdfpending/up-pdfpending.component";
     NzTableModule,
     NzTabsModule,
     PendingModalComponent,
-    UpPDFPendingComponent
+    
 ],
   templateUrl: './justification-apprentice.component.html',
   styleUrl: './justification-apprentice.component.css',
@@ -96,23 +93,10 @@ export class JustificationApprenticeComponent {
 
   filteredData = this.allData;
   isModalVisible = false;
-  isFirstModalVisible: boolean = false; // Controla el primer modal
-  isSecondModalVisible: boolean = false; // Controla el segundo modal
 
+  
+  
 
-  openSecondModal(): void {
-    this.isFirstModalVisible = false;
-    this.isSecondModalVisible = true;
-  }
-
-  closeSecondModal(): void {
-    this.isSecondModalVisible = false;
-  }
-
- 
- 
- 
- 
   openModal(): void {
     
     this.isModalVisible = true; 
@@ -122,6 +106,11 @@ export class JustificationApprenticeComponent {
   closeModal(data:boolean): void {
     this.isModalVisible = data; 
     
+  }
+  handleSubmission(data: { file: File; reason: string }): void {
+    console.log('Archivo cargado:', data.file);
+    console.log('Motivo:', data.reason);
+    this.isModalVisible = false; // Cierra el modal después de la acción
   }
 
 

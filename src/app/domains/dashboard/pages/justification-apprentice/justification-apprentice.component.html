@@ -40,10 +40,7 @@
 <app-pending-modal
 [isVisible]="isModalVisible"
 (close)="closeModal($event)"
+(submit)="handleSubmission($event)"
+
 ></app-pending-modal>
 
-<!-- Segundo Modal -->
-<app-up-pdfpending
-  [isVisible]="isSecondModalVisible"
-  (close)="closeSecondModal()"
-></app-up-pdfpending>
