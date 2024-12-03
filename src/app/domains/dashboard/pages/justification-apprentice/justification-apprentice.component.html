@@ -28,19 +28,45 @@
       <td>{{ data.instructor }}</td>
       <td>{{ data.shift }}</td>
       <td>{{ data.state }}</td> <!-- Mostrar el estado -->
+    
       <td>
-        <button nz-button nzType="link" (click)="openModal()">Revisar</button>
+        <button nz-button nzType="link" (click)="openModal(data)">Revisar</button>
       </td>
     </tr>
   </tbody>
 </nz-table>
 
 
-<!-- Primer Modal -->
-<app-pending-modal
-[isVisible]="isModalVisible"
-(close)="closeModal($event)"
-(submit)="handleSubmission($event)"
 
+<app-pending-modal
+  *ngIf="selectedJustification?.state === 'Pendientes'"
+  [isVisible]="isModalVisible"
+  (close)="closeModal()"
+  (submit)="handleSubmission($event)"
 ></app-pending-modal>
+
+<!-- Modal de rechazadas -->
+<app-rejected-modal
+  *ngIf="selectedJustification?.state === 'Rechazadas'"
+  [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
+  (close)="closeModal()"
+></app-rejected-modal>
+
+<!-- Modal de aprobadas -->
+<app-approved-modal
+  *ngIf="selectedJustification?.state === 'Aprobadas'"
+  [isVisible]="isModalVisible"
+  [fileName]="selectedJustification.fileName"
+  [reason]="selectedJustification.reason"
+  (close)="closeModal()"
+></app-approved-modal>
+
+<!-- Modal de vencidas -->
+<app-expired-modal
+  *ngIf="selectedJustification?.state === 'Vencidas'"
+  [isVisible]="isModalVisible"
+  (close)="closeModal()"
+></app-expired-modal>
+
 
