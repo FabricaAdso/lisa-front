@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject, ViewChild } from '@angular/core';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
@@ -16,6 +16,7 @@ import { UpdateAssistanceDTO } from '@shared/dto/update-assistance.dto';
 import { UserModel } from '@shared/models/user.model';
 import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
 
 @Component({
   selector: 'app-attendance',
@@ -30,14 +31,17 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
     NgIf,
     NzModalModule,
     CommonModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    AttendanceTableComponent
+],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
 })
 export class AttendanceComponent {
+
+  @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
+
   private assistance_service = inject(AssistanceService);
-  private apprentice_service = inject(ApprenticeService);
 
   assistance: AssistanceModel[] = [];
   listOfData: any[] = [];
@@ -51,6 +55,21 @@ export class AttendanceComponent {
 
   isVisible = false;
 
+
+  // Método para llamar la función prevPage() del hijo
+  callPrevPage() {
+    if (this.attendanceTable) {
+      this.attendanceTable.prevPage();
+    }
+  }
+
+  // Método para llamar la función nextPage() del hijo
+  callNextPage() {
+    if (this.attendanceTable) {
+      this.attendanceTable.nextPage();
+    }
+  }
+
   ngOnInit(): void {
     this.getData();
   }
@@ -59,6 +78,7 @@ export class AttendanceComponent {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
 
+ 
   getData() {
     const data_sub = forkJoin([
       this.assistance_service.getAssitanceAll({ included: ['apprentice.user'] }),
@@ -75,54 +95,11 @@ export class AttendanceComponent {
         }));
 
         this.listOfData = [...dataAssistance]
-        
-        
-        this.evaluarCantidadTablas(); // Agrupa los datos para multiples tablas
+
       },
     });
   }
 
-  toggleAssistance(assistanceId: number, event: Event) {
-    const isChecked = (event!.target as HTMLInputElement).checked;
-
-    const data: UpdateAssistanceDTO = {
-      id: assistanceId,
-      assistance: isChecked,
-    };
-
-    this.assistance_service.saveAssistances(data).subscribe({
-      next: (updated) => {
-        console.log('Asistencia actualizada:', updated);
-      },
-      error: (err) => {
-        console.error('Error al actualizar asistencia:', err);
-      },
-    });
-  }
-
-  evaluarCantidadTablas() {
-    this.listDAtos = [];
-    for (let i = 0; i < this.listOfData.length; i += this.rowsPerTable) {
-      this.listDAtos.push(this.listOfData.slice(i, i + this.rowsPerTable));
-    }
-  }
-
-  get paginatedTables(): any[][] {
-    const start = (this.currentPage - 1) * this.tablesPerPage;
-    return this.listDAtos.slice(start, start + this.tablesPerPage);
-  }
-
-  nextPage() {
-    if (this.currentPage < Math.ceil(this.listDAtos.length / this.tablesPerPage)) {
-      this.currentPage++;
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
 
   showModal(): void {
     this.isVisible = true;
