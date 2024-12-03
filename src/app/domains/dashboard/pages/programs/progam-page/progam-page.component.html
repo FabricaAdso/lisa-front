@@ -1,0 +1,82 @@
+<div class="content" nz-space nzDirection="vertical" [nzSize]="18">
+  <div *nzSpaceItem class="content2" nz-flex [nzJustify]="'center'">
+    <div
+      nz-space
+      [nzSize]="'large'"
+      nz-flex
+      [nzJustify]="'center'"
+      [nzAlign]="'center'"
+    >
+      <div *nzSpaceItem>
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nz-flex>
+          <input
+            type="text"
+            [(ngModel)]="search"
+            nz-input
+            placeholder="input search text"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button (click)="searchProgram()" nzType="primary" nzSearch>
+            <span
+              class="search-icon"
+              nz-icon
+              nzType="search"
+              nzTheme="outline"
+            ></span>
+          </button>
+        </ng-template>
+      </div>
+      <div *nzSpaceItem>
+        <app-add-program-modal
+          (programData)="createProgram($event)"
+        ></app-add-program-modal>
+      </div>
+    </div>
+  </div>
+
+  <div class="mid-table" *nzSpaceItem>
+    <div>
+      <nz-table
+        #basicTable
+        nzBordered=""
+        [nzPageSize]="10"
+        [nzData]="program"
+        [nzShowPagination]="true"
+        nzSize="small"
+      >
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Nivel de formación</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (data of basicTable.data; track data) {
+          <tr>
+            <td>{{ data.id }}</td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.education_level?.name }}</td>
+            <td>
+              <a>Action 一 {{ data.id }}</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a
+                nz-popconfirm
+                nzPopconfirmTitle="¿Estas seguro?"
+                (nzOnConfirm)="delectProgram(data.id)"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          }
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+  <div nz-flex nzJustify="flex-end" nzAlign="center" *nzSpaceItem>
+    <app-bulk-upload-modal></app-bulk-upload-modal>
+  </div>
+</div>

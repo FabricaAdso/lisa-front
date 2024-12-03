@@ -1,0 +1,35 @@
+.ant-input-affix-wrapper {
+  position: static !important;  
+  display: inline-flex !important; 
+  min-width: auto !important;    
+  width: 100% !important;
+  display: inline-flex !important;
+  padding: 0 !important;         
+  color: inherit !important;      
+  font-size: inherit !important;  
+  line-height: inherit !important; 
+  background-color: transparent !important; 
+  background-image: none !important; 
+  border: none !important;       
+  border-radius: 0 !important;   
+  transition: none !important;    
+}
+
+
+.ant-input-affix-wrapper-focused {
+  border-color: inherit !important;
+  box-shadow: inherit !important;
+  border: inherit !important ;
+  right: inherit !important;
+  width: 100% !important;
+  outline: inherit !important;
+}
+
+::ng-deep .ant-select .ant-select-selector{
+  border:none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ant-select .ant-select-selector:focus:disabled{
+  border:none !important;
+}

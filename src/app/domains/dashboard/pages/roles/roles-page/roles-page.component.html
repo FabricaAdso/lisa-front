@@ -1,0 +1,77 @@
+<div class="buscador">
+<!-- barra de busqueda -->
+  <div class="barra-busqueda">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input placeholder="input search text" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+    </ng-template>
+  </div>
+  <!-- boton upload -->
+  <div>
+    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" >
+      <button nz-button>
+        <span nz-icon nzType="upload"></span>
+        subir archivos
+      </button>
+    </nz-upload>
+
+  </div>
+
+</div>
+<section id="all">
+  <nz-table #basicTable [nzData]="users">
+    <thead>
+      <tr>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Roles</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.identity_document }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>
+          <span *ngFor="let role of user.roles; let i = index">
+            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
+          </span>
+        </td>
+        <td>
+          <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
+          <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
+            {{ user.desactive ? 'desactivar' : 'activar' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</section>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles y Estado" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <div class="modal-content">
+      <div class="modal-body">
+        <div>
+          <div class="form-group">
+
+
+            <label for="roles">Seleccionar Roles</label>
+
+            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+              nzPlaceHolder="Seleccione roles" [(ngModel)]="selectedRoles" name="roles"
+              (ngModelChange)="onRolesChange($event)">
+
+              <nz-option *ngFor="let role of allRoles" [nzLabel]="role" [nzValue]="role"></nz-option>
+            </nz-select>
+            <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

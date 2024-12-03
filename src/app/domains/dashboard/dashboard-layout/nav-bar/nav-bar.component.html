@@ -1,0 +1,71 @@
+<nav
+  class="flex justify-between items-center bg-[#ffffff] px-[24px] h-[64px] border-[0.5px] border-b-[#38a901]"
+>
+  <!-- Logo -->
+  <picture class="w-[55px] h-[55px]">
+    <img [src]="Image_logo" alt="Logo de la aplicación" class="h-full w-full" />
+  </picture>
+
+  <!-- Sección del usuario -->
+  <div class="flex items-center space-x-2">
+    <ng-container *ngIf="isLoggedIn">
+      <!-- Nombre completo del usuario -->
+      <span class="hidden desktop:inline text-black text-lg mr-2"
+        >{{ user()?.first_name }} {{ user()?.last_name }}</span
+      >
+
+      <!-- Imagen del usuario alineada a la derecha -->
+      <img
+        [src]="UserImage"
+        alt="Imagen de usuario"
+        class="hidden desktop:inline w-[40px] h-[40px] rounded-full object-cover cursor-pointer dropdown-button1"
+        (click)="toggleDropdown1()"
+      />
+
+      <!-- Cerrar Sesión -->
+      <div
+        *ngIf="isDropdownOpen1"
+        class="absolute right-0 mt-[7.5rem] w-48 bg-transparent rounded bg-black dropdown-menu1 z-50"
+      >
+        <button
+          (click)="logout()"
+          class="flex items-center justify-center w-[10rem] text-lg text-black hover:bg-gray-100 bg-white py-2 rounded-lg border hidden desktop:block"
+        >
+          <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>
+          Cerrar sesión
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isLoggedIn">
+      <button
+        nz-button
+        nzType="primary"
+        class="bg-[#38a901] hover:bg-white hover:text-[#38a901] hover:border hover:border-[#38a901] h-10 w-28 rounded-lg text-base text-white mobile:hidden tablet:hidden desktop:block"
+        (click)="login()"
+      >
+        Iniciar sesión
+      </button>
+    </ng-container>
+
+    <!-- Icono de opciones para pantallas mobile y tablet -->
+    <div class="relative">
+      <button
+        class="flex items-center text-lg mr-2 mobile:block tablet:block desktop:hidden dropdown-button2"
+        (click)="toggleDropdown2()"
+      >
+        <span
+          nz-icon
+          nzType="bars"
+          nzTheme="outline"
+          class="text-4xl text-[#38a901]"
+        ></span>
+      </button>
+      <!-- Menú desplegable -->
+      <app-drop-down-menu
+        *ngIf="isDropdownOpen2"
+        class="app-drop-down-menu absolute right-0 mt-[1rem] w-48 bg-black rounded shadow-lg z-10 mobile:block tablet:block desktop:hidden"
+      ></app-drop-down-menu>
+    </div>
+  </div>
+</nav>

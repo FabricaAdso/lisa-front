@@ -1,0 +1,60 @@
+/* Contenedor principal */
+.calendar-container {
+  @apply
+  w-full
+  h-full
+  max-w-screen-desktop_xl
+}
+
+/* Estilo base para los botones generales de FullCalendar */
+::ng-deep .fc-direction-ltr .fc-button-group > .fc-button,
+::ng-deep .fc-direction-ltr .fc-today-button {
+  @apply bg-[#38a901] text-white border-[#38a901] rounded-md shadow-sm transition duration-300 ease-in-out
+}
+
+/* Hover: Fondo más oscuro */
+::ng-deep .fc-direction-ltr .fc-button-group > .fc-button:hover,
+::ng-deep .fc-direction-ltr .fc-today-button:hover {
+  @apply bg-green-600
+}
+
+/* Activo persistente: Colores invertidos */
+::ng-deep .fc-direction-ltr .fc-button-group > .fc-button.fc-button-active,
+::ng-deep .fc-direction-ltr .fc-today-button.fc-button-active {
+  @apply bg-white text-[#38a901] border border-[#38a901]
+}
+
+/* Botones deshabilitados */
+::ng-deep .fc-button:disabled {
+  @apply bg-gray-300 text-gray-500 cursor-not-allowed
+}
+
+/* Estilo para los eventos */
+::ng-deep .fc-event {
+  @apply bg-[#38a901] text-white text-sm rounded-lg shadow-md
+}
+
+/* Hover: Fondo más oscuro al pasar el ratón */
+::ng-deep .fc-event:hover {
+  @apply bg-green-600
+}
+
+/* Estilo para el evento cuando es arrastrado o redimensionado */
+::ng-deep .fc-event.fc-event-draggable,
+::ng-deep .fc-event.fc-event-resizable {
+  @apply border-none /* Evitar bordes innecesarios */
+}
+
+/* Opcional: Estilo para el texto dentro del evento */
+::ng-deep .fc-event .fc-event-main i {
+  @apply text-white font-semibold
+}
+
+::ng-deep .fc-col-header-cell-cushion {
+  @apply text-center
+}
+
+::ng-deep .fc-col-header{
+  @apply text-white
+  bg-[#38a901]
+}

@@ -1,0 +1,15 @@
+<section>
+    <div
+        class="flex-container">
+        <div
+            class="card"
+            [ngClass]="{'flex-row-reverse' : RegisterView}">
+            <div class="img-container">
+                <img src="sena_background.ico" alt="Imagen del evento" class="w-full h-full object-cover" />
+            </div>
+            <div class="form-container ">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</section>

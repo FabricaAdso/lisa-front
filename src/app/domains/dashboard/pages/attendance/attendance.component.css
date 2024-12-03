@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+    
+
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+  color: #fff;
+  border-color:  #52c41a!important;
+  background:  #52c41a!important;
+}
+
+::ng-deep .ant-table-thead > tr > th {
+  position: relative;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 5000;
+  text-align: left;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.3s ease;
+}
+
+::ng-deep .ant-table-pagination {
+  display: flex !important;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+::ng-deep .ant-pagination-mini{
+  display: none !important;
+}
+
+
+.page-header {
+  width: 100%;
+  margin-top: 40px;
+  border: solid 0.5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+.table{
+  height: 40px;
+}
+.title-icon {
+  align-items: center;
+  width: 100%;
+  display: flex;
+}
+.attendance {
+  background-color: #fff;
+  padding: 5px;
+  height: 100%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+.buttons {
+  width: 80%;
+  padding: 10px;
+  margin: 20px 0px;
+  display: flex;
+  justify-content: center;
+}
+.button {
+  display: flex;
+  gap: 20px;
+}
+
+button[_ngcontent-ng-c2623682195], [role=button][_ngcontent-ng-c2623682195] {
+  display: flex;
+  align-items: center;
+  background-color: #7CB305;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+}
+
+
+.content {
+  display: flex;
+  justify-content: center;
+  height: 438px;
+  overflow: auto;
+  width: 80%;
+}
+.table {
+  width: 100%;
+}
+
+
+.page-header-title {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 15px;
+}
+
+::ng-deep .ant-descriptions-item-container {
+  @apply flex flex-col;
+}
+
+@screen tablet {
+  ::ng-deep .ant-descriptions-item-container {
+    @apply flex flex-row;
+  }
+  .page-header {
+    width: 60%;
+    margin-top: 40px;
+    border: solid 0.5px;
+    padding: 10px 45px;
+    border-radius: 10px;
+  }
+  .page-header-title {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    font-size: 15px;
+  }
+}
+
+@screen laptop {
+  ::ng-deep .ant-descriptions-item-container {
+    @apply flex flex-row;
+  }
+}
+
+
+
+.data{
+  width: max-content;
+}
+.grid-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px; 
+}
+
+.table-column {
+  border: 1px solid #d9d9d9; 
+  border-radius: 4px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+}
+.modal-content {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.filter-date label {
+  margin-right: 5px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.filter-date input {
+  padding: 5px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.all-btn {
+  padding: 5px 10px;
+}
+
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attendance-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-green {
+  background-color: #52c41a;
+}
+
+.status-yellow {
+  background-color: #faad14;
+}
+
+.status-red {
+  background-color: #f5222d;
+}
+
+.status-gray {
+  background-color: #d9d9d9;
+}
+
+.action-link {
+  margin-left: auto;
+  color: #0078d4;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.correction {
+  color: #faad14;
+}
+
+.revision {
+  color: #f5222d;
+}
+
+
