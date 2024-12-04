@@ -8,5 +8,5 @@ export interface CourseModel {
     end_date:Date;
     program_id:number;
     program?:ProgramModel;
-    shift:ShiftModel[]
+    shift:string;
 }

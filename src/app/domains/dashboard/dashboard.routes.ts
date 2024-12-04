@@ -38,7 +38,7 @@ export const routes: Routes = [
         path: 'justification',
         title: 'Administrar Asistencias',
         data: { breadcrumb: '' },
-        canActivate: [authGuard],
+        // canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
 
