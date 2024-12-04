@@ -60,30 +60,30 @@ export class EnvironmentComponent {
   }
 
   loadData() {
-    const datasub = forkJoin([
-      this.environmentService.get(),
-      this.areaService.get(),
-      this.headquarterService.getHeadquartes(),
+    // const datasub = forkJoin([
+    //   this.environmentService.get(),
+    //   this.areaService.get(),
+    //   this.headquarterService.getHeadquartes(),
 
 
-    ]).subscribe({
-      next: ([enviroments, areas, headquarters]) => {
-        this.environments = [...enviroments]
-        this.filteredEnvironments = [...this.environments]; 
-        this.areas = [...areas]
-        this.headquarters = [...headquarters]
+    // ]).subscribe({
+    //   next: ([enviroments, areas, headquarters]) => {
+    //     this.environments = [...enviroments]
+    //     this.filteredEnvironments = [...this.environments]; 
+    //     this.areas = [...areas]
+    //     this.headquarters = [...headquarters]
 
 
 
-        console.log(enviroments)
-        console.log('Sedes:', this.headquarters);
-        console.log('Áreas:', this.areas);
+    //     console.log(enviroments)
+    //     console.log('Sedes:', this.headquarters);
+    //     console.log('Áreas:', this.areas);
 
-      },
-      complete: () => {
-        datasub.unsubscribe();
-      }
-    });
+    //   },
+    //   complete: () => {
+    //     datasub.unsubscribe();
+    //   }
+    // });
   }
 
   applyFilter() {
@@ -108,9 +108,9 @@ export class EnvironmentComponent {
 
   // Cargar las sedes existentes
   loadEnvironments() {
-    this.environmentService.get().subscribe(data => {
-      this.environments = data;
-    });
+    // this.environmentService.get().subscribe(data => {
+    //   this.environments = data;
+    // });
   }
   deleteHeadquarters(id: number) { //para el boton
     const deleteSub = this.environmentService.delete(id).subscribe(() => {
