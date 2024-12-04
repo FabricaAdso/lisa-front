@@ -24,7 +24,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
 
   Math = Math; // Exponer Math para usarlo en la plantilla
   showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
-  rowsPerTable = 5; // Cantidad de filas por tabla
+  rowsPerTable = 7; // Cantidad de filas por tabla
   tablesPerPage = 3; // Cantidad de tablas por página
   currentPage = 1; // Pagina actual
 
@@ -33,7 +33,8 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
   
 
   ngOnInit(): void {
-    this.getData();
+    this.getData(); 
+    this.adjustTablesPerPage(window.innerWidth);
   }
 
   ngOnDestroy(): void {
@@ -58,6 +59,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
     } else {
       this.tablesPerPage = 1; // Pantallas pequeñas
     }
+    this.evaluarCantidadTablas();
   }
 
   getData() {

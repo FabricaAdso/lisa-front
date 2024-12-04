@@ -17,6 +17,8 @@ import { UserModel } from '@shared/models/user.model';
 import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
+import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 
 @Component({
   selector: 'app-attendance',
@@ -32,7 +34,10 @@ import { AttendanceTableComponent } from "./attendance-table/attendance-table.co
     NzModalModule,
     CommonModule,
     ReactiveFormsModule,
-    AttendanceTableComponent
+    AttendanceTableComponent,
+    NzTabsModule,
+    NzPageHeaderModule,
+    NzStatisticModule
 ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
@@ -62,6 +67,11 @@ export class AttendanceComponent {
       this.attendanceTable.prevPage();
     }
   }
+
+  trackByKey(index: number, item: any): any {
+    return item.key || index; // Usa 'key' si está disponible, de lo contrario el índice
+  }
+  
 
   // Método para llamar la función nextPage() del hijo
   callNextPage() {

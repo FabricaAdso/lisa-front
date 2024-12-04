@@ -32,7 +32,6 @@
 
 .page-header {
   width: 100%;
-  margin-top: 40px;
   border: solid 0.5px;
   padding: 5px;
   border-radius: 10px;
@@ -49,7 +48,7 @@
   background-color: #fff;
   padding: 5px;
   height: 100%;
-  width: 90%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -107,7 +106,6 @@ button[_ngcontent-ng-c2623682195], [role=button][_ngcontent-ng-c2623682195] {
   }
   .page-header {
     width: 60%;
-    margin-top: 40px;
     border: solid 0.5px;
     padding: 10px 45px;
     border-radius: 10px;
