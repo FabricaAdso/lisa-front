@@ -1,0 +1,113 @@
+<div class="buscador">
+  <!-- barra de busqueda -->
+    <div class="barra-busqueda">
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input type="text" nz-input placeholder="input search text" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+      </ng-template>
+    </div>
+    <!-- boton upload -->
+    <div>
+      <button nz-button nzType="default" (click)="openUploadModal()">
+        Subir Archivos
+      </button>
+   
+    </div>
+  </div>
+
+<div class="all">
+  <nz-tabset>
+    <!-- Tab de Instructores -->
+    <nz-tab nzTitle="Instructores">
+     
+      <button nz-button nzType="primary" (click)="openModal('instructor')">
+        Asignar Instructor
+      </button>
+      <nz-table #instructorTable [nzData]="instructores" [nzBordered]="true">
+        <thead>
+          <tr>
+            <th>Nombre y Apellidos</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let instructor of instructores">
+            <td>{{ instructor.nombreCompleto }}</td>
+            <td>{{ instructor.fechaInicio | date }}</td>
+            <td>{{ instructor.fechaFin | date }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+
+
+    <!-- Tab de Aprendices -->
+    <nz-tab nzTitle="Aprendices">
+      <button nz-button nzType="primary" (click)="openModal('aprendiz')">
+        Asignar Aprendiz
+      </button>
+
+      <nz-table #aprendizTable [nzData]="aprendices" [nzBordered]="true">
+        <thead>
+          <tr>
+            <th>Nombre y Apellidos</th>
+            <th>Documento</th>
+            <th>Fecha Ingreso</th>
+            <th>Fecha Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let aprendiz of aprendices">
+            <td>{{ aprendiz.nombreCompleto }}</td>
+            <td>{{ aprendiz.documento }}</td>
+            <td>{{ aprendiz.fechaInicio | date }}</td>
+            <td>{{ aprendiz.fechaFin | date }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+  </nz-tabset>
+  
+  
+  <!-- Modal único para Asignar Instructor o Aprendiz -->
+  <nz-modal [(nzVisible)]="isModalVisible"
+    [nzTitle]="modalType === 'instructor' ? 'Asignar Instructor' : 'Asignar Aprendiz'" (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <form [formGroup]="form">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">
+            {{ modalType === 'instructor' ? 'Instructor' : 'Aprendiz' }}
+          </nz-form-label>
+          <nz-form-control [nzSpan]="14">
+            <nz-select formControlName="persona" nzShowSearch nzPlaceHolder="Selecciona una persona">
+              <nz-option *ngFor="let persona of listaPersonas"
+                [nzLabel]="persona.documento + ' - ' + persona.nombreCompleto" [nzValue]="persona.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+      <ng-container *ngIf="errorMessage">
+        <nz-alert nzType="error" [nzMessage]="errorMessage"></nz-alert>
+      </ng-container>
+    </ng-container>
+  </nz-modal>
+  <!-- modal subir archivos -->
+  <div>
+    <nz-modal [(nzVisible)]="isUploadModalVisible" nzTitle="Subir Archivos" (nzOnCancel)="handleUploadCancel()"
+      (nzOnOk)="handleUploadOk()">
+      <ng-container *nzModalContent>
+        <nz-upload [nzFileList]="fileList" nzListType="picture">
+          <button nz-button>
+            <i nz-icon nzType="upload"></i> Subir Archivo
+          </button>
+        </nz-upload>
+      </ng-container>
+    </nz-modal>
+
+  </div>
+</div>
