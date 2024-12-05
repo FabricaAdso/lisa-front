@@ -39,6 +39,14 @@ export const routes: Routes = [
         loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
       },
       {
+        path: 'justification',
+        title: 'Administrar Asistencias',
+        data: { breadcrumb: '' },
+        // canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+      },
+
+      {
         path: 'environments-area',
         title: 'Administrar Areas',
         data: { breadcrumb: 'Administrar Areas' },
@@ -82,8 +90,8 @@ export const routes: Routes = [
         path: 'session',
         title: 'session',
         data: { breadcrumb: 'Sesiones' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/session-page/session-page.component').then(c => c.SessionPageComponent)
+        //canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
       {
@@ -103,6 +111,13 @@ export const routes: Routes = [
       },
 
       {
+        path: 'justification',
+        title: 'justicaciones',
+        data: { breadcrumb: 'justificaciones' },
+        
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+      },
+      {
         path: 'error_401',
         title: 'Autenticación Requerida',
         loadComponent: () => import('@domains/dashboard/pages/errors/error_401/error-401.component').then(c => c.Error401Component)
@@ -112,7 +127,7 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
-
+ 
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',

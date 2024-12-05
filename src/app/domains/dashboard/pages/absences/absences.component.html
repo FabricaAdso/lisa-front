@@ -1,0 +1,87 @@
+<div style="margin-bottom: 16px;">
+    <!-- Filtros por Estado -->
+    <button 
+    class="bg-white border px-4 py-2 rounded transition"
+    [ngClass]="{
+      'border-blue-500 text-blue-500 hover:border-blue-600 hover:text-blue-600': activeFilter === 'all',
+      'border-gray-300 text-gray-500 hover:border-blue-500 hover:text-blue-500': activeFilter !== 'all'
+    }"
+    (click)="filterByStatus('all')">
+      Todos
+    </button>
+
+    <button 
+    class="filter-button bg-white border border-gray-300 hover:border-yellow-500 hover:text-yellow-500 px-4 py-2 rounded transition"
+    [ngClass]="{ 'active bg-yellow-100 border-yellow-500 text-yellow-500': activeFilter === 'pending' }"
+    (click)="filterByStatus('pending')">
+      Pendientes
+    </button>
+
+    <button 
+    class="filter-button bg-white border border-gray-300 hover:border-red-500 hover:text-red-500 px-4 py-2 rounded transition"
+    [ngClass]="{ 'active bg-red-100 border-red-500 text-red-500': activeFilter === 'rejected' }"
+    (click)="filterByStatus('rejected')">
+      Rechazadas
+    </button>
+
+    <button  
+    class="filter-button bg-white border border-gray-300 hover:border-green-500 hover:text-green-500 px-4 py-2 rounded transition"
+    [ngClass]="{ 'active bg-green-100 border-green-500 text-green-500': activeFilter === 'approved' }"
+    (click)="filterByStatus('approved')">
+      Aprobadas
+    </button>
+
+    <button 
+    class="filter-button bg-white border border-gray-300 hover:border-gray-500 hover:text-gray-500 px-4 py-2 rounded transition"
+    [ngClass]="{ 'active bg-gray-100 border-gray-500 text-gray-500': activeFilter === 'expired' }"
+    (click)="filterByStatus('expired')">
+    Vencidas
+  </button>
+  </div>
+
+
+
+
+  <nz-table #basicTable [nzData]="filteredAbsences" [nzBordered]="true" [nzSize]="'middle'" [nzShowPagination]="true">
+    <thead>
+      <tr>
+        <th>Sesión</th>
+        <th>Jornada</th>
+        <th>Justificación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let absence of basicTable.data">
+        <td>{{ absence.session }}</td>
+        <td>{{ absence.shift }}</td>
+        <td>
+          <!-- Mostrar botón Corregir solo para rechazados -->
+          <button 
+            *ngIf="absence.status === 'rejected'" 
+            nz-button 
+            nzType="link" 
+            (click)="onCorrect(absence)">
+            Corregir
+          </button>
+  
+          <!-- Mostrar botón Examinar solo para aprobados o vencidos -->
+          <button 
+            *ngIf="absence.status === 'approved' || absence.status === 'expired'" 
+            nz-button 
+            nzType="link" 
+            (click)="onExamine(absence)">
+            Examinar
+          </button>
+  
+          <!-- Mostrar botón Revisar solo para pendientes -->
+          <button 
+            *ngIf="absence.status === 'pending'" 
+            nz-button 
+            nzType="primary" 
+            (click)="onReview(absence)">
+            Revisar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>

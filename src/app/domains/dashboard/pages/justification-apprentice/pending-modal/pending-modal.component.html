@@ -1,0 +1,36 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Cargar Justificación"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+>
+<ng-container *nzModalContent>
+<div>
+    <!-- Archivo PDF -->
+    <label for="file-upload" 
+      style="display: flex; align-items: center; cursor: pointer;">
+      <i nz-icon nzType="upload"></i>
+      <input id="file-upload" type="file" accept=".pdf" (change)="handleFileInput($event)" style="display: none;" />
+      <span style="margin-left: 8px;">Subir archivo PDF</span>
+    </label>
+    <p *ngIf="file">{{ file.name }}</p>
+
+    <!-- Mensaje de error -->
+    <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+
+    <!-- Motivo -->
+    <textarea
+      nz-input
+      rows="4"
+      placeholder="Escriba su motivo aquí..."
+      [(ngModel)]="reason"
+    ></textarea>
+
+    <!-- Botones -->
+    <div style="margin-top: 16px; text-align: right;">
+      <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+      <button nz-button nzType="primary" (click)="handleSubmit()">Enviar</button>
+    </div>
+  </div>
+</ng-container>
+</nz-modal>
