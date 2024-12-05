@@ -33,7 +33,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
       },
-
+      {
+        path:'fichas',
+        title:'Administrar Fichas',
+        loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
+      },
       {
         path: 'environments-area',
         title: 'Administrar Areas',
