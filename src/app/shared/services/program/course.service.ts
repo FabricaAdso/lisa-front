@@ -24,11 +24,11 @@ export class CourseService {
     return this.http.get<CourseModel[]>(url);
   }
 
-  getCursesInstructorPending(instructor_id:number,data?:QueryUrl): Observable<CourseModel[]>{
+  getCursesInstructorPending(data?:QueryUrl): Observable<CourseModel[]>{
 
-    let url:string = getQueryUrl(this.url,data)
+    let url:string = getQueryUrl(`course/sessions`,data)
    
-    return this.http.get<CourseModel[]>(`${url}/${instructor_id}/Instructorsessions`);
+    return this.http.get<CourseModel[]>(url);
   }
 
   getCursesInstructorRecord(instructor_id:number,data?:QueryUrl): Observable<CourseModel[]>{

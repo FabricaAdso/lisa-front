@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { CourseModel } from '@shared/models/course.model';
 import { EnvironmentService } from '@shared/services/environment.service';
 import { CourseService } from '@shared/services/program/course.service';
 import { ProgramService } from '@shared/services/program/program.service';
@@ -28,6 +29,8 @@ export class FichaComponent {
   private programService = inject(ProgramService);
   private environmentService = inject(EnvironmentService);
 
+  pending_courses:CourseModel[] = [];
+
   ngOnInit(): void {
     this.loadData();
     
@@ -35,16 +38,13 @@ export class FichaComponent {
 
   loadData(){
     const datasub= forkJoin([
-      this.courseService.getCurses(),
-      // this.courseService.getCursesInstructorPending(),
-      this.programService.getPrograms(),
-      this.environmentService.getEnvironments()
-
-
-
+      this.courseService.getCursesInstructorPending({included:['course']}),
 
     ]).subscribe({
-
+      next:([pending])=>{
+        this.pending_courses = pending;
+        console.log(this.pending_courses);
+      }
     });
   }
 
