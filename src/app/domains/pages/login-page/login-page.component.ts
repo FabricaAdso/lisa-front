@@ -121,7 +121,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   goRegister() {
     this.router.navigate(['/auth/register']);
   }
-
+ 
   formLogin = new FormGroup({
     identity_document: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),

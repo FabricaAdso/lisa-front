@@ -19,6 +19,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
 import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { SessionComponent } from "./session/session.component";
 
 @Component({
   selector: 'app-attendance',
@@ -37,7 +38,8 @@ import { NzStatisticModule } from 'ng-zorro-antd/statistic';
     AttendanceTableComponent,
     NzTabsModule,
     NzPageHeaderModule,
-    NzStatisticModule
+    NzStatisticModule,
+    SessionComponent
 ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
@@ -45,6 +47,7 @@ import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 export class AttendanceComponent {
 
   @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
+  @ViewChild('sessionModal') sessionModal:any = SessionComponent;
 
   private assistance_service = inject(AssistanceService);
 
@@ -54,12 +57,19 @@ export class AttendanceComponent {
 
   Math = Math; // Exponer Math para usarlo en la plantilla
   showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
+  showDefaultModal = true; // Estado para alternar entre el modal por defecto y el nuevo modal
   rowsPerTable = 5; // Cantidad de filas por tabla
   tablesPerPage = 3; // Cantidad de tablas por página
   currentPage = 1; // Pagina actual
 
   isVisible = false;
 
+  //abre modal del hijo session
+  openModal(){
+    if(this.sessionModal){
+      this.sessionModal.openModal()
+    }
+  }
 
   // Método para llamar la función prevPage() del hijo
   callPrevPage() {
@@ -86,6 +96,10 @@ export class AttendanceComponent {
 
   toggleTable() {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
+  }
+
+  toggleModal(){
+    this.showDefaultModal = !this.showDefaultModal; // Cambia el estado
   }
 
  
