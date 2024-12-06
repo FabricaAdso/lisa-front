@@ -1,38 +1,68 @@
-<nz-table #basicTable  [nzPageSize]="5">
-    <thead>
-        <tr>
-            <th  nzWidth="18%">
-                Nombre
+<nz-modal
+  (nzOnCancel)="closeModal()"
+  [(nzVisible)]="isModalVisible"
+  *ngIf="formSession"
+>
+  <ng-container *nzModalContent>
+    <form [formGroup]="formSession">
+      <div class="mb-4">
+        <label for="" class="">Red de conocimiento</label>
+        <nz-select
+          (change)="changeKnowledgeNetwork()"
+          [formControl]="fieldKnowledgeNetwork"
+          name="knowledge_network"
+          placeholder="Seleccione un Area"
+        >
+          @for (item of knowledge_network; track $index) {
+          <nz-option [nzLabel]="item.name" [nzValue]="item.id">{{
+            item.name
+          }}</nz-option>
+          }
+        </nz-select>
+      </div>
+      <div class="mb-4">
+        <label for="" class="">Instructor</label>
+        <nz-select
+          [formControl]="fieldInstructor"
+          name="instructor_id"
+          placeholder="Seleccione una Sede"
+        >
+          @for (item of instructor; track $index) {
+          <nz-option
+            [nzLabel]="
+              (item.user?.first_name || '') + ' ' + (item.user?.last_name || '')
+            "
+            [nzValue]="item.id"
+          ></nz-option>
+          }
+        </nz-select>
+      </div>
+      <div class="mb-4">
+        <label for="" class="">Curso</label>
+        <nz-select
+          [formControl]="fieldCourse"
+          name="course_id"
+          placeholder="Seleccione una Sede"
+        >
+          @for (item of courses; track $index) {
+          <nz-option
+            [nzLabel]="item.code"
+            [nzValue]="item.id"
+          ></nz-option>
+          }
+        </nz-select>
+      </div>
 
-                <nz-input-group nzSuffixIcon="search" style="margin-top: 8px;">
-                    <input
-                      nz-input
-                
-                    />
-                  </nz-input-group>
-
-            </th>
-            <th nzWidth="15%">Capacity</th>
-            <th nzWidth="15%">Area</th>
-            <th nzWidth="15%">Sede</th>
-            <th nzWidth="15%">acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- @for (item of environments; track $index) {
-        <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.capacity}}</td>
-            <td>{{ item.environment_area?.name}}</td>
-            <td>{{ item.headquarters?.name}}</td>
-
-            <td>
-                <button nz-button nzType="primary" (click)="openModal(item)">Edit</button>
-                <button nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
-                    Delete
-                </button>
-            </td>
-        </tr>
-        } -->
-    </tbody>
-</nz-table>
+      <div class="mb-4">
+        <label for="" class="">Fecha de asignacion</label>
+        <nz-range-picker
+          class="w-full"
+          [formControl]="fielRangePicker"
+          name="range_picker"
+          [nzShowTime]="true"ñ
+          (ngModelChange)="onDateChange($event)"
+        ></nz-range-picker>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>

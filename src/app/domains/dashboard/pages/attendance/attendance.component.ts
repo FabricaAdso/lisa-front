@@ -57,7 +57,6 @@ export class AttendanceComponent {
 
   Math = Math; // Exponer Math para usarlo en la plantilla
   showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
-  showDefaultModal = true; // Estado para alternar entre el modal por defecto y el nuevo modal
   rowsPerTable = 5; // Cantidad de filas por tabla
   tablesPerPage = 3; // Cantidad de tablas por página
   currentPage = 1; // Pagina actual
@@ -96,10 +95,6 @@ export class AttendanceComponent {
 
   toggleTable() {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
-  }
-
-  toggleModal(){
-    this.showDefaultModal = !this.showDefaultModal; // Cambia el estado
   }
 
  

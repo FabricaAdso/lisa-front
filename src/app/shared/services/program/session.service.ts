@@ -14,7 +14,7 @@ export class SessionService {
   private http = inject(HttpClient);
 
 
-  url:string = `transaccions`;
+  url:string = 'session';
 
   
 
@@ -25,7 +25,7 @@ export class SessionService {
   }
 
   create(data:CreateSessionDto){
-    return this.http.post<SessionModel>(this.url, data);
+    return this.http.post<SessionModel[]>(this.url, data);
   }
 
  
