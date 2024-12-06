@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center bg-white shadow-md ">
   <!-- Nombre del usuario con borde verde en la parte inferior -->
-  <div class="flex flex-col items-center justify-center space-y-2 py-4 border-b border-green-500 pb-4">
-    <span class="text-xl font-bold text-gray-700">Nombre Usuario</span>
+  <div class="flex flex-col items-center justify-center  py-6 border-b border-green-500 pb-4">
+    <span class="text-xl text-black font-normal">{{ user()?.first_name }} {{ user()?.last_name }}</span>
   </div>
 
   <ul nz-menu nzMode="inline">
@@ -36,7 +36,7 @@
 
   <!-- Botón de cerrar sesión -->
   <button
-  class="h-12 w-full flex items-center justify-center gap-2 border-t-2 border-[#38a901] py-4 px-6 rounded-md text-[#38a901] font-semibold hover:bg-[#38a901] hover:text-white transition-colors duration-300"
+  class="h-12 w-full flex items-center justify-center gap-2 border-t border-green-500 py-4 px-6 text-[#38a901] font-semibold hover:bg-[#38a901] hover:text-white transition-colors duration-300"
   (click)="logout()"
 >
   <!-- Icono de cierre de sesión (puedes cambiar el icono a otro) -->

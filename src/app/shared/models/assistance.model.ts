@@ -1,5 +1,6 @@
 import { NumberValueAccessor } from "@angular/forms";
 import { SessionModel } from "./session.model";
+import { ApprenticeModel } from "./apprentice.model";
 
 export interface AssistanceModel {
 
@@ -7,6 +8,5 @@ export interface AssistanceModel {
     assistance: boolean;
     session_id?:number;
     session?:SessionModel;
-    apprentice_id?:Number;
-
+    apprentice?:ApprenticeModel;
 }

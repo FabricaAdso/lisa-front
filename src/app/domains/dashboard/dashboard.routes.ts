@@ -14,16 +14,19 @@ export const routes: Routes = [
       {
         path: 'attendance',
         title: 'Asistencia',
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
       },
       {
         path: 'assists',
         title: 'Administrar asistencias',
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/assists/assists.component').then(c => c.AssistsComponent)
       },
       {
         path: 'environmentsArea',
         title: 'Administrar Areas',
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/area/area.component').then(c => c.AreaComponent)
       },
       {
@@ -36,13 +39,14 @@ export const routes: Routes = [
       {
         path:'fichas',
         title:'Administrar Fichas',
+        canActivate: [authGuard],
         loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
       },
       {
         path: 'justification',
-        title: 'Administrar Asistencias',
+        title: 'justificaciones',
         data: { breadcrumb: '' },
-        // canActivate: [authGuard],
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
 
@@ -88,8 +92,8 @@ export const routes: Routes = [
 
       {
         path: 'session',
-        title: 'session',
-        data: { breadcrumb: 'Sesiones' },
+        title: 'Sesiónes',
+        data: { breadcrumb: 'Sesiónes' },
         //canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
@@ -103,18 +107,10 @@ export const routes: Routes = [
       },
 
       {
-        path: 'calendar',
-        title: 'Sesiónes',
-        data: { breadcrumb: 'Sesiónes' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
-      },
-
-      {
         path: 'justification',
         title: 'justicaciones',
         data: { breadcrumb: 'justificaciones' },
-        
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
       {
