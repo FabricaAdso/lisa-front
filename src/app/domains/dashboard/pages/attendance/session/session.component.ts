@@ -20,8 +20,11 @@ import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { filter, forkJoin, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { CourseModel } from '@shared/models/course.model';
+import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
+import { SessionService } from '@shared/services/program/session.service';
 
 @Component({
   selector: 'app-session',
@@ -35,15 +38,21 @@ import { CourseService } from '@shared/services/program/course.service';
     NzInputModule,
     NzSelectComponent,
     NzModalComponent,
+    NzTimePickerModule,
+    
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
 export class SessionComponent implements OnInit {
+
+  time = new Date();
+
   private knowledge_network_service = inject(KnowledgeNetworkService);
   private instructor_service = inject(InstructorService);
   private formBuilder = inject(FormBuilder);
   private course_service = inject(CourseService);
+  private session_service = inject(SessionService)
 
   disableDates = () => true; // Desactiva todas las fechas
 
@@ -63,6 +72,9 @@ export class SessionComponent implements OnInit {
   knowledge_network: KnowledgeNetworkModel[] = [];
   instructor: InstructorModel[] = [];
   courses: CourseModel[] = [];
+  day_of_week:[] = [
+  
+  ];
 
   formSession!: FormGroup | null;
 
@@ -86,11 +98,12 @@ export class SessionComponent implements OnInit {
         .pipe(takeUntil(this.destroy)),
       this.course_service
         .getCourse()
-        .pipe(takeUntil(this.destroy)),
+        .pipe(takeUntil(this.destroy))
     ]).subscribe({
-      next: ([knowledgeNetwork, courses]) => {
+      next: ([knowledgeNetwork, courses, session]) => {
         this.knowledge_network = [...knowledgeNetwork];
         this.courses = [...courses];
+        this.session = [...session];
       },
       error: (err) => {
         console.error('Error fetching data:', err);

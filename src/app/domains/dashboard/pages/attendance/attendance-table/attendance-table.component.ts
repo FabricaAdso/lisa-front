@@ -24,12 +24,11 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
 
   Math = Math; // Exponer Math para usarlo en la plantilla
   showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
-  rowsPerTable = 7; // Cantidad de filas por tabla
+  rowsPerTable = 4; // Cantidad de filas por tabla
   tablesPerPage = 3; // Cantidad de tablas por página
   currentPage = 1; // Pagina actual
 
   isVisible = false;
-
   
 
   ngOnInit(): void {

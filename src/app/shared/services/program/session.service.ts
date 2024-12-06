@@ -13,15 +13,10 @@ export class SessionService {
 
   private http = inject(HttpClient);
 
-
   url:string = 'session';
 
-  
-
-  getAll(){
-    return this.http.get<SessionModel[]>(this.url)
-   
-    
+  getSession(){
+    return this.http.get<SessionModel[]>(this.url) 
   }
 
   create(data:CreateSessionDto){

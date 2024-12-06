@@ -59,9 +59,32 @@
           class="w-full"
           [formControl]="fielRangePicker"
           name="range_picker"
-          [nzShowTime]="true"ñ
           (ngModelChange)="onDateChange($event)"
         ></nz-range-picker>
+      </div>
+
+      <div class="mb-4 flex gap-5">
+        <div class="flex flex-col w-1/2"> 
+            <label for="" class="">Hora de inicio</label>
+        <nz-time-picker  nzFormat="HH:mm"></nz-time-picker>
+        </div>
+        <div class="flex flex-col w-1/2">
+            <label for="" class="">Hora de fin</label>
+         <nz-time-picker  nzFormat="HH:mm"></nz-time-picker>
+        </div>
+      </div>
+      <div class="mb-4">
+        <nz-select
+      [nzMaxTagCount]="3"
+      [nzMaxTagPlaceholder]="tagPlaceHolder"
+      nzMode="multiple"
+      nzPlaceHolder="Please select"
+    >
+      @for (item of day_of_week; track item) {
+        <nz-option []="" [nzValue]=""></nz-option>
+      }
+    </nz-select>
+    <ng-template #tagPlaceHolder let-selectedList>and {{ selectedList.length }} more selected</ng-template>
       </div>
     </form>
   </ng-container>
