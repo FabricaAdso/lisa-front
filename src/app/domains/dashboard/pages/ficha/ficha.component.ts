@@ -39,7 +39,7 @@ export class FichaComponent {
 
   loadData(){
     const datasub= forkJoin([
-      this.courseService.getCursesInstructorPending({included:['course']}),
+      this.courseService.getCursesInstructorPending({included:['course.program']}),
 
     ]).subscribe({
       next:([pending])=>{

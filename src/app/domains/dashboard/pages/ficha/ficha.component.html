@@ -6,13 +6,14 @@
         <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '12px' }">
           <div class="ficha-header">Ficha: {{ session.course!.code }}</div>
           <div class="ficha-content">
-            <!-- <p><strong>Programa:</strong> {{ ficha.program }}</p>
-            <p><strong>Sede:</strong> {{ ficha.site }}</p>
-            <p><strong>Ambiente:</strong> {{ ficha.environment }}</p>
+             <p><strong>Programa:</strong> {{ session.course?.program?.name }}</p> 
+           
+            <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name }}</p>  
+            <p><strong>Ambiente:</strong> {{ session.course?.environment?.name }}</p>
             <div class="ficha-details">
-            <p><strong>Sesión:</strong> {{ ficha.session }}</p>
-            <p><strong>Fecha:</strong> {{ ficha.date }}</p>
-            </div> -->
+            <p><strong>Sesión:</strong> {{ session.start_time }}</p>
+            <p><strong>Fecha:</strong> {{ session.date}}</p>
+            </div> 
           </div>
         </nz-card>
       </div>
