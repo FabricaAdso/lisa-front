@@ -25,7 +25,7 @@ export class ProgramService {
 
   
 
-  getAll(data?:QueryUrl){
+  getPrograms(data?:QueryUrl){
     let url:string = getQueryUrl(this.url,data)
     console.log(url);
     return this.http.get<ProgramModel[]>(url);

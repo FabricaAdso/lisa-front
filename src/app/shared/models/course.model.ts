@@ -1,12 +1,16 @@
 import { ProgramModel } from "./program.model";
-import { ShiftModel } from "./shift.model";
 
 export interface CourseModel {
     id:number;
     code:number;
-    star_date:Date;
-    end_date:Date;
-    program_id:number;
+    date_start?:Date;
+    date_end?:Date;
+    shift?:string;
+    state: 'Terminada_por_fecha' | 'En_ejecucion' | 'Terminada' | 'Termindad_por_unificacion';
+    stage?: 'PRACTICA' | 'LECTIVA';
+
+    environment_id?: number;
+    program_id?:number;
     program?:ProgramModel;
-    shift:ShiftModel[]
+    
 }

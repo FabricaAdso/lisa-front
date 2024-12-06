@@ -33,6 +33,18 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
       },
+      {
+        path:'fichas',
+        title:'Administrar Fichas',
+        loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
+      },
+      {
+        path: 'justification',
+        title: 'Administrar Asistencias',
+        data: { breadcrumb: '' },
+        // canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+      },
 
       {
         path: 'environments-area',
@@ -98,6 +110,13 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
+      {
+        path: 'justification',
+        title: 'justicaciones',
+        data: { breadcrumb: 'justificaciones' },
+        
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+      },
       {
         path: 'error_401',
         title: 'Autenticación Requerida',

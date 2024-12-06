@@ -1,12 +1,12 @@
-import { ApprenticeModel } from "./apprentice.model";
+import { NumberValueAccessor } from "@angular/forms";
 import { SessionModel } from "./session.model";
 
-export interface AssistanceModel{
-    id:number;
-    assistance:boolean;
-    session_id:number;
+export interface AssistanceModel {
+
+    id: number;
+    assistance: boolean;
+    session_id?:number;
     session?:SessionModel;
-    apprentice_id:number;
-    apprentice?:ApprenticeModel
-    
+    apprentice_id?:Number;
+
 }
