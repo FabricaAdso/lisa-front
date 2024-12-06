@@ -2,17 +2,17 @@
   <div class="fichas-container">
     <h1>FICHAS</h1>
     <div nz-row [nzGutter]="16">
-      <div nz-col [nzSpan]="6" *ngFor="let ficha of fichas">
+      <div nz-col [nzSpan]="6" *ngFor="let session of sessions">
         <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '12px' }">
-          <div class="ficha-header">Ficha: {{ ficha.number }}</div>
+          <div class="ficha-header">Ficha: {{ session.course!.code }}</div>
           <div class="ficha-content">
-            <p><strong>Programa:</strong> {{ ficha.program }}</p>
+            <!-- <p><strong>Programa:</strong> {{ ficha.program }}</p>
             <p><strong>Sede:</strong> {{ ficha.site }}</p>
             <p><strong>Ambiente:</strong> {{ ficha.environment }}</p>
             <div class="ficha-details">
             <p><strong>Sesión:</strong> {{ ficha.session }}</p>
             <p><strong>Fecha:</strong> {{ ficha.date }}</p>
-            </div>
+            </div> -->
           </div>
         </nz-card>
       </div>

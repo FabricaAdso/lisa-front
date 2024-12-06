@@ -1,3 +1,4 @@
+import { AreaModel } from "./area-model";
 import { SedeModel } from "./sede.model";
 
 export interface EnvironmentModel{

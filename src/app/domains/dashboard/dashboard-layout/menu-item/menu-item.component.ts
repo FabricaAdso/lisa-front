@@ -94,6 +94,11 @@ export class MenuItemComponent {
       route: 'attendance',
       theme: 'outline'
     },
+    { title: 'justificaciones',
+      icon: 'paper',
+      route: 'justification',
+      theme: 'outline'
+    },
   ];
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

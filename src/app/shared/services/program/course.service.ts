@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { CourseModel } from '@shared/models/course.model';
 import { QueryUrl } from '@shared/models/query-url.model';
+import { SessionModel } from '@shared/models/session.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
 export class CourseService {
 
   private http = inject(HttpClient);
-  url:string = 'courses'
+  url:string = 'course'
 
   constructor() { }
 
@@ -24,25 +25,25 @@ export class CourseService {
     return this.http.get<CourseModel[]>(url);
   }
 
-  getCursesInstructorPending(instructor_id:number,data?:QueryUrl): Observable<CourseModel[]>{
+  getCursesInstructorPending(data?:QueryUrl): Observable<SessionModel[]>{
 
-    let url:string = getQueryUrl(this.url,data)
+    let url:string = getQueryUrl(`${this.url}/Instructorsessions`,data)
    
-    return this.http.get<CourseModel[]>(`${url}/${instructor_id}/Instructorsessions`);
+    return this.http.get<SessionModel[]>(url);
   }
 
-  getCursesInstructorRecord(instructor_id:number,data?:QueryUrl): Observable<CourseModel[]>{
+  getCursesInstructorRecord(data?:QueryUrl): Observable<CourseModel[]>{
 
     let url:string = getQueryUrl(this.url,data)
    
-    return this.http.get<CourseModel[]>(`${url}/${instructor_id}/sessions`);
+    return this.http.get<CourseModel[]>(`${url}/sessions`);
   }
 
-  getCursesInstructorNow(instructor_id:number,data?:QueryUrl): Observable<CourseModel[]>{
+  getCursesInstructorNow(data?:QueryUrl): Observable<CourseModel[]>{
 
     let url:string = getQueryUrl(this.url,data)
    
-    return this.http.get<CourseModel[]>(`${url}/${instructor_id}/sessionsNow`);
+    return this.http.get<CourseModel[]>(`${url}/sessionsNow`);
   }
 
   

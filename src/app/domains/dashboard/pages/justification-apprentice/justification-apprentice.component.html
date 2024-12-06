@@ -1,0 +1,72 @@
+<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+  <nz-tab nzTitle="Inasistencias"></nz-tab>
+  <nz-tab nzTitle="Pendientes"></nz-tab>
+  <nz-tab nzTitle="Rechazadas"></nz-tab>
+  <nz-tab nzTitle="Aprobadas"></nz-tab>
+  <nz-tab nzTitle="Vencidas"></nz-tab>
+</nz-tabset>
+
+<nz-table
+  #basicTable
+  [nzBordered]="true"
+  [nzSize]="'middle'"
+  [nzData]="filteredData"
+  [nzScroll]="{ x: '1200px' }"
+>
+  <thead>
+    <tr>
+      <th nzWidth="25%">Sesión</th>
+      <th nzWidth="25%">Instructor</th>
+      <th nzWidth="25%">Jornada</th>
+      <th nzWidth="20%">Estado</th> <!-- Nueva columna -->
+      <th nzWidth="25%">Justificación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of filteredData">
+      <td>{{ data.session }}</td>
+      <td>{{ data.instructor }}</td>
+      <td>{{ data.shift }}</td>
+      <td>{{ data.state }}</td> <!-- Mostrar el estado -->
+    
+      <td>
+        <button nz-button nzType="link" (click)="openModal(data)">Revisar</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+
+
+<app-pending-modal
+  *ngIf="selectedJustification?.state === 'Pendientes'"
+  [isVisible]="isModalVisible"
+  (close)="closeModal()"
+  (submit)="handleSubmission($event)"
+></app-pending-modal>
+
+<!-- Modal de rechazadas -->
+<app-rejected-modal
+  *ngIf="selectedJustification?.state === 'Rechazadas'"
+  [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
+  (close)="closeModal()"
+></app-rejected-modal>
+
+<!-- Modal de aprobadas -->
+<app-approved-modal
+  *ngIf="selectedJustification?.state === 'Aprobadas'"
+  [isVisible]="isModalVisible"
+  [fileName]="selectedJustification.fileName"
+  [reason]="selectedJustification.reason"
+  (close)="closeModal()"
+></app-approved-modal>
+
+<!-- Modal de vencidas -->
+<app-expired-modal
+  *ngIf="selectedJustification?.state === 'Vencidas'"
+  [isVisible]="isModalVisible"
+  (close)="closeModal()"
+></app-expired-modal>
+
+
