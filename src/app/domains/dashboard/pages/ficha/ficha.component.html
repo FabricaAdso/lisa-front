@@ -2,7 +2,7 @@
   <div class="fichas-container">
     <h1>FICHAS</h1>
     <div nz-row [nzGutter]="16">
-      <div nz-col [nzSpan]="6" *ngFor="let session of sessions">
+      <div nz-col [nzSpan]="6" *ngFor="let session of pending_courses">
         <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '12px' }">
           <div class="ficha-header">Ficha: {{ session.course!.code }}</div>
           <div class="ficha-content">
