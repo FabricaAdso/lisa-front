@@ -10,6 +10,6 @@ export interface SessionModel {
   instructor2_id?: number | null;
   course_id?: number | null;
   course?: CourseModel;
-  assistances?: AssistanceModel[]; 
+  assistances: AssistanceModel[]; 
 }
 

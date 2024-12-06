@@ -62,32 +62,31 @@ export class CalendarComponent {
 
     // Obtiene el color para el timeline
     getTimelineColor(session: SessionModel): string {
-      const today = new Date().toISOString().split('T')[0];
-    
-      // 1. Azul: Si la sesión es hoy
-      if (session.date === today) {
+      const today = new Date();
+      const dateSesion = new Date(session.date)
+      const hasAssistanceTaken =  session.assistances.length > 0;
+  
+      if (dateSesion === today) {
         return 'blue'; // Sesión actual
       }
     
       // 2. Gris: Si la sesión aún no ha ocurrido
-      if (session.date > today) {
+      if (dateSesion > today) {
         return 'gray'; // Sesión futura
       }
-    
-      // 3. Verde: Si la sesión ya ocurrió y se tomó asistencia
-      const hasAssistanceTaken = session.assistances && session.assistances.length > 0;
-      if (session.date < today && hasAssistanceTaken) {
+      
+      if (dateSesion< today && hasAssistanceTaken) {
         return 'green'; // Sesión pasada con al menos una asistencia tomada
       }
     
       // 4. Rojo: Si la sesión ya ocurrió pero no se tomó asistencia
-      if (session.date < today && !hasAssistanceTaken) {
+      if (dateSesion < today && !hasAssistanceTaken) {
         return 'red'; // Sesión pasada sin asistencia tomada
       }
     
       // Por defecto (esto nunca debería ocurrir, pero es por seguridad)
       return 'gray';
-    }
+    }   
 
   // Maneja el clic en un evento para mostrar el modal
   handleEventClick(clickInfo: EventClickArg) {
