@@ -11,6 +11,7 @@ import { QueryUrl } from '@shared/models/query-url.model';
 export class AssistanceService {
 
   constructor() { }
+  // /assistance?filter[assistance]=0
 
   private http = inject(HttpClient);
 
