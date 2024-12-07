@@ -22,6 +22,11 @@ export class AssistanceService {
     console.log(URL)
     return this.http.get<AssistanceModel[]>(URL)
   }
+  getAbsence(data?:QueryUrl){   //TRAER LAS INASITENCIAS
+    let URL:string = getQueryUrl(this.URL,data)
+    console.log(URL)
+    return this.http.get<AssistanceModel[]>(URL)
+  }
 
   saveAssistances(data: UpdateAssistanceDTO){
     const {id} = data;
