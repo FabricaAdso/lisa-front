@@ -70,6 +70,21 @@
   color: #666;
 }
 
+/* Tarjetas */
+nz-card {
+  width: 250px; /* Ancho ajustado */
+  border-radius: 4px; /* Bordes redondeados */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Transición suave */
+  margin-bottom: 16px; /* Espaciado entre filas */
+}
+
+/* Efecto al pasar el cursor */
+nz-card:hover {
+  transform: translateY(-5px); /* Movimiento suave hacia arriba */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra más sutil */
+}
+
+
 /* Espaciado entre el Collapse y el Footer */
 nz-collapse {
   margin-top: 16px;
