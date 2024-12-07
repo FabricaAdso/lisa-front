@@ -1,12 +1,7 @@
-<div class="flex flex-col items-center bg-white shadow-md space-y-4 ">
-  <!-- Foto y nombre del usuario -->
-  <div class="flex flex-col items-center space-y-2">
-    <img 
-      src="https://via.placeholder.com/80" 
-      alt="Foto de usuario" 
-      class="w-24 h-24 rounded-full border-2 border-gray-300"
-    />
-    <span class="text-xl font-bold text-gray-700">Nombre Usuario</span>
+<div class="flex flex-col items-center bg-white shadow-md ">
+  <!-- Nombre del usuario con borde verde en la parte inferior -->
+  <div class="flex flex-col items-center justify-center  py-6 border-b border-green-500 pb-4">
+    <span class="text-xl text-black font-normal">{{ user()?.first_name }} {{ user()?.last_name }}</span>
   </div>
 
   <ul nz-menu nzMode="inline">
@@ -14,7 +9,7 @@
     <ng-template #renderSubMenu let-subMenuItems>
       <ng-container *ngFor="let subItem of subMenuItems">
         <!-- Elemento de menú simple -->
-        <li *ngIf="!subItem.subMenu" nz-menu-item >
+        <li *ngIf="!subItem.subMenu" nz-menu-item>
           <a [routerLink]="subItem.route" routerLinkActive="active">
             <!-- Enlace con routerLink -->
             <span
@@ -25,7 +20,7 @@
             <span>{{ subItem.title }}</span>
           </a>
         </li>
-  
+
         <!-- Submenú -->
         <li *ngIf="subItem.subMenu" nz-submenu [nzTitle]="subItem.title" [nzIcon]="subItem.icon!">
           <ul>
@@ -34,17 +29,20 @@
         </li>
       </ng-container>
     </ng-template>
-  
+
     <!-- Inicializa el menú -->
     <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"></ng-container>
   </ul>
-  
 
   <!-- Botón de cerrar sesión -->
   <button
-    class="w-full py-2 bg-white font-semibold rounded-lg border-2 border-green-500 text-[#38a901] hover:bg-green-500 hover:text-white transition-colors duration-300"
-    (click)="logout()"
-  >
-    Cerrar sesión
-  </button>
+  class="h-12 w-full flex items-center justify-center gap-2 border-t border-green-500 py-4 px-6 text-[#38a901] font-semibold hover:bg-[#38a901] hover:text-white transition-colors duration-300"
+  (click)="logout()"
+>
+  <!-- Icono de cierre de sesión (puedes cambiar el icono a otro) -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M17 12H3"></path>
+  </svg>
+  <span>Cerrar Sesión</span>
+</button>
 </div>

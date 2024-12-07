@@ -21,12 +21,10 @@ import { UserModel } from '@shared/models/user.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
     NzIconModule,
     NzMenuModule,
-    MenuItemComponent,
-    DropDownMenuComponent,
-  ],
+    DropDownMenuComponent
+],
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css'],
 })
@@ -59,11 +57,11 @@ export class NavBarComponent implements OnInit {
       this.isLoggedIn = this.auth_service.isAuth();
 
       if (this.isLoggedIn) {
-        // Suscribimos al signal con la respuesta del método 'me()' para obtener los datos del usuario
         this.auth_service.me().subscribe({
           next: (user: UserModel) => {
-            this.user.set(user);  // Actualizamos el signal con el objeto de usuario
+            this.user.set(user);
             console.log('Hola', user.first_name, user.first_name);
+            this.isLoggedIn = true
           },
           error: (err) => {
             console.error('Error al obtener el usuario:', err);

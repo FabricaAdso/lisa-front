@@ -1,13 +1,15 @@
+import { AssistanceModel } from "./assistance.model";
 import { CourseModel } from "./course.model";
 
 export interface SessionModel {
   id: number;
-  date: string; // Fecha de la sesión
-  start_time: string; // Hora de inicio
-  end_time: string; // Hora de finalización
-  instructor_id?: number | null; // ID del primer instructor (opcional)
-  instructor2_id?: number | null; // ID del segundo instructor (opcional)
-  course_id?: number | null; // ID del curso (opcional)
-  attendanceTaken?: boolean | null; // Asistencia tomada
-  course? : CourseModel;
+  date: string;
+  start_time: string;
+  end_time: string;
+  instructor_id?: number | null;
+  instructor2_id?: number | null;
+  course_id?: number | null;
+  course?: CourseModel;
+  assistances: AssistanceModel[]; 
 }
+

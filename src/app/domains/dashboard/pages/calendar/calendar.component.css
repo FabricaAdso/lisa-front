@@ -1,8 +1,10 @@
 /* Contenedor principal */
 .calendar-container {
-  @apply w-full
-  h-full
-  max-w-screen-desktop_xl
+  @apply desktop:w-full
+  desktop:max-h-[80vh]
+  desktop:max-w-screen-desktop_xl
+  mobile:w-full
+  mobile:h-[75vh]
 }
 
 /* Estilo base para los botones generales de FullCalendar */
@@ -28,17 +30,6 @@
   @apply bg-gray-300 text-gray-500 cursor-not-allowed
 }
 
-/* Estilo para los eventos */
-/* ::ng-deep .fc-daygrid-dot-event {
-  @apply text-[#38a901] bg-white text-sm rounded-sm shadow-md h-[30px] text-center p-2
-  @apply flex gap-2
-} */
-
-/* Hover: Fondo más oscuro al pasar el ratón */
-/* ::ng-deep .fc-event:hover {
-  @apply bg-[#38a901] text-white
-} */
-
 /* Estilo para el evento cuando es arrastrado o redimensionado */
 ::ng-deep .fc-event.fc-event-draggable,
 ::ng-deep .fc-event.fc-event-resizable {
@@ -60,28 +51,70 @@
 }
 
 ::ng-deep .fc-list-event {
-  @apply text-black text-sm rounded-sm shadow-md h-[30px] p-2 text-start border-white border-2 cursor-default
+  @apply text-black text-sm rounded-sm shadow-md h-[30px] py-1 text-start border-white border-2 cursor-default
 }
 
 ::ng-deep .fc-list-event:hover {
 @apply text-black bg-transparent
 }
 
-/* ::ng-deep  .no-bullet {
-  list-style-type: none
-} */
-
 ::ng-deep .fc-event-time{
   @apply hidden
 }
 
+/* Aplica estilos generales para los eventos */
 ::ng-deep .fc-event {
-  @apply bg-white border-[#38a901] h-8 text-center p-1 rounded-xl
+  @apply bg-white border-[#38a901] h-10 text-center py-[7px] px-0 rounded-lg;
+  overflow: hidden; /* Oculta texto que salga del contenedor */
+  white-space: nowrap; /* Mantiene el texto en una sola línea */
+  position: relative; /* Necesario para el desplazamiento */
 }
 
-::ng-deep .fc-event-title
-{
-  @apply text-[#38a901] text-sm font-semibold
+/* Estilos para el texto del evento */
+::ng-deep .fc-event-title {
+  @apply text-[#38a901] text-sm font-semibold;
+  display: inline-block; /* Necesario para el scroll */
+  animation: none; /* Desactivado por defecto */
+}
+
+/* Estilos específicos para pantallas pequeñas */
+@screen mobile {
+  ::ng-deep .fc-event-title {
+    animation: scroll-horizontal 5s linear infinite; /* Activa la animación */
+  }
+}
+@screen alex {
+  ::ng-deep .fc-event-title {
+    animation: scroll-horizontal 5s linear infinite; /* Activa la animación */
+  }
+}
+
+/* Animación de desplazamiento horizontal */
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(100%); /* Comienza fuera del contenedor */
+  }
+  100% {
+    transform: translateX(-100%); /* Desplaza todo el texto fuera hacia la izquierda */
+  }
+}
+/* Pantallas grandes: Desactiva animación */
+@screen desktop {
+  ::ng-deep .fc-event-title {
+    animation: none;
+  }
+}
+/* Pantallas grandes: Desactiva animación */
+@screen desktop_xl {
+  ::ng-deep .fc-event-title {
+    animation: none;
+  }
+}
+/* Pantallas grandes: Desactiva animación */
+@screen tablet {
+  ::ng-deep .fc-event-title {
+    animation: none;
+  }
 }
 
 ::ng-deep .ant-modal-content {

@@ -3,6 +3,34 @@
 @tailwind utilities;
 @tailwind screens;
 
+      
+
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+  color: #fff;
+  border-color:  #52c41a!important;
+  background:  #52c41a!important;
+}
+
+::ng-deep .ant-table-thead > tr > th {
+  position: relative;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 5000;
+  text-align: left;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.3s ease;
+}
+
+::ng-deep .ant-table-pagination {
+  display: flex !important;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+::ng-deep .ant-pagination-mini{
+  display: none !important;
+}
+
+
 .page-header {
   width: 100%;
   margin-top: 40px;
@@ -113,7 +141,6 @@ button[_ngcontent-ng-c2623682195], [role=button][_ngcontent-ng-c2623682195] {
 .table-column {
   border: 1px solid #d9d9d9; 
   border-radius: 4px;
-  overflow: hidden;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
 }
 .modal-content {
@@ -202,3 +229,5 @@ button[_ngcontent-ng-c2623682195], [role=button][_ngcontent-ng-c2623682195] {
 .revision {
   color: #f5222d;
 }
+
+

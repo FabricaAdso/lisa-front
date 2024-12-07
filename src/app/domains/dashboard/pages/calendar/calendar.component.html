@@ -1,4 +1,4 @@
-<div class="h-[48rem] flex items-center justify-center rounded-full">
+<div class="desktop:h-[80vh] desktop:flex justify-center">
   <full-calendar
     [options]="calendarOptions"
     class="calendar-container"
@@ -18,7 +18,7 @@
         *ngFor="let session of selectedEvent?.sessions"
         [nzColor]="getTimelineColor(session)"
       >
-        {{ session.date }} - {{ session.start_time }} a {{ session.end_time }}
+      {{ session.course?.code || "Sin Codigo"}}  {{ session.start_time }} a {{ session.end_time }}
       </nz-timeline-item>
     </nz-timeline>
   </ng-container>

@@ -9,27 +9,22 @@
   <!-- Sección del usuario -->
   <div class="flex items-center space-x-2">
     <ng-container *ngIf="isLoggedIn">
-      <!-- Nombre completo del usuario -->
-      <span class="hidden desktop:inline text-black text-lg mr-2"
-        >{{ user()?.first_name }} {{ user()?.last_name }}</span
-      >
-
-      <!-- Imagen del usuario alineada a la derecha -->
-      <img
-        [src]="UserImage"
-        alt="Imagen de usuario"
-        class="hidden desktop:inline w-[40px] h-[40px] rounded-full object-cover cursor-pointer dropdown-button1"
+      <!-- Nombre completo del usuario, al hacer clic se despliega el menú -->
+      <span
+        class="hidden desktop:inline text-black font-normal text-xl mr-2 cursor-pointer"
         (click)="toggleDropdown1()"
-      />
+      >
+        {{ user()?.first_name }} {{ user()?.last_name }}
+      </span>
 
-      <!-- Cerrar Sesión -->
+      <!-- Menú desplegable al hacer clic en el nombre -->
       <div
         *ngIf="isDropdownOpen1"
         class="absolute right-0 mt-[7.5rem] w-48 bg-transparent rounded bg-black dropdown-menu1 z-50"
       >
         <button
           (click)="logout()"
-          class="flex items-center justify-center w-[10rem] text-lg text-black hover:bg-gray-100 bg-white py-2 rounded-lg border hidden desktop:block"
+          class="flex items-center justify-center w-[10rem] text-lg text-black hover:bg-gray-100 bg-white py-2 rounded-lg border desktop:block"
         >
           <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>
           Cerrar sesión
@@ -41,7 +36,7 @@
       <button
         nz-button
         nzType="primary"
-        class="bg-[#38a901] hover:bg-white hover:text-[#38a901] hover:border hover:border-[#38a901] h-10 w-28 rounded-lg text-base text-white mobile:hidden tablet:hidden desktop:block"
+        class="bg-[#38a901] hover:bg-white hover:text-[#38a901] hover:border hover:border-[#38a901] h-10 w-28 rounded-lg text-base text-white"
         (click)="login()"
       >
         Iniciar sesión
@@ -49,7 +44,7 @@
     </ng-container>
 
     <!-- Icono de opciones para pantallas mobile y tablet -->
-    <div class="relative">
+    <div class="relative" *ngIf="isLoggedIn">
       <button
         class="flex items-center text-lg mr-2 mobile:block tablet:block desktop:hidden dropdown-button2"
         (click)="toggleDropdown2()"
