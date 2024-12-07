@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CourseModel } from '@shared/models/course.model';
 import { SessionModel } from '@shared/models/session.model';
 import { EnvironmentService } from '@shared/services/environment.service';
@@ -19,7 +20,8 @@ import { forkJoin } from 'rxjs';
     NzCardModule,
     NzCollapseModule,
     NzButtonModule,
-    NzGridModule
+    NzGridModule,
+    RouterModule
   ],
   templateUrl: './ficha.component.html',
   styleUrl: './ficha.component.css'

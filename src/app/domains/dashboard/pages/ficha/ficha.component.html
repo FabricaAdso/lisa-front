@@ -5,11 +5,10 @@
 
     <div nz-row [nzGutter]="16">
       <div nz-col [nzSpan]="6" *ngFor="let session of pending_courses">
-        
+        <a [routerLink]="[session.course!.code,'attendance']" >
           <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '2px' }">
             <div class="ficha-header">Ficha: {{ session.course!.code || 'No disponible' }}</div>
             <div class="ficha-content">
-              
               <p><strong>Programa:</strong> {{ session.course?.program?.name || 'No disponible' }}</p>
               <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name || 'No disponible' }}</p>
               <p><strong>Ambiente:</strong> {{ session.course?.environment?.name || 'No disponible' }}</p>
@@ -19,6 +18,7 @@
               </div>
             </div>
           </nz-card>
+        </a>
         </div>
       </div>
     </div>

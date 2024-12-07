@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
@@ -36,6 +36,8 @@ interface Person {
 })
 export class AttendanceComponent {
 
+  @Input() course_code?:number;
+
   person = {
     key: '1',
     nombre: 'John',
@@ -52,6 +54,7 @@ export class AttendanceComponent {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
   ngOnInit(): void {
+    alert(this.course_code);
     for (let index = 0; index < 20
       
       ; index++) {
