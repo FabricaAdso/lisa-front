@@ -4,12 +4,12 @@
     <div nz-row [nzGutter]="16">
       <div nz-col [nzSpan]="6" *ngFor="let session of pending_courses">
         <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '12px' }">
-          <div class="ficha-header">Ficha: {{ session.course!.code }}</div>
+          <div class="ficha-header">Ficha: {{ session.course!.code || 'No disponible'}}</div>
           <div class="ficha-content">
-             <p><strong>Programa:</strong> {{ session.course?.program?.name }}</p> 
+             <p><strong>Programa:</strong> {{ session.course?.program?.name || 'No disponible' }}</p> 
            
-            <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name }}</p>  
-            <p><strong>Ambiente:</strong> {{ session.course?.environment?.name }}</p>
+            <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name || 'No disponible' }}</p>  
+            <p><strong>Ambiente:</strong> {{ session.course?.environment?.name || 'No disponible' }}</p>
             <div class="ficha-details">
             <p><strong>Sesión:</strong> {{ session.start_time }}</p>
             <p><strong>Fecha:</strong> {{ session.date}}</p>
@@ -24,15 +24,15 @@
     <nz-collapse-panel [nzHeader]="'HISTORIAL DE FICHAS'" [nzShowArrow]="true">
       <div class="historial-fichas-container">
       <div nz-row [nzGutter]="16">
-        <div nz-col [nzSpan]="6" *ngFor="let ficha of historialFichas">
+        <div nz-col [nzSpan]="6" *ngFor="let session of record_courses">
           <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '12px' }">
-            <div class="ficha-header-historal">Ficha: {{ ficha.number }}</div>
+            <div class="ficha-header-historal">Ficha: {{ session.course?.code || 'No disponible'}}</div>
             <div class="ficha-content">
-              <p><strong>Programa:</strong> {{ ficha.program }}</p>
-              <p><strong>Sede:</strong> {{ ficha.site }}</p>
-              <p><strong>Ambiente:</strong> {{ ficha.environment }}</p>
-              <p><strong>Sesión:</strong> {{ ficha.session }}</p>
-              <p><strong>Fecha:</strong> {{ ficha.date }}</p>
+              <p><strong>Programa:</strong> {{ session.course?.program?.name}}</p>
+              <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name }}</p>
+              <p><strong>Ambiente:</strong> {{ session.course?.environment?.name  }}</p>
+              <p><strong>Sesión:</strong> {{ session.start_time}}</p>
+              <p><strong>Fecha:</strong> {{ session.date }}</p>
             </div>
           </nz-card>
         </div>

@@ -32,11 +32,10 @@ export class CourseService {
     return this.http.get<SessionModel[]>(url);
   }
 
-  getCursesInstructorRecord(data?:QueryUrl): Observable<CourseModel[]>{
-
-    let url:string = getQueryUrl(this.url,data)
+  getCursesInstructorRecord(data?:QueryUrl): Observable<SessionModel[]>{
+    let url:string = getQueryUrl(`${this.url}/sessions`,data)
    
-    return this.http.get<CourseModel[]>(`${url}/sessions`);
+    return this.http.get<SessionModel[]>(url);
   }
 
   getCursesInstructorNow(data?:QueryUrl): Observable<CourseModel[]>{
