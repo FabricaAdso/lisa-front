@@ -1,15 +1,12 @@
-
-    <nz-card-meta
-      nzTitle="404 - Página No Encontrada"
-      nzDescription="La página o el recurso que buscas no existe o ha sido movido. Verifica la URL o navega a la página principal para continuar."
-      class="text-lg text-center"
-    ></nz-card-meta>
-    <div class="flex items-center justify-center mt-6">
-      <picture class="w-[40rem] h-[40rem]">
-        <img
-          [src]="image_error"
-          class="w-full h-full object-contain"
-          alt="Error 404"
-        />
-      </picture>
-    </div>
+<nz-card-meta
+  nzTitle="404 - Página No Encontrada"
+  nzDescription="La página o el recurso que buscas no existe o ha sido movido. Verifica la URL o navega a la página principal para continuar."
+  class="text-lg text-center"
+></nz-card-meta>
+<div class="flex items-center justify-center">
+  <img
+    [src]="image_error"
+    class="w-[30rem] h-[30rem] object-contain"
+    alt="Error 404"
+  />
+</div>
