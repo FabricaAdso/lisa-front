@@ -1,4 +1,5 @@
 <nz-modal
+  (nzOnOk)="submitFormSession()"
   (nzOnCancel)="closeModal()"
   [(nzVisible)]="isModalVisible"
   *ngIf="formSession"
@@ -75,13 +76,15 @@
       </div>
       <div class="mb-4">
         <nz-select
-      [nzMaxTagCount]="3"
-      [nzMaxTagPlaceholder]="tagPlaceHolder"
-      nzMode="multiple"
-      nzPlaceHolder="Please select"
+        name="day_of_week"
+       [nzMaxTagCount]="3"
+       [nzMaxTagPlaceholder]="tagPlaceHolder"
+       nzMode="multiple"
+       nzPlaceHolder="Please select"
+       [formControl]="fieldDayOfWeek"
     >
       @for (item of day_of_week; track item) {
-        <nz-option []="" [nzValue]=""></nz-option>
+        <nz-option [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
       }
     </nz-select>
     <ng-template #tagPlaceHolder let-selectedList>and {{ selectedList.length }} more selected</ng-template>
