@@ -1,0 +1,25 @@
+<div class="desktop:h-[80vh] desktop:flex justify-center">
+  <full-calendar
+    [options]="calendarOptions"
+    class="calendar-container"
+  ></full-calendar>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Detalles del Evento"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <p><b>{{ selectedEvent?.title }}</b></p>
+    <nz-timeline>
+      <nz-timeline-item
+        *ngFor="let session of selectedEvent?.sessions"
+        [nzColor]="getTimelineColor(session).color"
+      >
+        {{ session.date }} - {{ getTimelineColor(session).status }}
+      </nz-timeline-item>
+    </nz-timeline>    
+  </ng-container>
+</nz-modal>

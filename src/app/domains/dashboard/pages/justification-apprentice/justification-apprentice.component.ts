@@ -62,7 +62,7 @@ export class JustificationApprenticeComponent {
   loadInasistencias(): void {
     const datasub = forkJoin([
 
-      this.justificationService.getJustifications({ included: ['assistance.session.instructor.user','aprobation','assistance.session.course'] }),
+      this.justificationService.getAll({ included: ['assistance.session.instructor.user','aprobation','assistance.session.course'] }),
 
       // Cargar aprobaciones
       // this.aprobationService.getAprobations({

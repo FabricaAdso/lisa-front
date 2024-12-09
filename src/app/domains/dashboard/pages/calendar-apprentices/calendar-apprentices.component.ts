@@ -87,7 +87,7 @@ getTimelineColor(session: SessionModel): { color: string, status: string } {
 
   if (assistance) {
     if (assistance.assistance) {
-      return { color: 'blue', status: 'Asistió' }; 
+      return { color: 'green', status: 'Asistió' }; 
     } else {
       return { color: 'red', status: 'No asistió' }; 
     }

@@ -1,0 +1,162 @@
+/* Contenedor principal */
+.calendar-container {
+    @apply desktop:w-full
+    desktop:max-h-[80vh]
+    desktop:max-w-screen-desktop_xl
+    mobile:w-full
+    mobile:h-[75vh]
+  }
+  
+  /* Estilo base para los botones generales de FullCalendar */
+  ::ng-deep .fc-direction-ltr .fc-button-group > .fc-button,
+  ::ng-deep .fc-direction-ltr .fc-today-button {
+    @apply bg-[#38a901] text-white border-[#38a901] rounded-md shadow-sm transition duration-300 ease-in-out
+  }
+  
+  /* Hover: Fondo más oscuro */
+  ::ng-deep .fc-direction-ltr .fc-button-group > .fc-button:hover,
+  ::ng-deep .fc-direction-ltr .fc-today-button:hover {
+    @apply bg-white text-[#38a901]
+  }
+  
+  /* Activo persistente: Colores invertidos */
+  ::ng-deep .fc-direction-ltr .fc-button-group > .fc-button.fc-button-active,
+  ::ng-deep .fc-direction-ltr .fc-today-button.fc-button-active {
+    @apply bg-white text-[#38a901] border border-[#38a901]
+  }
+  
+  /* Botones deshabilitados */
+  ::ng-deep .fc-button:disabled {
+    @apply bg-gray-300 text-gray-500 cursor-not-allowed
+  }
+  
+  /* Estilo para el evento cuando es arrastrado o redimensionado */
+  ::ng-deep .fc-event.fc-event-draggable,
+  ::ng-deep .fc-event.fc-event-resizable {
+    @apply border-none /* Evitar bordes innecesarios */
+  }
+  
+  /* Opcional: Estilo para el texto dentro del evento */
+  ::ng-deep .fc-event .fc-event-main i {
+    @apply text-white font-semibold cursor-default
+  }
+  
+  ::ng-deep .fc-col-header-cell-cushion {
+    @apply text-center
+  }
+  
+  ::ng-deep .fc-col-header {
+    @apply text-white
+    bg-[#38a901]
+  }
+  
+  ::ng-deep .fc-list-event {
+    @apply text-black text-sm rounded-sm shadow-md h-[30px] py-1 text-start border-white border-2 cursor-default
+  }
+  
+  ::ng-deep .fc-list-event:hover {
+  @apply text-black bg-transparent
+  }
+  
+  ::ng-deep .fc-event-time{
+    @apply hidden
+  }
+  
+  /* Aplica estilos generales para los eventos */
+  ::ng-deep .fc-event {
+    @apply bg-white border-[#38a901] h-10 text-center py-[7px] px-0 rounded-lg;
+    overflow: hidden; /* Oculta texto que salga del contenedor */
+    white-space: nowrap; /* Mantiene el texto en una sola línea */
+    position: relative; /* Necesario para el desplazamiento */
+  }
+  
+  /* Estilos para el texto del evento */
+  ::ng-deep .fc-event-title {
+    @apply text-[#38a901] text-sm font-semibold;
+    display: inline-block; /* Necesario para el scroll */
+    animation: none; /* Desactivado por defecto */
+  }
+  
+  /* Estilos específicos para pantallas pequeñas */
+  @screen mobile {
+    ::ng-deep .fc-event-title {
+      animation: scroll-horizontal 5s linear infinite; /* Activa la animación */
+    }
+  }
+  @screen alex {
+    ::ng-deep .fc-event-title {
+      animation: scroll-horizontal 5s linear infinite; /* Activa la animación */
+    }
+  }
+  
+  /* Animación de desplazamiento horizontal */
+  @keyframes scroll-horizontal {
+    0% {
+      transform: translateX(100%); /* Comienza fuera del contenedor */
+    }
+    100% {
+      transform: translateX(-100%); /* Desplaza todo el texto fuera hacia la izquierda */
+    }
+  }
+  /* Pantallas grandes: Desactiva animación */
+  @screen desktop {
+    ::ng-deep .fc-event-title {
+      animation: none;
+    }
+  }
+  /* Pantallas grandes: Desactiva animación */
+  @screen desktop_xl {
+    ::ng-deep .fc-event-title {
+      animation: none;
+    }
+  }
+  /* Pantallas grandes: Desactiva animación */
+  @screen tablet {
+    ::ng-deep .fc-event-title {
+      animation: none;
+    }
+  }
+  
+  ::ng-deep .ant-modal-content {
+    @apply  w-[36rem] h-[26rem]
+  }  
+  
+  ::ng-deep .ant-modal-body {
+    @apply h-[19rem] p-4 overflow-y-auto;
+  }
+  
+  ::ng-deep .ant-modal-body p
+  {
+    @apply text-lg mb-4 font-light underline
+  }
+  
+  /* Estilo general del timeline */
+  ::ng-deep .ant-timeline {
+    @apply text-xl h-[20rem]
+  }
+  
+  /* Personalización de los puntos (círculos) */
+  ::ng-deep .ant-timeline-item-head {
+    @apply w-4 h-4 bg-white
+  }
+  
+  /* Estilo de los separadores (líneas) */
+  ::ng-deep .ant-timeline-item-tail {
+    @apply ml-[0.20rem]
+  }
+  
+  /* Ajuste de la separación entre el círculo y el texto */
+  ::ng-deep .ant-timeline-item-content {
+    @apply ml-6
+  }
+  
+  /* Mejor visualización del texto y los íconos */
+  ::ng-deep .ant-timeline-item-content {
+    @apply text-lg
+  }
+  
+  /* Opcional: Aumentar la altura de los ítems */
+  ::ng-deep .ant-timeline-item {
+    @apply h-[4rem]
+  }
+  
