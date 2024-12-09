@@ -12,6 +12,12 @@ import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
 import { AssistanceService } from '@shared/services/assistance.service';
 import { AssistanceModel } from '@shared/models/assistance.model';
 import { JustificationModel } from '@shared/models/justificationModel';
+import { JustificationAssistanceService } from '@shared/services/justification-assistance.service';
+import { forkJoin } from 'rxjs';
+import { ApprovedModel } from '@shared/models/aproved-model';
+import { AprobationService } from '@shared/services/aprobation.service';
+import { JustificationService } from '@shared/services/justification.service';
+import { JustificationModell } from '@shared/models/justification-model';
 
 
 @Component({
@@ -25,7 +31,7 @@ import { JustificationModel } from '@shared/models/justificationModel';
     NzTableModule,
     NzTabsModule,
     NzTabsModule,
-    NzTagModule, 
+    NzTagModule,
     PendingModalComponent,
     RejectedModalComponent,
     ApprovedModalComponent,
@@ -39,80 +45,52 @@ import { JustificationModel } from '@shared/models/justificationModel';
 export class JustificationApprenticeComponent {
 
 
-  private assistance = inject(AssistanceService); 
- 
-  assistances:AssistanceModel[] = [];
+  private assistanceService = inject(JustificationAssistanceService);
+  private aprobationService = inject(AprobationService);
+  private justificationService = inject(JustificationService);
 
 
-  allData = [
+  allData: AssistanceModel[] = []; // Datos de inasistencias
+  filteredData: AssistanceModel[] = []; // Datos filtrados para la tabla
+  aprobations: ApprovedModel[] = [];
+  justifications: JustificationModell[] = [];
 
-    {
-      session: '2024-11-17',
-      instructor: 'María López',
-      shift: '7:00 - 13:00',
-      state: 'Pendientes',
-    }
-    , {
-      session: '2024-11-17',
-      instructor: 'María López',
-      shift: '7:00 - 13:00',
-      state: 'Pendientes',
-    },
-    {
-      session: '2024-11-16',
-      instructor: 'Carlos Gómez',
-      shift: '8:00 - 12:00',
-      state: 'Rechazadas',
-    },
-    {
-      session: '2024-11-15',
-      instructor: 'Ana García',
-      shift: '9:00 - 14:00',
-      state: 'Aprobadas',
-    },
-    {
-      session: '2024-11-14',
-      instructor: 'Luis Torres',
-      shift: '10:00 - 16:00',
-      state: 'Vencidas',
-    },
-    {
-      session: '2024-11-13',
-      instructor: 'Juan Pérez',
-      shift: '7:00 - 13:00',
-      state: 'Pendientes',
-    },
-    {
-      session: '2024-11-12',
-      instructor: 'María López',
-      shift: '8:00 - 12:00',
-      state: 'Rechazadas',
-    },
-    {
-      session: '2024-11-11',
-      instructor: 'Carlos Gómez',
-      shift: '9:00 - 14:00',
-      state: 'Aprobadas',
-    },
-    {
-      session: '2024-11-10',
-      instructor: 'Ana García',
-      shift: '10:00 - 16:00',
-      state: 'Vencidas',
-    },
-  
-  ];
 
+  ngOnInit(): void {
+    this.loadInasistencias(); // Cargar las inasistencias al inicializar
+  }
+  loadInasistencias(): void {
+    const datasub = forkJoin([
+
+      this.justificationService.getJustifications({ included: ['assistance.session.instructor.user','aprobation','assistance.session.course'] }),
+
+      // Cargar aprobaciones
+      // this.aprobationService.getAprobations({
+      //   included: ['justification', 'justification.assistance.session'],
+      // }),
+
+
+    ]).subscribe({
+      next: ([justifications]) => {
+        console.log('hola');
+        
+        console.log(justifications);
+        this.justifications = justifications;
+      }
+
+    });
+
+  }
 
 
   // Control de modal dinámico
   isModalVisible = false;
   selectedJustification!: JustificationModel; // Justificación seleccionada
 
-  filteredData = this.allData;
+  // filteredData1 = this.allData1;
 
 
-  openModal(data:any): void {
+  openModal(data: any): void {
 
     // this.selectedJustification = justification; 
     this.selectedJustification = {
@@ -147,15 +125,21 @@ export class JustificationApprenticeComponent {
 
 
 
-   // Cambiar entre pestañas y filtrar datos
-   onTabChange(index: number): void {
-    const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-    const selectedTab = tabs[index];
-    this.filteredData =
-      selectedTab === 'Inasistencias' ? this.allData : this.allData.filter(item => item.state === selectedTab);
-  }
+  // Cambiar entre pestañas y filtrar datos
 
- 
+
+
+  // onTabChange(index: number): void {
+  //   const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
+  //   const selectedTab = tabs[index];
+
+  //   if (selectedTab === 'Inasistencias') {
+  //     this.filteredData = this.allData;
+  //   } else {
+  //     this.filteredData = this.allData.filter((data) => data.state === selectedTab);
+  //   }
+
+  // }
 
 
 }

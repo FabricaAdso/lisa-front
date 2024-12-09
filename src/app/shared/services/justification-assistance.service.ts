@@ -19,8 +19,8 @@ export class JustificationAssistanceService {
 
 
    getAbsence(data?:QueryUrl){   //TRAER LAS INASITENCIAS
-    let URL:string = getQueryUrl(this.URL,data)
-    console.log(URL)
-    return this.http.get<AssistanceModel[]>(URL)
+    let url:string = getQueryUrl(`${this.URL}?filter[assistance]': '0'`,data)
+    console.log(url)
+    return this.http.get<AssistanceModel[]>(url)
   }
 }

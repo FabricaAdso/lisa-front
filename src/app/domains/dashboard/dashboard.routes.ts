@@ -118,13 +118,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
-      {
-        path: 'calend-app',
-        title: 'Calendario Aprendiz',
-        data: { breadcrumb: 'Calendario Aprendiz' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/calendar-apprentices/calendar-apprentices.component').then(c => c.CalendarApprenticesComponent )
-      },
+      // {
+      //   path: 'calend-app',
+      //   title: 'Calendario Aprendiz',
+      //   data: { breadcrumb: 'Calendario Aprendiz' },
+      //   canActivate: [authGuard],
+      //   loadComponent: () => import('@domains/dashboard/pages/calendar-apprentices/calendar-apprentices.component').then(c => c.CalendarApprenticesComponent )
+      // },
       {
         path: 'error_401',
         title: 'Autenticación Requerida',

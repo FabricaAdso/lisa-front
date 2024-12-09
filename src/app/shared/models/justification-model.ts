@@ -1,3 +1,4 @@
+import { ApprovedModel } from "./aproved-model";
 import { AssistanceModel } from "./assistance.model";
 
 export interface JustificationModell{
@@ -6,4 +7,8 @@ export interface JustificationModell{
     description?:string;
     assistance_id?:number;
     assistance?: AssistanceModel;
+    aprobation?: ApprovedModel; // Relación con la tabla aprobations
+
 }
+
+///aprobations?included=justification.assistance.session
