@@ -14,16 +14,19 @@ export const routes: Routes = [
       {
         path: 'attendance',
         title: 'Asistencia',
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
       },
       {
         path: 'assists',
         title: 'Administrar asistencias',
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/assists/assists.component').then(c => c.AssistsComponent)
       },
       {
         path: 'environmentsArea',
         title: 'Administrar Areas',
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/area/area.component').then(c => c.AreaComponent)
       },
       {
@@ -32,6 +35,19 @@ export const routes: Routes = [
         data: { breadcrumb: 'Roles ' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
+      },
+      {
+        path:'fichas',
+        title:'Administrar Fichas',
+        canActivate: [authGuard],
+        loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
+      },
+      {
+        path: 'justification',
+        title: 'justificaciones',
+        data: { breadcrumb: '' },
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
 
       {
@@ -76,10 +92,10 @@ export const routes: Routes = [
 
       {
         path: 'session',
-        title: 'session',
-        data: { breadcrumb: 'Sesiones' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/session-page/session-page.component').then(c => c.SessionPageComponent)
+        title: 'Sesiónes',
+        data: { breadcrumb: 'Sesiónes' },
+        //canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
       {
@@ -91,13 +107,12 @@ export const routes: Routes = [
       },
 
       {
-        path: 'calendar',
-        title: 'Sesiónes',
-        data: { breadcrumb: 'Sesiónes' },
+        path: 'justification',
+        title: 'justicaciones',
+        data: { breadcrumb: 'justificaciones' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
+        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
-
       {
         path: 'error_401',
         title: 'Autenticación Requerida',
@@ -108,7 +123,7 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
-
+ 
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',

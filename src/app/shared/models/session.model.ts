@@ -1,13 +1,15 @@
+import { AssistanceModel } from "./assistance.model";
 import { CourseModel } from "./course.model";
 
 export interface SessionModel {
-    id:number;
-    name:string;
-    start_date:Date;
-    end_date:Date
-    start_time:Date;
-    end_time:Date;
-    days_of_week:string;
-    course_id:number;
-    course?:CourseModel;
+  id: number;
+  date: string;
+  start_time: string;
+  end_time: string;
+  instructor_id?: number | null;
+  instructor2_id?: number | null;
+  course_id?: number | null;
+  course?: CourseModel;
+  assistances: AssistanceModel[]; 
 }
+

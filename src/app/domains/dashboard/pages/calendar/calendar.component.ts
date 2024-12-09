@@ -1,115 +1,140 @@
-import { Component , signal, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
+import { EventClickArg } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { createEventId } from './event-utils';
+import esLocale from '@fullcalendar/core/locales/es';
 
-  // Extensión del tipo EventApi para incluir formattedStart
-  export interface CustomEventApi extends EventApi {
-    formattedStart?: string;
-  }
+import { SessionModel } from '@shared/models/session.model';
+import { SessionService } from '@shared/services/program/session.service';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FullCalendarModule],
+  imports: [
+    CommonModule,
+    FullCalendarModule,
+    NzModalModule,
+    NzButtonModule,
+    NzTimelineModule,
+  ],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css'
+  styleUrls: ['./calendar.component.css'],
 })
 export class CalendarComponent {
-   // Definir eventos iniciales
-   initialEvents = [
-    { id: '1', title: 'Sesión Actual', start: new Date().toISOString(), color: 'blue' },
-    { id: '2', title: 'Sesión Futura', start: '2024-12-20T10:00:00', color: 'gray' },
-    { id: '3', title: 'Sesión Pasada (Asistencia)', start: '2024-10-10T14:00:00', color: 'red' },
-    { id: '4', title: 'Sesión Pasada (Sin Asistencia)', start: '2024-10-09T12:00:00', color: 'red' },
-  ];
+  isVisible = false; // Estado del modal
+  selectedEvent: { title: string; sessions: SessionModel[] } | null = null;
 
-  calendarVisible = signal(true);
-  calendarOptions = signal<CalendarOptions>({
-    plugins: [
-      interactionPlugin,
-      dayGridPlugin,
-      timeGridPlugin,
-      listPlugin,
-    ],
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-    },
+  // Sesiones iniciales con estado de asistencia
+  initialEvents: SessionModel[] = [];
+
+  // Opciones del calendario
+  calendarOptions: any = {
+    plugins: [interactionPlugin, dayGridPlugin, listPlugin],
     initialView: 'dayGridMonth',
-    initialEvents: this.initialEvents, // Asegúrate de usar los eventos iniciales aquí
-    weekends: true,
-    editable: true,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-    select: this.handleDateSelect.bind(this),
+    locale: esLocale,
+    events: [], // Inicialmente vacío
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-  });
+  };
 
-  currentEvents = signal<CustomEventApi[]>([]);
+  constructor(private sessionService: SessionService) {}
 
-  constructor(private changeDetector: ChangeDetectorRef) {
+  ngOnInit(): void {
+    this.loadSessions();
   }
 
-  handleCalendarToggle() {
-    this.calendarVisible.update((bool) => !bool);
+  loadSessions(): void {
+    this.sessionService.getAll({included:['instructor','course','assistances.apprentice']}).subscribe({
+      next: (sessions) => {
+        this.initialEvents = sessions;
+        this.updateCalendarEvents(); // Actualiza los eventos del calendario
+      },
+      error: (err) => {
+        console.error('Error loading sessions:', err);
+      },
+    });
   }
 
-  handleWeekendsToggle() {
-    this.calendarOptions.update((options) => ({
-      ...options,
-      weekends: !options.weekends,
+    // Obtiene el color para el timeline
+    getTimelineColor(session: SessionModel): string {
+      const today = new Date();
+      const dateSesion = new Date(session.date)
+      const hasAssistanceTaken =  session.assistances.length > 0;
+  
+      if (dateSesion === today) {
+        return 'blue'; // Sesión actual
+      }
+    
+      // 2. Gris: Si la sesión aún no ha ocurrido
+      if (dateSesion > today) {
+        return 'gray'; // Sesión futura
+      }
+      
+      if (dateSesion< today && hasAssistanceTaken) {
+        return 'green'; // Sesión pasada con al menos una asistencia tomada
+      }
+    
+      // 4. Rojo: Si la sesión ya ocurrió pero no se tomó asistencia
+      if (dateSesion < today && !hasAssistanceTaken) {
+        return 'red'; // Sesión pasada sin asistencia tomada
+      }
+    
+      // Por defecto (esto nunca debería ocurrir, pero es por seguridad)
+      return 'gray';
+    }   
+
+  // Maneja el clic en un evento para mostrar el modal
+  handleEventClick(clickInfo: EventClickArg) {
+    const eventDate = clickInfo.event.startStr.split('T')[0];
+    const sessionsForDay = this.getSessionsForDay(eventDate);
+
+    this.selectedEvent = {
+      title: `Sesiones del día ${eventDate}`,
+      sessions: sessionsForDay,
+    };
+
+    this.isVisible = true;
+  }
+
+  // Obtiene las sesiones para una fecha específica
+  getSessionsForDay(date: string): SessionModel[] {
+    return this.initialEvents.filter((event) => event.date === date);
+  }
+
+  // Agrupa las sesiones en días y actualiza los eventos del calendario
+  updateCalendarEvents(): void {
+    const groupedEvents = this.getGroupedSessions();
+    this.calendarOptions.events = groupedEvents; // Actualiza los eventos dinámicamente
+  }
+
+  // Agrupa las sesiones en días
+  getGroupedSessions() {
+    const groupedEvents: { [key: string]: number } = {};
+
+    this.initialEvents.forEach((event) => {
+      groupedEvents[event.date] = (groupedEvents[event.date] || 0) + 1;
+    });
+
+    return Object.keys(groupedEvents).map((date) => ({
+      title: `${groupedEvents[date]} Sesión${groupedEvents[date] !== 1 ? 'es' : ''}`,
+      start: `${date}T00:00:00`,
+      description: `${groupedEvents[date]} sesiones programadas`,
+      display: 'block',
     }));
   }
 
-  handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
-    }
+  // Oculta el modal
+  handleCancel() {
+    this.isVisible = false;
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
-  }
-
-  handleEvents(events: EventApi[]) {
-    const customEvents: CustomEventApi[] = events.map((event) => {
-      const start = event.start || new Date(); // Usa una fecha por defecto si start es null
-      return {
-        ...event,
-        formattedStart: new Intl.DateTimeFormat('es-ES', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        }).format(start),
-      };
-    });
-
-    this.currentEvents.set(customEvents);
-    this.changeDetector.detectChanges();
+  // Confirma el modal
+  handleOk() {
+    this.isVisible = false;
   }
 }

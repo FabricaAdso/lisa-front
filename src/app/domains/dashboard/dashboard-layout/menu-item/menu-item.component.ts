@@ -15,16 +15,13 @@ import { MenuItem } from '@shared/models/menuItems';
   selector: 'app-menu-item',
   standalone: true,
   imports: [
-    RouterOutlet,
     NzLayoutModule,
     NzBreadCrumbModule,
     NzIconModule,
     NzMenuModule,
-    NgIconComponent,
     CommonModule,
-    NavBarComponent,
-    RouterModule,
-  ],
+    RouterModule
+],
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.css'],
   providers: [
@@ -85,7 +82,7 @@ export class MenuItemComponent {
 
     { title: 'Sesiones',
       icon: 'calendar',
-      route: 'calendar',
+      route: 'session',
       theme: 'outline'
     },
 
@@ -94,7 +91,12 @@ export class MenuItemComponent {
       route: 'attendance',
       theme: 'outline'
     },
-  ];
+    { title: 'justificaciones',
+      icon: 'paper-clip',
+      route: 'justification',
+      theme: 'outline'
+    },
+];
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }

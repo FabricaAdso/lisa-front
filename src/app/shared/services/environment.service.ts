@@ -17,7 +17,7 @@ export class EnvironmentService {
   constructor() { }
 
 
-  get(data?:QueryUrl): Observable<EnvironmentModel[]>{
+  getEnvironments(data?:QueryUrl): Observable<EnvironmentModel[]>{
     let url:string = getQueryUrl(this.url,data)
     console.log(url);
     return this.http.get<EnvironmentModel[]>(url);
