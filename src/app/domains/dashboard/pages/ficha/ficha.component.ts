@@ -43,7 +43,6 @@ export class FichaComponent {
       this.courseService.getCursesInstructorPending({included:['course.program']}),
       this.courseService.getCursesInstructorRecord({included:['course.program']}),
 
-
     ]).subscribe({
       next:([pending,record] )=>{
         this.pending_courses = pending;

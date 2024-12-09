@@ -6,12 +6,12 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { PendingModalComponent } from './pending-modal/pending-modal.component';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { JustificationModel } from '@shared/models/justificationModel';
 import { RejectedModalComponent } from './rejected-modal/rejected-modal.component';
 import { ApprovedModalComponent } from './approved-modal/approved-modal.component';
 import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
 import { AssistanceService } from '@shared/services/assistance.service';
 import { AssistanceModel } from '@shared/models/assistance.model';
+import { JustificationModel } from '@shared/models/justificationModel';
 
 
 @Component({
