@@ -25,6 +25,7 @@ import { CourseModel } from '@shared/models/course.model';
 import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
 import { SessionService } from '@shared/services/program/session.service';
+import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 
 @Component({
   selector: 'app-session',
@@ -112,7 +113,7 @@ export class SessionComponent implements OnInit {
         .getknowledgeNetwork()
         .pipe(takeUntil(this.destroy)),
       this.course_service
-        .getCourse()
+        .getCourses()
         .pipe(takeUntil(this.destroy))
     ]).subscribe({
       next: ([knowledgeNetwork, courses]) => {
@@ -165,11 +166,13 @@ export class SessionComponent implements OnInit {
     console.log('Días seleccionados (nombres):', dayNames);
   }
 
+
+
+
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl('', Validators.required),
-      range_picker: new FormControl('', Validators.required),
+      instructor_id: new FormControl('', Validators.required),     
       course_id: new FormControl('', Validators.required),
       day_of_week: new FormControl([]),
     });
@@ -180,7 +183,7 @@ export class SessionComponent implements OnInit {
   get fieldInstructor() {
     return this.formSession?.get('instructor_id') as FormControl;
   }
-  get fielRangePicker() {
+  get fieldRangePicker() {
     return this.formSession?.get('range_picker') as FormControl;
   }
   get fieldCourse() {
@@ -204,7 +207,9 @@ export class SessionComponent implements OnInit {
   }
 
   saveForm(){
-    
+    const instructor: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
+
+    this.session_service.createSession(instructor).subscribe
   }
 
   closeModal(): void {

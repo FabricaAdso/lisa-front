@@ -20,6 +20,8 @@ import { AttendanceTableComponent } from "./attendance-table/attendance-table.co
 import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { SessionComponent } from "./session/session.component";
+import { CourseService } from '@shared/services/program/course.service';
+import { CourseModel } from '@shared/models/course.model';
 
 @Component({
   selector: 'app-attendance',
@@ -49,11 +51,11 @@ export class AttendanceComponent {
   @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
   @ViewChild('sessionModal') sessionModal:any = SessionComponent;
 
-  private assistance_service = inject(AssistanceService);
-  private apprentice_service = inject(ApprenticeService);
+  private courses_service = inject(CourseService);
   
   @Input() course_code?:number;
 
+  course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];
   listOfData: any[] = [];
   listDAtos: any[][] = []; // Almacena los grupos de datos para multiples tablas
@@ -103,22 +105,32 @@ export class AttendanceComponent {
  
   getData() {
     const data_sub = forkJoin([
-      this.assistance_service.getAssitanceAll({ included: ['apprentice.user'] }),
+      this.courses_service.getCourses({ included: ['apprentices.user'] }),
     ]).subscribe({
-      next: ([assistance]) => {
-        this.assistance = [...assistance];
-        const dataAssistance = this.assistance.map((item) => ({
-          key: item.id.toString(),
-          assistance: item.assistance,
-          nombre: item.apprentice?.user?.first_name,
-          apellido: item.apprentice?.user?.last_name,
-          documento: item.apprentice?.user?.identity_document,
-          correo: item.apprentice?.user?.email,
-        }));
+      next: ([course]) => {
+        this.course = [...course];
+      // Mapeamos cada course que es un array
+      const dataCourse = this.course.flatMap((item) => {
+        // Verificamos si apprentices es un array
+        if (Array.isArray(item.apprentices)) {
+          return item.apprentices?.map((apprentice) => ({
+            key: item.id.toString(),
+            nombre: apprentice.user?.first_name || 'No disponible',
+            apellido: apprentice.user?.last_name || 'No disponible',
+            documento: apprentice.user?.identity_document || 'No disponible',
+            correo: apprentice.user?.email || 'No disponible'
+          })) || [];
+        }else{
+          return [];  
+        } 
+      });
 
-        this.listOfData = [...dataAssistance]
-
-      },
+      // Asignamos los datos a la lista
+      this.listOfData = [...dataCourse];
+    },
+    complete(){
+      data_sub.unsubscribe()
+    }
     });
   }
 

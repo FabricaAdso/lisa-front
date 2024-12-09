@@ -12,12 +12,12 @@ import { Observable } from 'rxjs';
 export class CourseService {
 
   private http = inject(HttpClient);
-  url:string = 'course'
+  url:string = 'courses'
 
   constructor() { }
 
 
-  getCurses(data?:QueryUrl): Observable<CourseModel[]>{
+  getCourses(data?:QueryUrl): Observable<CourseModel[]>{
 
     let url:string = getQueryUrl(this.url,data)
     

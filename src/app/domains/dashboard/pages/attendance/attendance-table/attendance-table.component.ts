@@ -70,6 +70,9 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
         
         this.evaluarCantidadTablas(); // Agrupa los datos para multiples tablas
       },
+      complete(){
+        data_sub.unsubscribe()
+      }
     });
   }
 
