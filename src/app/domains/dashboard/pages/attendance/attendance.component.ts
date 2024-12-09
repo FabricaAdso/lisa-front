@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, ViewChild, Input } from '@angular/core';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
@@ -50,6 +50,9 @@ export class AttendanceComponent {
   @ViewChild('sessionModal') sessionModal:any = SessionComponent;
 
   private assistance_service = inject(AssistanceService);
+  private apprentice_service = inject(ApprenticeService);
+  
+  @Input() course_code?:number;
 
   assistance: AssistanceModel[] = [];
   listOfData: any[] = [];

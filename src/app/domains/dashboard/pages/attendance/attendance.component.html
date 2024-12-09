@@ -1,23 +1,22 @@
 <section class="flex flex-col items-center">
   <!-- Header -->
-  <header class="page-header w-full border border-gray-200 p-4 rounded-lg shadow-md bg-white">
-    <nz-page-header class="flex flex-col items-center">
-      <nz-page-header-title>Analisis y desarrollo de software 2774315</nz-page-header-title>
-      <nz-page-header-content>
-        <div class="flex ">
-          <div class="main">
-            <nz-descriptions nzSize="small" [nzColumn]="2">
-              <nz-descriptions-item nzTitle="Lider de ficha" [nzSpan]="1">Lili Qu</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Duracion del programa" [nzSpan]="1"><a>421421</a></nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Sede" [nzSpan]="1">2017-01-10</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Ambiente" [nzSpan]="1">2017-10-10</nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Vocero de la ficha" [nzSpan]="1"></nz-descriptions-item>
-              <nz-descriptions-item nzTitle="Vocero suplente de la ficha" [nzSpan]="1"></nz-descriptions-item>
-            </nz-descriptions>
-          </div>
-        </div>
-      </nz-page-header-content>
-    </nz-page-header>
+  <header class="page-header w-full mt-10 border border-solid border-gray-200 p-4 rounded-lg">
+    <div class="title-icon flex items-center justify-center w-full">
+      <nz-page-header nzBackIcon [nzGhost]="false" nzSize="large"></nz-page-header>
+      <nz-page-header-title class="page-header-title text-center text-sm sm:text-base lg:text-lg">
+        Análisis y Desarrollo de Software 2774315
+      </nz-page-header-title>
+    </div>
+    <nz-page-header-content>
+      <nz-descriptions nzSize="middle" [nzColumn]="2" class="flex flex-col sm:flex-row">
+        <nz-descriptions-item nzTitle="Líder de ficha">Leidy Mariani Dorado</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Duración del programa">06/06/2023 - 06/08/2024</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Sede">Inem</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Ambiente" [nzSpan]="1">{{course_code||'1055'}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero de ficha">Juan Andrés</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero suplente">Antonio Rodríguez</nz-descriptions-item>
+      </nz-descriptions>
+    </nz-page-header-content>
   </header>
 
   <!-- Buttons -->

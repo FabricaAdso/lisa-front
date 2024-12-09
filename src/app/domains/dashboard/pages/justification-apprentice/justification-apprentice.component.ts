@@ -1,15 +1,17 @@
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { PendingModalComponent } from './pending-modal/pending-modal.component';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { JustificationModel } from '@shared/models/justificationModel';
 import { RejectedModalComponent } from './rejected-modal/rejected-modal.component';
 import { ApprovedModalComponent } from './approved-modal/approved-modal.component';
 import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
+import { AssistanceService } from '@shared/services/assistance.service';
+import { AssistanceModel } from '@shared/models/assistance.model';
+import { JustificationModel } from '@shared/models/justificationModel';
 
 
 @Component({
@@ -35,6 +37,11 @@ import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
 
 })
 export class JustificationApprenticeComponent {
+
+
+  private assistance = inject(AssistanceService); 
+ 
+  assistances:AssistanceModel[] = [];
 
 
   allData = [
@@ -139,18 +146,6 @@ export class JustificationApprenticeComponent {
   }
 
 
-  // onTabChange(index: number): void {
-  //   const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-  //   const selectedTab = tabs[index];
-
-  //   if (selectedTab === 'Inasistencias') {
-  //     // Mostrar todas las justificaciones
-  //     this.filteredData = this.allData;
-  //   } else {
-  //     // Filtrar por estado
-  //     this.filteredData = this.allData.filter(data => data.state === selectedTab);
-  //   }
-  // }
 
    // Cambiar entre pestañas y filtrar datos
    onTabChange(index: number): void {
@@ -160,22 +155,7 @@ export class JustificationApprenticeComponent {
       selectedTab === 'Inasistencias' ? this.allData : this.allData.filter(item => item.state === selectedTab);
   }
 
-   // Obtiene colores dinámicos para los estados
-   getStatusColor(state: string): string {
-    switch (state) {
-      case 'Pendientes':
-        return 'orange';
-      case 'Rechazadas':
-        return 'red';
-      case 'Aprobadas':
-        return 'green';
-      case 'Vencidas':
-        return 'gray';
-      default:
-        return '';
-    }
-  }
-
+ 
 
 
 }

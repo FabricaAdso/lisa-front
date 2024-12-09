@@ -1,49 +1,94 @@
+/* Contenedor Principal */
 .main-container {
-  padding: 16px;
-  background-color: #fcfcfc;
   
+  background-color: #f8f5f5;
   display: flex;
   flex-direction: column;
 }
+
+
+
+/* Contenedor de Fichas Activas */
 .fichas-container {
-    padding: 16px;
-    max-height: calc(100vh - 600px); 
-    overflow-y: auto;
-    
-  }
-  .historial-fichas-container {
-    max-height: 300px;
-    overflow-y: auto; 
-    padding: 16px;
-    
-    border: 1px solid #e0e0e0; 
-    border-radius: 4px; 
-  }
+  padding: 16px;
+  max-height: calc(100vh - 450px); /* Altura máxima para evitar el corte */
+  overflow-y: auto; /* Desplazamiento vertical */
+  margin-bottom: 1px; /* Espaciado entre fichas y el historial */
+  border: 1px solid #e0e0e0;
+  border-radius: 4px; /* Bordes redondeados */
+  background-color: white; /* Fondo blanco */
+}
+
+/* Historial de Fichas */
+.historial-fichas-container {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 16px;
   
-  .ficha-header {
-    background-color: #70b22d;
-    color: white;
-    padding: 8px;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 4px 4px 0 0;
-    
-  }
-  .ficha-header-historal{
-    background-color: #bfbfbf;
-    color: white;
-    padding: 8px;
-    text-align: center;
-    font-weight: bold;
-  }
-  
-  .ficha-content p {
-    margin: 4px 0;
-  }
-  .ficha-details {
-    display: flex; /* Coloca los elementos en una línea */
-    justify-content: space-between; /* Espaciado entre sesión y fecha */
-    margin-top: 12px; /* Espaciado superior */
-    font-size: 13px; /* Tamaño de fuente ligeramente más pequeño */
-    color: #666; /* Color más tenue */
-  }
+  border-radius: 4px;
+  margin-top: 0; /* Espaciado entre el historial y el contenedor */
+}
+
+/* Encabezado de las Tarjetas */
+.ficha-header {
+  background-color: #70b22d; /* Color verde del encabezado */
+  color: white;
+  padding: 0;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 32px;
+  border-radius: 4px 4px 0 0;
+}
+
+.ficha-header-historal {
+  background-color: #bfbfbf; /* Color gris para historial */
+  color: white;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Contenido de las Tarjetas */
+.ficha-content {
+  padding: 12px;
+  font-size: 14px;
+  color: #333;
+}
+
+.ficha-content p {
+  margin: 4px 0;
+}
+
+/* Detalles de Sesión */
+.ficha-details {
+  display: flex;
+  justify-content: space-between; /* Espaciado entre sesión y fecha */
+  margin-top: 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Tarjetas */
+nz-card {
+
+  border-radius: 4px; /* Bordes redondeados */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Transición suave */
+  margin-bottom: 16px; /* Espaciado entre filas */
+}
+
+/* Efecto al pasar el cursor */
+nz-card:hover {
+  transform: translateY(-5px); /* Movimiento suave hacia arriba */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra más sutil */
+}
+
+
+/* Espaciado entre el Collapse y el Footer */
+nz-collapse {
+  margin-top: 16px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+}

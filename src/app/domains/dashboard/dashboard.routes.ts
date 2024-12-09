@@ -18,6 +18,11 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
       },
       {
+        path: 'fichas/:course_code/attendance',
+        title: 'Asistencia',
+        loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
+      },
+      {
         path: 'assists',
         title: 'Administrar asistencias',
         canActivate: [authGuard],
