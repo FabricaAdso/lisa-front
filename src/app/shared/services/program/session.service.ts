@@ -14,24 +14,16 @@ export class SessionService {
   constructor() { }
 
   private http = inject(HttpClient);
-
-
   url:string = `sessions`;
-
-
-
   getAll(data?:QueryUrl){
     let url:string = getQueryUrl(this.url,data);
+    console.log(url)
     return this.http.get<SessionModel[]>(url);
-
-
   }
 
   create(data:CreateSessionDto){
     return this.http.post<SessionModel>(this.url, data);
   }
-
-
 
   delete(id:number){
     return this.http.delete(`${this.url}/${id}`)

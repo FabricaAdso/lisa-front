@@ -21,6 +21,4 @@ export class ApprenticeService {
     console.log(URL)
     return this.http.get<ApprenticeModel[]>(URL);
   }
-
-
 }

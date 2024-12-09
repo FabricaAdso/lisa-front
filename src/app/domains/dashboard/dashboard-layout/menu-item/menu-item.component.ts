@@ -80,7 +80,7 @@ export class MenuItemComponent {
       theme: 'outline'
     },
 
-    { title: 'Sesiones',
+    { title: 'Sesiones Instructor',
       icon: 'calendar',
       route: 'session',
       theme: 'outline'
@@ -96,6 +96,12 @@ export class MenuItemComponent {
       route: 'justification',
       theme: 'outline'
     },
+    {
+      title: 'Sesiones Aprendiz',
+      icon: 'calendar',
+      route: 'calend-app',
+      theme: 'outline',
+    }
 ];
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

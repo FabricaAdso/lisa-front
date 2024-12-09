@@ -26,7 +26,4 @@ export class AssistanceService {
     const {id} = data;
     return this.http.put<AssistanceModel>(`${this.URL}/${id}`,data);
   } 
-
-
-
 }
