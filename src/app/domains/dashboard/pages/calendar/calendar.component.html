@@ -18,7 +18,7 @@
         *ngFor="let session of selectedEvent?.sessions"
         [nzColor]="getTimelineColor(session)"
       >
-      {{ session.course?.code || "Sin Codigo"}}  {{ session.start_time }} a {{ session.end_time }}
+      {{ session.course?.code || "Sin Codigo"}} - {{ session.course?.program?.name }} {{ session.start_time }} a {{ session.end_time }}
       </nz-timeline-item>
     </nz-timeline>
   </ng-container>

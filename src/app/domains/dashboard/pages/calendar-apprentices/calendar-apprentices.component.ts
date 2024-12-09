@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzTimelineModule } from 'ng-zorro-antd/timeline';
-import { EventClickArg } from '@fullcalendar/core';
+import { EventClickArg } from '@fullcalendar/core/index.js';
+import { SessionModel } from '@shared/models/session.model';
+import { SessionService } from '@shared/services/program/session.service';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
-import { ProgramModel } from '@shared/models/program.model';
-
-import { SessionModel } from '@shared/models/session.model';
-import { SessionService } from '@shared/services/program/session.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
+import { AssistanceService } from '@shared/services/assistance.service';
+import { AssistanceModel } from '@shared/models/assistance.model';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-calendar-apprentices',
   standalone: true,
   imports: [
     CommonModule,
@@ -24,15 +24,18 @@ import { SessionService } from '@shared/services/program/session.service';
     NzButtonModule,
     NzTimelineModule,
   ],
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css'],
+  templateUrl: './calendar-apprentices.component.html',
+  styleUrl: './calendar-apprentices.component.css'
 })
-export class CalendarComponent {
+export class CalendarApprenticesComponent {
   isVisible = false; // Estado del modal
   selectedEvent: { title: string; sessions: SessionModel[] } | null = null;
+  assistance: AssistanceModel[] = [];
+
 
   // Sesiones iniciales con estado de asistencia
   initialEvents: SessionModel[] = [];
+  assistanceEvents: AssistanceModel[] = [];
 
   // Opciones del calendario
   calendarOptions: any = {
@@ -43,15 +46,15 @@ export class CalendarComponent {
     eventClick: this.handleEventClick.bind(this),
   };
 
-  constructor(private sessionService: SessionService) {}
+  constructor(private sessionService: SessionService, private assistanceService: AssistanceService) {}
 
   ngOnInit(): void {
+    this.loadAssistances();
     this.loadSessions();
   }
 
   loadSessions(): void {
-    this.sessionService.getAll({included:['course.program','instructor','course','assistances.apprentice']})
-    .subscribe({
+    this.sessionService.getAll({included:['course.program','instructor','course','assistances.apprentice']}).subscribe({
       next: (sessions) => {
         this.initialEvents = sessions;
         this.updateCalendarEvents(); // Actualiza los eventos del calendario
@@ -62,33 +65,37 @@ export class CalendarComponent {
     });
   }
 
+  loadAssistances() : void {
+    this.assistanceService.getAssitanceAll({included:['apprentice','apprentice.user']})
+    .subscribe({
+      next: (assistances) => {
+        this.assistanceEvents = assistances;
+        },
+        error: (err) => {
+          console.error('Error loading assistances:', err);
+          },
+      });
+  }
+
     // Obtiene el color para el timeline
-    getTimelineColor(session: SessionModel): string {
-      const today = new Date();
-      const dateSesion = new Date(session.date)
-      const hasAssistanceTaken =  session.assistances.length > 0;
-  
-      if (dateSesion === today) {
-        return 'blue'; // Sesión actual
-      }
-    
-      // 2. Gris: Si la sesión aún no ha ocurrido
-      if (dateSesion > today) {
-        return 'gray'; // Sesión futura
-      }
-      
-      if (dateSesion< today && hasAssistanceTaken) {
-        return 'green'; // Sesión pasada con al menos una asistencia tomada
-      }
-    
-      // 4. Rojo: Si la sesión ya ocurrió pero no se tomó asistencia
-      if (dateSesion < today && !hasAssistanceTaken) {
-        return 'red'; // Sesión pasada sin asistencia tomada
-      }
-    
-      // Por defecto (esto nunca debería ocurrir, pero es por seguridad)
-      return 'gray';
-    }   
+    // Obtiene el color para el timeline
+// Obtiene el color y el estado de la asistencia para el timeline
+getTimelineColor(session: SessionModel): { color: string, status: string } {
+  const assistance = this.assistanceEvents.find(
+    (assistance) => assistance.session_id === session.id
+  );
+
+  if (assistance) {
+    if (assistance.assistance) {
+      return { color: 'blue', status: 'Asistió' }; 
+    } else {
+      return { color: 'red', status: 'No asistió' }; 
+    }
+  }
+  return { color: 'gray', status: 'Por asistir' };
+}
+
+
 
   // Maneja el clic en un evento para mostrar el modal
   handleEventClick(clickInfo: EventClickArg) {

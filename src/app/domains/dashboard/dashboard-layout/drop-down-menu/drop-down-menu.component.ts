@@ -129,6 +129,12 @@ export class DropDownMenuComponent {
         route: 'justification',
         theme: 'outline'
       },
+      {
+        title: 'Sesiones Aprendiz',
+        icon: 'calendar',
+        route: 'calend-app',
+        theme: 'outline',
+      }
   ];
   isMenuOpen = false;
   toggleMenu2() {
