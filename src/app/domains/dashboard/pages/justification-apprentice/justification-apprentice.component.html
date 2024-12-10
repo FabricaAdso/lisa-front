@@ -1,23 +1,23 @@
 <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
-  <nz-tab nzTitle="Inasistencias"></nz-tab>
-  <nz-tab nzTitle="Pendientes"></nz-tab>
-  <nz-tab nzTitle="Rechazadas"></nz-tab>
-  <nz-tab nzTitle="Aprobadas"></nz-tab>
-  <nz-tab nzTitle="Vencidas"></nz-tab>
+  <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
+  <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
+  <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
+  <nz-tab nzTitle="Aprobadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"></nz-tab>
+  <nz-tab nzTitle="Vencidas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"></nz-tab>
 </nz-tabset>
 
 <nz-table
   #basicTable
   [nzBordered]="true"
   [nzSize]="'middle'"
-  [nzData]="filteredData"
+  [nzData]="justifications|byEstadoJustificacion:estadoJustificacion"
   [nzScroll]="{ x: '1200px' }">
   <thead>
     <tr>
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
-      <th nzWidth="20%">Estado</th> <!-- Nueva columna -->
+      <th nzWidth="20%">Estado</th> 
       <th nzWidth="25%">Justificación</th>
     </tr>
   </thead>

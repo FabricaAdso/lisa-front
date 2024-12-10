@@ -16,6 +16,9 @@ import { ApprovedModel } from '@shared/models/aproved-model';
 import { AprobationService } from '@shared/services/aprobation.service';
 import { JustificationService } from '@shared/services/justification.service';
 import { JustificationModell } from '@shared/models/justification-model';
+import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
+import { ThisReceiver } from '@angular/compiler';
+import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
 
 
 @Component({
@@ -33,7 +36,8 @@ import { JustificationModell } from '@shared/models/justification-model';
     PendingModalComponent,
     RejectedModalComponent,
     ApprovedModalComponent,
-    ExpiredModalComponent
+    ExpiredModalComponent,
+    ByEstadoJustificacionPipe
 
   ],
   templateUrl: './justification-apprentice.component.html',
@@ -45,10 +49,16 @@ export class JustificationApprenticeComponent {
 
   private justificationService = inject(JustificationService);
 
-
- 
   justifications: JustificationModell[] = [];
+  estadoJustificacion?:EstadoJustificacionEnum;
+  estadoJustificacionEnum = EstadoJustificacionEnum;
+
+
+
   filteredData = this.justifications;
+
+
+
 
   ngOnInit(): void {
     this.loadInasistencias(); // Cargar las inasistencias al inicializar
@@ -120,6 +130,10 @@ onTabChange(index: number): void {
       (data) => data.aprobation?.state === selectedTab
     );
   }
+}
+
+setEstadoJustificacion(estado?:EstadoJustificacionEnum){
+  this.estadoJustificacion = estado;
 }
 
 
