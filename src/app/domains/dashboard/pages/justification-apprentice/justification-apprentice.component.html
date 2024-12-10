@@ -1,18 +1,17 @@
-<!-- <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
   <nz-tab nzTitle="Inasistencias"></nz-tab>
   <nz-tab nzTitle="Pendientes"></nz-tab>
   <nz-tab nzTitle="Rechazadas"></nz-tab>
   <nz-tab nzTitle="Aprobadas"></nz-tab>
   <nz-tab nzTitle="Vencidas"></nz-tab>
-</nz-tabset> -->
+</nz-tabset>
 
 <nz-table
   #basicTable
   [nzBordered]="true"
   [nzSize]="'middle'"
-  [nzData]="justifications"
-  [nzScroll]="{ x: '1200px' }"
->
+  [nzData]="filteredData"
+  [nzScroll]="{ x: '1200px' }">
   <thead>
     <tr>
       <th nzWidth="25%">Sesión</th>
@@ -27,10 +26,10 @@
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.first_name}}</td>
       <td>{{ data.assistance?.session?.course?.shift}}</td>
-      <td>{{ data.aprobation?.state}}</td>
+      <td>{{ data.aprobation?.state || 'Pendiente Null'}}</td>
   
       <td>
-        <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
+        <button nz-button nzType="link">Ver</button>
       </td>
     </tr>
   </tbody>
