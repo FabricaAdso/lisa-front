@@ -14,7 +14,7 @@ import { forkJoin } from 'rxjs';
 import { ApprovedModel } from '@shared/models/aproved-model';
 import { AprobationService } from '@shared/services/aprobation.service';
 import { JustificationService } from '@shared/services/justification.service';
-import { JustificationModell } from '@shared/models/justification-model';
+import { JustificationModel } from '@shared/models/justification-model';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { ThisReceiver } from '@angular/compiler';
 import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
@@ -48,13 +48,13 @@ export class JustificationApprenticeComponent {
 
   private justificationService = inject(JustificationService);
 
-  justifications: JustificationModell[] = [];
+  justifications: JustificationModel[] = [];
   estadoJustificacion?:EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
     // Control de modal dinámico
     isModalVisible = false;
-    selectedJustification!: JustificationModell; // datos de prueba
+    selectedJustification!: JustificationModel; // datos de prueba
     filteredData = this.justifications;
 
   ngOnInit(): void {
@@ -81,7 +81,7 @@ export class JustificationApprenticeComponent {
 
   }
 
-  openModal(justification: JustificationModell): void {
+  openModal(justification: JustificationModel): void {
     console.log('Justificación seleccionada:', justification);
     this.selectedJustification = justification;
     this.isModalVisible = true;

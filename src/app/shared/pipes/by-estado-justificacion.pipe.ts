@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
-import { JustificationModell } from '@shared/models/justification-model';
+import { JustificationModel } from '@shared/models/justification-model';
 
 @Pipe({
   name: 'byEstadoJustificacion',
@@ -8,7 +8,7 @@ import { JustificationModell } from '@shared/models/justification-model';
 })
 export class ByEstadoJustificacionPipe implements PipeTransform {
 
-  transform(justificaciones:JustificationModell[],estado?:EstadoJustificacionEnum): JustificationModell[] {
+  transform(justificaciones:JustificationModel[],estado?:EstadoJustificacionEnum): JustificationModel[] {
     if(!estado) return justificaciones;
     if(estado === EstadoJustificacionEnum.PENDIENTE){
       
