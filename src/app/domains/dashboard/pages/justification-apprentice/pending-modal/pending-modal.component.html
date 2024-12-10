@@ -1,36 +1,48 @@
 <nz-modal
   [(nzVisible)]="isVisible"
-  nzTitle="Cargar Justificación"
+  nzTitle="Subir Justificación"
   (nzOnCancel)="handleCancel()"
   [nzFooter]="null"
 >
-<ng-container *nzModalContent>
-<div>
-    <!-- Archivo PDF -->
-    <label for="file-upload" 
-      style="display: flex; align-items: center; cursor: pointer;">
-      <i nz-icon nzType="upload"></i>
-      <input id="file-upload" type="file" accept=".pdf" (change)="handleFileInput($event)" style="display: none;" />
-      <span style="margin-left: 8px;">Subir archivo PDF</span>
-    </label>
-    <p *ngIf="file">{{ file.name }}</p>
+  <ng-container *nzModalContent>
+    <div>
+      <!-- Subir Archivo -->
+      <label for="file-upload" style="display: flex; align-items: center; cursor: pointer;">
+        <i nz-icon nzType="upload"></i>
+        <input
+          id="file-upload"
+          type="file"
+          accept=".pdf"
+          (change)="handleFileInput($event)"
+          style="display: none;"
+        />
+        <span style="margin-left: 8px;">Subir archivo PDF</span>
+      </label>
+      <p *ngIf="file_url">{{ file_url }}</p>
 
-    <!-- Mensaje de error -->
-    <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+      <!-- Mensaje de error -->
+      <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
 
-    <!-- Motivo -->
-    <textarea
-      nz-input
-      rows="4"
-      placeholder="Escriba su motivo aquí..."
-      [(ngModel)]="reason"
-    ></textarea>
+      <!-- Motivo -->
+      <textarea
+        nz-input
+        rows="4"
+        placeholder="Escriba su motivo aquí..."
+        [(ngModel)]="justification.description"
+      ></textarea>
 
-    <!-- Botones -->
-    <div style="margin-top: 16px; text-align: right;">
-      <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
-      <button nz-button nzType="primary" (click)="handleSubmit()">Enviar</button>
+      <!-- Botones -->
+      <div style="margin-top: 16px; text-align: right;">
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="isLoading"
+          (click)="handleSubmit()"
+        >
+          <i *ngIf="isLoading" nz-icon nzType="loading" nzTheme="outline"></i> Enviar
+        </button>
+      </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
 </nz-modal>

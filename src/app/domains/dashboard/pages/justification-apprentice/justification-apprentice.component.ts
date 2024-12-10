@@ -91,12 +91,6 @@ export class JustificationApprenticeComponent {
   }
 
 
-  handleSubmission(data: { file: File; reason: string }): void {
-    console.log('Archivo cargado:', data.file);
-    console.log('Motivo:', data.reason);
-    this.isModalVisible = false; // Cierra el modal después de la acción
-  }
-
 
 
   // Cambiar entre pestañas y filtrar datos
@@ -123,6 +117,14 @@ onTabChange(index: number): void {
 
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;
+}
+
+handleSubmission(updatedJustification: JustificationModel): void {
+  const index = this.justifications.findIndex(j => j.id === updatedJustification.id);
+  if (index !== -1) {
+    this.justifications[index] = updatedJustification; // Actualiza el modelo en la lista
+  }
+  this.isModalVisible = false; // Cierra el modal
 }
 
 

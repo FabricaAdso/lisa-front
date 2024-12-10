@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { JustificationModel } from '@shared/models/justification-model';
+import { JustificationService } from '@shared/services/justification.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 
@@ -12,15 +14,23 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
   styleUrl: './pending-modal.component.css'
 })
 export class PendingModalComponent {
-
   @Input() isVisible: boolean = false; // Controla la visibilidad del modal
+  @Input() justification!: JustificationModel; // Modelo de justificación para pasar datos
   @Output() close = new EventEmitter<boolean>();
-  @Output() submit = new EventEmitter<{ file: File; reason: string }>(); // Envía el archivo y el motivo al padre
+  @Output() submit = new EventEmitter<JustificationModel>(); // Envía los datos actualizados al padre
 
-  file: File | null = null; // Archivo cargado
-  reason: string = ''; // Motivo ingresado
+  file_url?: string; // Archivo cargado (del modelo)
+  description: string = ''; // Motivo ingresado
   errorMessage: string = ''; // Mensajes de error
+  isLoading: boolean = false; // Estado de carga
 
+  ngOnInit(): void {
+    // Mapear los datos iniciales del modelo si está disponible
+    if (this.justification) {
+      this.file_url = this.justification.file_url || '';
+      this.description = this.justification.description || '';
+    }
+  }
 
   handleFileInput(event: any): void {
     const selectedFile = event.target.files[0];
@@ -28,54 +38,47 @@ export class PendingModalComponent {
 
     if (selectedFile.type !== 'application/pdf') {
       this.errorMessage = 'El archivo debe ser en formato PDF.';
-      this.file = null;
+      this.file_url = '';
       return;
     }
 
     if (selectedFile.size > 5 * 1024 * 1024) {
       this.errorMessage = 'El archivo no debe superar los 5MB.';
-      this.file = null;
+      this.file_url = '';
       return;
     }
 
-    this.file = selectedFile;
+    this.file_url = selectedFile.name; // Asigna el nombre del archivo
     this.errorMessage = '';
   }
 
-
-
-
   handleCancel(): void {
-    this.resetModal(); // Limpia los datos
     this.close.emit(false); // Cierra el modal
   }
 
   handleSubmit(): void {
-    if (!this.file) {
+    if (!this.file_url) {
       this.errorMessage = 'Debe seleccionar un archivo antes de enviar.';
       return;
     }
 
-    if (!this.reason.trim()) {
+    if (!this.description.trim()) {
       this.errorMessage = 'Debe ingresar un motivo.';
       return;
     }
 
-    // Envía los datos al padre
-    this.submit.emit({ file: this.file, reason: this.reason });
+    // Actualiza el modelo y lo envía al padre
+    const updatedJustification: JustificationModel = {
+      ...this.justification,
+      file_url: this.file_url,
+      description: this.description,
+    };
 
-    this.resetModal(); // Limpia el estado después de enviar
+    this.submit.emit(updatedJustification);
+
     this.close.emit(false); // Cierra el modal
   }
 
-  resetModal(): void {
-    this.file = null; // Limpia el archivo
-    this.reason = ''; // Limpia el motivo
-    this.errorMessage = ''; // Limpia los errores
-  }
-
-
- 
-
-
+  
 }
+

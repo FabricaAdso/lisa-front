@@ -42,6 +42,7 @@
 <app-pending-modal
   *ngIf="selectedJustification?.state === 'Pendientes'"
   [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
   (close)="closeModal()"
   (submit)="handleSubmission($event)"
 ></app-pending-modal>
