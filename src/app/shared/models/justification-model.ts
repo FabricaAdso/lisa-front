@@ -7,7 +7,7 @@ export interface JustificationModell{
     description?:string;
     assistance_id?:number;
     assistance?: AssistanceModel;
-    aprobation?: ApprovedModel; // Relación con la tabla aprobations
+    aprobation?: ApprovedModel; // Relación con la tabla aprobations 
     state:string;
 }
 
