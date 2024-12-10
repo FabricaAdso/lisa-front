@@ -8,7 +8,7 @@ export interface JustificationModell{
     assistance_id?:number;
     assistance?: AssistanceModel;
     aprobation?: ApprovedModel; // Relación con la tabla aprobations
-
+    state:string;
 }
 
 ///aprobations?included=justification.assistance.session
