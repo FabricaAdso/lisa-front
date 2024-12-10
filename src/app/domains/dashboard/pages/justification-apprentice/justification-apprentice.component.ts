@@ -82,10 +82,10 @@ export class JustificationApprenticeComponent {
   }
 
   openModal(justification: JustificationModell): void {
-    this.selectedJustification = justification; // Asigna la justificación seleccionada
-    this.isModalVisible = true; // Activa la visibilidad del modal
+    console.log('Justificación seleccionada:', justification);
+    this.selectedJustification = justification;
+    this.isModalVisible = true;
   }
-
   closeModal(): void {
     this.isModalVisible = false; // Cierra el modal
   }
