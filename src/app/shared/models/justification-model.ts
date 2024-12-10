@@ -11,4 +11,3 @@ export interface JustificationModell{
     state:string;
 }
 
-///aprobations?included=justification.assistance.session

@@ -14,6 +14,7 @@
   [nzScroll]="{ x: '1200px' }">
   <thead>
     <tr>
+      <th nzWidth="25%">id</th>
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
@@ -23,20 +24,21 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data">
+      <td>{{ data.id}}</td>
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.first_name}}</td>
       <td>{{ data.assistance?.session?.course?.shift}}</td>
-      <td>{{ data.aprobation?.state || 'Pendiente Null'}}</td>
+      <td>{{ data.aprobation?.state || 'Pendiente'}}</td>
   
       <td>
-        <button nz-button nzType="link">Ver</button>
+        <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
       </td>
     </tr>
   </tbody>
 </nz-table>
 
 
-
+<!-- datos de prueba -->
 <app-pending-modal
   *ngIf="selectedJustification?.state === 'Pendientes'"
   [isVisible]="isModalVisible"
@@ -44,7 +46,7 @@
   (submit)="handleSubmission($event)"
 ></app-pending-modal>
 
-<!-- Modal de rechazadas -->
+<!-- Modal de rechazadas datos de prueba -->
 <app-rejected-modal
   *ngIf="selectedJustification?.state === 'Rechazadas'"
   [isVisible]="isModalVisible"
@@ -52,16 +54,14 @@
   (close)="closeModal()"
 ></app-rejected-modal>
 
-<!-- Modal de aprobadas -->
+<!-- Modal de aprobadas PARA consumir API -->
 <app-approved-modal
-  *ngIf="selectedJustification?.state === 'Aprobadas'"
-  [isVisible]="isModalVisible"
-  [fileName]="selectedJustification.fileName"
-  [reason]="selectedJustification.reason"
+  [isVisible]="isVisible"
+  [justification]="selectedJustification"
   (close)="closeModal()"
 ></app-approved-modal>
 
-<!-- Modal de vencidas -->
+<!-- Modal de vencidas datos de prueba -->
 <app-expired-modal
   *ngIf="selectedJustification?.state === 'Vencidas'"
   [isVisible]="isModalVisible"

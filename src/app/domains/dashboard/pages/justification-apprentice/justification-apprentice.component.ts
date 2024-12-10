@@ -10,7 +10,6 @@ import { RejectedModalComponent } from './rejected-modal/rejected-modal.componen
 import { ApprovedModalComponent } from './approved-modal/approved-modal.component';
 import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
 import { AssistanceModel } from '@shared/models/assistance.model';
-import { JustificationModel } from '@shared/models/justificationModel';
 import { forkJoin } from 'rxjs';
 import { ApprovedModel } from '@shared/models/aproved-model';
 import { AprobationService } from '@shared/services/aprobation.service';
@@ -55,11 +54,8 @@ export class JustificationApprenticeComponent {
 
     // Control de modal dinámico
     isModalVisible = false;
-    selectedJustification!: JustificationModel; // Justificación seleccionada
+    selectedJustification!: JustificationModell; // datos de prueba
     filteredData = this.justifications;
-
-
-
 
   ngOnInit(): void {
     this.loadInasistencias(); // Cargar las inasistencias al inicializar
@@ -85,12 +81,10 @@ export class JustificationApprenticeComponent {
 
   }
 
-
-openModal(data: JustificationModel): void {
-  this.selectedJustification = data;
-  this.isModalVisible = true;
-}
-
+  openModal(justification: JustificationModell): void {
+    this.selectedJustification = justification; // Asigna la justificación seleccionada
+    this.isModalVisible = true; // Activa la visibilidad del modal
+  }
 
   closeModal(): void {
     this.isModalVisible = false; // Cierra el modal
