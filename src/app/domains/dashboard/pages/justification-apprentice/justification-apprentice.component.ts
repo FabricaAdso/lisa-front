@@ -53,9 +53,10 @@ export class JustificationApprenticeComponent {
   estadoJustificacion?:EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
-
-
-  filteredData = this.justifications;
+    // Control de modal dinámico
+    isModalVisible = false;
+    selectedJustification!: JustificationModel; // Justificación seleccionada
+    filteredData = this.justifications;
 
 
 
@@ -84,12 +85,6 @@ export class JustificationApprenticeComponent {
 
   }
 
-
-  // Control de modal dinámico
-  isModalVisible = false;
-  selectedJustification!: JustificationModel; // Justificación seleccionada
-
-// falata editar para el consumo de api
 
 openModal(data: JustificationModel): void {
   this.selectedJustification = data;
