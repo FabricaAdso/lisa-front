@@ -14,7 +14,7 @@ import { forkJoin } from 'rxjs';
 import { ApprovedModel } from '@shared/models/aproved-model';
 import { AprobationService } from '@shared/services/aprobation.service';
 import { JustificationService } from '@shared/services/justification.service';
-import { JustificationModell } from '@shared/models/justification-model';
+import { JustificationModel } from '@shared/models/justification-model';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { ThisReceiver } from '@angular/compiler';
 import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
@@ -48,13 +48,15 @@ export class JustificationApprenticeComponent {
 
   private justificationService = inject(JustificationService);
 
-  justifications: JustificationModell[] = [];
+  justifications: JustificationModel[] = [];
   estadoJustificacion?:EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
     // Control de modal dinámico
     isModalVisible = false;
-    selectedJustification!: JustificationModell; // datos de prueba
+    isPendingModalVisible = false;
+    
+    selectedJustification!: JustificationModel; // datos de prueba
     filteredData = this.justifications;
 
   ngOnInit(): void {
@@ -81,21 +83,30 @@ export class JustificationApprenticeComponent {
 
   }
 
-  openModal(justification: JustificationModell): void {
-    console.log('Justificación seleccionada:', justification);
+  openModal(justification: JustificationModel): void {
+     console.log('Justificación seleccionada:', justification);
+  const state = justification.aprobation?.state ?? 'Pendiente';
+  console.log('Estado:', state);
+
+  // Normalizar el estado a 'Pendiente' si es null
+  if (!justification.aprobation) {
+    justification.aprobation = {
+      state: EstadoJustificacionEnum.PENDIENTE,
+    } as ApprovedModel;
+  } else if (!justification.aprobation.state) {
+    justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
+  }
+
     this.selectedJustification = justification;
     this.isModalVisible = true;
   }
+
+
   closeModal(): void {
     this.isModalVisible = false; // Cierra el modal
   }
 
 
-  handleSubmission(data: { file: File; reason: string }): void {
-    console.log('Archivo cargado:', data.file);
-    console.log('Motivo:', data.reason);
-    this.isModalVisible = false; // Cierra el modal después de la acción
-  }
 
 
 
@@ -123,6 +134,14 @@ onTabChange(index: number): void {
 
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;
+}
+
+handleSubmission(updatedJustification: JustificationModel): void {
+  const index = this.justifications.findIndex(j => j.id === updatedJustification.id);
+  if (index !== -1) {
+    this.justifications[index] = updatedJustification; // Actualiza el modelo en la lista
+  }
+  this.isModalVisible = false; // Cierra el modal
 }
 
 
