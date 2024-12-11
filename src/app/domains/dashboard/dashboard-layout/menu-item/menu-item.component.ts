@@ -45,6 +45,12 @@ export class MenuItemComponent {
       theme: 'outline',
     },
     {
+      title: 'Inasistencias',
+      icon: 'user',
+      route: 'absences',
+      theme: 'outline',
+    },
+    {
       title: 'Asignación',
       icon: 'solution',
       route: 'assists',

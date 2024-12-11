@@ -1,0 +1,28 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Justificación Aprobada"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+>
+  <ng-container *nzModalContent>
+    <div>
+      <!-- Archivo PDF -->
+      <p style="display: flex; align-items: center; margin-bottom: 16px;">
+        <i
+          nz-icon
+          nzType="file-pdf"
+          nzTheme="outline"
+          style="color: red; margin-right: 8px;"
+        ></i>
+        <strong>{{ justification.file_url || 'Archivo no disponible' }}</strong>
+      </p>
+
+      <!-- Información del archivo y motivo -->
+      <div>
+        <p style="margin: 0; color: #555;">
+          {{ justification.description || 'Motivo no especificado' }}
+        </p>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

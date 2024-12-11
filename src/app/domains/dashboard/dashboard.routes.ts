@@ -108,6 +108,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/programs//course-page/course-page.component').then(c => c.CoursePageComponent)
       },
+      {
+        path: 'absences',
+        title: 'Inasistencias',
+        data: { breadcrumb: 'Registro de Inasistencias'},
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/apprentices-absences/apprentices-absences.component').then(c => c.ApprenticesAbsencesComponent)
+      },
 
       {
         path: 'error_401',
