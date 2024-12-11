@@ -69,12 +69,14 @@ export class AttendanceComponent {
   isVisible = false;
 
   //abre modal del hijo session
-  openModal(){
-    if(this.sessionModal){
-      this.sessionModal.openModal()
+  openModal() {
+    console.log(this.sessionModal);
+    if (this.sessionModal) {
+      this.sessionModal.openModal();
+    } else {
+      console.error('No se encontró sessionModal.');
     }
   }
-
   // Método para llamar la función prevPage() del hijo
   callPrevPage() {
     if (this.attendanceTable) {
@@ -96,6 +98,7 @@ export class AttendanceComponent {
 
   ngOnInit(): void {
     this.getData();
+    this.openModal()
   }
 
   toggleTable() {

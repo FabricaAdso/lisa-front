@@ -1,15 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { InstructorModel } from '@shared/models/instructor.model';
 import {
-  KnowledgeNetworkByInstructorModel,
   KnowledgeNetworkModel,
 } from '@shared/models/knowledg-network.model';
 import { InstructorService } from '@shared/services/instructor.service';
@@ -17,7 +17,6 @@ import { KnowledgeNetworkService } from '@shared/services/knowledge-network.serv
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalComponent, NzModalContentDirective } from 'ng-zorro-antd/modal';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
-import { NzTableComponent } from 'ng-zorro-antd/table';
 import { filter, forkJoin, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
@@ -40,12 +39,12 @@ import { CreateSessionDTO } from '@shared/dto/create-session.dto';
     NzSelectComponent,
     NzModalComponent,
     NzTimePickerModule,
-    
+    FormsModule
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
-export class SessionComponent implements OnInit {
+export class SessionComponent implements OnInit,OnDestroy {
 
   time = new Date();
 
@@ -54,12 +53,18 @@ export class SessionComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private course_service = inject(CourseService);
   private session_service = inject(SessionService)
+  private date_pipe = inject(DatePipe)
 
   disableDates = () => true; // Desactiva todas las fechas
 
   // Campos de la base de datos
-  start_date: Date | null = null;
-  end_date: Date | null = null;
+  start_date: string | null = null;
+  end_date: string | null = null;
+
+  start_time: string | null = null;
+  end_time: string | null = null;
+
+
 
   // Propiedad vinculada al rango del picker
   date: [Date | null, Date | null] = [null, null];
@@ -70,10 +75,12 @@ export class SessionComponent implements OnInit {
   selectedId: number | null = null;
   isModalVisible = false;
   formSession!: FormGroup | null;
+  formRangePicker!: FormGroup | null;
 
   knowledge_network: KnowledgeNetworkModel[] = [];
   instructor: InstructorModel[] = [];
   courses: CourseModel[] = [];
+  session: SessionModel[]=[];
   day_of_week = [
     { id: 1, name: 'Lunes' },
     { id: 2, name: 'Martes' },
@@ -83,21 +90,14 @@ export class SessionComponent implements OnInit {
     { id: 6, name: 'Sábado' },
     { id: 7, name: 'Domingo' }
   ];
-
-  // Método para obtener los nombres de los días seleccionados
-  getSelectedDayNames(): string[] {
-    const selectedIds = this.formSession?.get('day_of_week')?.value || [];
-    return selectedIds.map((id: number) => {
-      const day = this.day_of_week.find(d => d.id === id);
-      return day ? day.name : '';
-    }).filter((name:any) => name !== ''); // Filtra valores vacios en caso de errores
+  constructor(){
+    this.createForm()
   }
 
-
   ngOnInit(): void {
-    this.createForm();
     this.getData();
     this.changeKnowledgeNetwork();
+    this.formSession!.valueChanges.subscribe((val)=>console.log('form val',val)) 
   }
 
   ngOnDestroy(): void {
@@ -124,7 +124,7 @@ export class SessionComponent implements OnInit {
         console.error('Error fetching data:', err);
       },
     });
-  }
+  };
 
   changeKnowledgeNetwork() {
     this.fieldKnowledgeNetwork.valueChanges
@@ -159,22 +159,20 @@ export class SessionComponent implements OnInit {
       });
   }
 
-  submitFormSession(){
-    const selectedIds = this.fieldDayOfWeek.value;
-    const dayNames = this.getSelectedDayNames();
-    console.log('Días seleccionados (IDs):', selectedIds);
-    console.log('Días seleccionados (nombres):', dayNames);
-  }
-
-
-
 
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl('', Validators.required),     
+      instructor_id: new FormControl('', Validators.required),  
       course_id: new FormControl('', Validators.required),
-      day_of_week: new FormControl([]),
+      start_time: new FormControl('',Validators.required),
+      end_time: new FormControl('',Validators.required),
+      start_date: new FormControl('',Validators.required),
+      end_date: new FormControl('', Validators.required),
+      days_of_week: new FormControl([],Validators.required,),
+    });
+    this.formRangePicker = this.formBuilder.group({
+      range_picker: new FormControl('', Validators.required)
     });
   }
   get fieldKnowledgeNetwork() {
@@ -184,32 +182,67 @@ export class SessionComponent implements OnInit {
     return this.formSession?.get('instructor_id') as FormControl;
   }
   get fieldRangePicker() {
-    return this.formSession?.get('range_picker') as FormControl;
+    return this.formRangePicker?.get('range_picker') as FormControl;
   }
   get fieldCourse() {
     return this.formSession?.get('course_id') as FormControl;
   }
   get fieldDayOfWeek(){
-    return this.formSession?.get('day_of_week') as FormControl;
+    return this.formSession?.get('days_of_week') as FormControl;
+  }
+  get fieldStartTime() {
+    return this.formSession?.get('start_time') as FormControl;
+  }
+  get fieldEndTime(){
+    return this.formSession?.get('end_time') as FormControl;
   }
 
-  onDateChange(dates: [Date | null, Date | null]) {
-    if (dates && dates.length === 2) {
-      this.start_date = dates[0];
-      this.end_date = dates[1];
-    } else {
-      this.start_date = null;
-      this.end_date = null;
+  onTimeChanges(dates: Date | null){
+    if(dates){
+      this.start_time = this.date_pipe.transform(dates,'HH:mm')
+      this.end_time = this.date_pipe.transform(dates,'HH:mm')
+    }if(dates==this.start_time){
+      this.formSession?.get('start_time')?.setValue(this.start_time)
+    }if(dates==this.end_time){
+      this.formSession?.get('end_time')?.setValue(this.end_time)
     }
-    console.log('Start:', this.start_date, 'End:', this.end_date);
-
-    // Aquí puedes enviar los valores a tu base de datos o procesarlos según sea necesario.
+    
   }
 
-  saveForm(){
-    const instructor: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
+  onDateChange(dates: [Date | null, Date | null]): { start_date: string | null, end_date: string | null} {
 
-    this.session_service.createSession(instructor).subscribe
+    let start_date = null;
+    let end_date = null;
+
+    if (dates && dates.length === 2) {
+      start_date = this.date_pipe.transform(dates[0], 'yyyy/MM/dd');
+      end_date = this.date_pipe.transform(dates[1], 'yyyy/MM/dd');
+    }
+    this.formSession?.get('start_date')?.setValue(start_date)
+    this.formSession?.get('end_date')?.setValue(end_date)
+
+    console.log(this.formSession?.value)
+    return {start_date, end_date }
+  }
+
+
+  saveForm(){   
+
+    const session:CreateSessionDTO = this.formSession?.value as CreateSessionDTO
+
+     // Transformar el valor del campo day_of_week
+     if (session.days_of_week && Array.isArray(session.days_of_week)) {
+       session.days_of_week = session.days_of_week.join(',');
+     }
+
+  
+
+    this.session_service.createSession(session).subscribe({
+      next: (data) =>{
+        let session = [...this.session,data]
+      }
+    })
+
   }
 
   closeModal(): void {
