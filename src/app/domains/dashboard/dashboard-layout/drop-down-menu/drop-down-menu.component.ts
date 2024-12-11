@@ -78,6 +78,12 @@ export class DropDownMenuComponent {
       theme: 'outline',
     },
     {
+      title: 'Inasistencias',
+      icon: 'user',
+      route: 'absences',
+      theme: 'outline',
+    },
+    {
       title: 'Asignación',
       icon: 'solution',
       route: 'assists',
@@ -138,6 +144,7 @@ export class DropDownMenuComponent {
       theme: 'outline',
     },
   ];
+  
   
   isMenuOpen = false;
   toggleMenu2() {

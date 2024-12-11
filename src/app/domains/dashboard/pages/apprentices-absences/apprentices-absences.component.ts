@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
-import { JustificationModell } from '@shared/models/justification-model';
 import { JustificationService } from '@shared/services/justification.service';
 import { forkJoin } from 'rxjs';
 import { ModalApprovedComponent } from "./modal-approved/modal-approved.component";
@@ -13,6 +12,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { ModalPendingComponent } from "./modal-pending/modal-pending.component";
 import { ModalRejectedComponent } from "./modal-rejected/modal-rejected.component";
 import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
+import { JustificationModel } from '@shared/models/justification-model';
+import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
 
 @Component({
   selector: 'app-apprentices-absences',
@@ -25,7 +26,6 @@ import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
     NzTabsModule,
     NzTabsModule,
     NzTagModule,
-    ByEstadoJustificacionPipe,
     ModalApprovedComponent,
     ModalPendingComponent,
     ModalRejectedComponent,
@@ -35,15 +35,15 @@ import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
   styleUrl: './apprentices-absences.component.css'
 })
 export class ApprenticesAbsencesComponent {
-  private justificationService = inject(JustificationService);
+  private justificationService = inject(JustificationsInstructorService);
 
-  justifications: JustificationModell[] = [];
+  justifications: JustificationModel[] = [];
   estadoJustificacion?:EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
     // Control de modal dinámico
     isModalVisible = false;
-    selectedJustification!: JustificationModell; // datos de prueba
+    selectedJustification!: JustificationModel; // datos de prueba
     filteredData = this.justifications;
 
   ngOnInit(): void {
@@ -52,25 +52,22 @@ export class ApprenticesAbsencesComponent {
 
   loadInasistencias(): void {
     const datasub = forkJoin([
-
-      this.justificationService.getJustifications({ 
-        included: ['assistance.session.instructor.user','aprobation','assistance.session.course'] 
-      }),
-
+      this.justificationService.getJustifications({
+        included: ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course','assistance.apprentice.user']
+      })
     ]).subscribe({
       next: ([justifications]) => {
-        console.log('hola');
-        
-        console.log(justifications);
+        console.log('Justificaciones cargadas:', justifications);
         this.justifications = justifications;
         this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
+      },
+      error: (err) => {
+        console.error('Error al cargar las justificaciones:', err);
       }
-
     });
+  } 
 
-  }
-
-  openModal(justification: JustificationModell): void {
+  openModal(justification: JustificationModel): void {
     console.log('Justificación seleccionada:', justification);
     this.selectedJustification = justification;
     this.isModalVisible = true;

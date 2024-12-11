@@ -7,12 +7,12 @@ import { QueryUrl } from '@shared/models/query-url.model';
 @Injectable({
   providedIn: 'root'
 })
-export class JustificationService {
+export class JustificationsInstructorService {
 
   constructor() { }
 
   private http = inject(HttpClient);
-  URL:string = 'justification/apprentice'; 
+  URL:string = 'justification/instructor'; 
 
 
   getJustifications(data?:QueryUrl){

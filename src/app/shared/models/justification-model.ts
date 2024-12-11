@@ -1,3 +1,4 @@
+import { EstadoJustificacionEnum } from "@shared/enums/estado-justificacion.enum";
 import { ApprovedModel } from "./aproved-model";
 import { AssistanceModel } from "./assistance.model";
 
@@ -8,6 +9,6 @@ export interface JustificationModel{
     assistance_id?:number;
     assistance?: AssistanceModel;
     aprobation?: ApprovedModel; 
-   
+    state:string
 }
 

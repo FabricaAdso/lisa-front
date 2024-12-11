@@ -1,69 +1,78 @@
 <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
-    <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
-    <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
-    <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
-    <nz-tab nzTitle="Aprobadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"></nz-tab>
-    <nz-tab nzTitle="Vencidas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"></nz-tab>
-  </nz-tabset>
-  
-  <nz-table
-    #basicTable
-    [nzBordered]="true"
-    [nzSize]="'middle'"
-    [nzData]="justifications|byEstadoJustificacion:estadoJustificacion"
-    [nzScroll]="{ x: '1200px' }">
-    <thead>
-      <tr>
-        <th nzWidth="25%">id</th>
-        <th nzWidth="25%">Sesión</th>
-        <th nzWidth="25%">Instructor</th>
-        <th nzWidth="25%">Jornada</th>
-        <th nzWidth="20%">Estado</th> 
-        <th nzWidth="25%">Justificación</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data">
-        <td>{{ data.id}}</td>
-        <td>{{ data.assistance?.session?.date}}</td>
-        <td>{{ data.assistance!.session!.instructor!.user!.first_name}}</td>
-        <td>{{ data.assistance?.session?.course?.shift}}</td>
-        <td>{{ data.aprobation?.state || 'Pendiente'}}</td>
-    
-        <td>
-          <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
-  
-  
-  <!-- datos de prueba -->
-  <app-modal-pending
-    *ngIf="selectedJustification?.state === 'Pendientes'"
-    [isVisible]="isModalVisible"
-    (close)="closeModal()"
-    (submit)="handleSubmission($event)"
-  ></app-modal-pending>
-  
-  <!-- Modal de rechazadas datos de prueba -->
-  <app-modal-rejected
-    *ngIf="selectedJustification?.state === 'Rechazadas'"
-    [isVisible]="isModalVisible"
-    [justification]="selectedJustification"
-    (close)="closeModal()"
-  ></app-modal-rejected>
-  
-  <!-- Modal de aprobadas PARA consumir API -->
-  <app-modal-approved
-    [isVisible]="isModalVisible"
-    [justification]="selectedJustification"
-    (close)="closeModal()"
-  ></app-modal-approved>
-  
-  <!-- Modal de vencidas datos de prueba -->
-  <app-modal-expired
-    *ngIf="selectedJustification?.state === 'Vencidas'"
-    [isVisible]="isModalVisible"
-    (close)="closeModal()"
-  ></app-modal-expired>
+  <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
+  <nz-tab
+    nzTitle="Pendientes"
+    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"
+  ></nz-tab>
+  <nz-tab
+    nzTitle="Rechazadas"
+    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"
+  ></nz-tab>
+  <nz-tab
+    nzTitle="Aprobadas"
+    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"
+  ></nz-tab>
+  <nz-tab
+    nzTitle="Vencidas"
+    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"
+  ></nz-tab>
+</nz-tabset>
+
+<nz-table
+  #basicTable
+  [nzBordered]="true"
+  [nzSize]="'middle'"
+  [nzData]="filteredData"
+  [nzScroll]="{ x: '1200px' }"
+>
+  <thead>
+    <tr>
+      <th nzWidth="25%">Sesión</th>
+      <th nzWidth="25%">Ficha</th>
+      <th nzWidth="25%">Aprendiz</th>
+      <th nzWidth="20%">documento</th>
+      <th nzWidth="25%">ver</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of filteredData">
+      <td>{{ data.assistance?.session?.date }}</td>
+      <td>{{ data.assistance?.session?.course?.code }}</td>
+      <td>{{ data.assistance?.apprentice?.user?.first_name }} {{ data.assistance?.apprentice?.user?.last_name }}</td>
+      <td>{{ data.assistance?.apprentice?.user?.identity_document }}</td>
+      <td>
+        <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
+      </td>
+    </tr>
+  </tbody>  
+</nz-table>
+
+<!-- datos de prueba -->
+<app-modal-pending
+  *ngIf="selectedJustification?.state === 'Pendientes'"
+  [isVisible]="isModalVisible"
+  (close)="closeModal()"
+  (submit)="handleSubmission($event)"
+></app-modal-pending>
+
+<!-- Modal de rechazadas datos de prueba -->
+<app-modal-rejected
+  *ngIf="selectedJustification?.state === 'Rechazadas'"
+  [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
+  (close)="closeModal()"
+></app-modal-rejected>
+
+<!-- Modal de aprobadas PARA consumir API -->
+<app-modal-approved
+  [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
+  (close)="closeModal()"
+></app-modal-approved>
+
+<!-- Modal de vencidas datos de prueba -->
+<app-modal-expired
+  *ngIf="selectedJustification?.state === 'Vencidas'"
+  [isVisible]="isModalVisible"
+  (close)="closeModal()"
+></app-modal-expired>

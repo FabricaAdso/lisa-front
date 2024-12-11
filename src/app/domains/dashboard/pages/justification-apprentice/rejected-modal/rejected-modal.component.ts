@@ -24,7 +24,7 @@ export class RejectedModalComponent {
   @Input() isVisible: boolean = false; // Controla la visibilidad del modal
   @Output() close = new EventEmitter<boolean>(); // Para cerrar el modal desde el padre
 
-  @Input() justification!: JustificationModell; // rrecibe el objeto de justificación
+  @Input() justification!: JustificationModel; // rrecibe el objeto de justificación
 
 
 
