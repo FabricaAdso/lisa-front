@@ -8,8 +8,8 @@
 <nz-modal
   [(nzVisible)]="isVisible"
   nzTitle="Detalles del Evento"
-  (nzOnCancel)="handleCancel()"
   (nzOnOk)="handleOk()"
+  [nzFooter]="modalFooter"
 >
   <ng-container *nzModalContent>
     <p><b>{{ selectedEvent?.title }}</b></p>
@@ -17,9 +17,13 @@
       <nz-timeline-item
         *ngFor="let session of selectedEvent?.sessions"
         [nzColor]="getTimelineColor(session)"
+
       >
-      {{ session.course?.code || "Sin Codigo"}} - {{ session.course?.program?.name }} {{ session.start_time }} a {{ session.end_time }}
+      {{ formatTimeWithoutSeconds(session.start_time) || "Sin Asignar" }} - {{ formatTimeWithoutSeconds(session.end_time) || "Sin Asignar" }} - {{ session.course?.code }} - {{ session.course?.program?.name }} - {{ session.course?.environment?.name}} 
       </nz-timeline-item>
     </nz-timeline>
   </ng-container>
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)="handleOk()">Aceptar</button>
+  </ng-template>
 </nz-modal>

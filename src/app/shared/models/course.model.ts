@@ -11,7 +11,7 @@ export interface CourseModel {
     stage?: 'PRACTICA' | 'LECTIVA';
 
     environment_id?: number;
-    environment?:EnvironmentModel;
+    environment:EnvironmentModel;
     program_id?:number;
     program?:ProgramModel;
     

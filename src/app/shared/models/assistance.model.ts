@@ -1,6 +1,6 @@
 import { SessionModel } from "./session.model";
 import { ApprenticeModel } from "./apprentice.model";
-import { JustificationModel } from "./justificationModel";
+import { JustificationModell } from "./justification-model";
 
 export interface AssistanceModel {
 
@@ -10,5 +10,5 @@ export interface AssistanceModel {
     session?:SessionModel;
     apprentice?:ApprenticeModel;
     apprentice_id?:number
-    justified: JustificationModel[];
+    justified: JustificationModell[];
 }

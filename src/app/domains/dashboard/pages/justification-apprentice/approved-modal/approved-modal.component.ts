@@ -18,7 +18,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 export class ApprovedModalComponent {
 
   @Input() isVisible: boolean = false; 
-  @Input() justification!: JustificationModell; // Recibe el objeto JustificationModell completo
+  @Input() justification!: JustificationModell; // Recibe el objeto JustificationModelll completo
   @Output() close = new EventEmitter<boolean>(); // Notifica al padre que cierre el modal
 
   handleCancel(): void {

@@ -17,6 +17,6 @@ export class JustificationService {
   getJustifications(data?: QueryUrl){
     let url:string = getQueryUrl(this.url,data);
     console.log(url)
-    return this.http.get<JustificationModell[]>(this.url);
+    return this.http.get<JustificationModell[]>(url);
   }
 }

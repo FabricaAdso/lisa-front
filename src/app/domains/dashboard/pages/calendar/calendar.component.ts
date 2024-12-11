@@ -38,7 +38,7 @@ export class CalendarComponent {
   calendarOptions: any = {
     plugins: [interactionPlugin, dayGridPlugin, listPlugin],
     initialView: 'dayGridMonth',
-    locale: esLocale,
+    // locale: enLocale,
     events: [], // Inicialmente vacío
     eventClick: this.handleEventClick.bind(this),
   };
@@ -50,7 +50,7 @@ export class CalendarComponent {
   }
 
   loadSessions(): void {
-    this.sessionService.getAll({included:['course.program','instructor','course','assistances.apprentice']})
+    this.sessionService.getAll({included:['course.program','instructor','course','assistances.apprentice','course.environment']})
     .subscribe({
       next: (sessions) => {
         this.initialEvents = sessions;
@@ -129,6 +129,12 @@ export class CalendarComponent {
       display: 'block',
     }));
   }
+
+  formatTimeWithoutSeconds(time: string): string {
+    if (!time) return "Sin Asignar"; // Maneja valores nulos o indefinidos
+    return time.split(':').slice(0, 2).join(':'); // Obtiene solo las horas y minutos
+  }
+  
 
   // Oculta el modal
   handleCancel() {
