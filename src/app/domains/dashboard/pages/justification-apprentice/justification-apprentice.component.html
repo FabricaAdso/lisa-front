@@ -35,8 +35,7 @@
 
 <!-- Modal para Pendientes -->
 <app-pending-modal
-*ngIf="selectedJustification?.aprobation?.state === null || selectedJustification?.aprobation?.state === estadoJustificacionEnum.PENDIENTE"
-
+*ngIf="selectedJustification?.aprobation?.state == null || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE"
   [isVisible]="isModalVisible"
   [justification]="selectedJustification"
   (close)="closeModal()"

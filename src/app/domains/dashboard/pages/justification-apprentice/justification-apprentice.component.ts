@@ -85,19 +85,19 @@ export class JustificationApprenticeComponent {
 
   openModal(justification: JustificationModel): void {
      console.log('Justificación seleccionada:', justification);
-  const state = justification.aprobation?.state ?? 'Pendiente';
-  console.log('Estado:', state);
+    const state = justification.aprobation?.state ?? 'Pendiente';
+    console.log('Estado:', state);
 
   // Normalizar el estado a 'Pendiente' si es null
   if (!justification.aprobation) {
-    justification.aprobation = {
-      state: EstadoJustificacionEnum.PENDIENTE,
-    } as ApprovedModel;
+    justification.aprobation = {state: EstadoJustificacionEnum.PENDIENTE,} as ApprovedModel;
+    
   } else if (!justification.aprobation.state) {
     justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
   }
 
     this.selectedJustification = justification;
+    console.log(this.selectedJustification)
     this.isModalVisible = true;
   }
 
@@ -137,11 +137,16 @@ setEstadoJustificacion(estado?:EstadoJustificacionEnum){
 }
 
 handleSubmission(updatedJustification: JustificationModel): void {
-  const index = this.justifications.findIndex(j => j.id === updatedJustification.id);
-  if (index !== -1) {
-    this.justifications[index] = updatedJustification; // Actualiza el modelo en la lista
-  }
-  this.isModalVisible = false; // Cierra el modal
+  console.log(updatedJustification)
+  this.justificationService.setJustificacion(updatedJustification).subscribe({
+    next:(item:any)=>{
+      console.log(item)
+    },
+    error:error =>{
+      console.log(error)
+    }
+  })
+  this.isModalVisible = false; 
 }
 
 

@@ -12,7 +12,8 @@ export class JustificationService {
   constructor() { }
 
   private http = inject(HttpClient);
-  URL:string = 'justifications'; 
+  URL:string = 'justification/apprentice'; 
+  enviarJustificacion:string = 'justifications'
 
 
   getJustifications(data?:QueryUrl){
@@ -20,5 +21,14 @@ export class JustificationService {
     return  this.http.get<JustificationModel[]>(url)
 
   }
-
+  setJustificacion(item: JustificationModel) {
+    console.log('Contenido de item:', item);
+    var formData = new FormData();
+    formData.append('_method',"PUT");
+    formData.append('file', item.file!);
+    formData.append('description', item.description! );
+    formData.append('assistance_id', item.assistance_id!?.toString());
+    
+    return this.http.post<JustificationModel[]>(this.enviarJustificacion, formData);
+  }
 }
