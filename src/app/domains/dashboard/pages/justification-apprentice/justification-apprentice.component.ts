@@ -54,6 +54,8 @@ export class JustificationApprenticeComponent {
 
     // Control de modal dinámico
     isModalVisible = false;
+    isPendingModalVisible = false;
+    
     selectedJustification!: JustificationModel; // datos de prueba
     filteredData = this.justifications;
 
@@ -82,13 +84,28 @@ export class JustificationApprenticeComponent {
   }
 
   openModal(justification: JustificationModel): void {
-    console.log('Justificación seleccionada:', justification);
+     console.log('Justificación seleccionada:', justification);
+  const state = justification.aprobation?.state ?? 'Pendiente';
+  console.log('Estado:', state);
+
+  // Normalizar el estado a 'Pendiente' si es null
+  if (!justification.aprobation) {
+    justification.aprobation = {
+      state: EstadoJustificacionEnum.PENDIENTE,
+    } as ApprovedModel;
+  } else if (!justification.aprobation.state) {
+    justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
+  }
+
     this.selectedJustification = justification;
     this.isModalVisible = true;
   }
+
+
   closeModal(): void {
     this.isModalVisible = false; // Cierra el modal
   }
+
 
 
 

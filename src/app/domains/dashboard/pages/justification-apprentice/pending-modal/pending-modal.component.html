@@ -18,7 +18,7 @@
         />
         <span style="margin-left: 8px;">Subir archivo PDF</span>
       </label>
-      <p *ngIf="file_url">{{ file_url }}</p>
+      <p *ngIf="justification?.file_url">Archivo: <strong>{{ justification.file_url }}</strong></p>
 
       <!-- Mensaje de error -->
       <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>

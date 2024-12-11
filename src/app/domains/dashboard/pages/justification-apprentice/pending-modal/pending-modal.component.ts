@@ -61,23 +61,22 @@ export class PendingModalComponent {
       this.errorMessage = 'Debe seleccionar un archivo antes de enviar.';
       return;
     }
-
+  
     if (!this.description.trim()) {
       this.errorMessage = 'Debe ingresar un motivo.';
       return;
     }
-
-    // Actualiza el modelo y lo envía al padre
+  
     const updatedJustification: JustificationModel = {
       ...this.justification,
       file_url: this.file_url,
       description: this.description,
     };
-
+  
     this.submit.emit(updatedJustification);
-
-    this.close.emit(false); // Cierra el modal
+    this.handleCancel(); // Cierra el modal
   }
+  
 
   
 }
