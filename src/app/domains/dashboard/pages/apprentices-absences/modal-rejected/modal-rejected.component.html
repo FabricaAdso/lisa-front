@@ -2,7 +2,7 @@
   [(nzVisible)]="isVisible"
   nzTitle="Justificación Rechazada"
   (nzOnCancel)="handleCancel()"
-  [nzFooter]="null"
+  [nzFooter]="modalFooter"
 >
 <ng-container *nzModalContent>
   <div>
@@ -23,4 +23,8 @@
     </div>
   </div>
 </ng-container>
+<ng-template #modalFooter>
+  <button nz-button nzType="primary" (click)="null">Aceptar</button>
+  <button nz-button nzType="default" (click)="null">Cancelar</button>
+</ng-template>
 </nz-modal>

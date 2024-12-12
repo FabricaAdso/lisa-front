@@ -9,7 +9,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
-import { ProgramModel } from '@shared/models/program.model';
 
 import { SessionModel } from '@shared/models/session.model';
 import { SessionService } from '@shared/services/program/session.service';
@@ -38,7 +37,7 @@ export class CalendarComponent {
   calendarOptions: any = {
     plugins: [interactionPlugin, dayGridPlugin, listPlugin],
     initialView: 'dayGridMonth',
-    // locale: enLocale,
+    locale: esLocale,
     events: [], // Inicialmente vacío
     eventClick: this.handleEventClick.bind(this),
   };

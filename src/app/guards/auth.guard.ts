@@ -1,15 +1,15 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '@shared/services/auth.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
   const router = inject(Router);
-  if (authService.isAuth()) {
-    return true;
+  const token = localStorage.getItem('token');
+  
+  if (token) {
+    console.log('Token encontrado:', token);
+    return true; // El usuario está autenticado
   } else {
-    // router.navigateByUrl('/error_401');
-    const urlTreeReturn = router.createUrlTree(['/dashboard','error_401'])
-    return urlTreeReturn;
+    console.log('Token no encontrado, redirigiendo al login');
+    return router.createUrlTree(['auth/login']);
   }
 };
