@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { JustificationService } from '@shared/services/justification.service';
 import { forkJoin } from 'rxjs';
 import { ModalApprovedComponent } from "./modal-approved/modal-approved.component";
@@ -14,6 +13,7 @@ import { ModalRejectedComponent } from "./modal-rejected/modal-rejected.componen
 import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
 import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
+import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 
 @Component({
   selector: 'app-apprentices-absences',
@@ -37,6 +37,7 @@ import { JustificationsInstructorService } from '@shared/services/justifications
 export class ApprenticesAbsencesComponent {
   private justificationService = inject(JustificationsInstructorService);
 
+  isInasistencias: boolean = true;
   justifications: JustificationModel[] = [];
   estadoJustificacion?:EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
@@ -47,7 +48,7 @@ export class ApprenticesAbsencesComponent {
     filteredData = this.justifications;
 
   ngOnInit(): void {
-    this.loadInasistencias(); // Cargar las inasistencias al inicializar
+    this.loadInasistencias(); 
   }
 
   loadInasistencias(): void {
@@ -59,7 +60,7 @@ export class ApprenticesAbsencesComponent {
       next: ([justifications]) => {
         console.log('Justificaciones cargadas:', justifications);
         this.justifications = justifications;
-        this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
+        this.filteredData = [...this.justifications]; 
       },
       error: (err) => {
         console.error('Error al cargar las justificaciones:', err);
@@ -73,39 +74,51 @@ export class ApprenticesAbsencesComponent {
     this.isModalVisible = true;
   }
   closeModal(): void {
-    this.isModalVisible = false; // Cierra el modal
+    this.isModalVisible = false; 
   }
 
 
   handleSubmission(data: { file: File; reason: string }): void {
     console.log('Archivo cargado:', data.file);
     console.log('Motivo:', data.reason);
-    this.isModalVisible = false; // Cierra el modal después de la acción
+    this.isModalVisible = false; 
   }
 
-
-
-  // Cambiar entre pestañas y filtrar datos
-
-onTabChange(index: number): void {
-  const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-  const selectedTab = tabs[index];
-
-  if (selectedTab === 'Inasistencias') {
-    // Muestra todas las justificaciones
-    this.filteredData = this.justifications;
-  } else if (selectedTab === 'Pendientes') {
-    // Filtra aquellas sin aprobación (state null o undefined)
-    this.filteredData = this.justifications.filter(
-      (data) => !data.aprobation?.state
-    );
-  } else {
-    // Filtra por estado específico
-    this.filteredData = this.justifications.filter(
-      (data) => data.aprobation?.state === selectedTab
-    );
+  onTabChange(event: number): void {
+    switch (event) {
+      case 0:
+        this.isInasistencias = true;  
+        this.filteredData = this.justifications;
+        break;
+      case 1: 
+        this.isInasistencias = false; 
+        this.filteredData = this.justifications.filter(
+          (data) => !data.aprobation?.state
+        );
+        break;
+      case 2: 
+        this.isInasistencias = false; 
+        this.filteredData = this.justifications.filter(
+          (data) => data.aprobation?.state === EstadoJustificacionEnum.RECHAZADO
+        );
+        break;
+      case 3: // Aprobadas
+        this.isInasistencias = false; 
+        this.filteredData = this.justifications.filter(
+          (data) => data.aprobation?.state === EstadoJustificacionEnum.APROBADO
+        );
+        break;
+      case 4: // Vencidas
+        this.isInasistencias = false; 
+        this.filteredData = this.justifications.filter(
+          (data) => data.aprobation?.state === EstadoJustificacionEnum.VENCIDA
+        );
+        break;
+      default:
+        this.isInasistencias = false; 
+        this.filteredData = this.justifications;
+    }
   }
-}
 
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;

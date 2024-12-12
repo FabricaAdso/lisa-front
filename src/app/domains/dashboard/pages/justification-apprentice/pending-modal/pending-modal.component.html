@@ -14,10 +14,10 @@
           type="file"
           accept=".pdf"
           (change)="handleFileInput($event)"/>
-          <pdf-viewer 
+          <!-- <pdf-viewer 
             [src]="justification.file_url" 
             style="width: 100%; height: 400px;">
-        </pdf-viewer>
+        </pdf-viewer> -->
       </div>
       <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
       <div>
