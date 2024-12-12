@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, HostListener, inject, ViewChild, Input } from '@angular/core';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
@@ -16,6 +16,12 @@ import { UpdateAssistanceDTO } from '@shared/dto/update-assistance.dto';
 import { UserModel } from '@shared/models/user.model';
 import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
+import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { SessionComponent } from "./session/session.component";
+import { CourseService } from '@shared/services/program/course.service';
+import { CourseModel } from '@shared/models/course.model';
 
 @Component({
   selector: 'app-attendance',
@@ -30,17 +36,26 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
     NgIf,
     NzModalModule,
     CommonModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    AttendanceTableComponent,
+    NzTabsModule,
+    NzPageHeaderModule,
+    NzStatisticModule,
+    SessionComponent
+],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
 })
 export class AttendanceComponent {
-  private assistance_service = inject(AssistanceService);
-  private apprentice_service = inject(ApprenticeService);
+
+  @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
+  @ViewChild('sessionModal') sessionModal:any = SessionComponent;
+
+  private courses_service = inject(CourseService);
   
   @Input() course_code?:number;
 
+  course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];
   listOfData: any[] = [];
   listDAtos: any[][] = []; // Almacena los grupos de datos para multiples tablas
@@ -53,78 +68,75 @@ export class AttendanceComponent {
 
   isVisible = false;
 
+  //abre modal del hijo session
+  openModal() {
+    console.log(this.sessionModal);
+    if (this.sessionModal) {
+      this.sessionModal.openModal();
+    } else {
+      console.error('No se encontró sessionModal.');
+    }
+  }
+  // Método para llamar la función prevPage() del hijo
+  callPrevPage() {
+    if (this.attendanceTable) {
+      this.attendanceTable.prevPage();
+    }
+  }
+
+  trackByKey(index: number, item: any): any {
+    return item.key || index; // Usa 'key' si está disponible, de lo contrario el índice
+  }
+  
+
+  // Método para llamar la función nextPage() del hijo
+  callNextPage() {
+    if (this.attendanceTable) {
+      this.attendanceTable.nextPage();
+    }
+  }
+
   ngOnInit(): void {
     this.getData();
+    this.openModal()
   }
 
   toggleTable() {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
 
+ 
   getData() {
     const data_sub = forkJoin([
-      this.assistance_service.getAssitanceAll({ included: ['apprentice.user'] }),
+      this.courses_service.getCourses({ included: ['apprentices.user'] }),
     ]).subscribe({
-      next: ([assistance]) => {
-        this.assistance = [...assistance];
-        const dataAssistance = this.assistance.map((item) => ({
-          key: item.id.toString(),
-          assistance: item.assistance,
-          nombre: item.apprentice?.user?.first_name,
-          apellido: item.apprentice?.user?.last_name,
-          documento: item.apprentice?.user?.identity_document,
-          correo: item.apprentice?.user?.email,
-        }));
+      next: ([course]) => {
+        this.course = [...course];
+      // Mapeamos cada course que es un array
+      const dataCourse = this.course.flatMap((item) => {
+        // Verificamos si apprentices es un array
+        if (Array.isArray(item.apprentices)) {
+          return item.apprentices?.map((apprentice) => ({
+            key: item.id.toString(),
+            nombre: apprentice.user?.first_name || 'No disponible',
+            apellido: apprentice.user?.last_name || 'No disponible',
+            documento: apprentice.user?.identity_document || 'No disponible',
+            correo: apprentice.user?.email || 'No disponible'
+          })) || [];
+        }else{
+          return [];  
+        } 
+      });
 
-        this.listOfData = [...dataAssistance]
-        
-        
-        this.evaluarCantidadTablas(); // Agrupa los datos para multiples tablas
-      },
+      // Asignamos los datos a la lista
+      this.listOfData = [...dataCourse];
+    },
+    complete(){
+      data_sub.unsubscribe()
+    }
     });
   }
 
-  toggleAssistance(assistanceId: number, event: Event) {
-    const isChecked = (event!.target as HTMLInputElement).checked;
-
-    const data: UpdateAssistanceDTO = {
-      id: assistanceId,
-      assistance: isChecked,
-    };
-
-    this.assistance_service.saveAssistances(data).subscribe({
-      next: (updated) => {
-        console.log('Asistencia actualizada:', updated);
-      },
-      error: (err) => {
-        console.error('Error al actualizar asistencia:', err);
-      },
-    });
-  }
-
-  evaluarCantidadTablas() {
-    this.listDAtos = [];
-    for (let i = 0; i < this.listOfData.length; i += this.rowsPerTable) {
-      this.listDAtos.push(this.listOfData.slice(i, i + this.rowsPerTable));
-    }
-  }
-
-  get paginatedTables(): any[][] {
-    const start = (this.currentPage - 1) * this.tablesPerPage;
-    return this.listDAtos.slice(start, start + this.tablesPerPage);
-  }
-
-  nextPage() {
-    if (this.currentPage < Math.ceil(this.listDAtos.length / this.tablesPerPage)) {
-      this.currentPage++;
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
 
   showModal(): void {
     this.isVisible = true;
