@@ -20,3 +20,8 @@ label{
 .content button{
     margin-left: 10px;
 }
+ngx-extended-pdf-viewer {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }

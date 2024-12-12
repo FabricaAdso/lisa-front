@@ -30,6 +30,6 @@ export class JustificationService {
     formData.append('description', item.description! );
     formData.append('assistance_id', item.assistance_id!?.toString());
     
-    return this.http.post<JustificationModel[]>(this.enviarJustificacion, formData);
+    return this.http.post<JustificationModel>(this.enviarJustificacion, formData);
   }
 }

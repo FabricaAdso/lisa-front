@@ -114,8 +114,11 @@ setEstadoJustificacion(estado?:EstadoJustificacionEnum){
 handleSubmission(updatedJustification: JustificationModel): void {
   console.log(updatedJustification)
   this.justificationService.setJustificacion(updatedJustification).subscribe({
-    next:(item:any)=>{
-      console.log(item)
+    next:(item:JustificationModel)=>{
+      const index = this.justifications.findIndex(justificaction =>justificaction.id == item.id )
+      if(index != -1){
+        this.justifications[index] = item;
+      }
     },
     error:error =>{
       console.log(error)
