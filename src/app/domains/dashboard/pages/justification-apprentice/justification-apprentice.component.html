@@ -1,4 +1,4 @@
-<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+<nz-tabset>
   <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
   <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
   <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
@@ -25,7 +25,6 @@
       <td>{{ data.assistance!.session!.instructor!.user!.first_name}}</td>
       <td>{{ data.assistance?.session?.course?.shift}}</td>
       <td>{{ data.aprobation?.state || 'Pendiente'}}</td>
-
       <td>
         <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
       </td>

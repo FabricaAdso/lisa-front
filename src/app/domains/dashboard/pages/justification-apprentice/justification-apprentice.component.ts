@@ -107,31 +107,6 @@ export class JustificationApprenticeComponent {
   }
 
 
-
-
-
-  // Cambiar entre pestañas y filtrar datos
-
-onTabChange(index: number): void {
-  const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-  const selectedTab = tabs[index];
-
-  if (selectedTab === 'Inasistencias') {
-    // Muestra todas las justificaciones
-    this.filteredData = this.justifications;
-  } else if (selectedTab === 'Pendientes') {
-    // Filtra aquellas sin aprobación (state null o undefined)
-    this.filteredData = this.justifications.filter(
-      (data) => !data.aprobation?.state
-    );
-  } else {
-    // Filtra por estado específico
-    this.filteredData = this.justifications.filter(
-      (data) => data.aprobation?.state === selectedTab
-    );
-  }
-}
-
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;
 }
