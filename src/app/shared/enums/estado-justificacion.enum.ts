@@ -2,7 +2,7 @@
 
 export enum EstadoJustificacionEnum{
 
-    PENDIENTE = 'Pendiete',
+    PENDIENTE = 'Pendiente',
     RECHAZADO = 'Rechazada',
     APROBADO = 'Aprobada',  
     VENCIDA = 'Vencida'

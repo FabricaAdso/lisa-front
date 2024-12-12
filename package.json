@@ -32,6 +32,8 @@
     "date-fns-tz": "^3.2.0",
     "laravel-echo": "^1.17.1",
     "ng-zorro-antd": "^18.1.1",
+    "ng2-pdf-viewer": "^10.4.0",
+    "ngx-extended-pdf-viewer": "^22.1.0-alpha.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.11",
     "pusher-js": "^8.4.0-rc2",

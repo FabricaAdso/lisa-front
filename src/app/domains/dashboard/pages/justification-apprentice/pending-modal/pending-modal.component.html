@@ -5,33 +5,32 @@
   [nzFooter]="null"
 >
   <ng-container *nzModalContent>
-    <div>
-      <!-- Subir Archivo -->
-      <label for="file-upload" style="display: flex; align-items: center; cursor: pointer;">
+    <div class="content" >
+      <div>
+        <label for="file-upload" style="display: flex; align-items: center; cursor: pointer;">Archivo</label>
         <i nz-icon nzType="upload"></i>
         <input
           id="file-upload"
           type="file"
           accept=".pdf"
-          (change)="handleFileInput($event)"
-          style="display: none;"
-        />
-        <span style="margin-left: 8px;">Subir archivo PDF</span>
-      </label>
-      <p *ngIf="justification?.file_url">Archivo: <strong>{{ justification.file_url }}</strong></p>
-
-      <!-- Mensaje de error -->
+          (change)="handleFileInput($event)"/>
+          <pdf-viewer 
+            [src]="justification.file_url" 
+            style="width: 100%; height: 400px;">
+        </pdf-viewer>
+      </div>
       <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+      <div>
+        <label for="justificacion">Justificacion</label>
+        <textarea
+          id="justificacion"
+          nz-input
+          rows="4"
+          placeholder="Escriba su motivo aquí..."
+          [(ngModel)]="justification.description">
+      </textarea>
+      </div>
 
-      <!-- Motivo -->
-      <textarea
-        nz-input
-        rows="4"
-        placeholder="Escriba su motivo aquí..."
-        [(ngModel)]="justification.description"
-      ></textarea>
-
-      <!-- Botones -->
       <div style="margin-top: 16px; text-align: right;">
         <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
         <button

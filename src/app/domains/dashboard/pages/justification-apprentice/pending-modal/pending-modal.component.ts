@@ -5,11 +5,12 @@ import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationService } from '@shared/services/justification.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @Component({
   selector: 'app-pending-modal',
   standalone: true,
-  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule],
+  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule,PdfViewerModule],
   templateUrl: './pending-modal.component.html',
   styleUrl: './pending-modal.component.css'
 })
@@ -19,36 +20,34 @@ export class PendingModalComponent {
   @Output() close = new EventEmitter<boolean>();
   @Output() submit = new EventEmitter<JustificationModel>(); // Envía los datos actualizados al padre
 
+
+  file!: File; // Archivo seleccionado
   file_url?: string; // Archivo cargado (del modelo)
   description: string = ''; // Motivo ingresado
   errorMessage: string = ''; // Mensajes de error
   isLoading: boolean = false; // Estado de carga
 
   ngOnInit(): void {
-    // Mapear los datos iniciales del modelo si está disponible
-    if (this.justification) {
-      this.file_url = this.justification.file_url || '';
-      this.description = this.justification.description || '';
-    }
+    console.log(this.justification)
   }
 
   handleFileInput(event: any): void {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
-
+  
     if (selectedFile.type !== 'application/pdf') {
       this.errorMessage = 'El archivo debe ser en formato PDF.';
-      this.file_url = '';
+      this.file = undefined!;
       return;
     }
-
+  
     if (selectedFile.size > 5 * 1024 * 1024) {
       this.errorMessage = 'El archivo no debe superar los 5MB.';
-      this.file_url = '';
+      this.file = undefined!;
       return;
     }
-
-    this.file_url = selectedFile.name; // Asigna el nombre del archivo
+  
+    this.file = selectedFile; // Almacena el archivo seleccionado
     this.errorMessage = '';
   }
 
@@ -57,20 +56,19 @@ export class PendingModalComponent {
   }
 
   handleSubmit(): void {
-    if (!this.file_url) {
+    if (!this.file) {
       this.errorMessage = 'Debe seleccionar un archivo antes de enviar.';
       return;
     }
   
-    if (!this.description.trim()) {
+    if (!this.justification.description!.trim()) {
       this.errorMessage = 'Debe ingresar un motivo.';
       return;
     }
   
     const updatedJustification: JustificationModel = {
       ...this.justification,
-      file_url: this.file_url,
-      description: this.description,
+      file: this.file,
     };
   
     this.submit.emit(updatedJustification);

@@ -85,19 +85,19 @@ export class JustificationApprenticeComponent {
 
   openModal(justification: JustificationModel): void {
      console.log('Justificación seleccionada:', justification);
-  const state = justification.aprobation?.state ?? 'Pendiente';
-  console.log('Estado:', state);
+    const state = justification.aprobation?.state ?? 'Pendiente';
+    console.log('Estado:', state);
 
   // Normalizar el estado a 'Pendiente' si es null
   if (!justification.aprobation) {
-    justification.aprobation = {
-      state: EstadoJustificacionEnum.PENDIENTE,
-    } as ApprovedModel;
+    justification.aprobation = {state: EstadoJustificacionEnum.PENDIENTE,} as ApprovedModel;
+    
   } else if (!justification.aprobation.state) {
     justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
   }
 
     this.selectedJustification = justification;
+    console.log(this.selectedJustification)
     this.isModalVisible = true;
   }
 
@@ -107,41 +107,24 @@ export class JustificationApprenticeComponent {
   }
 
 
-
-
-
-  // Cambiar entre pestañas y filtrar datos
-
-onTabChange(index: number): void {
-  const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-  const selectedTab = tabs[index];
-
-  if (selectedTab === 'Inasistencias') {
-    // Muestra todas las justificaciones
-    this.filteredData = this.justifications;
-  } else if (selectedTab === 'Pendientes') {
-    // Filtra aquellas sin aprobación (state null o undefined)
-    this.filteredData = this.justifications.filter(
-      (data) => !data.aprobation?.state
-    );
-  } else {
-    // Filtra por estado específico
-    this.filteredData = this.justifications.filter(
-      (data) => data.aprobation?.state === selectedTab
-    );
-  }
-}
-
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;
 }
 
 handleSubmission(updatedJustification: JustificationModel): void {
-  const index = this.justifications.findIndex(j => j.id === updatedJustification.id);
-  if (index !== -1) {
-    this.justifications[index] = updatedJustification; // Actualiza el modelo en la lista
-  }
-  this.isModalVisible = false; // Cierra el modal
+  console.log(updatedJustification)
+  this.justificationService.setJustificacion(updatedJustification).subscribe({
+    next:(item:JustificationModel)=>{
+      const index = this.justifications.findIndex(justificaction =>justificaction.id == item.id )
+      if(index != -1){
+        this.justifications[index] = item;
+      }
+    },
+    error:error =>{
+      console.log(error)
+    }
+  })
+  this.isModalVisible = false; 
 }
 
 
