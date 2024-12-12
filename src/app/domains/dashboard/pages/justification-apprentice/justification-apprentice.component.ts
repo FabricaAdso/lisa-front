@@ -9,9 +9,15 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { RejectedModalComponent } from './rejected-modal/rejected-modal.component';
 import { ApprovedModalComponent } from './approved-modal/approved-modal.component';
 import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
-import { AssistanceService } from '@shared/services/assistance.service';
 import { AssistanceModel } from '@shared/models/assistance.model';
-import { JustificationModel } from '@shared/models/justificationModel';
+import { forkJoin } from 'rxjs';
+import { ApprovedModel } from '@shared/models/aproved-model';
+import { AprobationService } from '@shared/services/aprobation.service';
+import { JustificationService } from '@shared/services/justification.service';
+import { JustificationModel } from '@shared/models/justification-model';
+import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
+import { ThisReceiver } from '@angular/compiler';
+import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
 
 
 @Component({
@@ -25,11 +31,12 @@ import { JustificationModel } from '@shared/models/justificationModel';
     NzTableModule,
     NzTabsModule,
     NzTabsModule,
-    NzTagModule, 
+    NzTagModule,
     PendingModalComponent,
     RejectedModalComponent,
     ApprovedModalComponent,
-    ExpiredModalComponent
+    ExpiredModalComponent,
+    ByEstadoJustificacionPipe
 
   ],
   templateUrl: './justification-apprentice.component.html',
@@ -39,123 +46,103 @@ import { JustificationModel } from '@shared/models/justificationModel';
 export class JustificationApprenticeComponent {
 
 
-  private assistance = inject(AssistanceService); 
- 
-  assistances:AssistanceModel[] = [];
+  private justificationService = inject(JustificationService);
 
+  justifications: JustificationModel[] = [];
+  estadoJustificacion?:EstadoJustificacionEnum;
+  estadoJustificacionEnum = EstadoJustificacionEnum;
 
-  allData = [
+    // Control de modal dinámico
+    isModalVisible = false;
+    isPendingModalVisible = false;
+    
+    selectedJustification!: JustificationModel; // datos de prueba
+    filteredData = this.justifications;
 
-    {
-      session: '2024-11-17',
-      instructor: 'María López',
-      shift: '7:00 - 13:00',
-      state: 'Pendientes',
-    }
-    , {
-      session: '2024-11-17',
-      instructor: 'María López',
-      shift: '7:00 - 13:00',
-      state: 'Pendientes',
-    },
-    {
-      session: '2024-11-16',
-      instructor: 'Carlos Gómez',
-      shift: '8:00 - 12:00',
-      state: 'Rechazadas',
-    },
-    {
-      session: '2024-11-15',
-      instructor: 'Ana García',
-      shift: '9:00 - 14:00',
-      state: 'Aprobadas',
-    },
-    {
-      session: '2024-11-14',
-      instructor: 'Luis Torres',
-      shift: '10:00 - 16:00',
-      state: 'Vencidas',
-    },
-    {
-      session: '2024-11-13',
-      instructor: 'Juan Pérez',
-      shift: '7:00 - 13:00',
-      state: 'Pendientes',
-    },
-    {
-      session: '2024-11-12',
-      instructor: 'María López',
-      shift: '8:00 - 12:00',
-      state: 'Rechazadas',
-    },
-    {
-      session: '2024-11-11',
-      instructor: 'Carlos Gómez',
-      shift: '9:00 - 14:00',
-      state: 'Aprobadas',
-    },
-    {
-      session: '2024-11-10',
-      instructor: 'Ana García',
-      shift: '10:00 - 16:00',
-      state: 'Vencidas',
-    },
-  
-  ];
+  ngOnInit(): void {
+    this.loadInasistencias(); // Cargar las inasistencias al inicializar
+  }
 
+  loadInasistencias(): void {
+    const datasub = forkJoin([
 
+      this.justificationService.getJustifications({ 
+        included: ['assistance.session.instructor.user','aprobation','assistance.session.course'] 
+      }),
 
-  // Control de modal dinámico
-  isModalVisible = false;
-  selectedJustification!: JustificationModel; // Justificación seleccionada
+    ]).subscribe({
+      next: ([justifications]) => {
+        console.log('hola');
+        
+        console.log(justifications);
+        this.justifications = justifications;
+        this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
+      }
 
-  filteredData = this.allData;
-
-
-  openModal(data:any): void {
-
-    // this.selectedJustification = justification; 
-    this.selectedJustification = {
-      id: Math.floor(Math.random() * 100), // Generar un ID aleatorio como ejemplo
-      fileName: 'archivo-demo.pdf', // Archivo de muestra
-      reason: 'Motivo genérico.', // Motivo de muestra
-      state: data.state, // Usar el estado del objeto original
-      date: data.session, // Usar la sesión como fecha
-      session: data.session,
-      instructor: data.instructor,
-      shift: data.shift,
-    };
-
-    this.isModalVisible = true;
-
+    });
 
   }
-  // closeModal(data: boolean): void {
-  //   this.isModalVisible = data;
 
-  // }
+  openModal(justification: JustificationModel): void {
+     console.log('Justificación seleccionada:', justification);
+  const state = justification.aprobation?.state ?? 'Pendiente';
+  console.log('Estado:', state);
+
+  // Normalizar el estado a 'Pendiente' si es null
+  if (!justification.aprobation) {
+    justification.aprobation = {
+      state: EstadoJustificacionEnum.PENDIENTE,
+    } as ApprovedModel;
+  } else if (!justification.aprobation.state) {
+    justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
+  }
+
+    this.selectedJustification = justification;
+    this.isModalVisible = true;
+  }
+
+
   closeModal(): void {
     this.isModalVisible = false; // Cierra el modal
   }
 
 
-  handleSubmission(data: { file: File; reason: string }): void {
-    console.log('Archivo cargado:', data.file);
-    console.log('Motivo:', data.reason);
-    this.isModalVisible = false; // Cierra el modal después de la acción
+
+
+
+  // Cambiar entre pestañas y filtrar datos
+
+onTabChange(index: number): void {
+  const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
+  const selectedTab = tabs[index];
+
+  if (selectedTab === 'Inasistencias') {
+    // Muestra todas las justificaciones
+    this.filteredData = this.justifications;
+  } else if (selectedTab === 'Pendientes') {
+    // Filtra aquellas sin aprobación (state null o undefined)
+    this.filteredData = this.justifications.filter(
+      (data) => !data.aprobation?.state
+    );
+  } else {
+    // Filtra por estado específico
+    this.filteredData = this.justifications.filter(
+      (data) => data.aprobation?.state === selectedTab
+    );
   }
+}
 
+setEstadoJustificacion(estado?:EstadoJustificacionEnum){
+  this.estadoJustificacion = estado;
+}
 
-
-   // Cambiar entre pestañas y filtrar datos
-   onTabChange(index: number): void {
-    const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-    const selectedTab = tabs[index];
-    this.filteredData =
-      selectedTab === 'Inasistencias' ? this.allData : this.allData.filter(item => item.state === selectedTab);
+handleSubmission(updatedJustification: JustificationModel): void {
+  const index = this.justifications.findIndex(j => j.id === updatedJustification.id);
+  if (index !== -1) {
+    this.justifications[index] = updatedJustification; // Actualiza el modelo en la lista
   }
-
- 
+  this.isModalVisible = false; // Cierra el modal
+}
 
 
 }

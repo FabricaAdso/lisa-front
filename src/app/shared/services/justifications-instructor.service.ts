@@ -1,24 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { getQueryUrl } from '@shared/functions/url.functions';
-import { ApprenticeModel } from '@shared/models/apprentice.model';
+import { JustificationModel } from '@shared/models/justification-model';
 import { QueryUrl } from '@shared/models/query-url.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApprenticeService {
+export class JustificationsInstructorService {
 
   constructor() { }
 
   private http = inject(HttpClient);
+  URL:string = 'justification/instructor'; 
 
-  URL:string = 'apprentice'
 
-  getApprenticeAll(data?:QueryUrl){
-
-    let URL:string = getQueryUrl(this.URL,data)
-    console.log(URL)
-    return this.http.get<ApprenticeModel[]>(URL);
+  getJustifications(data?:QueryUrl){
+    let url = getQueryUrl(this.URL,data)
+    return  this.http.get<JustificationModel[]>(url)
   }
 }

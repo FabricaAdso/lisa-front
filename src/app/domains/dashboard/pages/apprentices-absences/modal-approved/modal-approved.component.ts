@@ -5,18 +5,17 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @Component({
-  selector: 'app-approved-modal',
+  selector: 'app-modal-approved',
   standalone: true,
   imports: [
     CommonModule,
     NzModalModule,
     NzIconModule
   ],
-  templateUrl: './approved-modal.component.html',
-  styleUrl: './approved-modal.component.css'
+  templateUrl: './modal-approved.component.html',
+  styleUrl: './modal-approved.component.css'
 })
-export class ApprovedModalComponent {
-
+export class ModalApprovedComponent {
   @Input() isVisible: boolean = false; 
   @Input() justification!: JustificationModel; // Recibe el objeto JustificationModell completo
   @Output() close = new EventEmitter<boolean>(); // Notifica al padre que cierre el modal

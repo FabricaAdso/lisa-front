@@ -21,14 +21,13 @@ export class SessionService {
 
   getAll(data?:QueryUrl){
     let url:string = getQueryUrl(this.url,data);
+    console.log(url)
     return this.http.get<SessionModel[]>(url);
   }
 
   createSession(data:CreateSessionDTO){
     return this.http.post<SessionModel[]>(this.url, data);
   }
-
-
 
   delete(id:number){
     return this.http.delete(`${this.url}/${id}`)

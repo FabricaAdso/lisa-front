@@ -65,71 +65,87 @@ export class DropDownMenuComponent {
   }
 
   menuItems: MenuItem[] = [
-      { title: 'Roles',
-        icon: 'team',
-        route: 'roles',
-        theme: 'outline',
-  
-      },
-  
-      {
-        title: 'Areas',
-        icon: 'appstore',
-        route: 'environments-area',
-        theme: 'outline',
-      },
-  
-      {
-        title: 'Centro Formativo',
-        icon: 'bank',
-        route: 'training-centers',
-        theme: 'outline',
-      },
-  
-      { title: 'Sedes',
-        icon: 'home',
-        route: 'headquarters',
-        theme: 'outline'
-      },
-  
-      {
-        title: 'Ambientes',
-        icon: 'environment',
-        route: 'environments',
-        theme: 'outline',
-      },
-  
-      {
-        title: 'Programas',
-  
-        icon: 'desktop',
-        route: 'programs',
-        theme: 'outline',
-      },
-  
-      { title: 'Curso',
-        icon: 'book',
-        route: 'course',
-        theme: 'outline'
-      },
-  
-      { title: 'Sesiones',
-        icon: 'calendar',
-        route: 'session',
-        theme: 'outline'
-      },
-  
-      { title: 'Asistencia',
-        icon: 'warning',
-        route: 'attendance',
-        theme: 'outline'
-      },
-      { title: 'justificaciones',
-        icon: 'paper-clip',
-        route: 'justification',
-        theme: 'outline'
-      },
+    {
+      title: 'Ambientes',
+      icon: 'environment',
+      route: 'environments',
+      theme: 'outline',
+    },
+    {
+      title: 'Areas',
+      icon: 'appstore',
+      route: 'environments-area',
+      theme: 'outline',
+    },
+    {
+      title: 'Inasistencias',
+      icon: 'user',
+      route: 'absences',
+      theme: 'outline',
+    },
+    {
+      title: 'Asignación',
+      icon: 'solution',
+      route: 'assists',
+      theme: 'outline',
+    },
+    {
+      title: 'Asistencia',
+      icon: 'check-square',
+      route: 'attendance',
+      theme: 'outline',
+    },
+    {
+      title: 'Centro Formativo',
+      icon: 'bank',
+      route: 'training-centers',
+      theme: 'outline',
+    },
+    {
+      title: 'Cursos',
+      icon: 'read',
+      route: 'course',
+      theme: 'outline',
+    },
+    {
+      title: 'Fichas',
+      icon: 'profile',
+      route: 'fichas',
+      theme: 'outline',
+    },
+    {
+      title: 'Justificaciones',
+      icon: 'file-text',
+      route: 'justification',
+      theme: 'outline',
+    },
+    {
+      title: 'Programas',
+      icon: 'project',
+      route: 'programs',
+      theme: 'outline',
+    },
+    {
+      title: 'Roles',
+      icon: 'team',
+      route: 'roles',
+      theme: 'outline',
+    },
+    {
+      title: 'Sedes',
+      icon: 'home',
+      route: 'headquarters',
+      theme: 'outline',
+    },
+    {
+      title: 'Sesiónes',
+      icon: 'calendar',
+      route: 'session',
+      theme: 'outline',
+    },
   ];
+  
+  
   isMenuOpen = false;
   toggleMenu2() {
     this.isMenuOpen = !this.isMenuOpen; // Alterna el estado del menú desplegable

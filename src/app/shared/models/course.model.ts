@@ -4,10 +4,10 @@ import { ProgramModel } from "./program.model";
 
 export interface CourseModel {
     id:number;
-    code:number;
+    code:number | string;
     date_start?:Date;
     date_end?:Date;
-    shift?:string;
+    shift:string ;
     state: 'Terminada_por_fecha' | 'En_ejecucion' | 'Terminada' | 'Termindad_por_unificacion';
     stage?: 'PRACTICA' | 'LECTIVA';
 
@@ -15,7 +15,7 @@ export interface CourseModel {
     apprentices?:ApprenticeModel
 
     environment_id?: number;
-    environment?:EnvironmentModel;
+    environment:EnvironmentModel;
     program_id?:number;
     program?:ProgramModel;
     
