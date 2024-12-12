@@ -1,6 +1,8 @@
+import { AssistanceModel } from "./assistance.model"
+
 export interface RegisterAssistanceModel {
     key?: string
-    assistance?: boolean
+    assistance?:AssistanceModel[]
     nombre?: string
     apellido?: string
     documento?: string
