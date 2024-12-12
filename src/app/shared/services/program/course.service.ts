@@ -12,7 +12,8 @@ import { Observable } from 'rxjs';
 export class CourseService {
 
   private http = inject(HttpClient);
-  url:string = 'courses'
+  url:string = 'course'
+  //
 
   constructor() { }
 
