@@ -32,6 +32,7 @@
     "date-fns-tz": "^3.2.0",
     "laravel-echo": "^1.17.1",
     "ng-zorro-antd": "^18.1.1",
+    "ngx-file-drop": "^16.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.11",
     "pusher-js": "^8.4.0-rc2",
