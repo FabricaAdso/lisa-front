@@ -2,19 +2,35 @@
   <nz-tab nzTitle="Inasistencias" (nzClick)="getFilterJustificacion()"></nz-tab>
   <nz-tab
     nzTitle="Pendientes"
-    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.PENDIENTE})"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.PENDIENTE
+      })
+    "
   ></nz-tab>
   <nz-tab
     nzTitle="Rechazadas"
-    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.RECHAZADO})"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.RECHAZADO
+      })
+    "
   ></nz-tab>
   <nz-tab
     nzTitle="Aprobadas"
-    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.APROBADO})"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.APROBADO
+      })
+    "
   ></nz-tab>
   <nz-tab
     nzTitle="Vencidas"
-    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.VENCIDA})"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.VENCIDA
+      })
+    "
   ></nz-tab>
 </nz-tabset>
 
@@ -32,35 +48,59 @@
       <th nzWidth="25%">Ficha</th>
       <th nzWidth="25%">Aprendiz</th>
       <th nzWidth="20%">documento</th>
-      <th nzWidth="25%">{{ isInasistencias ? 'Estado' : 'Ver' }}</th>
+      <th nzWidth="25%">{{ isInasistencias ? "Estado" : "Ver" }}</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of justifications">
       <td>{{ data.assistance?.session?.date }}</td>
       <td>{{ data.assistance?.session?.course?.code }}</td>
-      <td>{{ data.assistance?.apprentice?.user?.first_name }} {{ data.assistance?.apprentice?.user?.last_name }}</td>
+      <td>
+        {{ data.assistance?.apprentice?.user?.first_name }}
+        {{ data.assistance?.apprentice?.user?.last_name }}
+      </td>
       <td>{{ data.assistance?.apprentice?.user?.identity_document }}</td>
       <td>
         <!-- Si estamos en la pestaña "Inasistencias", muestra el estado -->
         <span *ngIf="isInasistencias">
-          {{ data.aprobation?.state || 'Sin estado' }}
+          {{ data.aprobation?.state || "Sin estado" }}
         </span>
-        
+
         <!-- Si no está vencida, muestra el botón "Examinar" -->
-        <button *ngIf="data.aprobation?.state !== estadoJustificacionEnum.VENCIDA && !isInasistencias" nz-button nzType="link" (click)="openModal(data)">
+        <button
+          *ngIf="
+            data.aprobation?.state !== estadoJustificacionEnum.VENCIDA &&
+            !isInasistencias
+          "
+          nz-button
+          nzType="link"
+          (click)="openModal(data)"
+        >
           Examinar
         </button>
-        
+
         <!-- Si está vencida, muestra el texto "Vencida" -->
-        <span *ngIf="data.aprobation?.state === estadoJustificacionEnum.VENCIDA && !isInasistencias">
+        <span
+          *ngIf="
+            data.aprobation?.state === estadoJustificacionEnum.VENCIDA &&
+            !isInasistencias
+          "
+        >
           Vencida
         </span>
       </td>
     </tr>
   </tbody>
 </nz-table>
-<nz-pagination (nzPageIndexChange)="changePage($event)" [nzTotal]="total_elements*10" [nzPageIndex]="page" [nzResponsive]="true" [nzHideOnSinglePage]="true"></nz-pagination>
+<nz-pagination
+  (nzPageIndexChange)="changePage($event)"
+  [nzTotal]="total_elements"
+  [nzPageIndex]="page"
+  [nzPageSize]="elements"
+  [nzResponsive]="true"
+  [nzHideOnSinglePage]="true">
+</nz-pagination>
+
 
 <!-- datos de prueba -->
 <app-modal-pending

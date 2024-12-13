@@ -47,8 +47,9 @@ export class ApprenticesAbsencesComponent {
   isModalVisible = false;
   selectedJustification!: JustificationModel; 
   filteredData = this.justifications;
-  page:number = 1;
-  elements:number = 1;
+
+  elements:number = 11 ;
+  page:number = 13;
   last_page:number = 0;
   total_elements:number = 0;
   page_options:number[] = [];
@@ -63,31 +64,35 @@ export class ApprenticesAbsencesComponent {
     const datasub = forkJoin([
       this.justificationService.getJustifications({
         included: this.included,
-        page:this.page,
-        elements:this.elements
+        page: this.page,
+        elements: this.elements
       })
     ]).subscribe({
       next: ([justifications]) => {
-        const {data,per_page,current_page,last_page,total: to} = justifications;
-        
-        this.setPage(per_page,current_page,last_page,to);
-
+        const { data, per_page, current_page, last_page, total } = justifications;
+  
+        // Actualizar el paginador
+        this.setPage(current_page, per_page, last_page, total);
+  
+        // Asignar las justificaciones
         this.justifications = [...data];
       },
       error: (err) => {
         console.error('Error al cargar las justificaciones:', err);
       }
     });
-  } 
-  setPage(current_page:number,per_page:number,last_page:number,total:number){
-    this.page = current_page;
-    this.elements = per_page;
-    this.last_page = last_page;
-    this.total_elements = total;
-    console.log(this.total_elements);
-
+  }
+  
+  setPage(current_page: number, per_page: number, last_page: number, total: number): void {
+    this.page = current_page; // Página actual
+    this.elements = per_page; // Elementos por página
+    this.last_page = last_page; // Última página
+    this.total_elements = total; // Total de elementos disponibles
+  
+    // Generar las opciones de páginas
     this.page_options = Array.from({ length: last_page }, (_, i) => i + 1);
   }
+  
 
   getFilterJustificacion(filter?:{[key:string]:string|EstadoJustificacionEnum}){
     this.filter = filter;
