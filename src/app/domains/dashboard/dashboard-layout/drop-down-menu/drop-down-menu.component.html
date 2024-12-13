@@ -31,7 +31,7 @@
     </ng-template>
 
     <!-- Inicializa el menú -->
-    <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"></ng-container>
+    <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: Items()}"></ng-container>
   </ul>
 
   <!-- Botón de cerrar sesión -->

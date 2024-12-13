@@ -61,12 +61,10 @@
       </td>
       <td>{{ data.assistance?.apprentice?.user?.identity_document }}</td>
       <td>
-        <!-- Si estamos en la pestaña "Inasistencias", muestra el estado -->
         <span *ngIf="isInasistencias">
           {{ data.aprobation?.state || "Sin estado" }}
         </span>
 
-        <!-- Si no está vencida, muestra el botón "Examinar" -->
         <button
           *ngIf="
             data.aprobation?.state !== estadoJustificacionEnum.VENCIDA &&
@@ -78,8 +76,6 @@
         >
           Examinar
         </button>
-
-        <!-- Si está vencida, muestra el texto "Vencida" -->
         <span
           *ngIf="
             data.aprobation?.state === estadoJustificacionEnum.VENCIDA &&
@@ -98,9 +94,9 @@
   [nzPageIndex]="page"
   [nzPageSize]="elements"
   [nzResponsive]="true"
-  [nzHideOnSinglePage]="true">
+  [nzHideOnSinglePage]="true"
+>
 </nz-pagination>
-
 
 <!-- datos de prueba -->
 <app-modal-pending

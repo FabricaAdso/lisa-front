@@ -97,6 +97,15 @@ export class ApprenticesAbsencesComponent {
   getFilterJustificacion(filter?:{[key:string]:string|EstadoJustificacionEnum}){
     this.filter = filter;
     this.changePage(1);
+
+    if(filter && filter['aprobationState'] != "Vencida"){
+      this.isInasistencias = false;
+    }
+    else{
+      this.isInasistencias = true;
+    }
+    console.log(filter);
+    
   }
   changePage(page:number){
     console.log(page);
@@ -114,7 +123,6 @@ export class ApprenticesAbsencesComponent {
           this.justifications = [...data];
         }
       })
-    
   }
 
   openModal(justification: JustificationModel): void {
@@ -133,53 +141,7 @@ export class ApprenticesAbsencesComponent {
     this.isModalVisible = false; 
   }
 
-  onTabChange(event: number): void {
-    switch (event) {
-      case 0:
-        this.isInasistencias = true;  
-        console.log('Listado Total')
-        this.filteredData = this.justifications;
-
-        
-        break;
-      case 1: 
-        this.isInasistencias = false; 
-        console.log(this.estadoJustificacion)
-        this.filteredData = this.justifications.filter(
-          (data) => !data.aprobation?.state
-        );
-        break;
-      case 2: 
-        this.isInasistencias = false;
-        console.log(this.estadoJustificacion) 
-        this.filteredData = this.justifications.filter(
-          (data) => data.aprobation?.state === EstadoJustificacionEnum.RECHAZADO
-        );
-        break;
-      case 3:
-        this.isInasistencias = false;
-        console.log(this.estadoJustificacion) 
-        this.filteredData = this.justifications.filter(
-          (data) => data.aprobation?.state === EstadoJustificacionEnum.APROBADO
-        );
-        break;
-      case 4: 
-        this.isInasistencias = false;
-        console.log(this.estadoJustificacion) 
-        this.filteredData = this.justifications.filter(
-          (data) => data.aprobation?.state === EstadoJustificacionEnum.VENCIDA
-        );
-        break;
-      default:
-        this.isInasistencias = false;
-        console.log(this.estadoJustificacion) 
-        this.filteredData = this.justifications;
-    }
-  }
-
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;
 }
-
-
 }
