@@ -59,7 +59,7 @@ export class JustificationApprenticeComponent {
     
     selectedJustification!: JustificationModel; // datos de prueba
     filteredData = this.justifications;
-
+included:string[] =  ['assistance.session.instructor.user','aprobation','assistance.session.course'];
   ngOnInit(): void {
     this.loadInasistencias(); // Cargar las inasistencias al inicializar
 
@@ -74,7 +74,7 @@ export class JustificationApprenticeComponent {
     const datasub = forkJoin([
 
       this.justificationService.getJustifications({ 
-        included: ['assistance.session.instructor.user','aprobation','assistance.session.course'] 
+        included: this.included
       }),
 
     ]).subscribe({
@@ -104,7 +104,6 @@ export class JustificationApprenticeComponent {
   }
 
     this.selectedJustification = justification;
-    console.log(this.selectedJustification)
     this.isModalVisible = true;
   }
 
@@ -121,14 +120,19 @@ setEstadoJustificacion(estado?:EstadoJustificacionEnum){
 handleSubmission(updatedJustification: JustificationModel): void {
   this.isLoading = true; // Indicar que la solicitud está en curso
 
-  this.justificationService.setJustificacion(updatedJustification).subscribe({
+  this.justificationService.setJustificacion(updatedJustification,{included:this.included}).subscribe({
     next: (response: JustificationModel) => {
       this.isLoading = false; // Finalizar el estado de carga
 
       // Actualizar la lista de justificaciones
-      const index = this.justifications.findIndex(j => j.id === response.id);
-      if (index !== -1) {
-        this.justifications[index] = response;
+      const index = this.justifications.findIndex((j) => j.id == updatedJustification.id );      
+      console.log('el indeeex',index);
+      if (index > -1) {
+        let justifications = this.justifications;
+        justifications[index] = response;
+        console.log(response);
+        
+        this.justifications = [...justifications];
       }
 
       // Actualizar el modelo seleccionado
