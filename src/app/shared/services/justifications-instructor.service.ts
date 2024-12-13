@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { JustificationModel } from '@shared/models/justification-model';
+import { PaginateModel } from '@shared/models/paginate.model';
 import { QueryUrl } from '@shared/models/query-url.model';
 
 @Injectable({
@@ -17,6 +18,6 @@ export class JustificationsInstructorService {
 
   getJustifications(data?:QueryUrl){
     let url = getQueryUrl(this.URL,data)
-    return  this.http.get<JustificationModel[]>(url)
+    return  this.http.get<PaginateModel<JustificationModel>>(url)
   }
 }

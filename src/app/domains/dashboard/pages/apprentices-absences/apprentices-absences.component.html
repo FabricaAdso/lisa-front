@@ -1,20 +1,20 @@
-<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
-  <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
+<nz-tabset>
+  <nz-tab nzTitle="Inasistencias" (nzClick)="getFilterJustificacion()"></nz-tab>
   <nz-tab
     nzTitle="Pendientes"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"
+    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.PENDIENTE})"
   ></nz-tab>
   <nz-tab
     nzTitle="Rechazadas"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"
+    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.RECHAZADO})"
   ></nz-tab>
   <nz-tab
     nzTitle="Aprobadas"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"
+    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.APROBADO})"
   ></nz-tab>
   <nz-tab
     nzTitle="Vencidas"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"
+    (nzClick)="getFilterJustificacion({'aprobationState':estadoJustificacionEnum.VENCIDA})"
   ></nz-tab>
 </nz-tabset>
 
@@ -22,8 +22,9 @@
   #basicTable
   [nzBordered]="true"
   [nzSize]="'middle'"
-  [nzData]="filteredData"
+  [nzData]="justifications"
   [nzScroll]="{ x: '1200px' }"
+  [nzShowPagination]="false"
 >
   <thead>
     <tr>
@@ -35,7 +36,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of filteredData">
+    <tr *ngFor="let data of justifications">
       <td>{{ data.assistance?.session?.date }}</td>
       <td>{{ data.assistance?.session?.course?.code }}</td>
       <td>{{ data.assistance?.apprentice?.user?.first_name }} {{ data.assistance?.apprentice?.user?.last_name }}</td>
@@ -59,6 +60,7 @@
     </tr>
   </tbody>
 </nz-table>
+<nz-pagination (nzPageIndexChange)="changePage($event)" [nzTotal]="total_elements*10" [nzPageIndex]="page" [nzResponsive]="true" [nzHideOnSinglePage]="true"></nz-pagination>
 
 <!-- datos de prueba -->
 <app-modal-pending
