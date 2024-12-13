@@ -51,6 +51,7 @@ export class JustificationApprenticeComponent {
   justifications: JustificationModel[] = [];
   estadoJustificacion?:EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
+  isLoading: boolean = false; // Controla el estado de carga
 
     // Control de modal dinámico
     isModalVisible = false;
@@ -61,6 +62,12 @@ export class JustificationApprenticeComponent {
 
   ngOnInit(): void {
     this.loadInasistencias(); // Cargar las inasistencias al inicializar
+
+     // Recuperar datos de LocalStorage
+  const savedData = localStorage.getItem('justificationData');
+  if (savedData) {
+    this.selectedJustification = JSON.parse(savedData);
+  }
   }
 
   loadInasistencias(): void {
@@ -112,20 +119,34 @@ setEstadoJustificacion(estado?:EstadoJustificacionEnum){
 }
 
 handleSubmission(updatedJustification: JustificationModel): void {
-  console.log(updatedJustification)
+  this.isLoading = true; // Indicar que la solicitud está en curso
+
   this.justificationService.setJustificacion(updatedJustification).subscribe({
-    next:(item:JustificationModel)=>{
-      const index = this.justifications.findIndex(justificaction =>justificaction.id == item.id )
-      if(index != -1){
-        this.justifications[index] = item;
+    next: (response: JustificationModel) => {
+      this.isLoading = false; // Finalizar el estado de carga
+
+      // Actualizar la lista de justificaciones
+      const index = this.justifications.findIndex(j => j.id === response.id);
+      if (index !== -1) {
+        this.justifications[index] = response;
       }
+
+      // Actualizar el modelo seleccionado
+      this.selectedJustification = response;
+
+      // Guardar en LocalStorage
+      localStorage.setItem('justificationData', JSON.stringify(response));
+
+      // Cerrar el modal
+      this.isModalVisible = false;
     },
-    error:error =>{
-      console.log(error)
+    error: (err) => {
+      this.isLoading = false; // Finalizar el estado de carga
+      console.error('Error al enviar la justificación:', err);
     }
-  })
-  this.isModalVisible = false; 
+  });
 }
+
 
 
 }
