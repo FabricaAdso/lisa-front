@@ -16,12 +16,23 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
   styleUrl: './modal-approved.component.css'
 })
 export class ModalApprovedComponent {
-  @Input() isVisible: boolean = false; 
-  @Input() justification!: JustificationModel; // Recibe el objeto JustificationModell completo
-  @Output() close = new EventEmitter<boolean>(); // Notifica al padre que cierre el modal
+  @Input() isVisible: boolean = false;
+  @Input() justification!: JustificationModel;
+  @Output() close = new EventEmitter<void>();
+  @Output() statusChange = new EventEmitter<'Aprobada' | 'Rechazada'>(); // Emite el cambio de estado
 
-  handleCancel(): void {
-    this.close.emit(); // Emite el evento para cerrar el modal
+  handleApprove(): void {
+    this.statusChange.emit('Aprobada'); // Emite "Aprobada" al componente principal
+    this.isVisible = false;
   }
 
+  handleReject(): void {
+    this.statusChange.emit('Rechazada'); // Emite "Rechazada" al componente principal
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    this.close.emit(); // Solo cierra el modal
+    this.isVisible = false;
+  }
 }

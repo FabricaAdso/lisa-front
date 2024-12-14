@@ -119,7 +119,9 @@
   [isVisible]="isModalVisible"
   [justification]="selectedJustification"
   (close)="closeModal()"
+  (statusChange)="updateJustificationStatus(selectedJustification, $event)"
 ></app-modal-approved>
+
 
 <!-- Modal de vencidas datos de prueba -->
 <app-modal-expired

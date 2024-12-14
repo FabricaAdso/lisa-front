@@ -48,8 +48,8 @@ export class ApprenticesAbsencesComponent {
   selectedJustification!: JustificationModel; 
   filteredData = this.justifications;
 
-  elements:number = 11 ;
-  page:number = 13;
+  elements:number = 10 ;
+  page:number = 1;
   last_page:number = 0;
   total_elements:number = 0;
   page_options:number[] = [];
@@ -144,4 +144,29 @@ export class ApprenticesAbsencesComponent {
 setEstadoJustificacion(estado?:EstadoJustificacionEnum){
   this.estadoJustificacion = estado;
 }
+
+updateJustificationStatus(justification: JustificationModel): void {
+  const newStatus: 'Aprobada' = 'Aprobada'; // Establece el estado como "Aprobada"
+  
+  this.justificationService
+    .updateJustificationStatus(justification.id, newStatus) // Método en el servicio
+    .subscribe({
+      next: () => {
+        if (justification.aprobation) {
+          justification.aprobation.state = newStatus; // Actualiza el estado localmente
+        } else {
+          console.error('La propiedad "aprobation" es undefined');
+        }
+        this.isModalVisible = false;
+      },
+      error: (err) => {
+        console.error('Error al actualizar la justificación:', err);
+      }
+    });
+}
+
+
+}
+
+
 }

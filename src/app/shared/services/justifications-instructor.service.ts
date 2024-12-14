@@ -20,4 +20,8 @@ export class JustificationsInstructorService {
     let url = getQueryUrl(this.URL,data)
     return  this.http.get<PaginateModel<JustificationModel>>(url)
   }
+  updateJustificationStatus(id: number, newStatus: string) {
+    return this.http.put(`/${id}`, { state: newStatus });
+  }
+  
 }
