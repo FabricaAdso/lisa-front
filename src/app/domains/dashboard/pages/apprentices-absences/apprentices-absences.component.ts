@@ -146,7 +146,7 @@ setEstadoJustificacion(estado?:EstadoJustificacionEnum){
 }
 
 updateJustificationStatus(justification: JustificationModel): void {
-  const newStatus: 'Aprobada' = 'Aprobada'; // Establece el estado como "Aprobada"
+  const newStatus= EstadoJustificacionEnum.APROBADO 
   
   this.justificationService
     .updateJustificationStatus(justification.id, newStatus) // Método en el servicio
@@ -164,9 +164,4 @@ updateJustificationStatus(justification: JustificationModel): void {
       }
     });
 }
-
-
-}
-
-
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { JustificationModel } from '@shared/models/justification-model';
 import { PaginateModel } from '@shared/models/paginate.model';
@@ -20,7 +21,7 @@ export class JustificationsInstructorService {
     let url = getQueryUrl(this.URL,data)
     return  this.http.get<PaginateModel<JustificationModel>>(url)
   }
-  updateJustificationStatus(id: number, newStatus: string) {
+  updateJustificationStatus(id: number, newStatus: EstadoJustificacionEnum) {
     return this.http.put(`/${id}`, { state: newStatus });
   }
   
