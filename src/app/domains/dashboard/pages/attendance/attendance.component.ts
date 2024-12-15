@@ -22,6 +22,8 @@ import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { SessionComponent } from "./session/session.component";
 import { CourseService } from '@shared/services/program/course.service';
 import { CourseModel } from '@shared/models/course.model';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { SessionShowComponent } from "./session-show/session-show.component";
 
 @Component({
   selector: 'app-attendance',
@@ -41,7 +43,8 @@ import { CourseModel } from '@shared/models/course.model';
     NzTabsModule,
     NzPageHeaderModule,
     NzStatisticModule,
-    SessionComponent
+    SessionComponent,
+    SessionShowComponent
 ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
@@ -50,6 +53,7 @@ export class AttendanceComponent {
 
   @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
   @ViewChild('sessionModal') sessionModal:any = SessionComponent;
+  @ViewChild('sessionShowModal') sessionShowModal:any = SessionShowComponent;
 
   private courses_service = inject(CourseService);
   
@@ -70,13 +74,21 @@ export class AttendanceComponent {
 
   //abre modal del hijo session
   openModal() {
-    console.log(this.sessionModal);
     if (this.sessionModal) {
       this.sessionModal.openModal();
     } else {
       console.error('No se encontró sessionModal.');
     }
   }
+
+  openModalSession(){
+    if(this.sessionShowModal){
+      this.sessionShowModal.openModal();
+      console.log('modal abierto');
+      
+    }
+  }
+
   // Método para llamar la función prevPage() del hijo
   callPrevPage() {
     if (this.attendanceTable) {
@@ -98,7 +110,6 @@ export class AttendanceComponent {
 
   ngOnInit(): void {
     this.getData();
-    this.openModal()
   }
 
   toggleTable() {
@@ -136,6 +147,7 @@ export class AttendanceComponent {
     }
     });
   }
+
 
 
   showModal(): void {

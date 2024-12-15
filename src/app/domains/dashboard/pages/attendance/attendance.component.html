@@ -21,7 +21,7 @@
 
   <!-- Buttons -->
   <div class="buttons w-4/5 p-4 mt-8 flex justify-end gap-4">
-    <button
+    <button *ngIf="showDefaultTable"
       nz-button
       nzType="default"
       class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
@@ -42,9 +42,11 @@
       nz-button
       nzType="default"
       class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
+      (click)="openModalSession()"
     >
       Sesiones
     </button>
+    <app-session-show class="hidden" #sessionShowModal></app-session-show>
     <div
       *ngIf="!showDefaultTable"
       class="button flex gap-4 items-center"
