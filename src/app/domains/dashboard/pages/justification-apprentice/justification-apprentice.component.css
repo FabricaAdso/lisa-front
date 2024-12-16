@@ -11,6 +11,19 @@
     
 }
 
+::ng-deep .inasistencias .ant-tabs-tab-active{
+    color: black ;
+}
+
+::ng-deep .inasistencias .ant-tabs-tab-active .ant-tabs-tab-btn{
+    color: red;
+}
+
+::ng-deep .pendientes .ant-tabs-tab-active{
+    color: yellow;
+    
+}
+
 
 
 
