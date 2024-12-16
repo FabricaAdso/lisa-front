@@ -15,7 +15,7 @@ export class SessionService {
 
   private http = inject(HttpClient);
 
-  url:string = 'sessions';
+  url:string = 'session';
 
 
 

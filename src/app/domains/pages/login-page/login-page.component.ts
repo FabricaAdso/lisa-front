@@ -47,7 +47,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   regional: RegionalModel[] = [];
   trainingCenters: TrainingCenterModel[] = [];
 
-  passwordVisible: boolean = true
+  passwordVisible: boolean = false
   showModalLogin: boolean = false;
   errorMessageLogin: string | null = null;
 

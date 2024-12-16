@@ -1,0 +1,15 @@
+<button nz-button nzType="primary" (click)="openModal()">
+    <span>Show Modal</span>
+  </button>
+  <nz-modal
+    [(nzVisible)]="isModalVisible"
+    nzTitle="Modal Title"
+    (nzOnCancel)="closeModal()"
+  >
+  <nz-timeline *nzModalContent>
+    <nz-timeline-item nzColor="green">Create a services site 2015-09-01</nz-timeline-item>
+    <nz-timeline-item nzColor="green">Solve initial network problems 2015-09-01</nz-timeline-item>
+    <nz-timeline-item nzColor="green">Technical testing 2015-09-01</nz-timeline-item>
+    <nz-timeline-item nzColor="green">Network problems being solved 2015-09-01</nz-timeline-item>
+  </nz-timeline>
+  </nz-modal>

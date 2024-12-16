@@ -7,21 +7,16 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { AssistanceService } from '@shared/services/assistance.service';
 import { forkJoin } from 'rxjs';
 import { AssistanceModel } from '@shared/models/assistance.model';
-import { ApprenticeService } from '@shared/services/apprentice.service';
-import { ApprenticeModel } from '@shared/models/apprentice.model';
-import { UpdateAssistanceDTO } from '@shared/dto/update-assistance.dto';
-import { UserModel } from '@shared/models/user.model';
-import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
 import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
-import { SessionComponent } from "./session/session.component";
 import { CourseService } from '@shared/services/program/course.service';
 import { CourseModel } from '@shared/models/course.model';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { SessionShowComponent } from "./session-show/session-show.component";
 
 @Component({
   selector: 'app-attendance',
@@ -41,7 +36,7 @@ import { CourseModel } from '@shared/models/course.model';
     NzTabsModule,
     NzPageHeaderModule,
     NzStatisticModule,
-    SessionComponent
+    SessionShowComponent
 ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
@@ -49,11 +44,12 @@ import { CourseModel } from '@shared/models/course.model';
 export class AttendanceComponent {
 
   @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
-  @ViewChild('sessionModal') sessionModal:any = SessionComponent;
+  @ViewChild('sessionShowModal') sessionShowModal:any = SessionShowComponent;
 
   private courses_service = inject(CourseService);
   
   @Input() course_code?:number;
+  @Input() session_code?:number;
 
   course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];
@@ -68,15 +64,13 @@ export class AttendanceComponent {
 
   isVisible = false;
 
-  //abre modal del hijo session
-  openModal() {
-    console.log(this.sessionModal);
-    if (this.sessionModal) {
-      this.sessionModal.openModal();
-    } else {
-      console.error('No se encontró sessionModal.');
+  openModalSession(){
+    if(this.sessionShowModal){
+      this.sessionShowModal.openModal();
+      console.log('modal abierto');
     }
   }
+
   // Método para llamar la función prevPage() del hijo
   callPrevPage() {
     if (this.attendanceTable) {
@@ -98,7 +92,6 @@ export class AttendanceComponent {
 
   ngOnInit(): void {
     this.getData();
-    this.openModal()
   }
 
   toggleTable() {
@@ -136,6 +129,7 @@ export class AttendanceComponent {
     }
     });
   }
+
 
 
   showModal(): void {
