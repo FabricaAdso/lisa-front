@@ -46,7 +46,7 @@ export class MenuItemComponent {
       route: 'environments',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Areas',
@@ -54,7 +54,7 @@ export class MenuItemComponent {
       route: 'environments-area',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Inasistencias',
@@ -62,7 +62,7 @@ export class MenuItemComponent {
       route: 'absences',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Asignación',
@@ -70,7 +70,7 @@ export class MenuItemComponent {
       route: 'assists',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Asistencia',
@@ -78,7 +78,7 @@ export class MenuItemComponent {
       route: 'attendance',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Centro Formativo',
@@ -86,7 +86,7 @@ export class MenuItemComponent {
       route: 'training-centers',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Cursos',
@@ -94,7 +94,7 @@ export class MenuItemComponent {
       route: 'course',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Fichas',
@@ -102,7 +102,7 @@ export class MenuItemComponent {
       route: 'fichas',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Justificaciones',
@@ -110,7 +110,7 @@ export class MenuItemComponent {
       route: 'justification',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Programas',
@@ -118,7 +118,7 @@ export class MenuItemComponent {
       route: 'programs',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Roles',
@@ -126,7 +126,7 @@ export class MenuItemComponent {
       route: 'roles',
       theme: 'outline',
       state: false,
-      Role: 'Istructor',
+      Role: 'Instructor',
     },
     {
       title: 'Sedes',

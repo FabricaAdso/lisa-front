@@ -58,13 +58,13 @@ export class AttendanceComponent {
   course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];
   listOfData: any[] = [];
-  listDAtos: any[][] = []; // Almacena los grupos de datos para multiples tablas
+  listDAtos: any[][] = [];
 
-  Math = Math; // Exponer Math para usarlo en la plantilla
-  showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
-  rowsPerTable = 5; // Cantidad de filas por tabla
-  tablesPerPage = 3; // Cantidad de tablas por página
-  currentPage = 1; // Pagina actual
+  Math = Math;
+  showDefaultTable = true;
+  rowsPerTable = 5; 
+  tablesPerPage = 3; 
+  currentPage = 1; 
 
   isVisible = false;
 
