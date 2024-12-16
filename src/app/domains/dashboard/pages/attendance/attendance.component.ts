@@ -49,6 +49,7 @@ export class AttendanceComponent {
   private courses_service = inject(CourseService);
   
   @Input() course_code?:number;
+  @Input() session_code?:number;
 
   course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];

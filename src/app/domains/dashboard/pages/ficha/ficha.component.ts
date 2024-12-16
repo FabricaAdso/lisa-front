@@ -79,8 +79,9 @@ export class FichaComponent {
       next:([pending,record] )=>{
         this.pending_courses = pending;
         this.record_courses = record;
-        console.log('pending',this.pending_courses);
-        console.log('Record Courses:', this.record_courses);
+      },
+      error:(error)=>{
+        console.error(error);
       }
     });
   }

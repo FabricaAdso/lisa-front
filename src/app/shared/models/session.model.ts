@@ -13,5 +13,8 @@ export interface SessionModel {
   course_id?: number | null;
   course?: CourseModel;
   assistances: AssistanceModel[]; 
+
+  //relaciones
+  assistance:AssistanceModel
 }
 
