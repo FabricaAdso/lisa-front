@@ -1,18 +1,18 @@
 <ul nz-menu nzMode="inline">
   <!-- Template genérico para la creación de submenús infinitos -->
   <ng-template #renderSubMenu let-subMenuItems>
-    <ng-container *ngFor="let subItem of subMenuItems">
+    <ng-container *ngFor="let subItem of subMenuItems" >
       <!-- Elemento de menú simple -->
       <li *ngIf="!subItem.subMenu" nz-menu-item >
-        <a [routerLink]="subItem.route" routerLinkActive="active">
-          <!-- Enlace con routerLink -->
-          <span
-            nz-icon
-            [nzType]="subItem.icon"
-            [nzTheme]="subItem.theme"
-          ></span>
-          <span>{{ subItem.title }}</span>
-        </a>
+          <a [routerLink]="subItem.route" routerLinkActive="active">
+            <!-- Enlace con routerLink -->
+            <span
+              nz-icon
+              [nzType]="subItem.icon"
+              [nzTheme]="subItem.theme"
+            ></span>
+            <span>{{ subItem.title }}</span>
+          </a>
       </li>
 
       <!-- Submenú -->
@@ -25,5 +25,5 @@
   </ng-template>
 
   <!-- Inicializa el menú -->
-  <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: menuItems }"></ng-container>
+  <ng-container *ngTemplateOutlet="renderSubMenu; context: { $implicit: Items() }"></ng-container>
 </ul>

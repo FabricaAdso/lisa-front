@@ -6,12 +6,11 @@ import { JustificationService } from '@shared/services/justification.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @Component({
   selector: 'app-pending-modal',
   standalone: true,
-  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule,NzIconModule,PdfViewerModule],
+  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule,NzIconModule],
   templateUrl: './pending-modal.component.html',
   styleUrl: './pending-modal.component.css'
 })

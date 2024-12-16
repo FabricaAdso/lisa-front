@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { JustificationModel } from '@shared/models/justification-model';
 
+
 @Pipe({
   name: 'byEstadoJustificacion',
   standalone: true

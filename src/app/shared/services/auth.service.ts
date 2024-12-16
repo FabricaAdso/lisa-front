@@ -4,6 +4,7 @@ import { LoginDTO } from '@shared/dto/login.dto';
 import { TokenModel } from '@shared/models/token.model';
 import { tap } from 'rxjs/operators';
 import { UserModel } from '@shared/models/user.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +39,18 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // Método para obtener los datos del usuario logueado
-  me() {
-    return this.http.post<UserModel>('me',{});  // 'me' es el endpoint para obtener los datos del usuario autenticado
+  me(): Observable<UserModel> {
+    return this.http.post<UserModel>('me', {}).pipe(
+      tap({
+        next: (user) => {
+          this.user.set(user);  // Llenar el signal con los datos del usuario
+        },
+        error: (err) => {
+          console.error('Error al cargar el usuario:', err);
+          this.user.set(null); // En caso de error, establecer como null
+        },
+      })
+    );
   }
 
 }

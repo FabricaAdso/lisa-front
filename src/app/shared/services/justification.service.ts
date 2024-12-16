@@ -21,7 +21,6 @@ export class JustificationService {
   getJustifications(data?:QueryUrl){
     let url = getQueryUrl(this.URL,data)
     return  this.http.get<JustificationModel[]>(url)
-
   }
   setJustificacion(item: JustificationModel,data_url?:QueryUrl) {
     console.log('Contenido de item:', item);

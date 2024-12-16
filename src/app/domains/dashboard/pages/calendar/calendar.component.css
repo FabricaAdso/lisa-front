@@ -118,11 +118,11 @@
 }
 
 ::ng-deep .ant-modal-content {
-  @apply  w-[36rem] h-[26rem]
+  @apply  w-[42rem] h-[26rem]
 }  
 
 ::ng-deep .ant-modal-body {
-  @apply h-[19rem] p-4 overflow-y-auto;
+  @apply h-[19rem] p-4 ;
 }
 
 ::ng-deep .ant-modal-body p
@@ -158,4 +158,8 @@
 /* Opcional: Aumentar la altura de los ítems */
 ::ng-deep .ant-timeline-item {
   @apply h-[4rem]
+}
+
+::ng-deep .ant-btn {
+  @apply bg-green-500 
 }

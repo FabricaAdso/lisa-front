@@ -15,17 +15,14 @@ export const routes: Routes = [
         path: 'attendance',
         title: 'Asistencia',
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
-      },
-      {
-        path: 'fichas/:course_code/attendance',
-        title: 'Asistencia',
+        data: {breadcrumb: 'Tomar Asistencia'},
         loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
       },
       {
         path: 'assists',
         title: 'Administrar asistencias',
         canActivate: [authGuard],
+        data: {breadcrumb:'Asignación de Instructor / Aprendiz'},
         loadComponent: () => import('@domains/dashboard/pages/assists/assists.component').then(c => c.AssistsComponent)
       },
       {
@@ -44,13 +41,14 @@ export const routes: Routes = [
       {
         path:'fichas',
         title:'Administrar Fichas',
+        data: { breadcrumb: 'Fichas ' },
         canActivate: [authGuard],
         loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
       },
       {
         path: 'justification',
         title: 'justificaciones',
-        data: { breadcrumb: '' },
+        data: { breadcrumb: 'Justificaciones' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
       },
@@ -99,7 +97,7 @@ export const routes: Routes = [
         path: 'session',
         title: 'Sesiónes',
         data: { breadcrumb: 'Sesiónes' },
-        //canActivate: [authGuard],
+        canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
@@ -110,21 +108,14 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/programs//course-page/course-page.component').then(c => c.CoursePageComponent)
       },
-
       {
-        path: 'justification',
-        title: 'justicaciones',
-        data: { breadcrumb: 'justificaciones' },
+        path: 'absences',
+        title: 'Inasistencias',
+        data: { breadcrumb: 'Registro de Inasistencias'},
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/justification-apprentice/justification-apprentice.component').then(c => c.JustificationApprenticeComponent)
+        loadComponent: () => import('@domains/dashboard/pages/apprentices-absences/apprentices-absences.component').then(c => c.ApprenticesAbsencesComponent)
       },
-      // {
-      //   path: 'calend-app',
-      //   title: 'Calendario Aprendiz',
-      //   data: { breadcrumb: 'Calendario Aprendiz' },
-      //   canActivate: [authGuard],
-      //   loadComponent: () => import('@domains/dashboard/pages/calendar-apprentices/calendar-apprentices.component').then(c => c.CalendarApprenticesComponent )
-      // },
+
       {
         path: 'error_401',
         title: 'Autenticación Requerida',
@@ -135,7 +126,7 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
- 
+      
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',
