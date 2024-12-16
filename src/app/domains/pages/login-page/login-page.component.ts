@@ -175,7 +175,17 @@ export class LoginPageComponent implements OnDestroy, OnInit {
       .subscribe({
         next: (token) => {
           this.token_service.setToken(token)
-          this.router.navigate(['/dashboard/roles']);
+          this.auth_service.me().subscribe({
+            next: (user) => {
+              this.auth_service.user.set(user);  
+              this.router.navigate(['/dashboard/roles']);
+            },
+            error: (err) => {
+              console.error('Error al cargar el usuario:', err);
+              this.auth_service.user.set(null); // En caso de error, establecer como null
+            },
+          })
+          
         },
         error: error => {
           console.log(error);

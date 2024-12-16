@@ -8,13 +8,13 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { ModalPendingComponent } from './modal-pending/modal-pending.component';
 import { ModalRejectedComponent } from './modal-rejected/modal-rejected.component';
-import { ModalExpiredComponent } from './modal-expired/modal-expired.component';
 import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { ModalPendingComponent } from "./modal-pending/modal-pending.component";
+import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
 
 @Component({
   selector: 'app-apprentices-absences',
@@ -26,11 +26,11 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzTabsModule,
     NzTagModule,
     ModalApprovedComponent,
-    ModalPendingComponent,
     ModalRejectedComponent,
-    ModalExpiredComponent,
     NzPaginationModule,
-  ],
+    ModalPendingComponent,
+    ModalExpiredComponent
+],
   templateUrl: './apprentices-absences.component.html',
   styleUrl: './apprentices-absences.component.css',
 })
@@ -72,7 +72,6 @@ export class ApprenticesAbsencesComponent {
       }),
     ]).subscribe({
       next: ([justifications]) => {
-        console.log('Datos recibidos para justificaciones:', justifications); // Log para depuración
         const { data, per_page, current_page, last_page, total } = justifications;
   
         this.setPage(current_page, per_page, last_page, total);
@@ -116,7 +115,6 @@ export class ApprenticesAbsencesComponent {
       delete this.filter['state']; // Elimina 'state' si ya no es necesario
     }
 
-    console.log(this.filter); // Verifica que el filtro sea correcto
   }
 
   changePage(page: number) {
@@ -154,25 +152,26 @@ export class ApprenticesAbsencesComponent {
   }
 
   openModal(justification: JustificationModel): void {
-    this.selectedJustification = justification;
+    this.isModalVisible = false;
+    this.selectedJustification = {...justification};
     this.isModalVisible = true;
+    console.log(justification);
   }
 
   closeModal(): void {
     this.isModalVisible = false;
   }
 
-  updateJustificationStatus(justification: JustificationModel): void {
-    const newStatus = EstadoJustificacionEnum.APROBADO; 
-
+  updateJustificationStatus(justification: JustificationModel, newStatus: EstadoJustificacionEnum, motive?: string): void {
     this.justificationService
-      .updateJustificationStatus(justification.id, newStatus)
+      .updateJustificationStatus(justification.id, newStatus, motive) 
       .subscribe({
         next: (response) => {
           if (justification.aprobation) {
             justification.aprobation.state = newStatus;
+            justification.aprobation.motive = motive; 
           }
-          this.isModalVisible = false; 
+          this.isModalVisible = false;
         },
         error: (err) => {
           console.error('Error al actualizar la justificación:', err);

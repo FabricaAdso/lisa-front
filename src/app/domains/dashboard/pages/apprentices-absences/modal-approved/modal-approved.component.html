@@ -1,32 +1,35 @@
 <nz-modal
   [(nzVisible)]="isVisible"
   nzTitle="Justificación Aprobada"
-  [nzFooter]="modalFooter"
+  [nzFooter]="null"
+  (nzOnCancel)="closeModal()"
 >
   <ng-container *nzModalContent>
     <div>
-      <!-- Archivo PDF -->
-       <h1>HOLAAAAA</h1>
-      <p style="display: flex; align-items: center; margin-bottom: 16px;">
+      <p style="display: flex; align-items: center; margin-bottom: 16px">
         <i
           nz-icon
           nzType="file-pdf"
           nzTheme="outline"
-          style="color: red; margin-right: 8px;"
+          style="color: red; margin-right: 8px"
         ></i>
-        <strong>{{ justification.file_url || 'Archivo no disponible' }}</strong>
+        <strong>{{ justification.file_url || "Archivo no disponible" }}</strong>
       </p>
-
-      <!-- Información del archivo y motivo -->
       <div>
-        <p style="margin: 0; color: #555;">
-          {{ justification.description || 'Motivo no especificado' }}
+        <p style="margin: 0; color: #555">
+          {{ justification.description || "Motivo no especificado" }}
         </p>
+      </div>
+      <div *ngIf="isRejecting">
+        <label for="motive">Motivo del Rechazo:</label>
+        <textarea
+          id="motive"
+          [(ngModel)]="motive"
+          placeholder="Escribe el motivo del rechazo..."
+          rows="4"
+          style="width: 100%"
+        ></textarea>
       </div>
     </div>
   </ng-container>
-  <ng-template #modalFooter>
-    <button nz-button nzType="primary" (click)="handleApprove()">Aprobar</button>
-    <button nz-button nzType="default" (click)="handleReject()">Rechazar</button>
-  </ng-template>
 </nz-modal>

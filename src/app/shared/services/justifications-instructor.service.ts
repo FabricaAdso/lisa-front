@@ -23,10 +23,12 @@ export class JustificationsInstructorService {
     let url = getQueryUrl(`${this.URL}/instructor`,data)
     return  this.http.get<PaginateModel<JustificationModel>>(url)
   }
-  updateJustificationStatus(justificationId: number, newStatus: string): Observable<any> {
-    return this.http.put(`${this.URL1}/aprobations`, {
+  
+  updateJustificationStatus(justificationId: number, newStatus: EstadoJustificacionEnum, motive?: string): Observable<any> {
+    return this.http.put(`${this.URL1}`, {
       justification_id: justificationId,
-      state: newStatus, 
+      state: newStatus,
+      motive: motive, 
     });
-  }
+  }  
 }

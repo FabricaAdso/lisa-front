@@ -11,7 +11,8 @@ import { AuthService } from '@shared/services/auth.service';
 import { UserModel } from '@shared/models/user.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { FiterToRoleService } from '@shared/services/fiter-to-role.service';
-
+import { MenuItemComponent } from '../menu-item/menu-item.component';
+import { menuItems } from '../itemsNav';
 @Component({
   selector: 'app-drop-down-menu',
   standalone: true,
@@ -23,13 +24,13 @@ import { FiterToRoleService } from '@shared/services/fiter-to-role.service';
     NzIconModule,
     NzMenuModule,
     CommonModule,
-    RouterModule
+    RouterModule,
 ],
   templateUrl: './drop-down-menu.component.html',
   styleUrl: './drop-down-menu.component.css',
 })
 export class DropDownMenuComponent {
-
+  menuItem = MenuItemComponent
   user = signal<UserModel | null>(null);  // Signal para almacenar el usuario logueado
 
   listOfPosition: NzPlacementType[] = [
@@ -41,20 +42,19 @@ export class DropDownMenuComponent {
     'topRight',
   ];
   position: NzPlacementType = this.listOfPosition[0]; // Puedes cambiar la posición predeterminada aquí
-  constructor(private cdr: ChangeDetectorRef, private filterItems: FiterToRoleService,) {}
+  constructor(private cdr: ChangeDetectorRef, private filterItems: FiterToRoleService) {}
   private auth_service = inject(AuthService)
   private router = inject(Router);
-
+  menuItems = menuItems;
   isLoggedIn: boolean = false;
 
   ngOnInit(): void {
       this.isLoggedIn = this.auth_service.isAuth();
 
       if (this.isLoggedIn) {
-        // Suscribimos al signal con la respuesta del método 'me()' para obtener los datos del usuario
         this.auth_service.me().subscribe({
           next: (user: UserModel) => {
-            this.user.set(user);  // Actualizamos el signal con el objeto de usuario
+            this.user.set(user);  
             console.log('Hola', user.first_name, user.first_name);
           },
           error: (err) => {
@@ -64,110 +64,14 @@ export class DropDownMenuComponent {
       }
   }
 
-  menuItems: MenuItem[] = [
-    {
-      title: 'Ambientes',
-      icon: 'environment',
-      route: 'environments',
-      theme: 'outline',
-      Role:'Instructor' 
-    },
-    {
-      title: 'Areas',
-      icon: 'appstore',
-      route: 'environments-area',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Inasistencias',
-      icon: 'user',
-      route: 'absences',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Asignación',
-      icon: 'solution',
-      route: 'assists',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Asistencia',
-      icon: 'check-square',
-      route: 'attendance',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Centro Formativo',
-      icon: 'bank',
-      route: 'training-centers',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Cursos',
-      icon: 'read',
-      route: 'course',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Fichas',
-      icon: 'profile',
-      route: 'fichas',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Justificaciones',
-      icon: 'file-text',
-      route: 'justification',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Programas',
-      icon: 'project',
-      route: 'programs',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Roles',
-      icon: 'team',
-      route: 'roles',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Sedes',
-      icon: 'home',
-      route: 'headquarters',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-    {
-      title: 'Sesiónes',
-      icon: 'calendar',
-      route: 'session',
-      theme: 'outline',
-      Role:'Instructor'
-    },
-  ];
-  
-  
   isMenuOpen = false;
   toggleMenu2() {
-    this.isMenuOpen = !this.isMenuOpen; // Alterna el estado del menú desplegable
+    this.isMenuOpen = !this.isMenuOpen; 
   }
 
   logout(){
     console.log('Cerrar sesión...');
     this.auth_service.logout();
-    // Re dirigir a login
     this.router.navigate(['auth/login']);
   }
   Items(){

@@ -18,11 +18,9 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
   styleUrl: './modal-rejected.component.css'
 })
 export class ModalRejectedComponent {
-
-  @Input() isVisible: boolean = false; // Controla la visibilidad del modal
-  @Output() close = new EventEmitter<boolean>(); // Para cerrar el modal desde el padre
-
-  @Input() justification!: JustificationModel; // rrecibe el objeto de justificación
+  @Input() isVisible: boolean = false; 
+  @Output() close = new EventEmitter<boolean>(); 
+  @Input() justification!: JustificationModel; 
 
 
 
