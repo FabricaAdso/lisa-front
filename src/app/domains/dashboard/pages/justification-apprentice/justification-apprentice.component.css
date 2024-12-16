@@ -13,7 +13,7 @@
 
 
 ::ng-deep .inasistencias .ant-tabs-tab-active .ant-tabs-tab-btn{
-    color:black;
+    color:#1890ff;
 }
 
 ::ng-deep .pendientes .ant-tabs-ink-bar{
