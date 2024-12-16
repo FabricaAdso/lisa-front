@@ -54,7 +54,7 @@ export class AttendanceComponent {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
   ngOnInit(): void {
-    alert(this.course_code);
+    // alert(this.course_code);
     for (let index = 0; index < 20
       
       ; index++) {
