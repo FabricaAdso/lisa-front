@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -40,12 +40,15 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzSelectComponent,
     NzModalComponent,
     NzTimePickerModule,
-    FormsModule
+    FormsModule,
+    NzModalContentDirective
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
-export class SessionComponent implements OnInit, OnDestroy {
+export class SessionComponent implements OnInit,OnChanges, OnDestroy {
+
+  @Input() isModalVisible = false;
 
   time = new Date();
 
@@ -75,7 +78,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   private destroy = new Subject<void>();
 
   selectedId: number | null = null;
-  isModalVisible = false;
   formSession!: FormGroup | null;
   formRangePicker!: FormGroup | null;
 
@@ -99,6 +101,9 @@ export class SessionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getData();
     this.changeKnowledgeNetwork();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
   ngOnDestroy(): void {
@@ -279,5 +284,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   openModal() {
     this.isModalVisible = true;
+    console.log(this.isModalVisible);
+    
   }
 }

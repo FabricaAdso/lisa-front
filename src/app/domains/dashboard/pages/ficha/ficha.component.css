@@ -6,6 +6,11 @@
   flex-direction: column;
 }
 
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+  color: #fff;
+  border-color:  #52c41a!important;
+  background:  #52c41a!important;
+}
 
 
 /* Contenedor de Fichas Activas */
