@@ -1,29 +1,45 @@
-<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
-  <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
+<nz-tabset>
+  <nz-tab nzTitle="Inasistencias" (nzClick)="getFilterJustificacion()"></nz-tab>
   <nz-tab
     nzTitle="Pendientes"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.PENDIENTE
+      })
+    "
   ></nz-tab>
   <nz-tab
     nzTitle="Rechazadas"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.RECHAZADO
+      })
+    "
   ></nz-tab>
   <nz-tab
     nzTitle="Aprobadas"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.APROBADO
+      })
+    "
   ></nz-tab>
   <nz-tab
     nzTitle="Vencidas"
-    (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"
+    (nzClick)="
+      getFilterJustificacion({
+        aprobationState: estadoJustificacionEnum.VENCIDA
+      })
+    "
   ></nz-tab>
 </nz-tabset>
-
 <nz-table
   #basicTable
   [nzBordered]="true"
   [nzSize]="'middle'"
-  [nzData]="filteredData"
+  [nzData]="justifications"
   [nzScroll]="{ x: '1200px' }"
+  [nzShowPagination]="false"
 >
   <thead>
     <tr>
@@ -31,21 +47,55 @@
       <th nzWidth="25%">Ficha</th>
       <th nzWidth="25%">Aprendiz</th>
       <th nzWidth="20%">documento</th>
-      <th nzWidth="25%">ver</th>
+      <th nzWidth="25%">{{ isInasistencias ? "Estado" : "Ver" }}</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of filteredData">
+    <tr *ngFor="let data of justifications">
       <td>{{ data.assistance?.session?.date }}</td>
       <td>{{ data.assistance?.session?.course?.code }}</td>
-      <td>{{ data.assistance?.apprentice?.user?.first_name }} {{ data.assistance?.apprentice?.user?.last_name }}</td>
+      <td>
+        {{ data.assistance?.apprentice?.user?.first_name }}
+        {{ data.assistance?.apprentice?.user?.last_name }}
+      </td>
       <td>{{ data.assistance?.apprentice?.user?.identity_document }}</td>
       <td>
-        <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
+        <span *ngIf="isInasistencias">
+          {{ data.aprobation?.state || "Sin estado" }}
+        </span>
+
+        <button
+          *ngIf="
+            data.aprobation?.state !== estadoJustificacionEnum.VENCIDA &&
+            !isInasistencias
+          "
+          nz-button
+          nzType="link"
+          (click)="openModal(data)"
+        >
+          Examinar
+        </button>
+        <span
+          *ngIf="
+            data.aprobation?.state === estadoJustificacionEnum.VENCIDA &&
+            !isInasistencias
+          "
+        >
+          Vencida
+        </span>
       </td>
     </tr>
-  </tbody>  
+  </tbody>
 </nz-table>
+<nz-pagination
+  (nzPageIndexChange)="changePage($event)"
+  [nzTotal]="total_elements"
+  [nzPageIndex]="page"
+  [nzPageSize]="elements"
+  [nzResponsive]="true"
+  [nzHideOnSinglePage]="true"
+>
+</nz-pagination>
 
 <!-- datos de prueba -->
 <app-modal-pending
@@ -64,11 +114,13 @@
 ></app-modal-rejected>
 
 <!-- Modal de aprobadas PARA consumir API -->
+<!-- Modal aprobado -->
 <app-modal-approved
   [isVisible]="isModalVisible"
   [justification]="selectedJustification"
   (close)="closeModal()"
-></app-modal-approved>
+  (statusChange)="updateJustificationStatus(selectedJustification)">
+</app-modal-approved>
 
 <!-- Modal de vencidas datos de prueba -->
 <app-modal-expired

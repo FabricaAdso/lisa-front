@@ -18,7 +18,7 @@ export class CourseService {
   constructor() { }
 
 
-  getCurses(data?:QueryUrl): Observable<CourseModel[]>{
+  getCourses(data?:QueryUrl): Observable<CourseModel[]>{
 
     let url:string = getQueryUrl(this.url,data)
     

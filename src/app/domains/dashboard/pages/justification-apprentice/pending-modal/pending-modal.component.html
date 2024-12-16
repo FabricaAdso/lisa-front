@@ -5,10 +5,17 @@
   [nzFooter]="null"
 >
   <ng-container *nzModalContent>
-    <div>
-      <!-- Subir Archivo -->
-      <label for="file-upload" style="display: flex; align-items: center; cursor: pointer;">
-        <i nz-icon nzType="upload"></i>
+    <div class="content">
+
+      <!-- Carga de archivo -->
+      <div>
+        <div *ngIf="!justification.file_url">
+          
+
+        <label for="file-upload" style="display: flex; align-items: center; cursor: pointer;">
+          <i nz-icon nzType="upload" style="margin-right: 8px;"></i>
+          <span>Seleccionar Archivo</span>
+        </label>
         <input
           id="file-upload"
           type="file"
@@ -16,20 +23,38 @@
           (change)="handleFileInput($event)"
           style="display: none;"
         />
-        <span style="margin-left: 8px;">Subir archivo PDF</span>
-      </label>
-      <p *ngIf="justification?.file_url">Archivo: <strong>{{ justification.file_url }}</strong></p>
+        </div>
+
+        <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->
+        <div *ngIf="justification.file_url" style="margin-top: 8px; display: flex; align-items: center;">
+          <a
+            [href]="justification.file_url"
+            target="_blank"
+            style="text-decoration: none; color: inherit; display: flex; align-items: center;"
+          >
+            <i nz-icon nzType="file-pdf" nzTheme="outline" style="color: #d32f2f; margin-right: 8px;"></i>
+            <span>{{  'Archivo cargado' }}</span>
+          </a>
+        </div>
+        <p *ngIf="!justification.file_url" style="color: #888; margin-top: 8px;">No hay un archivo cargado.</p>
+      </div>
 
       <!-- Mensaje de error -->
-      <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+      <p *ngIf="errorMessage" style="color: red; margin-top: 8px;">{{ errorMessage }}</p>
 
-      <!-- Motivo -->
-      <textarea
-        nz-input
-        rows="4"
-        placeholder="Escriba su motivo aquí..."
-        [(ngModel)]="justification.description"
-      ></textarea>
+      <!-- Descripción -->
+      <div>
+        <label for="justificacion">Justificación</label>
+        <textarea
+          id="justificacion"
+          nz-input
+          rows="4"
+          placeholder="Escriba su motivo aquí..."
+          [(ngModel)]="justification.description"
+          [disabled]="!!justification.file_url"
+          style="width: 100%; margin-top: 8px;">
+        </textarea>
+      </div>
 
       <!-- Botones -->
       <div style="margin-top: 16px; text-align: right;">
@@ -37,7 +62,7 @@
         <button
           nz-button
           nzType="primary"
-          [disabled]="isLoading"
+          [disabled]="!file || isLoading"
           (click)="handleSubmit()"
         >
           <i *ngIf="isLoading" nz-icon nzType="loading" nzTheme="outline"></i> Enviar

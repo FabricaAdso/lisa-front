@@ -1,19 +1,20 @@
 import { Component, inject } from '@angular/core';
-import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { JustificationService } from '@shared/services/justification.service';
 import { forkJoin } from 'rxjs';
-import { ModalApprovedComponent } from "./modal-approved/modal-approved.component";
+import { ModalApprovedComponent } from './modal-approved/modal-approved.component';
 import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { ModalPendingComponent } from "./modal-pending/modal-pending.component";
-import { ModalRejectedComponent } from "./modal-rejected/modal-rejected.component";
-import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
+import { ModalPendingComponent } from './modal-pending/modal-pending.component';
+import { ModalRejectedComponent } from './modal-rejected/modal-rejected.component';
+import { ModalExpiredComponent } from './modal-expired/modal-expired.component';
 import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
+import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-apprentices-absences',
@@ -22,94 +23,160 @@ import { JustificationsInstructorService } from '@shared/services/justifications
     CommonModule,
     NzTableModule,
     NzButtonModule,
-    NzTableModule,
-    NzTabsModule,
     NzTabsModule,
     NzTagModule,
     ModalApprovedComponent,
     ModalPendingComponent,
     ModalRejectedComponent,
-    ModalExpiredComponent
-],
+    ModalExpiredComponent,
+    NzPaginationModule,
+  ],
   templateUrl: './apprentices-absences.component.html',
-  styleUrl: './apprentices-absences.component.css'
+  styleUrl: './apprentices-absences.component.css',
 })
 export class ApprenticesAbsencesComponent {
   private justificationService = inject(JustificationsInstructorService);
 
+  isInasistencias: boolean = true;
   justifications: JustificationModel[] = [];
-  estadoJustificacion?:EstadoJustificacionEnum;
+  estadoJustificacion?: EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
-    // Control de modal dinámico
-    isModalVisible = false;
-    selectedJustification!: JustificationModel; // datos de prueba
-    filteredData = this.justifications;
+  isModalVisible = false;
+  selectedJustification!: JustificationModel;
+  filteredData = this.justifications;
+
+  elements: number = 10;
+  page: number = 1;
+  last_page: number = 0;
+  total_elements: number = 0;
+  page_options: number[] = [];
+
+  included: string[] = [
+    'aprobation',
+    'assistance.session.course',
+    'assistance.apprentice.user',
+  ];
+  filter?: { [key: string]: string | EstadoJustificacionEnum };
 
   ngOnInit(): void {
-    this.loadInasistencias(); // Cargar las inasistencias al inicializar
+    this.loadInasistencias();
   }
 
   loadInasistencias(): void {
     const datasub = forkJoin([
       this.justificationService.getJustifications({
-        included: ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course','assistance.apprentice.user']
-      })
+        included: this.included,
+        page: this.page,
+        elements: this.elements,
+      }),
     ]).subscribe({
       next: ([justifications]) => {
-        console.log('Justificaciones cargadas:', justifications);
-        this.justifications = justifications;
-        this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
+        console.log('Datos recibidos para justificaciones:', justifications); // Log para depuración
+        const { data, per_page, current_page, last_page, total } = justifications;
+  
+        this.setPage(current_page, per_page, last_page, total);
+        this.justifications = [...data];
       },
       error: (err) => {
         console.error('Error al cargar las justificaciones:', err);
-      }
+      },
     });
-  } 
-
-  openModal(justification: JustificationModel): void {
-    console.log('Justificación seleccionada:', justification);
-    this.selectedJustification = justification;
-    this.isModalVisible = true;
   }
-  closeModal(): void {
-    this.isModalVisible = false; // Cierra el modal
+  
+
+  setPage(
+    current_page: number,
+    per_page: number,
+    last_page: number,
+    total: number
+  ): void {
+    this.page = current_page;
+    this.elements = per_page;
+    this.last_page = last_page; 
+    this.total_elements = total;
+
+    this.page_options = Array.from({ length: last_page }, (_, i) => i + 1);
   }
 
+  getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
+    this.filter = filter;
+    this.changePage(1);
+
+    // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
+    if (filter && filter['state'] !== 'Vencida') {
+      this.isInasistencias = false;
+    } else {
+      this.isInasistencias = true;
+    }
+
+    // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
+    if (this.filter && this.filter['state']) {
+      this.filter['aprobationState'] = this.filter['state'];
+      delete this.filter['state']; // Elimina 'state' si ya no es necesario
+    }
+
+    console.log(this.filter); // Verifica que el filtro sea correcto
+  }
+
+  changePage(page: number) {
+    console.log(page);
+    this.justificationService
+      .getJustifications({
+        included: this.included,
+        filter: this.filter,
+        page: page,
+        elements: this.elements,
+      })
+      .subscribe({
+        next: (justifications) => {
+          const {
+            data,
+            per_page,
+            current_page,
+            last_page,
+            total: to,
+          } = justifications;
+          this.setPage(current_page, per_page, last_page, to);
+          this.justifications = [...data];
+        },
+      });
+  }
 
   handleSubmission(data: { file: File; reason: string }): void {
     console.log('Archivo cargado:', data.file);
     console.log('Motivo:', data.reason);
-    this.isModalVisible = false; // Cierra el modal después de la acción
+    this.isModalVisible = false;
   }
 
-
-
-  // Cambiar entre pestañas y filtrar datos
-
-onTabChange(index: number): void {
-  const tabs = ['Inasistencias', 'Pendientes', 'Rechazadas', 'Aprobadas', 'Vencidas'];
-  const selectedTab = tabs[index];
-
-  if (selectedTab === 'Inasistencias') {
-    // Muestra todas las justificaciones
-    this.filteredData = this.justifications;
-  } else if (selectedTab === 'Pendientes') {
-    // Filtra aquellas sin aprobación (state null o undefined)
-    this.filteredData = this.justifications.filter(
-      (data) => !data.aprobation?.state
-    );
-  } else {
-    // Filtra por estado específico
-    this.filteredData = this.justifications.filter(
-      (data) => data.aprobation?.state === selectedTab
-    );
+  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
+    this.estadoJustificacion = estado;
   }
-}
 
-setEstadoJustificacion(estado?:EstadoJustificacionEnum){
-  this.estadoJustificacion = estado;
-}
+  openModal(justification: JustificationModel): void {
+    this.selectedJustification = justification;
+    this.isModalVisible = true;
+  }
 
+  closeModal(): void {
+    this.isModalVisible = false;
+  }
 
+  updateJustificationStatus(justification: JustificationModel): void {
+    const newStatus = EstadoJustificacionEnum.APROBADO; 
+
+    this.justificationService
+      .updateJustificationStatus(justification.id, newStatus)
+      .subscribe({
+        next: (response) => {
+          if (justification.aprobation) {
+            justification.aprobation.state = newStatus;
+          }
+          this.isModalVisible = false; 
+        },
+        error: (err) => {
+          console.error('Error al actualizar la justificación:', err);
+        },
+      });
+  }
 }
