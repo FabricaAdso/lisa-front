@@ -109,17 +109,6 @@ export class AttendanceComponent {
     }
   }
 
-  get paginatedTables(): any[][] {
-    const start = (this.currentPage - 1) * this.tablesPerPage;
-    return this.listDAtos.slice(start, start + this.tablesPerPage);
-  }
-
-  nextPage() {
-    if (this.currentPage < Math.ceil(this.listDAtos.length / this.tablesPerPage)) {
-      this.currentPage++;
-    }
-  }
-
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
