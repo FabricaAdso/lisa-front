@@ -109,9 +109,11 @@ export class AttendanceComponent {
       const dataCourse = this.course.flatMap((item) => {
         // Verificamos si apprentices es un array
         if (Array.isArray(item.apprentices)) {
+          console.log(item.apprentices);
+          
           return item.apprentices?.map((apprentice) => ({
             key: item.id.toString(),
-            nombre: apprentice.user?.first_name || 'No disponible',
+            nombre: apprentice.user?.name || 'No disponible',
             apellido: apprentice.user?.last_name || 'No disponible',
             documento: apprentice.user?.identity_document || 'No disponible',
             correo: apprentice.user?.email || 'No disponible'
