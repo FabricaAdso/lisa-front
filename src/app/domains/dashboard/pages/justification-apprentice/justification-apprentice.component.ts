@@ -61,12 +61,12 @@ export class JustificationApprenticeComponent {
   filteredData = this.justifications;
   included: string[] = ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course'];
 
-  selectedTab: string = 'inasistencias';
+  
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
-  setEstadoJustificacion(estado?: EstadoJustificacionEnum, tab: string = 'inasistencias') {
+  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
     this.estadoJustificacion = estado;
-    this.selectedTab= tab;
+   
   }
 
 
