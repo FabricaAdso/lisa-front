@@ -33,7 +33,6 @@
     "
   ></nz-tab>
 </nz-tabset>
-
 <nz-table
   #basicTable
   [nzBordered]="true"
@@ -115,13 +114,13 @@
 ></app-modal-rejected>
 
 <!-- Modal de aprobadas PARA consumir API -->
+<!-- Modal aprobado -->
 <app-modal-approved
   [isVisible]="isModalVisible"
   [justification]="selectedJustification"
   (close)="closeModal()"
-  (statusChange)="updateJustificationStatus(selectedJustification, $event)"
-></app-modal-approved>
-
+  (statusChange)="updateJustificationStatus(selectedJustification)">
+</app-modal-approved>
 
 <!-- Modal de vencidas datos de prueba -->
 <app-modal-expired
