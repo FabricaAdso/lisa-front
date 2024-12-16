@@ -22,7 +22,8 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzGridModule,
     RouterModule,
     SessionComponent,
-    NzModalModule
+    NzModalModule,
+  
 ],
   templateUrl: './ficha.component.html',
   styleUrl: './ficha.component.css'
@@ -38,6 +39,7 @@ export class FichaComponent {
 
   isVisible = false;
   createSessionOpen = false;
+  anotherModalOpen = false;
 
 
   //abre modal del hijo session
@@ -47,6 +49,10 @@ export class FichaComponent {
     } else {
       console.error('No se encontró sessionModal.');
     }
+  }
+  openAnotherModal() {
+    this.anotherModalOpen = true;
+    // Aquí puedes usar otro componente o configuración de modal diferente
   }
 
   showModal(): void {

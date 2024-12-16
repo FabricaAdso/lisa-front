@@ -85,12 +85,7 @@
             [nzUse12Hours]="false">
           </nz-time-picker>
         </div>
-      </div>
-      
-      
-      
-      
-      
+      </div>   
       <div class="mb-4">
         <nz-select
           name="days_of_week"
@@ -108,3 +103,14 @@
     </form>
   </ng-container>
 </nz-modal>
+
+
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  (nzOnOk)="saveForm()"
+  (nzOnCancel)="closeModal()">
+  <ng-container *nzModalContent>
+    <h1>holaaaa</h1>
+  </ng-container>
+</nz-modal>
+
