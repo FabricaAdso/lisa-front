@@ -49,38 +49,49 @@ export class JustificationApprenticeComponent {
   private justificationService = inject(JustificationService);
 
   justifications: JustificationModel[] = [];
-  estadoJustificacion?:EstadoJustificacionEnum;
-  estadoJustificacionEnum = EstadoJustificacionEnum;
+  estadoJustificacion?: EstadoJustificacionEnum;
+  
   isLoading: boolean = false; // Controla el estado de carga
 
-    // Control de modal dinámico
-    isModalVisible = false;
-    isPendingModalVisible = false;
-    
-    selectedJustification!: JustificationModel; // datos de prueba
-    filteredData = this.justifications;
-included:string[] =  ['assistance.session.instructor.user','aprobation','assistance.session.course'];
+  // Control de modal dinámico
+  isModalVisible = false;
+  isPendingModalVisible = false;
+
+  selectedJustification!: JustificationModel; // datos de prueba
+  filteredData = this.justifications;
+  included: string[] = ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course'];
+
+  selectedTab: string = 'inasistencias';
+  estadoJustificacionEnum = EstadoJustificacionEnum;
+
+  setEstadoJustificacion(estado?: EstadoJustificacionEnum, tab: string = 'inasistencias') {
+    this.estadoJustificacion = estado;
+    this.selectedTab= tab;
+  }
+
+
   ngOnInit(): void {
     this.loadInasistencias(); // Cargar las inasistencias al inicializar
 
-     // Recuperar datos de LocalStorage
-  const savedData = localStorage.getItem('justificationData');
-  if (savedData) {
-    this.selectedJustification = JSON.parse(savedData);
+    // Recuperar datos de LocalStorage
+    const savedData = localStorage.getItem('justificationData');
+    if (savedData) {
+      this.selectedJustification = JSON.parse(savedData);
+    }
   }
-  }
+
 
   loadInasistencias(): void {
     const datasub = forkJoin([
 
-      this.justificationService.getJustifications({ 
+      this.justificationService.getJustifications({
         included: this.included
       }),
 
     ]).subscribe({
       next: ([justifications]) => {
         console.log('hola');
-        
+
         console.log(justifications);
         this.justifications = justifications;
         this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
@@ -90,18 +101,20 @@ included:string[] =  ['assistance.session.instructor.user','aprobation','assista
 
   }
 
+  
+
   openModal(justification: JustificationModel): void {
-     console.log('Justificación seleccionada:', justification);
+    console.log('Justificación seleccionada:', justification);
     const state = justification.aprobation?.state ?? 'Pendiente';
     console.log('Estado:', state);
 
-  // Normalizar el estado a 'Pendiente' si es null
-  if (!justification.aprobation) {
-    justification.aprobation = {state: EstadoJustificacionEnum.PENDIENTE,} as ApprovedModel;
-    
-  } else if (!justification.aprobation.state) {
-    justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
-  }
+    // Normalizar el estado a 'Pendiente' si es null
+    if (!justification.aprobation) {
+      justification.aprobation = { state: EstadoJustificacionEnum.PENDIENTE, } as ApprovedModel;
+
+    } else if (!justification.aprobation.state) {
+      justification.aprobation.state = EstadoJustificacionEnum.PENDIENTE;
+    }
 
     this.selectedJustification = justification;
     this.isModalVisible = true;
@@ -113,43 +126,41 @@ included:string[] =  ['assistance.session.instructor.user','aprobation','assista
   }
 
 
-setEstadoJustificacion(estado?:EstadoJustificacionEnum){
-  this.estadoJustificacion = estado;
-}
 
-handleSubmission(updatedJustification: JustificationModel): void {
-  this.isLoading = true; // Indicar que la solicitud está en curso
 
-  this.justificationService.setJustificacion(updatedJustification,{included:this.included}).subscribe({
-    next: (response: JustificationModel) => {
-      this.isLoading = false; // Finalizar el estado de carga
+  handleSubmission(updatedJustification: JustificationModel): void {
+    this.isLoading = true; // Indicar que la solicitud está en curso
 
-      // Actualizar la lista de justificaciones
-      const index = this.justifications.findIndex((j) => j.id == updatedJustification.id );      
-      console.log('el indeeex',index);
-      if (index > -1) {
-        let justifications = this.justifications;
-        justifications[index] = response;
-        console.log(response);
-        
-        this.justifications = [...justifications];
+    this.justificationService.setJustificacion(updatedJustification, { included: this.included }).subscribe({
+      next: (response: JustificationModel) => {
+        this.isLoading = false; // Finalizar el estado de carga
+
+        // Actualizar la lista de justificaciones
+        const index = this.justifications.findIndex((j) => j.id == updatedJustification.id);
+        console.log('el indeeex', index);
+        if (index > -1) {
+          let justifications = this.justifications;
+          justifications[index] = response;
+          console.log(response);
+
+          this.justifications = [...justifications];
+        }
+
+        // Actualizar el modelo seleccionado
+        this.selectedJustification = response;
+
+        // Guardar en LocalStorage
+        localStorage.setItem('justificationData', JSON.stringify(response));
+
+        // Cerrar el modal
+        this.isModalVisible = false;
+      },
+      error: (err) => {
+        this.isLoading = false; // Finalizar el estado de carga
+        console.error('Error al enviar la justificación:', err);
       }
-
-      // Actualizar el modelo seleccionado
-      this.selectedJustification = response;
-
-      // Guardar en LocalStorage
-      localStorage.setItem('justificationData', JSON.stringify(response));
-
-      // Cerrar el modal
-      this.isModalVisible = false;
-    },
-    error: (err) => {
-      this.isLoading = false; // Finalizar el estado de carga
-      console.error('Error al enviar la justificación:', err);
-    }
-  });
-}
+    });
+  }
 
 
 
