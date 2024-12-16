@@ -25,15 +25,6 @@
       nz-button
       nzType="default"
       class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
-      (click)="openModal()"
-    >
-      Crear sesion
-    </button>
-    <app-session class="hidden" #sessionModal></app-session>
-    <button
-      nz-button
-      nzType="default"
-      class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
       (click)="toggleTable()"
     >
       {{ showDefaultTable ? 'Tomar asistencia' : 'Volver a tabla original' }}
@@ -42,9 +33,11 @@
       nz-button
       nzType="default"
       class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
+      (click)="openModalSession()"
     >
       Sesiones
     </button>
+    <app-session-show class="hidden" #sessionShowModal></app-session-show>
     <div
       *ngIf="!showDefaultTable"
       class="button flex gap-4 items-center"

@@ -1,13 +1,12 @@
+
+<div class="flex justify-end">
+  <button nz-button nzType="primary" (click)="openModal()">Crear session</button>
+</div>
 <div class="main-container">
   <!-- Contenedor de Fichas Activas -->
-  <button nz-button nzType="default" class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
-    (click)="openModal()">
-    Gestionar sesion 
-  </button>
-
   <div class="fichas-container">
     <h1>FICHAS</h1>
-
+    <app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
     <div nz-row [nzGutter]="16">
       <div nz-col [nzSpan]="6" *ngFor="let session of pending_courses">
         <a [routerLink]="[session.course!.code,'attendance']">
@@ -28,28 +27,28 @@
     </div>
   </div>
 
-  <!-- Historial de Fichas -->
-  <nz-collapse>
-    <nz-collapse-panel [nzHeader]="'HISTORIAL DE FICHAS'" [nzShowArrow]="true">
-      <div class="historial-fichas-container">
-        <div nz-row [nzGutter]="16">
-          <div nz-col [nzSpan]="6" *ngFor="let session of record_courses">
-            <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '2px' }">
-              <div class="ficha-header-historal">Ficha: {{ session.course?.code || 'No disponible' }}</div>
-              <div class="ficha-content">
-                <p><strong>Programa:</strong> {{ session.course?.program?.name }}</p>
-                <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name }}</p>
-                <p><strong>Ambiente:</strong> {{ session.course?.environment?.name }}</p>
-                <div class="ficha-details">
+    <!-- Historial de Fichas -->
+    <nz-collapse>
+      <nz-collapse-panel [nzHeader]="'HISTORIAL DE FICHAS'" [nzShowArrow]="true">
+        <div class="historial-fichas-container">
+          <div nz-row [nzGutter]="16">
+            <div nz-col [nzSpan]="6" *ngFor="let session of record_courses">
+              <a [routerLink]="[session.course!.code,'attendance']" >
+              <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '2px' }">
+                <div class="ficha-header-historal">Ficha: {{ session.course?.code || 'No disponible' }}</div>
+                <div class="ficha-content">
+                  <p><strong>Programa:</strong> {{ session.course?.program?.name }}</p>
+                  <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name }}</p>
+                  <p><strong>Ambiente:</strong> {{ session.course?.environment?.name }}</p>
+                  <div class="ficha-details">
                   <p><strong>Sesión:</strong> {{ session.start_time }}</p>
                   <p><strong>Fecha:</strong> {{ session.date }}</p>
+                  </div>
                 </div>
-              </div>
-            </nz-card>
+              </nz-card>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    </nz-collapse-panel>
-  </nz-collapse>
-
-  <!-- modal -->
+      </nz-collapse-panel>
+    </nz-collapse>

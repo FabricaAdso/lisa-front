@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -25,6 +25,7 @@ import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
 import { SessionService } from '@shared/services/program/session.service';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-session',
@@ -39,12 +40,15 @@ import { CreateSessionDTO } from '@shared/dto/create-session.dto';
     NzSelectComponent,
     NzModalComponent,
     NzTimePickerModule,
-    FormsModule
+    FormsModule,
+    NzModalContentDirective
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
-export class SessionComponent implements OnInit,OnDestroy {
+export class SessionComponent implements OnInit,OnChanges, OnDestroy {
+
+  @Input() isModalVisible = false;
 
   time = new Date();
 
@@ -54,6 +58,7 @@ export class SessionComponent implements OnInit,OnDestroy {
   private course_service = inject(CourseService);
   private session_service = inject(SessionService)
   private date_pipe = inject(DatePipe)
+  private notification = inject(NzNotificationService);
 
   disableDates = () => true; // Desactiva todas las fechas
 
@@ -73,14 +78,13 @@ export class SessionComponent implements OnInit,OnDestroy {
   private destroy = new Subject<void>();
 
   selectedId: number | null = null;
-  isModalVisible = false;
   formSession!: FormGroup | null;
   formRangePicker!: FormGroup | null;
 
   knowledge_network: KnowledgeNetworkModel[] = [];
   instructor: InstructorModel[] = [];
   courses: CourseModel[] = [];
-  session: SessionModel[]=[];
+  session: SessionModel[] = [];
   day_of_week = [
     { id: 1, name: 'Lunes' },
     { id: 2, name: 'Martes' },
@@ -90,13 +94,16 @@ export class SessionComponent implements OnInit,OnDestroy {
     { id: 6, name: 'Sábado' },
     { id: 7, name: 'Domingo' }
   ];
-  constructor(){
+  constructor() {
     this.createForm()
   }
 
   ngOnInit(): void {
     this.getData();
     this.changeKnowledgeNetwork();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
   ngOnDestroy(): void {
@@ -162,13 +169,13 @@ export class SessionComponent implements OnInit,OnDestroy {
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl('', Validators.required),  
+      instructor_id: new FormControl('', Validators.required),
       course_id: new FormControl('', Validators.required),
-      start_time: new FormControl('',Validators.required),
-      end_time: new FormControl('',Validators.required),
-      start_date: new FormControl('',Validators.required),
-      end_date: new FormControl('', Validators.required),
-      days_of_week: new FormControl([],Validators.required,),
+      start_time: new FormControl('', Validators.required),
+      end_time: new FormControl('', Validators.required),
+      start_date: new FormControl(null, Validators.required),
+      end_date: new FormControl(null, Validators.required),
+      days_of_week: new FormControl([], Validators.required,),
     });
     this.formRangePicker = this.formBuilder.group({
       range_picker: new FormControl('', Validators.required)
@@ -186,29 +193,35 @@ export class SessionComponent implements OnInit,OnDestroy {
   get fieldCourse() {
     return this.formSession?.get('course_id') as FormControl;
   }
-  get fieldDayOfWeek(){
+  get fieldDayOfWeek() {
     return this.formSession?.get('days_of_week') as FormControl;
   }
   get fieldStartTime() {
     return this.formSession?.get('start_time') as FormControl;
   }
-  get fieldEndTime(){
+  get fieldEndTime() {
     return this.formSession?.get('end_time') as FormControl;
   }
 
-  // onTimeChanges(dates: Date | null){
-  //   if(dates){
-  //     this.start_time = this.date_pipe.transform(dates,'HH:mm')
-  //     this.end_time = this.date_pipe.transform(dates,'HH:mm')
-  //   }if(dates==this.start_time){
-  //     this.formSession?.get('start_time')?.setValue(this.start_time)
-  //   }if(dates==this.end_time){
-  //     this.formSession?.get('end_time')?.setValue(this.end_time)
-  //   }
-    
-  // }
+  onTimeChangesStart(timeStart: Date): void {
+    if (timeStart) {
+      // Formatear la hora en formato HH:mm
+      const formattedTime = timeStart.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      console.log('Hora seleccionada:', formattedTime); // Ejemplo: '21:02'
 
-  onDateChange(dates: [Date | null, Date | null]): { start_date: string | null, end_date: string | null} {
+    }
+  }
+
+  onTimeChangesEnd(timeEnd: Date): void {
+    if (timeEnd) {
+      // Formatear la hora en formato HH:mm
+      const formattedTime = timeEnd.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      console.log('Hora seleccionada:', formattedTime); // Ejemplo: '21:02'
+
+    }
+  }
+
+  onDateChange(dates: [Date | null, Date | null]): { start_date: string | null, end_date: string | null } {
 
     let start_date = null;
     let end_date = null;
@@ -221,27 +234,47 @@ export class SessionComponent implements OnInit,OnDestroy {
     this.formSession?.get('end_date')?.setValue(end_date)
 
     console.log(this.formSession?.value)
-    return {start_date, end_date }
+    return { start_date, end_date }
   }
 
 
-  saveForm(){   
+  saveForm() {
 
-    const session:CreateSessionDTO = this.formSession?.value as CreateSessionDTO
+    const session: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
 
-     // Transformar el valor del campo day_of_week
-     if (session.days_of_week && Array.isArray(session.days_of_week)) {
-       session.days_of_week = session.days_of_week.join(',');
-     }
+    // Transformar el valor del campo day_of_week
+    if (session.days_of_week && Array.isArray(session.days_of_week)) {
+      session.days_of_week = session.days_of_week.join(',');
+    }
 
-  
+    // Convertir las fechas a solo hora (HH:mm)
+    if (session.start_time) {
+      const startTime = new Date(session.start_time);
+      session.start_time = startTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    if (session.end_time) {
+      const endTime = new Date(session.end_time);
+      session.end_time = endTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    }
+
 
     this.session_service.createSession(session).subscribe({
-      next: (data) =>{
-        let session = [...this.session,data]
+      next: (data) => {
+        let session = [...this.session, data]
+        this.createBasicNotification();
+        this.closeModal()
       }
     })
 
+  }
+
+  createBasicNotification(): void {
+    this.notification
+      .blank(
+        'Se ha creado la sesion correctamente',
+        'Ahora puede tomar asistencia de su sesion'
+      )
   }
 
   closeModal(): void {
@@ -251,5 +284,7 @@ export class SessionComponent implements OnInit,OnDestroy {
 
   openModal() {
     this.isModalVisible = true;
+    console.log(this.isModalVisible);
+    
   }
 }
