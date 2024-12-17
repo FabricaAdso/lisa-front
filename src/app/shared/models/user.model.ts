@@ -1,4 +1,5 @@
 import { DocumentTypeModel } from "./document-type.model";
+import { RoleModel } from "./rolemodel-model";
 import { TrainingCenterModel } from "./training-center.model";
 
 export interface UserModel{
@@ -12,4 +13,5 @@ export interface UserModel{
      document_type_id:number;
      document_type?:DocumentTypeModel;
      training_centers: TrainingCenterModel[];
+     roles: string[];
 }

@@ -61,28 +61,15 @@
       <td>{{ data.assistance?.apprentice?.user?.identity_document }}</td>
       <td>
         <span *ngIf="isInasistencias">
-          {{ data.aprobation?.state || "Sin estado" }}
+          {{ data.aprobation?.state || "Pendiente" }}
         </span>
-
         <button
-          *ngIf="
-            data.aprobation?.state !== estadoJustificacionEnum.VENCIDA &&
-            !isInasistencias
-          "
           nz-button
           nzType="link"
           (click)="openModal(data)"
         >
           Examinar
         </button>
-        <span
-          *ngIf="
-            data.aprobation?.state === estadoJustificacionEnum.VENCIDA &&
-            !isInasistencias
-          "
-        >
-          Vencida
-        </span>
       </td>
     </tr>
   </tbody>
@@ -93,38 +80,37 @@
   [nzPageIndex]="page"
   [nzPageSize]="elements"
   [nzResponsive]="true"
-  [nzHideOnSinglePage]="true"
->
+  [nzHideOnSinglePage]="true">
 </nz-pagination>
 
-<!-- datos de prueba -->
-<app-modal-pending
-  *ngIf="selectedJustification?.state === 'Pendientes'"
-  [isVisible]="isModalVisible"
-  (close)="closeModal()"
-  (submit)="handleSubmission($event)"
-></app-modal-pending>
 
-<!-- Modal de rechazadas datos de prueba -->
-<app-modal-rejected
-  *ngIf="selectedJustification?.state === 'Rechazadas'"
+<app-modal-rejected 
+  *ngIf="selectedJustification?.aprobation!.state =='Rechazada'"
   [isVisible]="isModalVisible"
   [justification]="selectedJustification"
   (close)="closeModal()"
 ></app-modal-rejected>
 
-<!-- Modal de aprobadas PARA consumir API -->
-<!-- Modal aprobado -->
 <app-modal-approved
+  *ngIf="selectedJustification?.aprobation!.state =='Aprobada'"
   [isVisible]="isModalVisible"
   [justification]="selectedJustification"
   (close)="closeModal()"
-  (statusChange)="updateJustificationStatus(selectedJustification)">
+  (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-approved>
 
-<!-- Modal de vencidas datos de prueba -->
-<app-modal-expired
-  *ngIf="selectedJustification?.state === 'Vencidas'"
+<app-modal-pending
+  *ngIf="selectedJustification?.aprobation!.state =='Pendiente'"
   [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
   (close)="closeModal()"
-></app-modal-expired>
+  (statusChange)="updateJustificationStatus(selectedJustification, $event)">
+</app-modal-pending>
+
+<app-modal-expired
+  *ngIf="selectedJustification?.aprobation!.state =='Vencida'"
+  [isVisible]="isModalVisible"
+  [justification]="selectedJustification"
+  (close)="closeModal()"
+  (statusChange)="updateJustificationStatus(selectedJustification, $event)">
+</app-modal-expired>

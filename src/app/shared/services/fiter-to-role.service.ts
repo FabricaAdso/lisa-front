@@ -11,9 +11,6 @@ export class FiterToRoleService {
 
 
   filterItems(rol: string): boolean {
-    return 'Instructor' == rol;
-    return !!this.auth_Service.user()?.training_centers?.some((center) =>
-      center.pivot?.role?.some((rolItem) => rolItem.name === rol)
-    );
+    return !!this.auth_Service.user()?.roles.some(Rol=>Rol == rol);
   }
 } 

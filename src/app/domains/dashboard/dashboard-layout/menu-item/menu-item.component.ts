@@ -13,6 +13,7 @@ import { MenuItem } from '@shared/models/menuItems';
 import { PermissionDirective } from '@shared/directives/permission.directive';
 import { FiterToRoleService } from '@shared/services/fiter-to-role.service';
 import { AuthService } from '@shared/services/auth.service';
+import { menuItems } from '../itemsNav';
 
 @Component({
   selector: 'app-menu-item',
@@ -32,119 +33,13 @@ import { AuthService } from '@shared/services/auth.service';
   ],
 })
 export class MenuItemComponent {
+  menuItems = menuItems;
   isMenuOpen = false;
   constructor (
     private filterItems: FiterToRoleService,
     private auth_service:AuthService
   ) { }
 
-
-  menuItems: MenuItem[] = [
-    {
-      title: 'Ambientes',
-      icon: 'environment',
-      route: 'environments',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Areas',
-      icon: 'appstore',
-      route: 'environments-area',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Inasistencias',
-      icon: 'user',
-      route: 'absences',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Asignación',
-      icon: 'solution',
-      route: 'assists',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Asistencia',
-      icon: 'check-square',
-      route: 'attendance',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Centro Formativo',
-      icon: 'bank',
-      route: 'training-centers',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Cursos',
-      icon: 'read',
-      route: 'course',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Fichas',
-      icon: 'profile',
-      route: 'fichas',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Justificaciones',
-      icon: 'file-text',
-      route: 'justification',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Programas',
-      icon: 'project',
-      route: 'programs',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Roles',
-      icon: 'team',
-      route: 'roles',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Sedes',
-      icon: 'home',
-      route: 'headquarters',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-    {
-      title: 'Sesiónes',
-      icon: 'calendar',
-      route: 'session',
-      theme: 'outline',
-      state: false,
-      Role: 'Instructor',
-    },
-  ];
   
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

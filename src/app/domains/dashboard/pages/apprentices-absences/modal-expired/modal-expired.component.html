@@ -1,8 +1,8 @@
 <nz-modal
   [(nzVisible)]="isVisible"
   nzTitle="Tiempo Límite Excedido"
-  (nzOnCancel)="handleCancel()"
   [nzFooter]="null"
+  (nzOnCancel)="closeModal()"
 >
 <ng-container *nzModalContent>
   <div style="text-align: center; padding: 16px;">
