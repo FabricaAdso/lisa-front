@@ -84,16 +84,16 @@ export class FichaComponent {
   }
   deleteSession(sessionId: number, courseId: number) {
     // Lógica para eliminar la sesión, usando el servicio correspondiente
-    this.courseService.deleteSession(sessionId, courseId).subscribe({
-      next: () => {
-        // Después de eliminar, recargar las fichas y sus sesiones
-        this.loadData();
-        console.log('Sesión eliminada');
-      },
-      error: (error) => {
-        console.error('Error al eliminar la sesión', error);
-      }
-    });
+    // this.courseService.deleteSession(sessionId, courseId).subscribe({
+    //   next: () => {
+    //     // Después de eliminar, recargar las fichas y sus sesiones
+    //     this.loadData();
+    //     console.log('Sesión eliminada');
+    //   },
+    //   error: (error) => {
+    //     console.error('Error al eliminar la sesión', error);
+    //   }
+    // });
   }
 
 }

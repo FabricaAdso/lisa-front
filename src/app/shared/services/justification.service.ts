@@ -14,7 +14,7 @@ export class JustificationService {
 
   private http = inject(HttpClient);
   //
-  URL:string = 'justification/apprentice'; 
+  URL:string = 'justifications/apprentice'; 
   enviarJustificacion:string = 'justifications'
 
 
