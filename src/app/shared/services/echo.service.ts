@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class WebSocketService {
-  private echo: Echo;
+  private echo: Echo<any>;
   pusher = Pusher;
   private tokenJWT = inject(TokenService)
   private notificationSubject = new Subject<any>();
