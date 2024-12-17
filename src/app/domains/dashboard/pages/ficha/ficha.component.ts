@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
@@ -31,50 +31,19 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 
 ],
-schemas: [CUSTOM_ELEMENTS_SCHEMA], // Añadir este esquema
+
   templateUrl: './ficha.component.html',
   styleUrl:  './ficha.component.css'
 })
 export class FichaComponent {
 
   @ViewChild('sessionModal') sessionModal:any = SessionComponent;
-
   private courseService = inject(CourseService);
 
   pending_courses:SessionModel[] = [];
   record_courses:SessionModel[] = [];
-
-  isVisible = false;
   createSessionOpen = false;
   anotherModalOpen = false;
-  selectedTabIndex: number = 0;
-  fichas = [
-    {
-      nombre: 'Ficha 1',
-      sesiones: [
-        { nombre: 'Sesion 1.1' },
-        { nombre: 'Sesion 1.2' }
-      ]
-    },
-    {
-      nombre: 'Ficha 2',
-      sesiones: [
-        { nombre: 'Sesion 2.1' },
-        { nombre: 'Sesion 2.2' }
-      ]
-    }
-  ];
-   // Métodos para manejar la edición y eliminación de sesiones
-   editarSesion(sesion: any): void {
-    console.log('Editando sesión:', sesion);
-    // Lógica para editar la sesión
-  }
-
-  eliminarSesion(sesion: any): void {
-    console.log('Eliminando sesión:', sesion);
-    // Lógica para eliminar la sesión
-  }
-
 
   //abre modal del hijo session
   openModal() {
@@ -98,40 +67,33 @@ export class FichaComponent {
     this.closeAnotherModal();
   }
 
-  showModal(): void {
-    this.isVisible = true;
-  }
-
-  handleOk(): void {
-    console.log('Button ok clicked!');
-    this.isVisible = false;
-  }
-
-  handleCancel(): void {
-    console.log('Button cancel clicked!');
-    this.isVisible = false;
-  }
-
   ngOnInit(): void {
     this.loadData();
   }
 
-  loadData(){
-    const datasub= forkJoin([
-      this.courseService.getCursesInstructorPending({included:['course.program']}),
-      this.courseService.getCursesInstructorRecord({included:['course.program']}),
-
-    ]).subscribe({
-      next:([pending,record] )=>{
-        this.pending_courses = pending;
-        this.record_courses = record;
+  loadData() {
+    // Llamar al servicio para obtener las fichas pendientes y sus sesiones
+    this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
+      next: (data) => {
+        this.pending_courses = data;  // Asigna las fichas al array
       },
-      error:(error)=>{
+      error: (error) => {
         console.error(error);
       }
     });
   }
-
-
+  deleteSession(sessionId: number, courseId: number) {
+    // Lógica para eliminar la sesión, usando el servicio correspondiente
+    this.courseService.deleteSession(sessionId, courseId).subscribe({
+      next: () => {
+        // Después de eliminar, recargar las fichas y sus sesiones
+        this.loadData();
+        console.log('Sesión eliminada');
+      },
+      error: (error) => {
+        console.error('Error al eliminar la sesión', error);
+      }
+    });
+  }
 
 }

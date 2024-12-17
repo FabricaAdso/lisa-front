@@ -52,9 +52,9 @@
           ></nz-option>
           }
         </nz-select>
-      </div>  
+      </div>
 
-      <div class="mb-4"> 
+      <div class="mb-4">
         <label for="" class="">Fecha de asignacion</label>
         <nz-range-picker
           class="w-full"
@@ -65,27 +65,27 @@
       </div>
 
       <div class="mb-4 flex gap-5">
-        <div class="flex flex-col w-1/2"> 
+        <div class="flex flex-col w-1/2">
           <label class="mb-1 text-sm font-medium text-gray-700">Hora de inicio</label>
-          <nz-time-picker 
-            (ngModelChange)="onTimeChangesStart($event)" 
-            [formControl]="fieldStartTime" 
-            name="start_time" 
-            [nzFormat]="'HH:mm'" 
+          <nz-time-picker
+            (ngModelChange)="onTimeChangesStart($event)"
+            [formControl]="fieldStartTime"
+            name="start_time"
+            [nzFormat]="'HH:mm'"
             [nzUse12Hours]="false">
           </nz-time-picker>
         </div>
         <div class="flex flex-col w-1/2">
           <label class="mb-1 text-sm font-medium text-gray-700">Hora de fin</label>
-          <nz-time-picker 
-            (ngModelChange)="onTimeChangesEnd($event)" 
-            [formControl]="fieldEndTime" 
-            name="end_time" 
-            [nzFormat]="'HH:mm'" 
+          <nz-time-picker
+            (ngModelChange)="onTimeChangesEnd($event)"
+            [formControl]="fieldEndTime"
+            name="end_time"
+            [nzFormat]="'HH:mm'"
             [nzUse12Hours]="false">
           </nz-time-picker>
         </div>
-      </div>   
+      </div>
       <div class="mb-4">
         <nz-select
           name="days_of_week"
@@ -105,12 +105,6 @@
 </nz-modal>
 
 
-<nz-modal
-  [(nzVisible)]="isModalVisible"
-  (nzOnOk)="saveForm()"
-  (nzOnCancel)="closeModal()">
-  <ng-container *nzModalContent>
-    <h1>holaaaa</h1>
-  </ng-container>
-</nz-modal>
+
+
 
