@@ -70,8 +70,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
       this.course_service.getCursesInstructorNow({ included: ['assistances.apprentice.user'] }),
     ]).subscribe({
       next: ([assistance]) => {
-        console.log(assistance);
-        
+
         this.listOfData = assistance.assistances.map((item) => this.mapToAssistance(item));
         this.evaluarCantidadTablas(); // Agrupa los datos para multiples tablas
       },
@@ -85,7 +84,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
     return{
       key: item.id.toString(),
       assistance: item.assistance,
-      nombre: item.apprentice?.user?.first_name,
+      nombre: item.apprentice?.user?.name,
       apellido: item.apprentice?.user?.last_name,
       documento: item.apprentice?.user?.identity_document,
       correo: item.apprentice?.user?.email,
