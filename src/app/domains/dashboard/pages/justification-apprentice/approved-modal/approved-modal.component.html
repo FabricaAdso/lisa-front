@@ -14,13 +14,22 @@
           nzTheme="outline"
           style="color: red; margin-right: 8px;"
         ></i>
-        <strong>{{ justification.file_url || 'Archivo no disponible' }}</strong>
+        <a
+          *ngIf="justification?.file_url"
+          [href]="justification.file_url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Descargar Archivo
+        </a>
+        <span *ngIf="!justification?.file_url">Archivo no disponible</span>
       </p>
 
-      <!-- Información del archivo y motivo -->
+      <!-- Información de la descripción -->
       <div>
+        <p style="font-weight: bold; margin-bottom: 8px;">Descripción:</p>
         <p style="margin: 0; color: #555;">
-          {{ justification.description || 'Descripción del aprendiz sin especificar' }}
+          {{ justification.description || 'Descripción no especificada' }}
         </p>
       </div>
     </div>

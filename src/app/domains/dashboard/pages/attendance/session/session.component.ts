@@ -46,10 +46,9 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
-export class SessionComponent implements OnInit, OnDestroy {
+export class SessionComponent implements OnInit,OnChanges, OnDestroy {
 
   @Input() isModalVisible = false;
-  @Input()  anotherModalOpen = false;
 
   time = new Date();
 
@@ -73,7 +72,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
 
   // Propiedad vinculada al rango del picker
-  date = null;
+  date: [Date | null, Date | null] = [null, null];
 
   private knowledgeNetworkSelection = new Subject<void>();
   private destroy = new Subject<void>();
@@ -96,19 +95,15 @@ export class SessionComponent implements OnInit, OnDestroy {
     { id: 7, name: 'Domingo' }
   ];
   constructor() {
-
-  }
-
-  openAnotherModal() {
-    this.anotherModalOpen = true;
-
-    // Aquí puedes usar otro componente o configuración de modal diferente
+    this.createForm()
   }
 
   ngOnInit(): void {
-    this.createForm()
     this.getData();
     this.changeKnowledgeNetwork();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
   ngOnDestroy(): void {
@@ -176,10 +171,10 @@ export class SessionComponent implements OnInit, OnDestroy {
       knowledge_network: new FormControl('', Validators.required),
       instructor_id: new FormControl('', Validators.required),
       course_id: new FormControl('', Validators.required),
-      start_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
-      end_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
-      start_date: new FormControl(new Date, Validators.required),
-      end_date: new FormControl(new Date, Validators.required),
+      start_time: new FormControl('', Validators.required),
+      end_time: new FormControl('', Validators.required),
+      start_date: new FormControl(null, Validators.required),
+      end_date: new FormControl(null, Validators.required),
       days_of_week: new FormControl([], Validators.required,),
     });
     this.formRangePicker = this.formBuilder.group({
@@ -290,6 +285,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   openModal() {
     this.isModalVisible = true;
     console.log(this.isModalVisible);
-
+    
   }
 }

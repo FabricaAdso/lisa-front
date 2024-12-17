@@ -14,6 +14,7 @@ export class CourseService {
   private http = inject(HttpClient);
   url:string = 'course'
   //
+  urlSessionNOw:string = 'course/sessionsNow'
 
   constructor() { }
 
@@ -21,30 +22,30 @@ export class CourseService {
   getCourses(data?:QueryUrl): Observable<CourseModel[]>{
 
     let url:string = getQueryUrl(this.url,data)
-    
-    
+
+
     return this.http.get<CourseModel[]>(url);
   }
 
   getCursesInstructorPending(data?:QueryUrl): Observable<SessionModel[]>{
 
     let url:string = getQueryUrl(`${this.url}/Instructorsessions`,data)
-   
+
     return this.http.get<SessionModel[]>(url);
   }
 
   getCursesInstructorRecord(data?:QueryUrl): Observable<SessionModel[]>{
     let url:string = getQueryUrl(`${this.url}/sessions`,data)
-   
+
     return this.http.get<SessionModel[]>(url);
   }
 
-  getCursesInstructorNow(data?:QueryUrl): Observable<CourseModel[]>{
+  getCursesInstructorNow(data?:QueryUrl){
 
-    let url:string = getQueryUrl(this.url,data)
-   
-    return this.http.get<CourseModel[]>(`${url}/sessionsNow`);
+    let urlSessionNOw:string = getQueryUrl(this.urlSessionNOw,data)
+
+    return this.http.get<SessionModel>(urlSessionNOw);
   }
 
-  
+
 }

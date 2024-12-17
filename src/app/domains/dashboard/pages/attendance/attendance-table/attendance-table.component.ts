@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
+import { CourseService } from '@shared/services/program/course.service';
+import { SessionModel } from '@shared/models/session.model';
 
 @Component({
   selector: 'app-attendance-table',
@@ -17,7 +19,9 @@ import { RegisterAssistanceModel } from '@shared/models/register-assistance.mode
   styleUrl: './attendance-table.component.css'
 })
 export class AttendanceTableComponent implements OnInit,OnDestroy {
+
   private assistance_service = inject(AssistanceService);
+  private course_service = inject(CourseService)
   listOfData: RegisterAssistanceModel[] = [];
   
   listDAtos: any[][] = []; // Almacena los grupos de datos para multiples tablas
@@ -32,7 +36,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
   
 
   ngOnInit(): void {
-    this.getData(); 
+    this.getData();   
     this.adjustTablesPerPage(window.innerWidth);
   }
 
@@ -63,11 +67,11 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
 
   getData() {
     const data_sub = forkJoin([
-      this.assistance_service.getAssitanceAll({ included: ['apprentice.user'] }),
+      this.course_service.getCursesInstructorNow({ included: ['assistances.apprentice.user'] }),
     ]).subscribe({
       next: ([assistance]) => {
-        this.listOfData = assistance.map((item) => (this.mapToAssistance(item)));
-        
+
+        this.listOfData = assistance.assistances.map((item) => this.mapToAssistance(item));
         this.evaluarCantidadTablas(); // Agrupa los datos para multiples tablas
       },
       complete(){
@@ -80,7 +84,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
     return{
       key: item.id.toString(),
       assistance: item.assistance,
-      nombre: item.apprentice?.user?.first_name,
+      nombre: item.apprentice?.user?.name,
       apellido: item.apprentice?.user?.last_name,
       documento: item.apprentice?.user?.identity_document,
       correo: item.apprentice?.user?.email,

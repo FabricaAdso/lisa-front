@@ -1,0 +1,8 @@
+::ng-deep .ant-tabs-tab {
+    @apply text-gray-500 transition-all duration-300; /* Pestañas inactivas */
+  }
+  
+  ::ng-deep .ant-tabs-tab:hover {
+    @apply text-gray-700; /* Al pasar el cursor */
+  }
+  

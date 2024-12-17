@@ -49,6 +49,7 @@ export class AttendanceComponent {
   private courses_service = inject(CourseService);
   
   @Input() course_code?:number;
+  @Input() session_code?:number;
 
   course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];
@@ -110,11 +111,12 @@ export class AttendanceComponent {
         if (Array.isArray(item.apprentices)) {
           return item.apprentices?.map((apprentice) => ({
             key: item.id.toString(),
-            nombre: apprentice.user?.first_name || 'No disponible',
+            nombre: apprentice.user?.name || 'No disponible',
             apellido: apprentice.user?.last_name || 'No disponible',
             documento: apprentice.user?.identity_document || 'No disponible',
             correo: apprentice.user?.email || 'No disponible'
           })) || [];
+          
         }else{
           return [];  
         } 

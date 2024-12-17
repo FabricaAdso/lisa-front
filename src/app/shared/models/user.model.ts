@@ -3,7 +3,7 @@ import { TrainingCenterModel } from "./training-center.model";
 
 export interface UserModel{
      id:number;
-     first_name:string;
+     name:string;
      middle_name:string;
      last_name:string;
      second_last_name:string;
