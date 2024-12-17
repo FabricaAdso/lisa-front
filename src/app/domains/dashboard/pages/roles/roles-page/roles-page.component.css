@@ -8,9 +8,12 @@
  width: 40%;
 }
 
-#all {
-  display: flex;
+#all[_ngcontent-ng-c4024495835] {
+  display: flex
+;
   justify-content: center;
+  height: 80%;
+  overflow: auto;
 }
 .ant-table-wrapper {
   clear: both;
