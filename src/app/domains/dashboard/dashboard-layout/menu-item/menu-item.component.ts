@@ -40,8 +40,6 @@ export class MenuItemComponent {
     private auth_service:AuthService
   ) { }
 
-
- 
   
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

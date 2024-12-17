@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationService } from '@shared/services/justification.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-pending-modal',
   standalone: true,
-  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule],
+  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule,NzIconModule],
   templateUrl: './pending-modal.component.html',
   styleUrl: './pending-modal.component.css'
 })
@@ -53,14 +54,13 @@ export class PendingModalComponent {
   handleCancel(): void {
     this.close.emit(false); // Cierra el modal
   }
-
   handleSubmit(): void {
     if (!this.file) {
       this.errorMessage = 'Debe seleccionar un archivo antes de enviar.';
       return;
     }
   
-    if (!this.justification.description!.trim()) {
+    if (!this.justification.description?.trim()) {
       this.errorMessage = 'Debe ingresar un motivo.';
       return;
     }
@@ -68,10 +68,14 @@ export class PendingModalComponent {
     const updatedJustification: JustificationModel = {
       ...this.justification,
       file: this.file,
+      description: this.justification.description
     };
   
+    // Emitir los datos al padre
     this.submit.emit(updatedJustification);
-    this.handleCancel(); // Cierra el modal
+  
+    // Cerrar el modal
+    this.handleCancel();
   }
   
 

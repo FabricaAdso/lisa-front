@@ -54,8 +54,8 @@ export class DropDownMenuComponent {
       if (this.isLoggedIn) {
         this.auth_service.me().subscribe({
           next: (user: UserModel) => {
-            this.user.set(user);  
-            console.log('Hola', user.first_name, user.first_name);
+            this.user.set(user);  // Actualizamos el signal con el objeto de usuario
+            console.log('Hola', user.name, user.last_name);
           },
           error: (err) => {
             console.error('Error al obtener el usuario:', err);

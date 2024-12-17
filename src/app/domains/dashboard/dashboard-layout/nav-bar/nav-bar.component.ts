@@ -60,7 +60,7 @@ export class NavBarComponent implements OnInit {
         this.auth_service.me().subscribe({
           next: (user: UserModel) => {
             this.user.set(user);
-            console.log('Hola', user.first_name, user.first_name);
+            console.log('Hola', user.name, user.last_name);
             this.isLoggedIn = true
           },
           error: (err) => {

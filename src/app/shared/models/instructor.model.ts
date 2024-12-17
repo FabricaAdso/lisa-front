@@ -1,7 +1,8 @@
-import { UserModel } from "./user.model";
-
+import { CourseModel } from "./course.model";
 import { KnowledgeNetworkModel } from "./knowledg-network.model";
+import { SessionModel } from "./session.model";
 import { TrainingCenterModel } from "./training-center.model";
+import { UserModel } from "./user.model";
 
 export interface InstructorModel{
     id:number;
@@ -13,6 +14,9 @@ export interface InstructorModel{
     knowledge_network_id:number;
     knowledge_network?:KnowledgeNetworkModel
 
+    //relacion para componente session-show
+    courses?:CourseModel[]
+    sessions?:SessionModel[]
 
 }
 

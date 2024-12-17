@@ -13,7 +13,7 @@
         <nz-descriptions-item nzTitle="Duración del programa">06/06/2023 - 06/08/2024</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Sede">Inem</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Ambiente" [nzSpan]="1">{{course_code||'1055'}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Vocero de ficha">Juan Andrés</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero de ficha">Juan Andrés°</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Vocero suplente">Antonio Rodríguez</nz-descriptions-item>
       </nz-descriptions>
     </nz-page-header-content>
@@ -21,15 +21,6 @@
 
   <!-- Buttons -->
   <div class="buttons w-4/5 p-4 mt-8 flex justify-end gap-4">
-    <button
-      nz-button
-      nzType="default"
-      class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
-      (click)="openModal()"
-    >
-      Crear sesion
-    </button>
-    <app-session class="hidden" #sessionModal></app-session>
     <button
       nz-button
       nzType="default"
@@ -42,9 +33,11 @@
       nz-button
       nzType="default"
       class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
+      (click)="openModalSession()"
     >
       Sesiones
     </button>
+    <app-session-show class="hidden" #sessionShowModal></app-session-show>
     <div
       *ngIf="!showDefaultTable"
       class="button flex gap-4 items-center"

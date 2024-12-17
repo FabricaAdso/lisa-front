@@ -13,6 +13,8 @@ export class CourseService {
 
   private http = inject(HttpClient);
   url:string = 'course'
+  //
+  urlSessionNOw:string = 'course/sessionsNow'
 
   constructor() { }
 
@@ -38,11 +40,11 @@ export class CourseService {
     return this.http.get<SessionModel[]>(url);
   }
 
-  getCursesInstructorNow(data?:QueryUrl): Observable<CourseModel[]>{
+  getCursesInstructorNow(data?:QueryUrl){
 
-    let url:string = getQueryUrl(this.url,data)
+    let urlSessionNOw:string = getQueryUrl(this.urlSessionNOw,data)
    
-    return this.http.get<CourseModel[]>(`${url}/sessionsNow`);
+    return this.http.get<SessionModel>(urlSessionNOw);
   }
 
   
