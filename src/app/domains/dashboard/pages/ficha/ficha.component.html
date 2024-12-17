@@ -1,4 +1,3 @@
-
 <div class="flex justify-end">
   <button nz-button nzType="primary" (click)="openModal()">Crear session</button>
   <button nz-button nzType="primary" (click)="openAnotherModal()">Crear otro modal</button>
@@ -7,8 +6,31 @@
   <!-- Contenedor de Fichas Activas -->
   <div class="fichas-container">
     <h1>FICHAS</h1>
+    <!-- modales -->
     <app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
-    <app-session *ngIf="createSessionOpen"></app-session>
+
+
+    <nz-modal
+    [(nzVisible)]="anotherModalOpen"
+    nzTitle="Fichas"
+    (nzOnCancel)="closeAnotherModal()"
+    (nzOnOk)="handleAnotherModalOk()"
+  >
+    <ng-container *nzModalContent>
+      <nz-tabset [(nzSelectedIndex)]="selectedTabIndex">
+        <nz-tab *ngFor="let ficha of fichas" [nzTabLabel]="ficha.nombre">
+          <div *ngFor="let sesion of ficha.sesiones">
+            <div class="session-card">
+              <p>{{ sesion.nombre }}</p>
+              <button nz-button nzType="primary" (click)="editarSesion(sesion)">Editar</button>
+              <button nz-button nzType="default" (click)="eliminarSesion(sesion)">Eliminar</button>
+            </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </ng-container>
+  </nz-modal>
+    <!-- -------------------------------------------------------------------------------------------------------------- -->
     <div nz-row [nzGutter]="16">
       <div nz-col [nzSpan]="6" *ngFor="let session of pending_courses">
         <a [routerLink]="[session.course!.code,'attendance']">
@@ -29,13 +51,13 @@
     </div>
   </div>
 
-    <!-- Historial de Fichas -->
-    <nz-collapse>
-      <nz-collapse-panel [nzHeader]="'HISTORIAL DE FICHAS'" [nzShowArrow]="true">
-        <div class="historial-fichas-container">
-          <div nz-row [nzGutter]="16">
-            <div nz-col [nzSpan]="6" *ngFor="let session of record_courses">
-              <a [routerLink]="[session.course!.code,'attendance']" >
+  <!-- Historial de Fichas -->
+  <nz-collapse>
+    <nz-collapse-panel [nzHeader]="'HISTORIAL DE FICHAS'" [nzShowArrow]="true">
+      <div class="historial-fichas-container">
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="6" *ngFor="let session of record_courses">
+            <a [routerLink]="[session.course!.code,'attendance']">
               <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '2px' }">
                 <div class="ficha-header-historal">Ficha: {{ session.course?.code || 'No disponible' }}</div>
                 <div class="ficha-content">
@@ -43,14 +65,14 @@
                   <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name }}</p>
                   <p><strong>Ambiente:</strong> {{ session.course?.environment?.name }}</p>
                   <div class="ficha-details">
-                  <p><strong>Sesión:</strong> {{ session.start_time }}</p>
-                  <p><strong>Fecha:</strong> {{ session.date }}</p>
+                    <p><strong>Sesión:</strong> {{ session.start_time }}</p>
+                    <p><strong>Fecha:</strong> {{ session.date }}</p>
                   </div>
                 </div>
               </nz-card>
-              </a>
-            </div>
+            </a>
           </div>
         </div>
-      </nz-collapse-panel>
-    </nz-collapse>
+      </div>
+    </nz-collapse-panel>
+  </nz-collapse>

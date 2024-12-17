@@ -49,6 +49,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 export class SessionComponent implements OnInit,OnChanges, OnDestroy {
 
   @Input() isModalVisible = false;
+  @Input()  anotherModalOpen = false;
 
   time = new Date();
 
@@ -96,6 +97,12 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
   ];
   constructor() {
     this.createForm()
+  }
+
+  openAnotherModal() {
+    this.anotherModalOpen = true;
+
+    // Aquí puedes usar otro componente o configuración de modal diferente
   }
 
   ngOnInit(): void {
@@ -285,6 +292,6 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
   openModal() {
     this.isModalVisible = true;
     console.log(this.isModalVisible);
-    
+
   }
 }
