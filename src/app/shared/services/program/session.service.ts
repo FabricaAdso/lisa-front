@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CreateSessionDto } from '@shared/dto/program/create-session-dto';
+import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { UpdateCourseDto } from '@shared/dto/program/update-course-dto';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { QueryUrl } from '@shared/models/query-url.model';
@@ -14,15 +14,19 @@ export class SessionService {
   constructor() { }
 
   private http = inject(HttpClient);
-  url:string = `sessions`;
+
+  url:string = 'sessions';
+
+
+
   getAll(data?:QueryUrl){
     let url:string = getQueryUrl(this.url,data);
     console.log(url)
     return this.http.get<SessionModel[]>(url);
   }
 
-  create(data:CreateSessionDto){
-    return this.http.post<SessionModel>(this.url, data);
+  createSession(data:CreateSessionDTO){
+    return this.http.post<SessionModel[]>(this.url, data);
   }
 
   delete(id:number){

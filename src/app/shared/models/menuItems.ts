@@ -5,4 +5,6 @@ export interface MenuItem {
   route: string | null;
   subMenu?: MenuItem[];
   theme: string;
+  state?: boolean;
+  Role?: string;
 }

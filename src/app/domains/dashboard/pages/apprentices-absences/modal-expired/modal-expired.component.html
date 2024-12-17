@@ -1,0 +1,24 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Tiempo Límite Excedido"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+>
+<ng-container *nzModalContent>
+  <div style="text-align: center; padding: 16px;">
+    <p style="color: #d32f2f; font-size: 16px; font-weight: bold;">
+      ¡Justificación no válida!
+    </p>
+    <p style="color: #555;">
+      Lo sentimos, pero el tiempo límite para cargar la justificación ha
+      expirado. Por favor, contacte al instructor para obtener más
+      información.
+    </p>
+  </div>
+</ng-container>
+<ng-template #modalFooter>
+  <button nz-button nzType="primary" (click)="null">Aceptar</button>
+  <button nz-button nzType="default" (click)="null">Cancelar</button>
+</ng-template>
+</nz-modal>
+

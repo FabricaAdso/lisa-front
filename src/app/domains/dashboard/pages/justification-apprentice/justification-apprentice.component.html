@@ -1,10 +1,20 @@
-<nz-tabset>
-  <nz-tab nzTitle="Inasistencias" (nzClick)="setEstadoJustificacion()"></nz-tab>
-  <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
-  <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
-  <nz-tab nzTitle="Aprobadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"></nz-tab>
-  <nz-tab nzTitle="Vencidas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"></nz-tab>
-</nz-tabset>
+<div [ngClass]="{
+  'inasistencias':!estadoJustificacion,
+  'pendientes':estadoJustificacion === estadoJustificacionEnum.PENDIENTE,
+  'rechazadas':estadoJustificacion === estadoJustificacionEnum.RECHAZADO,
+  'aprobadas':estadoJustificacion === estadoJustificacionEnum.APROBADO,
+  'vencida':estadoJustificacion === estadoJustificacionEnum.VENCIDA,
+
+}">
+  <nz-tabset >
+    <nz-tab nzTitle="Inasistencias"   (nzClick)="setEstadoJustificacion()"></nz-tab>
+    <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
+    <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
+    <nz-tab nzTitle="Aprobadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"></nz-tab>
+    <nz-tab nzTitle="Vencidas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"></nz-tab>
+  </nz-tabset>
+</div>
+
 
 <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'"
   [nzData]="justifications|byEstadoJustificacion:estadoJustificacion" [nzScroll]="{ x: '1200px' }">
