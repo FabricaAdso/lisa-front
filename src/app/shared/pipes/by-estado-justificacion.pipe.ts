@@ -11,11 +11,10 @@ export class ByEstadoJustificacionPipe implements PipeTransform {
 
   transform(justificaciones:JustificationModel[],estado?:EstadoJustificacionEnum): JustificationModel[] {
     if(!estado) return justificaciones;
-    else{
-      return justificaciones.filter((justificacion)=>{
-        return justificacion.aprobation?.state == estado || justificacion.aprobation?.state == null ;
-      });
-    }
+    return justificaciones.filter((justificacion)=>{
+      return justificacion.aprobation?.state == estado  ;
+    });
+    
   }
 
 }
