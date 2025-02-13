@@ -49,7 +49,7 @@ export class CalendarComponent {
   }
 
   loadSessions(): void {
-    this.sessionService.getAll({included:['course.program','instructor','course','assistances.apprentice','course.environment']})
+    this.sessionService.getAll({included:['course.program','instructor.user','course','assistances.apprentice.user','course.environment']})
     .subscribe({
       next: (sessions) => {
         this.initialEvents = sessions;
@@ -63,6 +63,7 @@ export class CalendarComponent {
 
     // Obtiene el color para el timeline
     getTimelineColor(session: SessionModel): string {
+      console.log(session)
       const today = new Date();
       const dateSesion = new Date(session.date)
       const hasAssistanceTaken =  session.assistances.length > 0;
@@ -92,6 +93,7 @@ export class CalendarComponent {
   // Maneja el clic en un evento para mostrar el modal
   handleEventClick(clickInfo: EventClickArg) {
     const eventDate = clickInfo.event.startStr.split('T')[0];
+    console.log(eventDate)
     const sessionsForDay = this.getSessionsForDay(eventDate);
 
     this.selectedEvent = {

@@ -15,9 +15,11 @@ export class SessionService {
 
   private http = inject(HttpClient);
 
-  url:string = 'session';
+  url:string = 'sessions';
 
-
+  getSessionsByFicha(courseId: number) {
+    return this.http.get<SessionModel[]>(`/api/ficha/${courseId}/sessions`);
+  }
 
   getAll(data?:QueryUrl){
     let url:string = getQueryUrl(this.url,data);
@@ -29,7 +31,7 @@ export class SessionService {
     return this.http.post<SessionModel[]>(this.url, data);
   }
 
-  delete(id:number){
+  deleteSession(id:number){
     return this.http.delete(`${this.url}/${id}`)
   }
 

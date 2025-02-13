@@ -20,7 +20,6 @@
   [nzData]="justifications|byEstadoJustificacion:estadoJustificacion" [nzScroll]="{ x: '1200px' }">
   <thead>
     <tr>
-      <th nzWidth="25%">id</th>
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
@@ -30,7 +29,6 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data">
-      <td>{{ data.id}}</td>
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.name}}</td>
       <td>{{ data.assistance?.session?.course?.shift}}</td>
