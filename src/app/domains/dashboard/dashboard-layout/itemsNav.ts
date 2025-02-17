@@ -7,7 +7,7 @@ export const menuItems: MenuItem[] = [
       route: 'environments',
       theme: 'outline',
       state: false,
-      Role: 'Admiin',
+      Role: 'Usuario',
     },
     {
       title: 'Areas',
@@ -15,7 +15,7 @@ export const menuItems: MenuItem[] = [
       route: 'environments-area',
       theme: 'outline',
       state: false,
-      Role: 'Admin',
+      Role: 'Usuario',
     },
     {
       title: 'Inasistencias',
@@ -23,7 +23,7 @@ export const menuItems: MenuItem[] = [
       route: 'absences',
       theme: 'outline',
       state: false,
-      Role: 'Instructor',
+      Role: 'Usuario',
     },
     {
       title: 'Asignación',
@@ -31,7 +31,7 @@ export const menuItems: MenuItem[] = [
       route: 'assists',
       theme: 'outline',
       state: false,
-      Role: 'Admin',
+      Role: 'Usuario',
     },
     {
       title: 'Asistencia',
@@ -39,7 +39,7 @@ export const menuItems: MenuItem[] = [
       route: 'fichas/:course_code/attendance',
       theme: 'outline',
       state: false,
-      Role: 'Instructor',
+      Role: 'Usuario',
     },
     {
       title: 'Centro Formativo',
@@ -47,7 +47,7 @@ export const menuItems: MenuItem[] = [
       route: 'training-centers',
       theme: 'outline',
       state: false,
-      Role: 'Admin',
+      Role: 'Usuario',
     },
     {
       title: 'Cursos',
@@ -55,7 +55,7 @@ export const menuItems: MenuItem[] = [
       route: 'course',
       theme: 'outline',
       state: false,
-      Role: 'Admin',
+      Role: 'Usuario',
     },
     {
       title: 'Fichas',
@@ -63,7 +63,7 @@ export const menuItems: MenuItem[] = [
       route: 'fichas',
       theme: 'outline',
       state: false,
-      Role: 'Instructor',
+      Role: 'Usuario',
     },
     {
       title: 'Justificaciones',
@@ -71,7 +71,7 @@ export const menuItems: MenuItem[] = [
       route: 'justification',
       theme: 'outline',
       state: false,
-      Role: 'Aprendiz',
+      Role: 'Usuario',
     },
     {
       title: 'Programas',
@@ -79,7 +79,7 @@ export const menuItems: MenuItem[] = [
       route: 'programs',
       theme: 'outline',
       state: false,
-      Role: 'Admin',
+      Role: 'Usuario',
     },
     {
       title: 'Roles',
@@ -87,7 +87,7 @@ export const menuItems: MenuItem[] = [
       route: 'roles',
       theme: 'outline',
       state: false,
-      Role: 'Admin',
+      Role: 'Usuario',
     },
     {
       title: 'Sedes',
@@ -95,7 +95,7 @@ export const menuItems: MenuItem[] = [
       route: 'headquarters',
       theme: 'outline',
       state: false,
-      Role: 'Admin,',
+      Role: 'Usuario,',
     },
     {
       title: 'Sesiónes',
@@ -103,6 +103,14 @@ export const menuItems: MenuItem[] = [
       route: 'session',
       theme: 'outline',
       state: false,
-      Role: 'Instructor',
+      Role: 'Usuario',
+    },
+    {
+      title: 'Notificaciones',
+      icon: 'notification',
+      route: 'notification',
+      theme: 'outline',
+      state: false,
+      Role: 'Usuario',
     },
   ];
