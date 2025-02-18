@@ -13,6 +13,7 @@
           [formControl]="fieldKnowledgeNetwork"
           name="knowledge_network"
           placeholder="Seleccione un Area"
+          [nzShowSearch]="true"
         >
           @for (item of knowledge_network; track $index) {
           <nz-option [nzLabel]="item.name" [nzValue]="item.id">{{
@@ -27,6 +28,7 @@
           [formControl]="fieldInstructor"
           name="instructor_id"
           placeholder="Seleccione una Sede"
+          [nzShowSearch]="true"
         >
           @for (item of instructor; track $index) {
           <nz-option
@@ -44,6 +46,7 @@
           [formControl]="fieldCourse"
           name="course_id"
           placeholder="Seleccione una Sede"
+          [nzShowSearch]="true"
         >
           @for (item of courses; track $index) {
           <nz-option

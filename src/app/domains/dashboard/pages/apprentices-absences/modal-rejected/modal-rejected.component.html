@@ -2,29 +2,22 @@
   [(nzVisible)]="isVisible"
   nzTitle="Justificación Rechazada"
   (nzOnCancel)="handleCancel()"
-  [nzFooter]="modalFooter"
->
-<ng-container *nzModalContent>
-  <div>
-    <!-- Archivo PDF -->
-    <p style="display: flex; align-items: center; margin-bottom: 16px;">
-      <i nz-icon nzType="file-pdf" nzTheme="outline" style="color: red; margin-right: 8px;"></i>
-      <strong>{{ justification }}</strong>
-    </p>
+  [nzFooter]="null">
+  <ng-container *nzModalContent>
+    <div>
+      <p style="display: flex; align-items: center; margin-bottom: 16px">
+        <i
+          nz-icon
+          nzType="file-pdf"
+          nzTheme="outline"
+          style="color: red; margin-right: 8px"
+        ></i>
+        <strong>{{justification.file_url}}</strong>
+      </p>
 
-    <!-- Razón de rechazo -->
-    <p style="color: #333; margin-bottom: 16px;">
-      {{ justification }}
-    </p>
-
-    <!-- Botón de cerrar -->
-    <div style="text-align: right;">
-      <button nz-button nzType="default" (click)="handleCancel()">Cerrar</button>
+      <p style="color: #333; margin-bottom: 16px">
+        {{ justification.aprobation?.motive}}
+      </p>
     </div>
-  </div>
-</ng-container>
-<ng-template #modalFooter>
-  <button nz-button nzType="primary" (click)="null">Aceptar</button>
-  <button nz-button nzType="default" (click)="null">Cancelar</button>
-</ng-template>
+  </ng-container>
 </nz-modal>

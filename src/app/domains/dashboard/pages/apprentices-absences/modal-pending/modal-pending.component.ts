@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
+import { JustificationModel } from '@shared/models/justification-model';
+import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 
@@ -15,65 +18,49 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 })
 export class ModalPendingComponent {
 
-  @Input() isVisible: boolean = false; // Controla la visibilidad del modal
+ @Input() isVisible: boolean = false;
+  @Input() justification!: JustificationModel;
   @Output() close = new EventEmitter<boolean>();
-  @Output() submit = new EventEmitter<{ file: File; reason: string }>(); // Envía el archivo y el motivo al padre
+  @Output() statusChange = new EventEmitter<EstadoJustificacionEnum>();
+  motive: string = ''; 
+  isRejecting: boolean = false; 
+  private justificationService = inject(JustificationsInstructorService);
 
-  file: File | null = null; // Archivo cargado
-  reason: string = ''; // Motivo ingresado
-  errorMessage: string = ''; // Mensajes de error
-
-
-  handleFileInput(event: any): void {
-    const selectedFile = event.target.files[0];
-    if (!selectedFile) return;
-
-    if (selectedFile.type !== 'application/pdf') {
-      this.errorMessage = 'El archivo debe ser en formato PDF.';
-      this.file = null;
-      return;
-    }
-
-    if (selectedFile.size > 5 * 1024 * 1024) {
-      this.errorMessage = 'El archivo no debe superar los 5MB.';
-      this.file = null;
-      return;
-    }
-
-    this.file = selectedFile;
-    this.errorMessage = '';
+  ngOnInit(): void {
+    console.log(this.isVisible)
   }
 
-
-
-
-  handleCancel(): void {
-    this.resetModal(); // Limpia los datos
-    this.close.emit(false); // Cierra el modal
+  handleApprove(): void {
+    this.statusChange.emit(EstadoJustificacionEnum.APROBADO); 
+    this.isVisible = false;
   }
-
-  handleSubmit(): void {
-    if (!this.file) {
-      this.errorMessage = 'Debe seleccionar un archivo antes de enviar.';
+  
+  handleReject(): void {
+    this.isRejecting = true; 
+  }
+  sendRejection(): void {
+    if (this.motive.trim() === '') {
+      alert('Por favor ingresa el motivo del rechazo.');
       return;
     }
-
-    if (!this.reason.trim()) {
-      this.errorMessage = 'Debe ingresar un motivo.';
-      return;
-    }
-
-    // Envía los datos al padre
-    this.submit.emit({ file: this.file, reason: this.reason });
-
-    this.resetModal(); // Limpia el estado después de enviar
-    this.close.emit(false); // Cierra el modal
+    this.statusChange.emit(EstadoJustificacionEnum.RECHAZADO);
+    this.close.emit();
+    this.isVisible = false;
+    this.justificationService.updateJustificationStatus(this.justification.id, EstadoJustificacionEnum.RECHAZADO, this.motive)
+      .subscribe({
+        next: (response) => {
+          console.log('Justificación rechazada con motivo:', this.motive);
+        },
+        error: (err) => {
+          console.error('Error al actualizar la justificación:', err);
+        }
+      });
   }
-
-  resetModal(): void {
-    this.file = null; // Limpia el archivo
-    this.reason = ''; // Limpia el motivo
-    this.errorMessage = ''; // Limpia los errores
+  
+  closeModal(): void {
+    this.close.emit(false);
+    this.isRejecting = false;  
+    this.motive = '';         
   }
-
+  
 }

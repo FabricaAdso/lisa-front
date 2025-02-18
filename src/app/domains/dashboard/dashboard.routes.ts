@@ -115,7 +115,14 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/apprentices-absences/apprentices-absences.component').then(c => c.ApprenticesAbsencesComponent)
       },
+      {
+        path: 'notification',
+        title: 'Notificaciones',
+        data: { breadcrumb: 'Notificaciones'},
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/notifications/notifications.component').then(c => c.NotificationsComponent)
 
+      },
       {
         path: 'error_401',
         title: 'Autenticación Requerida',

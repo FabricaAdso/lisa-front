@@ -15,7 +15,7 @@ export class SessionService {
 
   private http = inject(HttpClient);
 
-  url:string = 'session';
+  url:string = 'sessions';
 
   getSessionsByFicha(courseId: number) {
     return this.http.get<SessionModel[]>(`/api/ficha/${courseId}/sessions`);
