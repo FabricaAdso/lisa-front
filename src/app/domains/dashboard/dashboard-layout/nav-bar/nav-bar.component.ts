@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import {
   Component,
   HostListener,
@@ -7,14 +8,15 @@ import {
   OnInit,
   inject,
   signal,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.component';
 import { AuthService } from '@shared/services/auth.service';
 import { UserModel } from '@shared/models/user.model';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-nav-bar',
@@ -23,12 +25,17 @@ import { UserModel } from '@shared/models/user.model';
     CommonModule,
     NzIconModule,
     NzMenuModule,
-    DropDownMenuComponent
+    DropDownMenuComponent,
+    ReactiveFormsModule,
+    NzBadgeModule,
+    
 ],
   templateUrl: './nav-bar.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit {
+
   private router = inject(Router);
 
   private breackpoint_observer = inject(BreakpointObserver);
