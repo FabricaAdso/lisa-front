@@ -70,7 +70,7 @@
   (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-approved>
 
-<app-modal-pending *ngIf="selectedJustification?.aprobation!.state =='Pendiente'" [isVisible]="isModalVisible"
+<app-modal-pending *ngIf="selectedJustification?.aprobation!.state =='Pendiente' || selectedJustification?.aprobation!.state == null" [isVisible]="isModalVisible"
   [justification]="selectedJustification" (close)="closeModal()"
   (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-pending>
