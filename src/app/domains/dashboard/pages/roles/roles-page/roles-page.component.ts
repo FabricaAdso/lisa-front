@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiRolesService } from '@shared/services/api-roles.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -10,6 +10,7 @@ import { NzOptionComponent, NzSelectModule} from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'nz-demo-modal-basic',
@@ -25,6 +26,7 @@ import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
     NzSelectModule,
     NzIconModule,
     NzInputModule,
+    NzPaginationModule,
     NzUploadModule],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
@@ -55,98 +57,114 @@ export class RolesComponent implements OnInit {
   isVisible = false;
   users: any[] = [];
   selectedUser: any;
-  selectedRoles: string[] = [];
+  selectedRoles: any[] = [];
   isActive: boolean = true;
-  allRoles = ['Administrador', 'Aprendiz', 'Instructor', 'Coordinador Academico'];
-  roles =  ['Admisntrador','usuario','instructor','aprendiz'];
+  roles:any = [];
+  filteredUsers: any[] = [];
+  searchTerm: string = ''; 
 
-getRoleName(roleId: number): string {
-    return this.roles[roleId] || 'Desconocido';
-}
 
-  constructor(private userService: ApiRolesService) {}
+  private userService = inject(ApiRolesService);
 
   ngOnInit(): void {
-
     this.getUsers();
-
-
+    this.allRoles()
   }
-  // Cargar los usuarios desde el servicio
+
+  allRoles(){
+    this.userService.getRoles().subscribe({
+      next: (data) => {
+        console.log("roles",data)
+         this.roles = data
+      },
+      error: (error) => {
+
+      }
+    })
+  }
+
+//mostrar todos los usuarios con su respectivo rol,traidos desde el servicio
   getUsers(): void {
     this.userService.getUsers().subscribe({
-        next: (data) => {
-            this.users = data;
-            this.users.forEach(user => {
-                const roleId = user.training_centers.length > 0 ? user.training_centers[0].role_id : null;
-                console.log(`Usuario: ${user.name} ${user.last_name}, Rol: ${roleId}`);
-            });
-        },
-        error: (error) => console.error('Error al obtener usuarios', error)
+      next: (data) => {
+        this.users = data.map((user: { training_centers: any[]; }) => ({
+          ...user,
+          roles: user.training_centers.map((tc: { role_id: any; }) => tc.role_id) // Extrae solo los roles
+        }));
+        this.filteredUsers = [...this.users]; 
+        console.log(this.users);
+      },
+      error: (error) => console.error('Error al obtener usuarios', error)
     });
 }
+  // Filtrar usuarios por nombre, apellido o documento
+  searchUsers(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+    this.filteredUsers = this.users.filter(user =>
+      user.identity_document.toLowerCase().includes(term) ||
+      user.name.toLowerCase().includes(term) ||
+      user.last_name.toLowerCase().includes(term)
+    );
+  }
+//funcion para seleccionar un usuario
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
-    this.selectedRoles= [...user.roles]  ;
-    this.isActive = !user.desactive;
+    this.selectedRoles = [...user.roles]  ;
+    console.log(this.selectedRoles)
   }
+  toggleUserStatus(user: any): void {
+    if (!user || !user.id) {
+      console.error('Usuario inválido');
+      return;
+    }
 
+    // Determinar si se activará o desactivará el usuario
+    const isActive = user.deactivation_date ? false : true;
+
+    this.userService.toggleUserStatus(user.id, isActive).subscribe({
+      next: (response) => {
+        console.log(response.message);
+
+        // Invertir el estado localmente
+        user.deactivation_date = isActive ? null : new Date().toISOString();
+
+        // Actualizar la lista de usuarios
+        this.getUsers();
+      },
+      error: (error) => {
+        console.error('Error al cambiar el estado del usuario', error);
+      }
+    });
+  }
   handleOk(): void {
+    if (!this.selectedUser || !this.selectedUser.id) {
+      console.error('Usuario inválido');
+      return;
+    }
 
+     // Asegúrate de que los roles sean IDs numéricos
+  const roleIds = this.selectedRoles.map(role => Number(role));
 
-    // Actualizar roles
-    this.userService.toggleUserRole(this.selectedUser.id, this.selectedRoles).subscribe({
-      next: () => {
-        console.log('Roles actualizados correctamente');
-        localStorage.setItem(`user_roles_${this.selectedUser.id}`, JSON.stringify(this.selectedRoles)); // Guardar roles en localStorage
-        this.selectedUser.roles = [...this.selectedRoles];
-        this.getUsers();
-      },
-      error: (error) => console.error('Error al actualizar roles', error)
-    });
-
-    // Actualizar estado
-    this.selectedUser.desactive = !this.isActive;
-    this.userService.toggleUserStatus(this.selectedUser.id, this.isActive).subscribe({
-      next: () => {
-        console.log('Estado de usuario actualizado correctamente');
-        localStorage.setItem(`user_status_${this.selectedUser.id}`, JSON.stringify(this.isActive)); // Guardar estado en localStorage
-        this.getUsers();
-
-      },
-      error: (error) => console.error('Error al actualizar estado de usuario', error)
-    });
-
-    this.isVisible = false;
-
+  this.userService.assignRoles(this.selectedUser.id, roleIds).subscribe({
+    next: () => {
+      console.log('Roles asignados correctamente');
+      this.selectedUser.roles = [...roleIds]; // Actualiza la UI
+      this.isVisible = false;
+    },
+    error: (error) => console.error('Error al asignar roles', error)
+  });
   }
-  onStatusChange(): void {
-    this.isActive = !this.isActive; // Actualiza el estado localmente
-    console.log('Estado de checkbox cambiado:', this.isActive);
-  }
-
   handleCancel(): void {
     this.isVisible = false;
-  }
-
-  toggleUserStatus(user: any): void {
-    user.desactive = !user.desactive; // Cambiar el estado localmente
-    this.userService.toggleUserStatus(user.id, user.desactive).subscribe({
-      next: () => {
-        console.log('Estado de usuario actualizado');
-        localStorage.setItem(`user_status_${user.id}`, JSON.stringify(user.desactive)); // Guardar nuevo estado en localStorage
-        if (this.selectedUser && this.selectedUser.id === user.id) {
-          // Sincronizar el estado del checkbox si el usuario en el modal es el mismo
-          this.isActive = !user.desactive;
-        }
-      },
-      error: (error) => console.error('Error al actualizar estado de usuario', error)
-    });
   }
   onRolesChange(selected: string[]): void {
     this.selectedRoles = selected; // Sincronizar los roles seleccionados
   }
 
+  getRoleName(roleId: number): string {
+    return this.roles?.find((rol:any) => rol.id === roleId)?.name || 'Desconocido';
+  }
+  
 
 }

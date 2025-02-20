@@ -2,7 +2,7 @@
 <!-- barra de busqueda -->
   <div class="barra-busqueda">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-      <input type="text" nz-input placeholder="input search text" />
+      <input type="text" nz-input placeholder="Buscar usuario" [(ngModel)]="searchTerm" (input)="searchUsers()"  />
     </nz-input-group>
     <ng-template #suffixIconButton>
       <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
@@ -21,7 +21,7 @@
 
 </div>
 <section id="all">
-  <nz-table #basicTable [nzData]="users">
+  <nz-table #basicTable [nzData]="filteredUsers" [nzBordered]="true" [nzShowPagination]="true" [nzPageSize]="10">
     <thead>
       <tr>
         <th>Documento</th>
@@ -36,15 +36,15 @@
         <td>{{ user.identity_document }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.last_name }}</td>
-        <td>{{ user.training_centers.length > 0 ? getRoleName(user.training_centers[0].role_id) : 'Sin rol asignado' }}
-          <!-- <span *ngFor="let role of user.roles; let i = index">
-            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
-          </span> -->
+        <td>
+          <span *ngFor="let roleId of user.roles; let i = index">
+            {{ this.getRoleName(roleId) }}<span *ngIf="i < user.roles.length - 1">, </span>
+          </span>
         </td>
         <td>
           <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
           <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
-            {{ user.desactive ? 'desactivar' : 'activar' }}
+            {{ user.deactivation_date ? 'Activar' : 'Desactivar' }}
           </button>
         </td>
       </tr>
@@ -65,8 +65,7 @@
             <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
               nzPlaceHolder="Seleccione roles" [(ngModel)]="selectedRoles" name="roles"
               (ngModelChange)="onRolesChange($event)">
-
-              <nz-option *ngFor="let role of allRoles" [nzLabel]="role" [nzValue]="role"></nz-option>
+              <nz-option *ngFor="let role of roles" [nzLabel]="role.name" [nzValue]="role.id"></nz-option>
             </nz-select>
             <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
           </div>
