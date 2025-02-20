@@ -41,6 +41,36 @@
 ::ng-deep .vencida .ant-tabs-tab-active .ant-tabs-tab-btn{
     color:#8f0303 ; 
 }
+
+.estado-indicador {
+    display: inline-block;
+    width: 10px;  /* Tamaño de la bolita */
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  /* Colores para cada estado */
+  .estado-pendiente {
+    background-color: #fdc900; /* Amarillo */
+  }
+  
+  .estado-rechazado {
+    background-color: #db1f1f; /* Rojo */
+  }
+  
+  .estado-aprobado {
+    background-color: #0f880b; /* Verde */
+  }
+  
+  .estado-vencida {
+    background-color: #8f0303; /* Rojo oscuro */
+  }
+  
+  .estado-inasistencia {
+    background-color: gray; /* Color de fallback */
+  }
+  
  
 
 

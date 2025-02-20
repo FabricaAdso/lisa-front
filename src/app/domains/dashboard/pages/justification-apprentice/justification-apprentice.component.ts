@@ -49,6 +49,7 @@ export class JustificationApprenticeComponent {
   private justificationService = inject(JustificationService);
 
   justifications: JustificationModel[] = [];
+  filteredData: JustificationModel[] = []; // Datos filtrados
   estadoJustificacion?: EstadoJustificacionEnum;
   
   isLoading: boolean = false; // Controla el estado de carga
@@ -58,16 +59,12 @@ export class JustificationApprenticeComponent {
   isPendingModalVisible = false;
 
   selectedJustification!: JustificationModel; // datos de prueba
-  filteredData = this.justifications;
-  included: string[] = ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course'];
 
-  
+  included: string[] = ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course'];
   estadoJustificacionEnum = EstadoJustificacionEnum;
 
-  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
-    this.estadoJustificacion = estado;
-   
-  }
+  activeTabClass = 'inasistencias'; // Estado inicial
+
 
 
   ngOnInit(): void {
@@ -99,6 +96,36 @@ export class JustificationApprenticeComponent {
 
     });
 
+  }
+
+  getFilterJustificacion(filter?: { aprobationState?: EstadoJustificacionEnum }) {
+    if (!filter || !filter.aprobationState) {
+      this.filteredData = [...this.justifications]; // Mostrar todo si no hay filtro
+    } else {
+      this.filteredData = this.justifications.filter(
+        (j) => j.aprobation?.state === filter.aprobationState
+      );
+    }
+  }
+  setActiveTab(tab: string) {
+    this.activeTabClass = tab;
+  }
+
+  getEstadoClass(estado: string | null | undefined): string {
+    if (!estado) return 'estado-pendiente'; // Default a 'Pendiente'
+  
+    switch (estado) {
+      case this.estadoJustificacionEnum.PENDIENTE:
+        return 'estado-pendiente';
+      case this.estadoJustificacionEnum.RECHAZADO:
+        return 'estado-rechazado';
+      case this.estadoJustificacionEnum.APROBADO:
+        return 'estado-aprobado';
+      case this.estadoJustificacionEnum.VENCIDA:
+        return 'estado-vencida';
+      default:
+        return 'estado-inasistencia';
+    }
   }
 
   

@@ -1,23 +1,16 @@
-<div [ngClass]="{
-  'inasistencias':!estadoJustificacion,
-  'pendientes':estadoJustificacion === estadoJustificacionEnum.PENDIENTE,
-  'rechazadas':estadoJustificacion === estadoJustificacionEnum.RECHAZADO,
-  'aprobadas':estadoJustificacion === estadoJustificacionEnum.APROBADO,
-  'vencida':estadoJustificacion === estadoJustificacionEnum.VENCIDA,
+<nz-tabset [ngClass]="activeTabClass">
+  <nz-tab nzTitle="Inasistencias" (nzClick)="setActiveTab('inasistencias'); getFilterJustificacion()"></nz-tab>
+  <nz-tab nzTitle="Pendientes" (nzClick)="setActiveTab('pendientes'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.PENDIENTE })"></nz-tab>
+  <nz-tab nzTitle="Rechazadas" (nzClick)="setActiveTab('rechazadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.RECHAZADO })"></nz-tab>
+  <nz-tab nzTitle="Aprobadas" (nzClick)="setActiveTab('aprobadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.APROBADO })"></nz-tab>
+  <nz-tab nzTitle="Vencidas" (nzClick)="setActiveTab('vencida'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.VENCIDA })"></nz-tab>
+</nz-tabset>
 
-}">
-  <nz-tabset >
-    <nz-tab nzTitle="Inasistencias"   (nzClick)="setEstadoJustificacion()"></nz-tab>
-    <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
-    <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
-    <nz-tab nzTitle="Aprobadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"></nz-tab>
-    <nz-tab nzTitle="Vencidas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"></nz-tab>
-  </nz-tabset>
-</div>
+
 
 
 <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'"
-  [nzData]="justifications|byEstadoJustificacion:estadoJustificacion" [nzScroll]="{ x: '1200px' }">
+  [nzData]="filteredData" [nzScroll]="{ x: '1200px' }" [nzShowPagination]="false">
   <thead>
     <tr>
       <th nzWidth="5%">id Just</th>
@@ -34,7 +27,10 @@
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.name}} {{ data.assistance!.session!.instructor!.user!.last_name}}</td>
       <td>{{ data.assistance?.session?.course?.shift}}</td>
-      <td>{{ data.aprobation?.state || 'Pendiente'}}</td>
+      <td>
+        <span class="estado-indicador" [ngClass]="getEstadoClass(data.aprobation?.state)"></span>
+        {{ data.aprobation?.state || 'Pendiente' }}
+      </td>
       <td>
         <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
       </td>
