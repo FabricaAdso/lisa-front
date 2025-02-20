@@ -53,11 +53,16 @@ export class RolesComponent implements OnInit {
     }
   ];
   isVisible = false;
-  users: any[] = [];  
+  users: any[] = [];
   selectedUser: any;
   selectedRoles: string[] = [];
   isActive: boolean = true;
   allRoles = ['Administrador', 'Aprendiz', 'Instructor', 'Coordinador Academico'];
+  roles =  ['Admisntrador','usuario','instructor','aprendiz'];
+
+getRoleName(roleId: number): string {
+    return this.roles[roleId] || 'Desconocido';
+}
 
   constructor(private userService: ApiRolesService) {}
 
@@ -65,38 +70,25 @@ export class RolesComponent implements OnInit {
 
     this.getUsers();
 
-  }
- // Cargar roles y estado desde localStorage
- loadUserData(): void {
-  this.users.forEach(user => {
-    const storedRoles = localStorage.getItem(`user_roles_${user.id}`);
-    const storedStatus = localStorage.getItem(`user_status_${user.id}`);
 
-    if (storedRoles) {
-      user.roles = JSON.parse(storedRoles);
-    }
-    if (storedStatus) {
-      user.desactive = JSON.parse(storedStatus);
-    }
-  });
-}
+  }
   // Cargar los usuarios desde el servicio
   getUsers(): void {
     this.userService.getUsers().subscribe({
-      next: (data) =>{
-        this.users = data
-        this.loadUserData();
-        console.log(data);
-
-      },
-      error: (error) => console.error('Error al obtener usuarios', error)
+        next: (data) => {
+            this.users = data;
+            this.users.forEach(user => {
+                const roleId = user.training_centers.length > 0 ? user.training_centers[0].role_id : null;
+                console.log(`Usuario: ${user.name} ${user.last_name}, Rol: ${roleId}`);
+            });
+        },
+        error: (error) => console.error('Error al obtener usuarios', error)
     });
-  }
-
+}
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
-    this.selectedRoles = [...user.roles]  ;
+    this.selectedRoles= [...user.roles]  ;
     this.isActive = !user.desactive;
   }
 

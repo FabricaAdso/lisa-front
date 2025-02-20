@@ -6,6 +6,7 @@ export interface TrainingCenterModel {
   name: string;
   regional_id: number;
   pivot: TrainingCenterPivotModel;
+  
 }
 
 export interface TrainingCenterPivotModel {

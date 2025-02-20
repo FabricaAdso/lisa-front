@@ -11,7 +11,11 @@ export class ApiRolesService{
 
   // Obtener todos los usuarios
   getUsers(): Observable<any> {
-    return this.http.get(`users`);
+    return this.http.get(`users-by-training-center`);
+  }
+  //obtener los roles 
+  getRoles(): Observable<any> {
+    return this.http.get(`roles`);
   }
 
   // Activar o desactivar un usuario

@@ -36,10 +36,10 @@
         <td>{{ user.identity_document }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.last_name }}</td>
-        <td>
-          <span *ngFor="let role of user.roles; let i = index">
+        <td>{{ user.training_centers.length > 0 ? getRoleName(user.training_centers[0].role_id) : 'Sin rol asignado' }}
+          <!-- <span *ngFor="let role of user.roles; let i = index">
             {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
-          </span>
+          </span> -->
         </td>
         <td>
           <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
