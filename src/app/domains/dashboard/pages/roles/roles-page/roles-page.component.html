@@ -8,20 +8,12 @@
       <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
     </ng-template>
   </div>
-  <!-- boton upload -->
-  <div>
-    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" >
-      <button nz-button>
-        <span nz-icon nzType="upload"></span>
-        subir archivos
-      </button>
-    </nz-upload>
-
-  </div>
-
+<!-- tabla de usuarios  -->
 </div>
 <section id="all">
-  <nz-table #basicTable [nzData]="filteredUsers" [nzBordered]="true" [nzShowPagination]="true" [nzPageSize]="10">
+  <nz-table #basicTable [nzData]="filteredUsers"  nzShowPagination
+  nzShowSizeChanger [nzBordered]="true" 
+   [nzPageSize]="pageSize" [(nzPageIndex)]="pageIndex" (nzPageIndexChange)="pageIndexChange($event)">
     <thead>
       <tr>
         <th>Documento</th>
@@ -32,9 +24,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of basicTable.data">
         <td>{{ user.identity_document }}</td>
-        <td>{{ user.name }}</td>
+        <td>{{ user.name}} {{user.last_name}}</td>
         <td>{{ user.last_name }}</td>
         <td>
           <span *ngFor="let roleId of user.roles; let i = index">

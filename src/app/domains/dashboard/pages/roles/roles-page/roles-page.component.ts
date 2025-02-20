@@ -62,6 +62,8 @@ export class RolesComponent implements OnInit {
   roles:any = [];
   filteredUsers: any[] = [];
   searchTerm: string = ''; 
+  pageIndex: number = 1;
+  pageSize: number = 8;
 
 
   private userService = inject(ApiRolesService);
@@ -92,7 +94,6 @@ export class RolesComponent implements OnInit {
           roles: user.training_centers.map((tc: { role_id: any; }) => tc.role_id) // Extrae solo los roles
         }));
         this.filteredUsers = [...this.users]; 
-        console.log(this.users);
       },
       error: (error) => console.error('Error al obtener usuarios', error)
     });
@@ -105,6 +106,7 @@ export class RolesComponent implements OnInit {
       user.name.toLowerCase().includes(term) ||
       user.last_name.toLowerCase().includes(term)
     );
+    this.pageIndex = 1;
   }
 //funcion para seleccionar un usuario
   showModal(user: any): void {
@@ -165,6 +167,10 @@ export class RolesComponent implements OnInit {
   getRoleName(roleId: number): string {
     return this.roles?.find((rol:any) => rol.id === roleId)?.name || 'Desconocido';
   }
-  
+  pageIndexChange(item:any){
+    this.pageIndex = item
+    console.log(this.pageIndex)
+  }
+
 
 }
