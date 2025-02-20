@@ -75,7 +75,7 @@ export class FichaComponent {
     // Llamar al servicio para obtener las fichas pendientes y sus sesiones
     this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
       next: (data) => {
-        this.pending_courses = data;  // Asigna las fichas al array
+ // Asigna las fichas al array
       },
       error: (error) => {
         console.error(error);
