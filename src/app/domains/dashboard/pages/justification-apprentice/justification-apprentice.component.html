@@ -14,7 +14,7 @@
   [nzShowPagination]="false">
   <thead>
     <tr>
-      <th nzWidth="5%">id Just</th>
+   
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
@@ -24,7 +24,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data">
-      <td>{{ data.aprobation?.justification_id}}</td>
+    
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.name}} {{
         data.assistance!.session!.instructor!.user!.last_name}}</td>
