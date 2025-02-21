@@ -96,13 +96,5 @@ export const menuItems: MenuItem[] = [
       theme: 'outline',
       state: false,
       Role: 'Usuario',
-    },
-    {
-      title: 'Notificaciones',
-      icon: 'notification',
-      route: 'notification',
-      theme: 'outline',
-      state: false,
-      Role: 'Usuario',
-    },
+    }
   ];

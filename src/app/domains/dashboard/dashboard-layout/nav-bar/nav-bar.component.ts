@@ -82,6 +82,10 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['auth/login']);
   }
 
+  goNotifications(){
+    this.router.navigate(['dashboard/notification']);
+  }
+
   logout(){
     console.log('Cerrar sesión...');
     this.auth_service.logout();

@@ -35,14 +35,17 @@
         </button>
       </div>
     </ng-container>
-    <div class="flex">
-      <nz-badge [nzCount]="10">
-        <span class="text-2xl"
-        nz-icon
-        nzType="bell" 
-        >
-        </span>
-      </nz-badge>
+
+    <div class="flex" >
+      <button (click)="goNotifications()" >
+        <nz-badge [nzCount]="10">
+          <span class="text-2xl"
+          nz-icon
+          nzType="bell" 
+          >
+          </span>
+        </nz-badge>
+      </button>
     </div>
 
     <ng-container *ngIf="!isLoggedIn">

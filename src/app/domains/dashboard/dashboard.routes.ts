@@ -113,7 +113,7 @@ export const routes: Routes = [
         title: 'Notificaciones',
         data: { breadcrumb: 'Notificaciones'},
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/notifications/notifications.component').then(c => c.NotificationsComponent)
+        loadComponent: () => import('@domains/dashboard/dashboard-layout/nav-bar/notifications/notifications.component').then(c => c.NotificationsComponent)
 
       },
       {
