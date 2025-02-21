@@ -22,28 +22,22 @@
                 </nz-form-control>
             </div>
 
-            <div class="none flex-col justify-end">
+            <div class="" >
                 <nz-form-label for="option"
-                    class="flex felx-start text-gray-700">*Tipo
-                    documento</nz-form-label>
-                <nz-form-control nzValidateStatus="error" nzHasFeedback [nzErrorTip]="errorOpt">
-                    <select id="option" name="document_type_id" formControlName="document_type_id"
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
-                        required="" >
-                        <option value="" disabled selected class="text-gray-400">Documentos</option>
+                >Tipo de documento</nz-form-label>
+                <nz-form-control nzValidateStatus="" nzHasFeedback [nzErrorTip]="errorType">
+                    <nz-select formControlName="document_type" nzShowSearch  nzAllowClear  nzPlaceHolder="Selecciona tu documento" class="w-full px-2 py-1 border rounded-md focus:outline-none focus:border-green-500">
                         @for (item of document_type; track $index) {
-                        <option [value]="item.id">{{ item.name }}</option>
+                          <nz-option  style="border: 1PX green solid" nzCustomContent [nzLabel]="item.name" [nzValue]="item.id" >{{item.name}}</nz-option>
                         }
-                    </select>
-                    <ng-template #errorOpt>
-                        @if (formRegister.controls.document_type_id.touched) { @if
-                        (formRegister.controls.document_type_id.hasError('required')) {
-                        <span class="span-error inline-block">Selecciona un documento</span>
-                        } }
+                      </nz-select>
+                      <ng-template #errorType>
+                        
                     </ng-template>
                 </nz-form-control>
-            </div>
+            </div>  
         </div>
+        
         <div class="none flex-col justify-end" >
             <nz-form-label for="option"
             >Selecciona tu regional</nz-form-label>
@@ -71,36 +65,25 @@
                   <ng-template #errorRegional>
                 </ng-template>
             </nz-form-control>
-        </div>
-        <div class="flex justify-between gap-1 max-sm:items-end">
-            <div>
+        </div>  
+            <div class="flex flex-col gap-1 max-sm:items-end">
                 <nz-form-label for="name"
-                    class="w-full flex felx-start text-gray-700 ">*Nombre</nz-form-label>
+                    class="w-full flex felx-start text-gray-700 ">*Nombres completo</nz-form-label>
                 <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorName">
-                    <input type="name" name="first_name" id="first-name" formControlName="first_name"
+                    <input type="name" name="name" id="name" formControlName="name"
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
                         placeholder="Jhon" required="" />
                     <ng-template #errorName>
-                        @if (formRegister.controls.first_name.touched) { @if
-                        (formRegister.controls.first_name.hasError('required')) {
-                        <span class="span-error">Ingresa tu nombre</span>
+                        @if (formRegister.controls.name.touched) { @if
+                        (formRegister.controls.name.hasError('required')) {
+                        <span class="span-error">Ingresa tu nombre completo</span>
                         } }
                     </ng-template>
                 </nz-form-control>
             </div>
             <div>
                 <nz-form-label for="name"
-                    class="w-full flex felx-start text-gray-700">Segundo
-                    nombre</nz-form-label>
-                <input type="name" name="name" id="middle-name"
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
-                    placeholder="Alexander" />
-            </div>
-        </div>
-        <div class="flex justify-between gap-1 max-sm:items-end">
-            <div>
-                <nz-form-label for="name"
-                    class="flex felx-start text-gray-700">*Apellido</nz-form-label>
+                    class="flex felx-start text-gray-700">*Apellidos completos</nz-form-label>
                 <nz-form-control nzValidateStatus="error" [nzErrorTip]="errorLastName">
                     <input type="name" name="last_name" id="last-name" formControlName="last_name"
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
@@ -108,20 +91,11 @@
                     <ng-template #errorLastName>
                         @if(formRegister.controls.last_name.touched){
                         @if(formRegister.controls.last_name.hasError('required')){
-                        <span class="span-error">Ingresa tu apellido</span>
+                        <span class="span-error">Ingresa tu apellido completo</span>
                         } }
                     </ng-template>
                 </nz-form-control>
             </div>
-            <div>
-                <nz-form-label for="name"
-                    class="flex felx-start text-gray-700">Segundo
-                    apellido</nz-form-label>
-                <input type="name" name="name" id="second-last-name"
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500"
-                    placeholder="Pardo" />
-            </div>
-        </div>
         <div>
             <nz-form-label for="email"
                 class="flex felx-start text-gray-700">*Correo

@@ -8,7 +8,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { forkJoin } from 'rxjs';
-import { SessionComponent } from './session/session.component';
+import { SessionComponent } from './session-modal/session.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
