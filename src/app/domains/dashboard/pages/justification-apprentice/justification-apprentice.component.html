@@ -37,6 +37,14 @@
     </tr>
   </tbody>
 </nz-table>
+<nz-pagination
+  (nzPageIndexChange)="changePage($event)"
+  [nzTotal]="total_elements"
+  [nzPageIndex]="page"
+  [nzPageSize]="elements"
+  [nzResponsive]="true"
+  [nzHideOnSinglePage]="true">
+</nz-pagination>
 
 <!-- Modal para Pendientes -->
 <app-pending-modal
