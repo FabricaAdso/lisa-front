@@ -6,11 +6,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzOptionComponent, NzSelectModule} from 'ng-zorro-antd/select';
+import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { log } from 'ng-zorro-antd/core/logger';
 
 @Component({
   selector: 'nz-demo-modal-basic',
@@ -27,11 +28,16 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzIconModule,
     NzInputModule,
     NzPaginationModule,
+    NzPaginationModule,
     NzUploadModule],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
 export class RolesComponent implements OnInit {
+  changePage(newPage: number) {
+    this.pageIndex = newPage;
+    this.getUsers(this.pageIndex, this.pageSize);
+  }
   fileList: NzUploadFile[] = [
     {
       uid: '1',
@@ -59,11 +65,13 @@ export class RolesComponent implements OnInit {
   selectedUser: any;
   selectedRoles: any[] = [];
   isActive: boolean = true;
-  roles:any = [];
+  roles: any = [];
   filteredUsers: any[] = [];
-  searchTerm: string = ''; 
-  pageIndex: number = 1;
-  pageSize: number = 8;
+  searchTerm: string = '';
+  pageIndex: any;
+  pageSize: any;
+  totalItems: any;
+
 
 
   private userService = inject(ApiRolesService);
@@ -73,11 +81,11 @@ export class RolesComponent implements OnInit {
     this.allRoles()
   }
 
-  allRoles(){
+  allRoles() {
     this.userService.getRoles().subscribe({
       next: (data) => {
-        console.log("roles",data)
-         this.roles = data
+        console.log("roles", data)
+        this.roles = data
       },
       error: (error) => {
 
@@ -85,17 +93,31 @@ export class RolesComponent implements OnInit {
     })
   }
 
-//mostrar todos los usuarios con su respectivo rol,traidos desde el servicio
-  getUsers(): void {
-    this.userService.getUsers().subscribe({
-      next: (data) => {
-        this.users = data.map((user: { training_centers: any[]; }) => ({
-          ...user,
-          roles: user.training_centers.map((tc: { role_id: any; }) => tc.role_id) // Extrae solo los roles
-        }));
-        this.filteredUsers = [...this.users]; 
-      },
-      error: (error) => console.error('Error al obtener usuarios', error)
+  //mostrar todos los usuarios con su respectivo rol,traidos desde el servicio
+  getUsers(page: number = 1, pageSize: number = 8): void {
+    this.userService.getUsers(page, pageSize).subscribe({
+        next: (response) => {
+            console.log('Respuesta del backend:', response); // Verifica la estructura de la respuesta
+
+            // Extrae los datos de la respuesta
+            const { data, total, current_page, per_page } = response;
+
+            // Mapea los usuarios y extrae los roles
+            this.users = data.map((user: { training_centers?: any[]; }) => ({
+                ...user,
+                roles: user.training_centers?.map((tc: { role_id: any; }) => tc.role_id) || []
+            }));
+            console.log(this.users);
+            
+            // Asigna los usuarios filtrados
+            this.filteredUsers = [...this.users];
+
+            // Actualiza las propiedades de paginación
+            this.totalItems = total;
+            this.pageIndex = current_page;
+            this.pageSize = per_page;
+        },
+        error: (error) => console.error('Error al obtener usuarios', error)
     });
 }
   // Filtrar usuarios por nombre, apellido o documento
@@ -108,11 +130,11 @@ export class RolesComponent implements OnInit {
     );
     this.pageIndex = 1;
   }
-//funcion para seleccionar un usuario
+  //funcion para seleccionar un usuario
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
-    this.selectedRoles = [...user.roles]  ;
+    this.selectedRoles = [...user.roles];
     console.log(this.selectedRoles)
   }
   toggleUserStatus(user: any): void {
@@ -145,17 +167,17 @@ export class RolesComponent implements OnInit {
       return;
     }
 
-     // Asegúrate de que los roles sean IDs numéricos
-  const roleIds = this.selectedRoles.map(role => Number(role));
+    // Asegúrate de que los roles sean IDs numéricos
+    const roleIds = this.selectedRoles.map(role => Number(role));
 
-  this.userService.assignRoles(this.selectedUser.id, roleIds).subscribe({
-    next: () => {
-      console.log('Roles asignados correctamente');
-      this.selectedUser.roles = [...roleIds]; // Actualiza la UI
-      this.isVisible = false;
-    },
-    error: (error) => console.error('Error al asignar roles', error)
-  });
+    this.userService.assignRoles(this.selectedUser.id, roleIds).subscribe({
+      next: () => {
+        console.log('Roles asignados correctamente');
+        this.selectedUser.roles = [...roleIds]; // Actualiza la UI
+        this.isVisible = false;
+      },
+      error: (error) => console.error('Error al asignar roles', error)
+    });
   }
   handleCancel(): void {
     this.isVisible = false;
@@ -165,9 +187,9 @@ export class RolesComponent implements OnInit {
   }
 
   getRoleName(roleId: number): string {
-    return this.roles?.find((rol:any) => rol.id === roleId)?.name || 'Desconocido';
+    return this.roles?.find((rol: any) => rol.id === roleId)?.name || 'Desconocido';
   }
-  pageIndexChange(item:any){
+  pageIndexChange(item: any) {
     this.pageIndex = item
     console.log(this.pageIndex)
   }

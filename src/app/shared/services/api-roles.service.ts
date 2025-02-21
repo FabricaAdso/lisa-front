@@ -10,14 +10,14 @@ export class ApiRolesService{
   private http = inject(HttpClient);
 
   // Obtener todos los usuarios
-  getUsers(): Observable<any> {
-    return this.http.get(`users-by-training-center`);
+  getUsers(page:number =1, pageSize:number = 10): Observable<any> {
+    return this.http.get(`users-by-training-center?elementos=${pageSize}&page=${page}`);
   }
    // Activar o desactivar un usuario
    toggleUserStatus(userId: string, isActive: boolean): Observable<any> {
     return this.http.post(`users/${userId}/deactivate`, { active: isActive });
   }
-  //obtner lso roles 
+  //obtner los roles 
   getRoles():Observable<any>{
     return this.http.get(`roles`,);
   }

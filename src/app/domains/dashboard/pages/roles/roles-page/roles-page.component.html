@@ -1,19 +1,17 @@
 <div class="buscador">
-<!-- barra de busqueda -->
+  <!-- barra de busqueda -->
   <div class="barra-busqueda">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-      <input type="text" nz-input placeholder="Buscar usuario" [(ngModel)]="searchTerm" (input)="searchUsers()"  />
+      <input type="text" nz-input placeholder="Buscar usuario" [(ngModel)]="searchTerm" (input)="searchUsers()" />
     </nz-input-group>
     <ng-template #suffixIconButton>
       <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
     </ng-template>
   </div>
-<!-- tabla de usuarios  -->
+  <!-- tabla de usuarios  -->
 </div>
 <section id="all">
-  <nz-table #basicTable [nzData]="filteredUsers"  nzShowPagination
-  nzShowSizeChanger [nzBordered]="true" 
-   [nzPageSize]="pageSize" [(nzPageIndex)]="pageIndex" (nzPageIndexChange)="pageIndexChange($event)">
+  <nz-table [nzShowPagination]="false" #basicTable [nzData]="filteredUsers">
     <thead>
       <tr>
         <th>Documento</th>
@@ -42,6 +40,13 @@
       </tr>
     </tbody>
   </nz-table>
+  <div class="paginate">
+    <nz-pagination (nzPageIndexChange)="changePage($event)" [nzPageIndex]="pageIndex" [nzTotal]="totalItems"
+    [nzPageSize]="pageSize">
+  </nz-pagination>
+
+  </div>
+  
 </section>
 
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles y Estado" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
