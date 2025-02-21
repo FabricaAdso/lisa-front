@@ -50,7 +50,7 @@ export class JustificationApprenticeComponent {
 
 
   private justificationService = inject(JustificationService);
-
+  isInasistencias: boolean = true;
   justifications: JustificationModel[] = [];
   estadoJustificacion?: EstadoJustificacionEnum;
   estadoJustificacionEnum = EstadoJustificacionEnum;
@@ -99,8 +99,11 @@ export class JustificationApprenticeComponent {
         const { data, per_page, current_page, last_page, total } = justifications;
         this.setPage(current_page, per_page, last_page, total);
         this.justifications = [...data];
-        this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
-      }
+        
+      },
+      error: (err) => {
+        console.error('Error al cargar las justificaciones:', err);
+      },
 
     });
 
@@ -136,22 +139,33 @@ export class JustificationApprenticeComponent {
             last_page,
             total: to,
           } = justifications;
+          console.log(data);
           this.setPage(current_page, per_page, last_page, to);
           this.justifications = [...data];
-          console.log(justifications);
         },
       });
   }
 
-  getFilterJustificacion(filter?: { aprobationState?: EstadoJustificacionEnum }) {
-    if (!filter || !filter.aprobationState) {
-      this.filteredData = [...this.justifications]; // Mostrar todo si no hay filtro
+  getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
+    this.filter = filter;
+    this.changePage(1);
+
+    // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
+    if (filter && filter['state'] !== 'Vencida') {
+      this.isInasistencias = false;
     } else {
-      this.filteredData = this.justifications.filter(
-        (j) => j.aprobation?.state === filter.aprobationState
-      );
+      this.isInasistencias = true;
     }
+
+    // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
+    if (this.filter && this.filter['state']) {
+      this.filter['aprobationState'] = this.filter['state'];
+      delete this.filter['state']; // Elimina 'state' si ya no es necesario
+    }
+
   }
+
+
   setActiveTab(tab: string) {
     this.activeTabClass = tab;
   }
@@ -171,6 +185,10 @@ export class JustificationApprenticeComponent {
       default:
         return 'estado-inasistencia';
     }
+  }
+
+  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
+    this.estadoJustificacion = estado;
   }
 
   
