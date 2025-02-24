@@ -154,7 +154,11 @@ export class SessionComponent implements OnInit, OnDestroy {
               takeUntil(this.knowledgeNetworkSelection),
               tap((instructor) => {
                 if (instructor.length === 0) {
-                  alert('no se econtraron instructores');
+                  this.notification.create(
+                    'warning',
+                    'Error',
+                    'No hay ningun instructor asociado a la red de conocimiento'
+                  );
                 }
                 this.instructor = [
                   ...new Set([...this.instructor, ...instructor]),
@@ -245,7 +249,9 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   saveForm() {
 
-    const session: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
+    if(this.formSession?.valid){
+
+      const session: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
 
     // Transformar el valor del campo day_of_week
     if (session.days_of_week && Array.isArray(session.days_of_week)) {
@@ -263,7 +269,6 @@ export class SessionComponent implements OnInit, OnDestroy {
       session.end_time = endTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     }
 
-
     this.session_service.createSession(session).subscribe({
       next: (data) => {
         let session = [...this.session, data]
@@ -271,6 +276,17 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.closeModal()
       }
     })
+
+    }else{
+      this.notification.create(
+        'warning',
+        'Error',
+        'Por favor, complete todos los campos'
+      )
+      
+    }
+
+    
 
   }
 
@@ -289,7 +305,5 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   openModal() {
     this.isModalVisible = true;
-    console.log(this.isModalVisible);
-
   }
 }

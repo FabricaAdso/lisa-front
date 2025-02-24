@@ -36,7 +36,7 @@ export const routes: Routes = [
         title:'Administrar Sesiones',
         data: { breadcrumb: 'Sesiones ' },
         canActivate: [authGuard],
-        loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c=>c.FichaComponent)
+        loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
       },
       {
         path: 'justification',
