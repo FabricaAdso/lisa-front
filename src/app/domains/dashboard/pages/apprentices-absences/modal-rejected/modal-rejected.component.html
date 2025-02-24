@@ -1,18 +1,23 @@
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Justificación Rechazada" (nzOnCancel)="handleCancel()" [nzFooter]="null">
+<nz-modal 
+  [(nzVisible)]="isVisible" 
+  nzTitle="Justificación Rechazada" 
+  (nzOnCancel)="handleCancel()" 
+  [nzFooter]="null"
+>
   <ng-container *nzModalContent>
-    <div>
-        <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->
-      <div *ngIf="justification.file_url" >
-        <a [href]="justification.file_url" target="_blank"
-         >
-          <i nz-icon nzType="file-pdf" nzTheme="outline" style="color: #d32f2f; margin-right: 8px;"></i>
-          <span>{{ 'Archivo cargado' }}</span>
+    <div class="modal-container">
+      <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->
+      <div *ngIf="justification.file_url" class="file-container">
+        <a [href]="justification.file_url" target="_blank" class="file-link">
+          <i nz-icon nzType="file-pdf" nzTheme="outline"></i>
+          <span>Ver archivo adjunto</span>
         </a>
       </div>
 
-      <p style="color: #333; margin-bottom: 16px">
-        {{ justification.aprobation?.motive}}
-      </p>
+      <!-- Motivo de rechazo -->
+      <div class="motive-box">
+        <p>{{ justification.aprobation?.motive }}</p>
+      </div>
     </div>
   </ng-container>
 </nz-modal>
