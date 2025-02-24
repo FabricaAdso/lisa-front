@@ -1,53 +1,36 @@
 <nz-tabset>
   <nz-tab nzTitle="Inasistencias" (nzClick)="getFilterJustificacion()"></nz-tab>
-  <nz-tab
-    nzTitle="Pendientes"
-    (nzClick)="
+  <nz-tab nzTitle="Pendientes" (nzClick)="
       getFilterJustificacion({
         aprobationState: estadoJustificacionEnum.PENDIENTE
       })
-    "
-  ></nz-tab>
-  <nz-tab
-    nzTitle="Rechazadas"
-    (nzClick)="
+    "></nz-tab>
+  <nz-tab nzTitle="Rechazadas" (nzClick)="
       getFilterJustificacion({
         aprobationState: estadoJustificacionEnum.RECHAZADO
       })
-    "
-  ></nz-tab>
-  <nz-tab
-    nzTitle="Aprobadas"
-    (nzClick)="
+    "></nz-tab>
+  <nz-tab nzTitle="Aprobadas" (nzClick)="
       getFilterJustificacion({
         aprobationState: estadoJustificacionEnum.APROBADO
       })
-    "
-  ></nz-tab>
-  <nz-tab
-    nzTitle="Vencidas"
-    (nzClick)="
+    "></nz-tab>
+  <nz-tab nzTitle="Vencidas" (nzClick)="
       getFilterJustificacion({
         aprobationState: estadoJustificacionEnum.VENCIDA
       })
-    "
-  ></nz-tab>
+    "></nz-tab>
 </nz-tabset>
-<nz-table
-  #basicTable
-  [nzBordered]="true"
-  [nzSize]="'middle'"
-  [nzData]="justifications"
-  [nzScroll]="{ x: '1200px' }"
-  [nzShowPagination]="false"
->
+<nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="justifications" [nzScroll]="{ x: '1200px' }"
+  [nzShowPagination]="false">
   <thead>
     <tr>
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Ficha</th>
       <th nzWidth="25%">Aprendiz</th>
-      <th nzWidth="20%">documento</th>
-      <th nzWidth="25%">{{ isInasistencias ? "Estado" : "Ver" }}</th>
+      <th nzWidth="15%">documento</th>
+      <th nzWidth="10%">{{ isInasistencias ? "Estado" : "Ver" }}</th>
+      <th nzWidth="10%">Ver</th>
     </tr>
   </thead>
   <tbody>
@@ -63,54 +46,36 @@
         <span *ngIf="isInasistencias">
           {{ data.aprobation?.state || "Pendiente" }}
         </span>
-        <button
-          nz-button
-          nzType="link"
-          (click)="openModal(data)"
-        >
+      </td>
+      <td>
+
+        <button nz-button nzType="link" (click)="openModal(data)">
           Examinar
         </button>
       </td>
+
     </tr>
   </tbody>
 </nz-table>
-<nz-pagination
-  (nzPageIndexChange)="changePage($event)"
-  [nzTotal]="total_elements"
-  [nzPageIndex]="page"
-  [nzPageSize]="elements"
-  [nzResponsive]="true"
-  [nzHideOnSinglePage]="true">
+<nz-pagination (nzPageIndexChange)="changePage($event)" [nzTotal]="total_elements" [nzPageIndex]="page"
+  [nzPageSize]="elements" [nzResponsive]="true" [nzHideOnSinglePage]="true">
 </nz-pagination>
 
 
-<app-modal-rejected 
-  *ngIf="selectedJustification?.aprobation!.state =='Rechazada'"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
-></app-modal-rejected>
+<app-modal-rejected *ngIf="selectedJustification?.aprobation!.state =='Rechazada'" [isVisible]="isModalVisible"
+  [justification]="selectedJustification" (close)="closeModal()"></app-modal-rejected>
 
-<app-modal-approved
-  *ngIf="selectedJustification?.aprobation!.state =='Aprobada'"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
+<app-modal-approved *ngIf="selectedJustification?.aprobation!.state =='Aprobada'" [isVisible]="isModalVisible"
+  [justification]="selectedJustification" (close)="closeModal()"
   (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-approved>
 
-<app-modal-pending
-  *ngIf="selectedJustification?.aprobation!.state =='Pendiente'"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
+<app-modal-pending *ngIf="selectedJustification?.aprobation!.state =='Pendiente' || selectedJustification?.aprobation!.state == null" [isVisible]="isModalVisible"
+  [justification]="selectedJustification" (close)="closeModal()"
   (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-pending>
 
-<app-modal-expired
-  *ngIf="selectedJustification?.aprobation!.state =='Vencida'"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
+<app-modal-expired *ngIf="selectedJustification?.aprobation!.state =='Vencida'" [isVisible]="isModalVisible"
+  [justification]="selectedJustification" (close)="closeModal()"
   (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-expired>
