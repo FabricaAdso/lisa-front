@@ -6,12 +6,13 @@ import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-modal-pending',
   standalone: true,
   imports: [
-    CommonModule, NzModalModule, NzButtonModule,FormsModule
+    CommonModule, NzModalModule, NzButtonModule,FormsModule, NzIconModule
   ],
   templateUrl: './modal-pending.component.html',
   styleUrl: './modal-pending.component.css'

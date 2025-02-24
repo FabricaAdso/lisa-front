@@ -6,20 +6,34 @@
 >
   <ng-container *nzModalContent>
     <div>
-      <p style="display: flex; align-items: center; margin-bottom: 16px">
-        <i
-          nz-icon
-          nzType="file-pdf"
-          nzTheme="outline"
-          style="color: red; margin-right: 8px"
-        ></i>
-        <strong>{{ justification.file_url || "Archivo no disponible" }}</strong>
-      </p>
+        <!-- <strong>{{ justification.file_url || "Archivo no disponible" }}</strong> -->
+
+        <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->
+        <div *ngIf="justification.file_url" style="margin-top: 8px; display: flex; align-items: center;">
+          <a
+            [href]="justification.file_url"
+            target="_blank"
+            style="text-decoration: none; color: inherit; display: flex; align-items: center;"
+          >
+            <i nz-icon nzType="file-pdf" nzTheme="outline" style="color: #d32f2f; margin-right: 8px;"></i>
+            <span>{{ 'Archivo cargado' }}</span>
+          </a>
+        </div>
+        <p *ngIf="!justification.file_url" style="color: #888; margin-top: 8px;">No hay un archivo cargado.</p>
+      
+
+        
+     
       <div>
         <p style="margin: 0; color: #555">
           {{ justification.description || "Motivo no especificado" }}
         </p>
       </div>
+
+
+
+
+
       <div *ngIf="isRejecting">
         <label for="motive">Motivo del Rechazo:</label>
         <textarea

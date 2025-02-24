@@ -25,6 +25,7 @@
   [nzShowPagination]="false">
   <thead>
     <tr>
+      <th nzWidth="4%">id</th>
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Ficha</th>
       <th nzWidth="25%">Aprendiz</th>
@@ -36,6 +37,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of justifications">
+      <td>{{ data.aprobation?.justification_id }}</td>
       <td>{{ data.assistance?.session?.date }}</td>
       <td>{{ data.assistance?.session?.course?.code }}</td>
       <td>
