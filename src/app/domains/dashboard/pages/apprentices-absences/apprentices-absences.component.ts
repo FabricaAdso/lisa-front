@@ -46,7 +46,7 @@ export class ApprenticesAbsencesComponent {
   selectedJustification!: JustificationModel;
   filteredData = this.justifications;
 
-  elements: number = 10;
+  elements: number = 4;
   page: number = 1;
   last_page: number = 0;
   total_elements: number = 0;
@@ -99,26 +99,24 @@ export class ApprenticesAbsencesComponent {
   }
 
   getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
-    this.filter = filter;
+    this.filter = { ...filter }; // 🔹 Clona el objeto para evitar mutaciones inesperadas
     this.changePage(1);
 
-    // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
-    if (filter && filter['state'] !== 'Vencida') {
-      this.isInasistencias = false;
-    } else {
-      this.isInasistencias = true;
+    // ✅ Accede a 'state' correctamente usando notación de corchetes
+    this.isInasistencias = filter?.['state'] === 'Vencida';
+
+    // ✅ Verifica que 'state' se mapee correctamente a 'aprobationState'
+    if (this.filter?.['state']) {
+        this.filter['aprobationState'] = this.filter['state'];
+        delete this.filter['state']; // 🔹 Elimina 'state' si ya no es necesario
     }
 
-    // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
-    if (this.filter && this.filter['state']) {
-      this.filter['aprobationState'] = this.filter['state'];
-      delete this.filter['state']; // Elimina 'state' si ya no es necesario
-    }
+    console.log("Filtro final aplicado:", this.filter); // 🟢 Verifica el filtro antes de la petición
+}
 
-  }
 
   changePage(page: number) {
-    console.log(page);
+    console.log("Solicitando página:", page);
     this.justificationService
       .getJustifications({
         included: this.included,
@@ -128,18 +126,16 @@ export class ApprenticesAbsencesComponent {
       })
       .subscribe({
         next: (justifications) => {
-          const {
-            data,
-            per_page,
-            current_page,
-            last_page,
-            total: to,
-          } = justifications;
+          console.log("Datos recibidos:", justifications); // 🟢 Verifica si llegan datos
+          const { data, per_page, current_page, last_page, total: to } = justifications;
           this.setPage(current_page, per_page, last_page, to);
           this.justifications = [...data];
         },
+        error: (err) => {
+          console.error("Error al obtener justificaciones:", err);
+        }
       });
-  }
+}
 
   handleSubmission(data: { file: File; reason: string }): void {
     console.log('Archivo cargado:', data.file);
