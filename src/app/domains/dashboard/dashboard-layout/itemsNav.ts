@@ -49,14 +49,14 @@ export const menuItems: MenuItem[] = [
       state: false,
       Role: 'Usuario',
     },
-    {
+    /* {
       title: 'Sesiones',
       icon: 'profile',
       route: 'session',
       theme: 'outline',
       state: false,
       Role: 'Usuario',
-    },
+    }, */
     {
       title: 'Justificaciones',
       icon: 'file-text',
@@ -96,5 +96,14 @@ export const menuItems: MenuItem[] = [
       theme: 'outline',
       state: false,
       Role: 'Usuario',
-    }
+    },
+    {
+      title: 'Gestionar sesiones',
+      icon: 'home',
+      route: 'managesession',
+      theme: 'outline',
+      state: false,
+      Role: 'Usuario',
+    },
+
   ];
