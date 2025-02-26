@@ -16,6 +16,16 @@
     color:#1890ff;
 }
 
+::ng-deep .En_espera .ant-tabs-ink-bar{
+  background: #b41969;
+  
+}
+::ng-deep .En_espera  .ant-tabs-tab-active .ant-tabs-tab-btn{
+  color:#b609ad ; 
+}
+
+
+
 ::ng-deep .pendientes .ant-tabs-ink-bar{
     background: #fdc900;
     
@@ -49,8 +59,19 @@
     border-radius: 50%;
     margin-right: 8px;
   }
+
+  
   
   /* Colores para cada estado */
+
+  
+
+  .estado-en-espera {
+    background-color: #46066b; /* Amarillo */
+  }
+  
+
+
   .estado-pendiente {
     background-color: #fdc900; /* Amarillo */
   }

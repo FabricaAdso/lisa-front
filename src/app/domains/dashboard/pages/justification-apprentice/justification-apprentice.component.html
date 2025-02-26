@@ -2,8 +2,8 @@
   <nz-tab nzTitle="Inasistencias" (nzClick)="setActiveTab('inasistencias'); getFilterJustificacion()"></nz-tab>
 
   <nz-tab nzTitle="Sin justificar"
-  (nzClick)="setActiveTab('En_espera'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.EN_ESPERA})"></nz-tab>
-  
+    (nzClick)="setActiveTab('En_espera'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.EN_ESPERA})"></nz-tab>
+
   <nz-tab nzTitle="Pendiente de aprobación"
     (nzClick)="setActiveTab('pendientes'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.PENDIENTE })"></nz-tab>
   <nz-tab nzTitle="Rechazadas"
@@ -31,8 +31,8 @@
   <tbody>
     <tr *ngFor="let data of basicTable.data">
 
-     <td>{{ data.aprobation?.justification_id}}</td>
-     <td>{{ data.assistance_id}}</td>
+      <td>{{ data.aprobation?.justification_id}}</td>
+      <td>{{ data.assistance_id}}</td>
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.name}} {{
         data.assistance!.session!.instructor!.user!.last_name}}</td>
@@ -51,9 +51,9 @@
   [nzPageSize]="elements" [nzResponsive]="true" [nzHideOnSinglePage]="true">
 </nz-pagination>
 
-<!-- Modal para Pendientes -->
-<app-pending-modal
-  *ngIf="selectedJustification?.aprobation?.state == null || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE"
+<!-- Modal para cargar justificacion  -->
+<!-- <app-pending-modal *ngIf="selectedJustification?.aprobation?.state == null || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE" -->
+<app-pending-modal *ngIf="selectedJustification?.aprobation?.state ===estadoJustificacionEnum.EN_ESPERA || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE"
   [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"
   (submit)="handleSubmission($event)"></app-pending-modal>
 
