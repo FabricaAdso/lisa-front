@@ -16,6 +16,7 @@ export interface SessionModel {
   course?: CourseModel;
   assistances: AssistanceModel[];
   subject:SubjectModel;
+  
 
 
   //relaciones

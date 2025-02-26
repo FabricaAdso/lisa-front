@@ -22,15 +22,26 @@ export class ManageSessionComponent implements OnInit{
 
   constructor(private sessionService: ManageSessionService) { }
 
+
   ngOnInit(): void {
-    this.sessionService.getSessions().subscribe({
-      next: (sessions) => {
-        console.log('Sesiones obtenidas:', sessions);
-      },
-      error: (err) => {
-        console.error('Error al obtener sesiones:', err);
-      }
+    this.sessionService.getSessions({
+  included: ['instructor.user','rap', 'course.program.subjects']
+}).subscribe({
+  next: (sessions) => {
+    sessions.forEach(session => {
+      console.log('Rap de la sesión:', session.subjects.rap);
+      console.log('Nombre del instructor:', session.instructor?.user?.name);
+      console.log('Sesiones con relaciones incluidas:', sessions);
+
     });
+  },
+  error: (err) => {
+    console.error('Error loading sessions:', err);
+  }
+});
+
+
+
   }
 
   /* fetchSessions(): void {

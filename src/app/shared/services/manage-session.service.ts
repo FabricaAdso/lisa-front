@@ -16,6 +16,7 @@ export class ManageSessionService {
 
   getSessions(data?:QueryUrl) {
     let URL:string =getQueryUrl(`${this.URL}`,data)
+
     console.log(URL)
     return this.http.get<SessionModel[]>(URL)
   }
