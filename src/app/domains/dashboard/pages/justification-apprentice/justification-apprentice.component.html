@@ -39,7 +39,7 @@
       <td>{{ data.assistance?.session?.course?.shift}}</td>
       <td>
         <span class="estado-indicador" [ngClass]="getEstadoClass(data.aprobation?.state)"></span>
-        {{ data.aprobation?.state || 'Pendiente' }}
+        {{ data.aprobation?.state === 'En_espera' ? 'Sin justificar' : data.aprobation?.state }}
       </td>
       <td>
         <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
