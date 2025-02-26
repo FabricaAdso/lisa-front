@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
+import { NotificationModel } from '@shared/models/notification-model';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -8,12 +9,22 @@ export class SharedDataService {
 
   constructor() { }
 
-  private dataSubject = new BehaviorSubject<number | null>(null); // Inicializa con null
-  public data$ = this.dataSubject.asObservable(); // Observable para suscribirse
+  //iniciamos un array vacio de notificaciones
+  private notificationsSignal = signal<NotificationModel[]>([]);
 
-  // Método para actualizar los datos
-  updateData(data: number) {
-    this.dataSubject.next(data); // Emite el nuevo valor
+  //meteremos las notificaciones en el array
+  updateNotifications(notifications: NotificationModel[]) {
+    this.notificationsSignal.set(notifications);
+  }
+
+  //desde aqui podemos obtener las notificaciones en tiempo real
+  get notifications() {
+    return this.notificationsSignal;
+  }
+
+  // Computed para contar las notificaciones en tiempo real
+  get notificationCount() {
+    return computed(() => this.notificationsSignal().length);
   }
 
 }

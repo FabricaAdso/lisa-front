@@ -40,7 +40,7 @@ export class NavBarComponent implements OnInit {
   private router = inject(Router);
 
   private dataSharedService = inject(SharedDataService);
-  recievetData: any
+  notificationCount = this.dataSharedService.notificationCount;
 
   private breackpoint_observer = inject(BreakpointObserver);
 
@@ -79,7 +79,6 @@ export class NavBarComponent implements OnInit {
           }
         });
       }
-      this.notificationsCount();
   }
 
   login() {
@@ -159,14 +158,6 @@ export class NavBarComponent implements OnInit {
     }
   }
 
-  notificationsCount(){
-    this.dataSharedService.data$.subscribe(
-     (data) => {
-        this.recievetData = data
-        console.log(this.recievetData)  ;
-        
-     }
-    )
-    
-  }
+  
+ 
 }

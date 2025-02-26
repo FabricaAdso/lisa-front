@@ -19,59 +19,16 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 export class NotificationsComponent implements OnInit {
 
   private dataSharedService = inject(SharedDataService);
-  private websocketService = inject(WebSocketService);
-  private notificationService = inject(NotificationService);
-  private authService = inject(AuthService); // Suponiendo que tienes un servicio de autenticación
   message = { message: '' };
   userId:number = 0
   userModel: UserModel | null = null
   notificationModel: NotificationModel[] | null = null
 
   ngOnInit(): void {
-    this.listenNotification()
-  }
     
-
-  listenNotification(){
-    // Obtener el userId desde el servicio de autenticación
-    this.authService.me().subscribe({
-      next: (user) => {
-        this.userModel = user;
-        this.userId = this.userModel!.id
-        this.getNotification(this.userId);
-        this.notificationCount(this.userId);
-        this.websocketService.listen(`notifications.${this.userId}`, '.notification.received', (data: any) => {
-        });
-      }
-    }); 
   }
 
-
-  getNotification(data:number){
-    this.notificationService.getNotifications(data)
-      .subscribe({
-      next: (notificacion) => {
-        this.notificationModel = notificacion.map((notificationes) => {
-          return {
-            id: notificationes.id,
-            message: notificationes.message,
-            type: notificationes.type,
-            user_id: notificationes.user_id,
-            user_recieved: notificationes.user_recieved,
-          };
-        });
-      }
-    });
-
-  }
-
-  notificationCount(data:number){
-    this.notificationService.notificationCount(data)
-  }
-
-  
-
-
+  notifications = this.dataSharedService.notifications;
   
 
 }
