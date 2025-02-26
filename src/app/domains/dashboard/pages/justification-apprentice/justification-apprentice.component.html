@@ -1,6 +1,10 @@
 <nz-tabset [ngClass]="activeTabClass">
   <nz-tab nzTitle="Inasistencias" (nzClick)="setActiveTab('inasistencias'); getFilterJustificacion()"></nz-tab>
-  <nz-tab nzTitle="Pendientes"
+
+  <nz-tab nzTitle="Sin justificar"
+  (nzClick)="setActiveTab('En_espera'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.EN_ESPERA})"></nz-tab>
+  
+  <nz-tab nzTitle="Pendiente de aprobación"
     (nzClick)="setActiveTab('pendientes'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.PENDIENTE })"></nz-tab>
   <nz-tab nzTitle="Rechazadas"
     (nzClick)="setActiveTab('rechazadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.RECHAZADO })"></nz-tab>

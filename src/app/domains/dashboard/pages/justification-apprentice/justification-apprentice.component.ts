@@ -182,6 +182,8 @@ export class JustificationApprenticeComponent {
         return 'estado-aprobado';
       case this.estadoJustificacionEnum.VENCIDA:
         return 'estado-vencida';
+      case this.estadoJustificacionEnum.EN_ESPERA:
+        return 'estado-en-espera';  
       default:
         return 'estado-inasistencia';
     }
