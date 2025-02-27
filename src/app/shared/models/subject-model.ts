@@ -1,9 +1,9 @@
 import { RapModel } from "./rap-model";
 
 export interface SubjectModel {
+  id:number;
+  name:string;
+  total_number_hours:number;
 
-  description:string;
-  number_hours:number;
-
-  rap:RapModel[];
+  raps:RapModel[];
 }

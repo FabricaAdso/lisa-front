@@ -20,5 +20,7 @@ export class ManageSessionService {
     console.log(URL)
     return this.http.get<SessionModel[]>(URL)
   }
+
+  
 }
 
