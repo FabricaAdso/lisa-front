@@ -1,26 +1,22 @@
-<nz-tabset>
-  <nz-tab nzTitle="Inasistencias" (nzClick)="getFilterJustificacion()"></nz-tab>
-  <nz-tab nzTitle="Pendientes" (nzClick)="
-      getFilterJustificacion({
-        aprobationState: estadoJustificacionEnum.PENDIENTE
-      })
-    "></nz-tab>
-  <nz-tab nzTitle="Rechazadas" (nzClick)="
-      getFilterJustificacion({
-        aprobationState: estadoJustificacionEnum.RECHAZADO
-      })
-    "></nz-tab>
-  <nz-tab nzTitle="Aprobadas" (nzClick)="
-      getFilterJustificacion({
-        aprobationState: estadoJustificacionEnum.APROBADO
-      })
-    "></nz-tab>
-  <nz-tab nzTitle="Vencidas" (nzClick)="
-      getFilterJustificacion({
-        aprobationState: estadoJustificacionEnum.VENCIDA
-      })
-    "></nz-tab>
+<nz-tabset [ngClass]="activeTabClass">
+  <nz-tab nzTitle="Inasistencias" (nzClick)="setActiveTab('inasistencias'); getFilterJustificacion()"></nz-tab>
+
+  <nz-tab nzTitle="Sin justificar"
+    (nzClick)="setActiveTab('En_espera'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.EN_ESPERA})"></nz-tab>
+
+  <nz-tab nzTitle="Pendiente de aprobación"
+    (nzClick)="setActiveTab('pendientes'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.PENDIENTE })"></nz-tab>
+  <nz-tab nzTitle="Rechazadas"
+    (nzClick)="setActiveTab('rechazadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.RECHAZADO })"></nz-tab>
+  <nz-tab nzTitle="Aprobadas"
+    (nzClick)="setActiveTab('aprobadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.APROBADO })"></nz-tab>
+  <nz-tab nzTitle="Vencidas"
+    (nzClick)="setActiveTab('vencida'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.VENCIDA })"></nz-tab>
 </nz-tabset>
+
+
+
+
 <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="justifications" [nzScroll]="{ x: '1200px' }"
   [nzShowPagination]="false">
   <thead>
@@ -46,15 +42,12 @@
       </td>
       <td>{{ data.assistance?.apprentice?.user?.identity_document }}</td>
       <td>
-        <span *ngIf="isInasistencias">
-          {{ data.aprobation?.state || "Pendiente" }}
-        </span>
+        <span class="estado-indicador" [ngClass]="getEstadoClass(data.aprobation?.state)"></span>
+        {{ data.aprobation?.state === 'En_espera' ? 'Sin justificar' : data.aprobation?.state }}
       </td>
       <td>
 
-        <button nz-button nzType="link" (click)="openModal(data)">
-          Examinar
-        </button>
+        <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
       </td>
 
     </tr>

@@ -46,7 +46,7 @@ export class ApprenticesAbsencesComponent {
   selectedJustification!: JustificationModel;
   filteredData = this.justifications;
 
-  elements: number = 4;
+  elements: number = 8;
   page: number = 1;
   last_page: number = 0;
   total_elements: number = 0;
@@ -57,6 +57,9 @@ export class ApprenticesAbsencesComponent {
     'assistance.session.course',
     'assistance.apprentice.user',
   ];
+
+  activeTabClass = 'inasistencias'; // Estado inicial
+
   filter?: { [key: string]: string | EstadoJustificacionEnum };
 
   ngOnInit(): void {
@@ -98,21 +101,60 @@ export class ApprenticesAbsencesComponent {
     this.page_options = Array.from({ length: last_page }, (_, i) => i + 1);
   }
 
-  getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
-    this.filter = { ...filter }; // 🔹 Clona el objeto para evitar mutaciones inesperadas
-    this.changePage(1);
 
-    // ✅ Accede a 'state' correctamente usando notación de corchetes
-    this.isInasistencias = filter?.['state'] === 'Vencida';
 
-    // ✅ Verifica que 'state' se mapee correctamente a 'aprobationState'
-    if (this.filter?.['state']) {
-        this.filter['aprobationState'] = this.filter['state'];
-        delete this.filter['state']; // 🔹 Elimina 'state' si ya no es necesario
-    }
+getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
+  this.filter = filter;
+  this.changePage(1);
 
-    console.log("Filtro final aplicado:", this.filter); // 🟢 Verifica el filtro antes de la petición
+  // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
+  if (filter && filter['state'] !== 'Vencida') {
+    this.isInasistencias = false;
+  } else {
+    this.isInasistencias = true;
+  }
+
+  // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
+  if (this.filter && this.filter['state']) {
+    this.filter['aprobationState'] = this.filter['state'];
+    delete this.filter['state']; // Elimina 'state' si ya no es necesario
+  }
+
 }
+
+
+setActiveTab(tab: string) {
+  this.activeTabClass = tab;
+}
+
+getEstadoClass(estado: string | null | undefined): string {
+  if (!estado) return 'estado-pendiente'; // Default a 'Pendiente'
+
+  switch (estado) {
+    case this.estadoJustificacionEnum.PENDIENTE:
+      return 'estado-pendiente';
+    case this.estadoJustificacionEnum.RECHAZADO:
+      return 'estado-rechazado';
+    case this.estadoJustificacionEnum.APROBADO:
+      return 'estado-aprobado';
+    case this.estadoJustificacionEnum.VENCIDA:
+      return 'estado-vencida';
+    case this.estadoJustificacionEnum.EN_ESPERA:
+      return 'estado-en-espera';  
+    default:
+      return 'estado-inasistencia';
+  }
+}
+
+setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
+  this.estadoJustificacion = estado;
+}
+
+
+
+
+
+
 
 
   changePage(page: number) {
@@ -143,9 +185,7 @@ export class ApprenticesAbsencesComponent {
     this.isModalVisible = false;
   }
 
-  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
-    this.estadoJustificacion = estado;
-  }
+
 
   openModal(justification: JustificationModel): void {
     this.isModalVisible = false;
