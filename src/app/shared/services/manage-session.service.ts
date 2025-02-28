@@ -6,6 +6,14 @@ import { QueryUrl } from '@shared/models/query-url.model';
 import { SessionModel } from '@shared/models/session.model';
 import { Observable } from 'rxjs';
 
+export interface SessionFilters {
+  included?: string[]; // ['instructor.user','course.program.subjects', ...]
+  course_?: string;    // valor a filtrar por course
+  rap_?: string;       // valor a filtrar por rap
+  subject_?: string;   // valor a filtrar por subject
+  // agrega más si necesitas
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,11 +24,9 @@ export class ManageSessionService {
 
   getSessions(data?:QueryUrl) {
     let URL:string =getQueryUrl(`${this.URL}`,data)
-
-    console.log(URL)
     return this.http.get<SessionModel[]>(URL)
   }
 
-  
+
 }
 

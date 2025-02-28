@@ -1,12 +1,18 @@
+<nz-select [(ngModel)]="selecion"  (ngModelChange)="FilterSesion($event)" nzAllowClear
+  nzPlaceHolder="Choose">
+  @for (option of select_sessions; track option) {
+  <nz-option [nzValue]="option" [nzLabel]="option.name"></nz-option>
+  }
+</nz-select>
+
 <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="sessions" [nzScroll]="{ x: '' }">
   <thead>
     <tr>
       <th nzWidth="6%">Fecha</th>
-      <th nzWidth="4%">Inicio</th>
-      <th nzWidth="10%">Fin</th>
+      <th nzWidth="4%">Ficha</th>
+      <th nzWidth="10%">Programa</th>
       <th nzWidth="10%">Instructor</th>
-      <th nzWidth="4%">Curso</th>
-      <th nzWidth="4%">Programa</th>
+      <th nzWidth="4%">Horario</th>
       <th nzWidth="10%">Rap</th>
       <th nzWidth="15%">Subject</th>
     </tr>
@@ -15,18 +21,21 @@
     <tr *ngFor="let session of basicTable.data">
       <td>2024-23-20</td>
       <td>2774315</td>
-      <td><div style="white-space: normal; word-wrap: break-word;">sdsds es una nota fe la vominidad que funciona pra reportar a los usarios y que estso puesdan reaccionar en consecuenaia</div>analisisi y desarrollo de software</td>
+      <td>
+        <div style="white-space: normal; word-wrap: break-word;">sdsds es una nota fe la vominidad que funciona pra
+          reportar a los usarios y que estso puesdan reaccionar en consecuenaia</div>analisisi y desarrollo de software
+      </td>
       <td>ana gabriel buesquillo gutierrez</td>
-      <td>12:20</td>
-      <td>19:20</td>
-      <td>36180 - Enrique Low Murtra-Interactuar en el contexto productivo y social de acuerdo con principios  éticos para la construcción de una cultura de paz.</td>
-      <td>593147 - 02  ESTABLECER RELACIONES DE CRECIMIENTO PERSONAL Y COMUNITARIO A PARTIR DEL BIEN COMÚN COMO APORTE PARA EL DESARROLLO SOCIAL.</td>
+      <td>12:20 - 12:20</td>
+      <td>36180 - Enrique Low Murtra-Interactuar en el contexto productivo y social de acuerdo con principios éticos
+        para la construcción de una cultura de paz. (29)</td>
+      <td>593147 - 02 ESTABLECER RELACIONES DE CRECIMIENTO PERSONAL Y COMUNITARIO A PARTIR DEL BIEN COMÚN COMO APORTE
+        PARA EL DESARROLLO SOCIAL. (100)</td>
       <!-- <td>{{ session.date }}</td>
       <td>{{ session.course?.code || 'N/D' }}</td>
       <td>{{ session.course?.program?.name || 'N/D' }}</td>
       <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
-      <td>{{ session.start_time }}</td>
-      <td>{{ session.end_time }}</td>
+      <td>{{ session.start_time }} - {{ session.end_time }}</td>
       <td>
         {{ session.rap.description || 'N/D' }}<br>
         ({{ session.rap.number_hours || 'N/D' }})
@@ -44,4 +53,3 @@
     </tr>
   </tbody>
 </nz-table>
-
