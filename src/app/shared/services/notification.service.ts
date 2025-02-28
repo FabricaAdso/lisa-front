@@ -12,8 +12,8 @@ export class NotificationService {
   private http = inject(HttpClient);
   url:string = 'message'
 
-    getNotifications(data: number){
-      return this.http.get<NotificationModel[]>(`${this.url}?filter[user_id]=${data}`);
+    getNotifications(){
+      return this.http.get<NotificationModel[]>(`${this.url}`);
     }
   }
 

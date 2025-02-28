@@ -50,7 +50,7 @@ export class AttendanceComponent {
   private course_service = inject(CourseService);
   
   @Input() course_code?:number;
-  @Input() session_code?:number;
+  @Input() session_id?:number;
 
   course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];

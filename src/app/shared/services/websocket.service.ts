@@ -17,6 +17,7 @@ export class WebSocketService{
 
     this.echo = new Echo({
       broadcaster: 'pusher',
+      disableStats: true,
       key: environment.pusherKey,
       cluster: environment.pusherCluster,
       forceTLS: environment.pusherForceTLS,
@@ -39,5 +40,13 @@ export class WebSocketService{
   }
   listen(channel: string, event: string, callback: Function) {
     this.echo.private(channel).listen(event, callback);
+  }
+
+  unlisten(channel: string) {
+    this.echo.leave(channel);
+  }
+
+  disconnect() {
+    this.echo.disconnect();
   }
 }

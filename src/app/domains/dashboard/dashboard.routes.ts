@@ -12,7 +12,7 @@ export const routes: Routes = [
         redirectTo: 'environtments',
       },
       {
-        path: 'fichas/:course_code/attendance',
+        path: 'session/:session_id/:course_code/attendance',
         title: 'Asistencia',
         canActivate: [authGuard],
         data: {breadcrumb: 'Tomar Asistencia'},
