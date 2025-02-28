@@ -77,7 +77,7 @@ export class HeadquarterComponent {
     this.deleteHeadquarters(id); // Llama a deleteHeadquarters con el id
     this.nzMessageService.info('Confirmación de eliminación');
   }
-  
+
   deleteHeadquarters(id: number) {
     const deleteSub = this.headquarterService.delete(id).subscribe(() => {
       this.loadHeadquarters(); // Recarga la lista de sedes.
@@ -89,7 +89,7 @@ export class HeadquarterComponent {
 
   loadData() {
     const datasub = forkJoin([
-      this.headquarterService.getHeadquartes(),
+      this.headquarterService.getHeadquarters(),
       this.trainingCentreService.getCentros(),
       this.locationService.getDepartments()
     ]).subscribe({
@@ -151,7 +151,7 @@ export class HeadquarterComponent {
 
   // Cargar las sedes existentes
   loadHeadquarters() {
-    this.headquarterService.getHeadquartes().subscribe(data => {
+    this.headquarterService.getHeadquarters().subscribe(data => {
       this.headquarters = data;
     });
   }
@@ -169,11 +169,11 @@ export class HeadquarterComponent {
       this.editingHeadquartersId = headquarter.id;
       this.formHeadquarters?.patchValue({
         ...headquarter,
-        department: headquarter.municipality.departament_id, // Asegúrate de que este campo sea el ID correcto del departamento
-        municipality_id: headquarter.municipality.id
+        department: headquarter.municipality, // Asegúrate de que este campo sea el ID correcto del departamento
+        municipality_id: headquarter.municipality
       });
       // Cargar municipios según el departamento actual
-      this.onDepartmentChange(headquarter.municipality.departament_id);
+
     } else {
       this.editingHeadquartersId = null;
       this.formHeadquarters?.reset();

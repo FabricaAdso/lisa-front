@@ -24,7 +24,7 @@
     <tbody>
       <tr *ngFor="let user of basicTable.data">
         <td>{{ user.identity_document }}</td>
-        <td>{{ user.name}} {{user.last_name}}</td>
+        <td>{{ user.name}}</td>
         <td>{{ user.last_name }}</td>
         <td>
           <span *ngFor="let roleId of user.roles; let i = index">

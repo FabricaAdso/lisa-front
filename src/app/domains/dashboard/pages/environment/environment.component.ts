@@ -1,21 +1,21 @@
+ import { query } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Query } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
 import { CreateEvironentDTO } from '@shared/dto/create-environmentDTO';
-import { AreaModel } from '@shared/models/area-model';
+import { getQueryUrl } from '@shared/functions/url.functions';
 import { EnvironmentModel } from '@shared/models/environment-model';
+import { KnowledgeNetworkModel } from '@shared/models/knowledg-network.model';
 import { SedeModel } from '@shared/models/sede.model';
-import { AreaService } from '@shared/services/area.service';
 import { EnvironmentService } from '@shared/services/environment.service';
 import { HeadquartersService } from '@shared/services/headquarters.service';
+import { KnowledgeNetworkService } from '@shared/services/knowledge-network.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-environment',
@@ -38,13 +38,13 @@ export class EnvironmentComponent {
 
   private formBuilder = inject(FormBuilder);
   private environmentService = inject(EnvironmentService);
-  private areaService = inject(AreaService);
-  private headquarterService = inject(HeadquartersService);
+  private knowledge_network = inject(KnowledgeNetworkService);
+  private headquarter = inject(HeadquartersService);
 
- 
+
 
   environments: EnvironmentModel[] = [];
-  areas: AreaModel[] = [];
+  networks: KnowledgeNetworkModel[] = [];
   headquarters: SedeModel[] = [];
 
   formEnvironments!: FormGroup | null;
@@ -55,35 +55,42 @@ export class EnvironmentComponent {
   filteredEnvironments: EnvironmentModel[] = []; // Arreglo para datos filtrados
 
   ngOnInit(): void {
-    this.loadData();// Carga los datos iniciales.
+    this.getHeadquarters();
+    this.getNetworks();
+    this.getEnvironments();// Carga los datos iniciales.
     this.createForm();
   }
+  getHeadquarters():void{
+    this.headquarter.getHeadquarters().subscribe({
+      next: (res) => {
+        this.headquarters = res;
+      },
+      error: (err) => console.log(err)
+    });
 
-  loadData() {
-    // const datasub = forkJoin([
-    //   this.environmentService.get(),
-    //   this.areaService.get(),
-    //   this.headquarterService.getHeadquartes(),
+  }
 
+  getNetworks():void{
+    this.knowledge_network.getknowledgeNetwork().subscribe({
+      next: (res) => {
+        this.networks= res;
+      },
+      error: (err) => console.log(err)
+    });
 
-    // ]).subscribe({
-    //   next: ([enviroments, areas, headquarters]) => {
-    //     this.environments = [...enviroments]
-    //     this.filteredEnvironments = [...this.environments]; 
-    //     this.areas = [...areas]
-    //     this.headquarters = [...headquarters]
-
-
-
-    //     console.log(enviroments)
-    //     console.log('Sedes:', this.headquarters);
-    //     console.log('Áreas:', this.areas);
-
-    //   },
-    //   complete: () => {
-    //     datasub.unsubscribe();
-    //   }
-    // });
+  }
+  getEnvironments(): void {
+    this.environmentService.getEnvironments().subscribe({
+      next: (res) => {
+        this.environments = res.map(env => ({
+          ...env,
+          headquarters_name: this.headquarters.find(h => h.id === env.headquarters_id)?.name ?? 'No encontrado',
+          knowledge_network_name: this.networks.find(n => n.id === env.knowledge_network_id)?.name ?? 'No encontrado'
+        }));
+        this.filteredEnvironments = this.environments;
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   applyFilter() {
