@@ -8,6 +8,7 @@ import { ManageSessionService } from '@shared/services/manage-session.service';
 import { SessionService } from '@shared/services/program/session.service';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -26,7 +27,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzSpaceModule,
     NzDividerModule,
     NzSelectModule,
-    FormsModule
+    FormsModule,NzInputModule
   ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
@@ -35,41 +36,85 @@ export class ManageSessionComponent implements OnInit {
 
   sessions: SessionModel[] = [];
   loading = false;
-  selecion:{ name: string, id: number } | null = null;
+  selecion: { name: string, id: number } | null = null;
   select_sessions: { name: string, id: number }[] = [
-    {
-      name: "past",
-      id: 1
-    },
-    {
-      name: "pending",
-      id: 2
-    }
+    { name: "past", id: 1 },
+    { name: "pending", id: 2 },
+    { name: "all", id: 3 }
+  ];
 
-  ]
+  filters: { [key: string]: any } = {};
 
+  courseFilter: string = '';
   constructor(private sessionService: ManageSessionService) { }
 
-
   ngOnInit(): void {
-    this.selecion = this.select_sessions.find(item => item.name === 'pending') || null;
-    this.FilterSesion(this.selecion)
+    this.selecion = this.select_sessions[1];
+    this.applyCourseFilter();
+    this.FilterSesion();
   }
 
-  FilterSesion(tipo?:{ name: string, id: number }| null) {
-    console.log(tipo);
-    const filter = tipo ? { [tipo.name]: true } : {};
+  onCourseFilterChange(value: string): void {
+    this.courseFilter = value;
+    if (value && value.trim().length > 0) {
+      this.filters['course_'] = value;
+    } else {
+      delete this.filters['course_'];
+    }
+    this.FilterSesion();
+  }
+
+  private applyCourseFilter(): void {
+    if (this.selecion && this.selecion.name !== 'all') {
+      this.filters['course_'] = this.selecion.name;
+    } else {
+      delete this.filters['course_'];
+    }
+  }
+
+  FilterSesion(): void {
+    console.log('Filtros aplicados:', this.filters);
     this.sessionService.getSessions({
-      filter: filter,
-      included: ['instructor.user', 'course', 'course.program', 'course.program.subjects']
+      filter: this.filters,
+      included: [
+        'instructor.user',
+        'course',
+        'course.program',
+        'rap.subject'
+      ]
     }).subscribe({
       next: (sessions) => {
-        this.sessions  = [...sessions]
+        this.sessions = [...sessions];
       },
+      error: (err) => console.error(err)
     });
   }
 
 
+ /*  ngOnInit(): void {
+    this.selecion = this.select_sessions[0];
+     this.FilterSesion(this.selecion)
+  }
+
+  FilterSesion(tipo?:{ name: string, id: number }| null) {
+    console.log(tipo);
+    let filter= {};
+    if (tipo && tipo.name !=='all'){
+      filter = {[tipo.name]: true}
+    }
+
+    this.sessionService.getSessions({
+      filter: filter,
+      included: ['instructor.user', 'course.program'
+        ,'rap', 'rap.subject']
+    }).subscribe({
+      next: (sessions) => {
+        console.log('Sesiones recibidas:', sessions);
+
+        this.sessions  = [...sessions]
+      },
+    });
+  } */
 
 
 }
