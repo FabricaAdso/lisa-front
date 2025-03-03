@@ -26,6 +26,10 @@ import { CourseService } from '@shared/services/program/course.service';
 import { SessionService } from '@shared/services/program/session.service';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { RapService } from '@shared/services/rap.service';
+import { SubjectService } from '@shared/services/subject.service';
+import { SubjectModel } from '@shared/models/subject-model';
+import { RapModel } from '@shared/models/rap-model';
 
 @Component({
   selector: 'app-session',
@@ -60,6 +64,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   private session_service = inject(SessionService)
   private date_pipe = inject(DatePipe)
   private notification = inject(NzNotificationService);
+  private subjectService = inject(SubjectService);
+  private rapService = inject(RapService);
 
   disableDates = () => true; // Desactiva todas las fechas
 
@@ -75,6 +81,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   // Propiedad vinculada al rango del picker
   date = null;
 
+  private subjectSelection = new Subject<void>();
   private knowledgeNetworkSelection = new Subject<void>();
   private destroy = new Subject<void>();
 
@@ -86,6 +93,9 @@ export class SessionComponent implements OnInit, OnDestroy {
   instructor: InstructorModel[] = [];
   courses: CourseModel[] = [];
   session: SessionModel[] = [];
+  subjectModel: SubjectModel[] = [];
+  rapModel: RapModel[] = [];
+
   day_of_week = [
     { id: 1, name: 'Lunes' },
     { id: 2, name: 'Martes' },
@@ -109,6 +119,8 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.createForm()
     this.getData();
     this.changeKnowledgeNetwork();
+    this.changeRaps();
+    
   }
 
   ngOnDestroy(): void {
@@ -116,20 +128,26 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.destroy.complete();
     this.knowledgeNetworkSelection.next();
     this.knowledgeNetworkSelection.complete();
+    this.subjectSelection.next();
+    this.subjectSelection.complete();
   }
 
   getData() {
     forkJoin([
       this.knowledge_network_service
-        .getknowledgeNetwork()
-        .pipe(takeUntil(this.destroy)),
+      .getknowledgeNetwork()
+      .pipe(takeUntil(this.destroy)),
       this.course_service
-        .getCourses()
-        .pipe(takeUntil(this.destroy))
+      .getCourses()
+      .pipe(takeUntil(this.destroy)),
+      this.subjectService
+        .getSubject()
+        .pipe(takeUntil(this.destroy)),
     ]).subscribe({
-      next: ([knowledgeNetwork, courses]) => {
+      next: ([knowledgeNetwork, courses, subject]) => {
         this.knowledge_network = [...knowledgeNetwork];
         this.courses = [...courses];
+        this.subjectModel = [...subject];
       },
       error: (err) => {
         console.error('Error fetching data:', err);
@@ -142,12 +160,14 @@ export class SessionComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => {
           this.knowledgeNetworkSelection.next();
-
+          console.log(this.knowledgeNetworkSelection);
+          
           this.instructor = [];
         }),
         filter((value): value is number => value !== null),
         switchMap((knowledgeNetwork: number) => {
           this.fieldInstructor.reset();
+          console.log(knowledgeNetwork);
           return this.instructor_service
             .getInstructorByKnowledgeNetwork(knowledgeNetwork)
             .pipe(
@@ -174,12 +194,58 @@ export class SessionComponent implements OnInit, OnDestroy {
       });
   }
 
+  changeRaps(){
+    this.fieldSubject.valueChanges
+    .pipe(
+      tap (() => {
+        this.subjectSelection.next();
+        console.log(this.subjectSelection);
+        
+        this.rapModel = [];
+      }),
+      filter((value): value is number => value !== null),
+      switchMap((subject: number) => {
+        this.fieldRap.reset();
+        console.log(subject);
+        
+        return this.rapService
+        .getRapBySubject(subject, {included:['subject']})
+        .pipe(
+          takeUntil(this.subjectSelection),
+          tap((rap) => {
+            if (rap.length === 0) {
+              this.notification.create(
+                'warning',
+                'Error',
+                'No hay ningun rap asociado al subject'
+              )
+            }
+            this.rapModel = [
+              ...new Set([...this.rapModel, ...rap]),
+            ]
+          })
+        )
+      }),
+      takeUntil(this.destroy)
+    ).
+    subscribe({
+      error: () =>
+        this.notification.create(
+          'error',
+          'Error',
+          'Error al obtener los raps asociados'
+        )
+    });
+  }
+
 
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
       instructor_id: new FormControl('', Validators.required),
       course_id: new FormControl('', Validators.required),
+      rap_id: new FormControl('', Validators.required),
+      subject: new FormControl('', Validators.required),
       start_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
       end_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
       start_date: new FormControl(new Date, Validators.required),
@@ -210,6 +276,12 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
   get fieldEndTime() {
     return this.formSession?.get('end_time') as FormControl;
+  }
+  get fieldRap(){
+    return this.formSession?.get('rap_id') as FormControl;
+  }
+  get fieldSubject(){
+    return this.formSession?.get('subject') as FormControl;
   }
 
   onTimeChangesStart(timeStart: Date): void {
