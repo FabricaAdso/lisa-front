@@ -10,6 +10,8 @@ export interface CourseModel {
     shift:string ;
     state: 'Terminada_por_fecha' | 'En_ejecucion' | 'Terminada' | 'Termindad_por_unificacion';
     stage?: 'PRACTICA' | 'LECTIVA';
+    representative_id:number
+    representative:ApprenticeModel
 
     //relacion con aprendices
     apprentices?:ApprenticeModel

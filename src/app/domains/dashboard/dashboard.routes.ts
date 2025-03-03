@@ -12,7 +12,7 @@ export const routes: Routes = [
         redirectTo: 'environtments',
       },
       {
-        path: 'fichas/:course_code/attendance',
+        path: 'session/:session_id/:course_code/attendance',
         title: 'Asistencia',
         canActivate: [authGuard],
         data: {breadcrumb: 'Tomar Asistencia'},
@@ -96,7 +96,7 @@ export const routes: Routes = [
 
       {
         path: 'file',
-        title: 'Fichas',
+        title: 'Fichas',                                                      
         data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/programs/ficha-page/ficha-page.component').then(c => c.FichaPageComponent)

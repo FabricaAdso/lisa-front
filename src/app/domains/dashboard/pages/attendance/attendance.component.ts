@@ -18,6 +18,10 @@ import { CourseModel } from '@shared/models/course.model';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { SessionShowComponent } from "./session-show/session-show.component";
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
+import { SessionService } from '@shared/services/program/session.service';
+import { GeneralAssistanceData } from '@shared/models/generalDataAssistance-model';
+import { SessionModel } from '@shared/models/session.model';
+
 
 @Component({
   selector: 'app-attendance',
@@ -48,14 +52,16 @@ export class AttendanceComponent {
   @ViewChild('sessionShowModal') sessionShowModal:any = SessionShowComponent;
 
   private course_service = inject(CourseService);
+  private session_service = inject(SessionService);
   
   @Input() course_code?:number;
-  @Input() session_code?:number;
+  @Input() session_id?:number;
 
   course: CourseModel[]=[];
   assistance: AssistanceModel[] = [];
   listOfData: any[] = [];
   listDAtos: any[][] = [];
+  listOfData2: SessionModel | null = null;
 
   Math = Math;
   showDefaultTable = true;
@@ -99,46 +105,16 @@ export class AttendanceComponent {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
 
- 
-  // getData() {
-  //   const data_sub = forkJoin([
-  //     this.courses_service.getCourses({ included: ['apprentices.user'] }),
-  //   ]).subscribe({
-  //     next: ([course]) => {
-  //       this.course = [...course];
-  //     // Mapeamos cada course que es un array
-  //     const dataCourse = this.course.flatMap((item) => {
-  //       // Verificamos si apprentices es un array
-  //       if (Array.isArray(item.apprentices)) {
-  //         return item.apprentices?.map((apprentice) => ({
-  //           key: item.id.toString(),
-  //           nombre: apprentice.user?.name || 'No disponible',
-  //           apellido: apprentice.user?.last_name || 'No disponible',
-  //           documento: apprentice.user?.identity_document || 'No disponible',
-  //           correo: apprentice.user?.email || 'No disponible'
-  //         })) || [];
-          
-  //       }else{
-  //         return [];  
-  //       } 
-  //     });
-
-  //     // Asignamos los datos a la lista
-  //     this.listOfData = [...dataCourse];
-  //   },
-  //   complete(){
-  //     data_sub.unsubscribe()
-  //   }
-  //   });
-  // }
-
   getData() {
     const data_sub = forkJoin([
-      this.course_service.getCursesInstructorNow({ included: ['assistances.apprentice.user'] }),
+      this.session_service.getSessionShow(this.session_id!,{ included: ['assistances.apprentice.user', 'instructor.user', 'course.environment.headquarters'] }),
     ]).subscribe({
       next: ([assistance]) => {
 
         this.listOfData = assistance.assistances.map((item) => this.mapToAssistance(item));// Agrupa los datos para multiples tablas
+        this.listOfData2 = assistance
+        console.log(this.listOfData2);
+        
       },
       complete(){
         data_sub.unsubscribe()
@@ -156,8 +132,7 @@ export class AttendanceComponent {
       correo: item.apprentice?.user?.email,
     }
   }
-
-
+  
 
   showModal(): void {
     this.isVisible = true;

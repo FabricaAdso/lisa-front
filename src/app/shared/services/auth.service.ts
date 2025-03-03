@@ -5,6 +5,7 @@ import { TokenModel } from '@shared/models/token.model';
 import { tap } from 'rxjs/operators';
 import { UserModel } from '@shared/models/user.model';
 import { Observable } from 'rxjs';
+import { WebSocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ export class AuthService {
 
 
   constructor() { }
+
+  private websocketService = inject(WebSocketService);
 
   private http = inject(HttpClient);
 
@@ -27,8 +30,12 @@ export class AuthService {
   }
 
   logout(){
-    localStorage.removeItem('token')
-    return this.http.post('logout',null)
+    localStorage.removeItem('token');
+  localStorage.removeItem('pusherTransportNonTLS'); 
+
+  this.user.set(null); // Limpiar usuario
+
+  this.websocketService.disconnect(); 
   }
 
   isAuth() {

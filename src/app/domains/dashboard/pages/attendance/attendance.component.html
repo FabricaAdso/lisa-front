@@ -9,11 +9,12 @@
     </div>
     <nz-page-header-content>
       <nz-descriptions nzSize="middle" [nzColumn]="2" class="flex flex-col sm:flex-row">
-        <nz-descriptions-item nzTitle="Líder de ficha">Leidy Mariani Dorado</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Duración del programa">06/06/2023 - 06/08/2024</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Sede">Inem</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Ambiente" [nzSpan]="1">{{course_code||'1055'}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Vocero de ficha">Juan Andrés°</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name}} {{listOfData2?.instructor?.user?.last_name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Numero de ficha">{{listOfData2?.course?.code}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start}} - {{listOfData2?.course?.date_end}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero de ficha">{{listOfData2?.course?.representative}}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Vocero suplente">Antonio Rodríguez</nz-descriptions-item>
       </nz-descriptions>
     </nz-page-header-content>
@@ -108,7 +109,7 @@
     </ng-container>
 
     <!-- Alternate Table -->
-     <app-attendance-table #attendanceTable *ngIf="!showDefaultTable">
+     <app-attendance-table [session_id]="session_id!" #attendanceTable *ngIf="!showDefaultTable">
      </app-attendance-table>
     
   </div>

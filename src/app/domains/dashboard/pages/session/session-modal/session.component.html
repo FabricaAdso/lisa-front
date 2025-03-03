@@ -56,15 +56,46 @@
           }
         </nz-select>
       </div>
+      <div class="mb-4">
+        <label for="" class="">Competencia</label>
+        <nz-select
+          (change)="changeRaps()"
+          [formControl]="fieldSubject"
+          name="subject"
+          placeholder="Seleccione un Area"
+          [nzShowSearch]="true"
+        >
+          @for (item of subjectModel; track $index) {
+          <nz-option [nzLabel]="item.name" [nzValue]="item.id">{{
+            item.name
+          }}</nz-option>
+          }
+        </nz-select>
+      </div>
+      <div class="mb-4">
+        <label for="" class="">Rap</label>
+        <nz-select
+          [formControl]="fieldRap"
+          name="rap_id"
+          placeholder="Seleccione un Area"
+          [nzShowSearch]="true"
+        >
+          @for (item of rapModel; track $index) {
+          <nz-option [nzLabel]="item.description" [nzValue]="item.id">{{
+            item.description
+          }}</nz-option>
+          } 
+        </nz-select>
+      </div>
 
       <div class="mb-4">
         <label for="" class="">Fecha de asignacion</label>
-        <nz-range-picker
+        <nz-date-picker
           class="w-full"
-          [formControl]="fieldRangePicker"
+          [formControl]="fieldStartDate"
           name="range_picker"
           (ngModelChange)="onDateChange($event)"
-        ></nz-range-picker>
+        ></nz-date-picker>
       </div>
 
       <div class="mb-4 flex gap-5">
