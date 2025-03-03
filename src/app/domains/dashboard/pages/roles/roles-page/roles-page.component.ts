@@ -108,7 +108,7 @@ export class RolesComponent implements OnInit {
                 roles: user.training_centers?.map((tc: { role_id: any; }) => tc.role_id) || []
             }));
             console.log(this.users);
-            
+
             // Asigna los usuarios filtrados
             this.filteredUsers = [...this.users];
 
@@ -130,6 +130,11 @@ export class RolesComponent implements OnInit {
     );
     this.pageIndex = 1;
   }
+
+  showModalCargue(): void {
+    this.isVisible = true;
+  }
+
   //funcion para seleccionar un usuario
   showModal(user: any): void {
     this.isVisible = true;
