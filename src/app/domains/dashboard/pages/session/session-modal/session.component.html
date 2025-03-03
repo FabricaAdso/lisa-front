@@ -90,12 +90,12 @@
 
       <div class="mb-4">
         <label for="" class="">Fecha de asignacion</label>
-        <nz-range-picker
+        <nz-date-picker
           class="w-full"
-          [formControl]="fieldRangePicker"
+          [formControl]="fieldStartDate"
           name="range_picker"
           (ngModelChange)="onDateChange($event)"
-        ></nz-range-picker>
+        ></nz-date-picker>
       </div>
 
       <div class="mb-4 flex gap-5">

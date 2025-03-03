@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { AttendanceComponent } from '../attendance.component';
 import { AssistanceModel } from '@shared/models/assistance.model';
 import { AssistanceService } from '@shared/services/assistance.service';
@@ -10,6 +10,7 @@ import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
 import { CourseService } from '@shared/services/program/course.service';
 import { SessionModel } from '@shared/models/session.model';
+import { SessionService } from '@shared/services/program/session.service';
 
 @Component({
   selector: 'app-attendance-table',
@@ -20,8 +21,9 @@ import { SessionModel } from '@shared/models/session.model';
 })
 export class AttendanceTableComponent implements OnInit,OnDestroy {
 
+  @Input() SessionDatos:AssistanceModel[]=[];
+
   private assistance_service = inject(AssistanceService);
-  private course_service = inject(CourseService)
   listOfData: RegisterAssistanceModel[] = [];
   
   listDAtos: any[][] = []; // Almacena los grupos de datos para multiples tablas
@@ -66,18 +68,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
   }
 
   getData() {
-    const data_sub = forkJoin([
-      this.course_service.getCursesInstructorNow({ included: ['assistances.apprentice.user'] }),
-    ]).subscribe({
-      next: ([assistance]) => {
-
-        this.listOfData = assistance.assistances.map((item) => this.mapToAssistance(item));
-        this.evaluarCantidadTablas(); // Agrupa los datos para multiples tablas
-      },
-      complete(){
-        data_sub.unsubscribe()
-      }
-    });
+    this.listOfData = this.SessionDatos?.map((item) => this.mapToAssistance(item))
   }
 
   mapToAssistance(item:AssistanceModel):RegisterAssistanceModel{
