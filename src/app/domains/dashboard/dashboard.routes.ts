@@ -96,7 +96,7 @@ export const routes: Routes = [
 
       {
         path: 'file',
-        title: 'Fichas',
+        title: 'Fichas',                                                      
         data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/programs/ficha-page/ficha-page.component').then(c => c.FichaPageComponent)
