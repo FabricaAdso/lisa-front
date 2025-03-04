@@ -15,8 +15,8 @@ export class JustificationsInstructorService {
   constructor() { }
 
   private http = inject(HttpClient);
-  URL:string = 'justifications'; 
-  URL1:string = 'aprobations';
+  URL:string = 'justifications/'; 
+  URL1:string = 'aprobations/';
 
 
   getJustifications(data?:QueryUrl){
