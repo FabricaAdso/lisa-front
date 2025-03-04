@@ -23,6 +23,8 @@ export class ModalPendingComponent {
   @Input() justification!: JustificationModel;
   @Output() close = new EventEmitter<boolean>();
   @Output() statusChange = new EventEmitter<EstadoJustificacionEnum>();
+  @Output() rejectionData = new EventEmitter<{ status: EstadoJustificacionEnum, motive: string }>();
+
   motive: string = ''; 
   isRejecting: boolean = false; 
   private justificationService = inject(JustificationsInstructorService);
@@ -39,23 +41,19 @@ export class ModalPendingComponent {
   handleReject(): void {
     this.isRejecting = true; 
   }
+
   sendRejection(): void {
     if (this.motive.trim() === '') {
       alert('Por favor ingresa el motivo del rechazo.');
       return;
     }
-    this.statusChange.emit(EstadoJustificacionEnum.RECHAZADO);
-    this.close.emit();
-    this.isVisible = false;
-    this.justificationService.updateJustificationStatus(this.justification.id, EstadoJustificacionEnum.RECHAZADO, this.motive)
-      .subscribe({
-        next: (response) => {
-          console.log('Justificación rechazada con motivo:', this.motive);
-        },
-        error: (err) => {
-          console.error('Error al actualizar la justificación:', err);
-        }
-      });
+  
+    this.rejectionData.emit({
+      status: EstadoJustificacionEnum.RECHAZADO,
+      motive: this.motive
+    });
+  
+    this.close.emit(false);
   }
   
   closeModal(): void {

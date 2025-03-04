@@ -68,7 +68,8 @@
 
 <app-modal-pending *ngIf="selectedJustification?.aprobation!.state =='Pendiente' || selectedJustification?.aprobation!.state == null" [isVisible]="isModalVisible"
   [justification]="selectedJustification" (close)="closeModal()"
-  (statusChange)="updateJustificationStatus(selectedJustification, $event)">
+  (statusChange)="updateJustificationStatus(selectedJustification, $event)"
+  (rejectionData)="onRejectionDataReceived($event)">
 </app-modal-pending>
 
 <app-modal-expired *ngIf="selectedJustification?.aprobation!.state =='Vencida'" [isVisible]="isModalVisible"

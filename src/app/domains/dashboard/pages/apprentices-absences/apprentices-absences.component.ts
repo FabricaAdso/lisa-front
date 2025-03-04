@@ -214,4 +214,10 @@ setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
         },
       });
   }
+
+  onRejectionDataReceived(data: { status: EstadoJustificacionEnum, motive: string }) {
+    if (this.selectedJustification) {
+      this.updateJustificationStatus(this.selectedJustification, data.status, data.motive);
+    }
+  }
 }
