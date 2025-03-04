@@ -1,15 +1,8 @@
- import { query } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Query } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateEvironentDTO } from '@shared/dto/create-environmentDTO';
-import { getQueryUrl } from '@shared/functions/url.functions';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
-import { KnowledgeNetworkModel } from '@shared/models/knowledg-network.model';
-import { SedeModel } from '@shared/models/sede.model';
 import { EnvironmentService } from '@shared/services/environment.service';
-import { HeadquartersService } from '@shared/services/headquarters.service';
-import { KnowledgeNetworkService } from '@shared/services/knowledge-network.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -17,23 +10,11 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 
-interface Person {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
-interface MockUser {
-  name: {
-    first: string;
-  };
-}
+
 
 @Component({
   selector: 'app-environment',
@@ -63,56 +44,55 @@ interface MockUser {
 
 
 export class EnvironmentComponent implements OnInit {
-  readonly randomUserUrl: string = 'https://api.randomuser.me/?results=10';
-  optionList: string[] = [];
-  selectedUser: string | null = null;
+
+  private environmentService = inject(EnvironmentService);
+
+
+
+  Environments:EnvironmentModel  []=[];
+  filteredEnvironments: EnvironmentModel[] = [];
+  headquartersList: any[] = [];
+  selectedHeadquarter: number | null = null;
   isLoading = false;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-    this.loadMore();
-  }
+  getEnvironments(): void {
+    const query = {
+      included: ['headquarters', 'knowledge_network']
+    };
 
-  getRandomNameList(): Observable<string[]> {
-    return this.http
-      .get<{ results: MockUser[] }>(`${this.randomUserUrl}`)
-      .pipe(
-        map(res => res.results),
-        catchError(() => of<MockUser[]>([]))
-      )
-      .pipe(map(list => list.map(item => `${item.name.first}`)));
-  }
+    this.environmentService.getEnvironments(query).subscribe((environments) => {
+      this.Environments = environments;
+      this.filteredEnvironments = environments;
 
-  loadMore(): void {
-    this.isLoading = true;
-    this.getRandomNameList().subscribe(data => {
-      this.isLoading = false;
-      this.optionList = [...this.optionList, ...data];
+      // Sacamos las sedes sin repetir
+      this.headquartersList = environments
+        .map((env) => env.headquarters)
+        .filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
     });
   }
 
-  listOfData: Person[] = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park'
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park'
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park'
+  filterByHeadquarters(headquarterId: number): void {
+    if (!headquarterId) {
+      this.filteredEnvironments = this.Environments;
+      return;
     }
-  ];
+    this.filteredEnvironments = this.Environments.filter(
+      (env) => env.headquarters.id === headquarterId
+    );
+  }
+  trackByHeadquarter(index: number, item: any): number {
+    return item.id;
+  }
+
+  ngOnInit(): void {
+
+    this.getEnvironments();
+  }
+
 }
+
 
 
 

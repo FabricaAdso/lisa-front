@@ -1,11 +1,9 @@
 <section class="Environments">
   <div class="content-tittle">
-    <div class="search-box">
-      <nz-select [(ngModel)]="selectedUser" (nzScrollToBottom)="loadMore()" nzPlaceHolder="Seleccione una sede" nzAllowClear
+    <div class="search-box" >
+      <nz-select [(ngModel)]="selectedHeadquarter"  (ngModelChange)="filterByHeadquarters($event)" nzPlaceHolder="Seleccione una sede" nzAllowClear
         [nzDropdownRender]="renderTemplate">
-        @for (item of optionList; track item) {
-        <nz-option [nzValue]="item" [nzLabel]="item"></nz-option>
-        }
+        <nz-option *ngFor="let headquarter of headquartersList; trackBy: trackByHeadquarter" [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
       </nz-select>
       <ng-template #renderTemplate>
         @if (isLoading) {
@@ -21,7 +19,7 @@
 
   </div>
 
-  <nz-table #basicTable [nzData]="listOfData">
+  <nz-table #basicTable [nzData]="filteredEnvironments">
     <thead>
       <tr>
         <th>Name</th>
@@ -31,15 +29,15 @@
       </tr>
     </thead>
     <tbody>
-      @for (data of basicTable.data; track data) {
+      @for (environment of basicTable.data; track environment) {
       <tr>
-        <td>{{ data.name }}</td>
-        <td>{{ data.age }}</td>
-        <td>{{ data.address }}</td>
+        <td>{{ environment.name }}</td>
+        <td>{{ environment.capacity }}</td>
+        <td>{{ environment.knowledge_network.name}}</td>
         <td>
-          <a>Action 一 {{ data.name }}</a>
+          <button class="btn-accion">delete</button>
           <nz-divider nzType="vertical"></nz-divider>
-          <a>Delete</a>
+          <button clas>delete</button>
         </td>
       </tr>
       }
