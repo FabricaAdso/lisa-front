@@ -76,3 +76,8 @@
   [justification]="selectedJustification" (close)="closeModal()"
   (statusChange)="updateJustificationStatus(selectedJustification, $event)">
 </app-modal-expired>
+
+
+<!-- Modal  sin justificación -->
+<app-unjustified *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.EN_ESPERA"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-unjustified>

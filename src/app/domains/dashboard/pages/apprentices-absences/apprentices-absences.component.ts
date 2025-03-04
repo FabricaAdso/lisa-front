@@ -15,6 +15,7 @@ import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { ModalPendingComponent } from "./modal-pending/modal-pending.component";
 import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
+import { UnjustifiedComponent } from './unjustified/unjustified.component';
 
 @Component({
   selector: 'app-apprentices-absences',
@@ -27,9 +28,11 @@ import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
     NzTagModule,
     ModalApprovedComponent,
     ModalRejectedComponent,
+   
     NzPaginationModule,
     ModalPendingComponent,
-    ModalExpiredComponent
+    ModalExpiredComponent,
+    UnjustifiedComponent
 ],
   templateUrl: './apprentices-absences.component.html',
   styleUrl: './apprentices-absences.component.css',
