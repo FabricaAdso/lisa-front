@@ -41,6 +41,7 @@ export class EnvironmentComponent {
   private areaService = inject(AreaService);
   private headquarterService = inject(HeadquartersService);
 
+ 
 
   environments: EnvironmentModel[] = [];
   areas: AreaModel[] = [];

@@ -1,0 +1,4 @@
+@for (item of notifications(); track $index) {
+    <nz-alert nzBanner [nzMessage]="item.message" [nzType]="item.type" [nzShowIcon]="true"></nz-alert>
+}
+

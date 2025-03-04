@@ -4,8 +4,10 @@ export interface TrainingCenterModel {
   id: number;
   code: number;
   name: string;
+  role_id:number,
   regional_id: number;
   pivot: TrainingCenterPivotModel;
+  
 }
 
 export interface TrainingCenterPivotModel {

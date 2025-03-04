@@ -1,27 +1,17 @@
 <div class="buscador">
-<!-- barra de busqueda -->
+  <!-- barra de busqueda -->
   <div class="barra-busqueda">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-      <input type="text" nz-input placeholder="input search text" />
+      <input type="text" nz-input placeholder="Buscar usuario" [(ngModel)]="searchTerm" (input)="searchUsers()" />
     </nz-input-group>
     <ng-template #suffixIconButton>
       <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
     </ng-template>
   </div>
-  <!-- boton upload -->
-  <div>
-    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" >
-      <button nz-button>
-        <span nz-icon nzType="upload"></span>
-        subir archivos
-      </button>
-    </nz-upload>
-
-  </div>
-
+  <!-- tabla de usuarios  -->
 </div>
 <section id="all">
-  <nz-table #basicTable [nzData]="users">
+  <nz-table [nzShowPagination]="false" #basicTable [nzData]="filteredUsers">
     <thead>
       <tr>
         <th>Documento</th>
@@ -32,24 +22,31 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of basicTable.data">
         <td>{{ user.identity_document }}</td>
-        <td>{{ user.first_name }}</td>
+        <td>{{ user.name}} {{user.last_name}}</td>
         <td>{{ user.last_name }}</td>
         <td>
-          <span *ngFor="let role of user.roles; let i = index">
-            {{ role }}<span *ngIf="i < user.roles.length - 1">, </span>
+          <span *ngFor="let roleId of user.roles; let i = index">
+            {{ this.getRoleName(roleId) }}<span *ngIf="i < user.roles.length - 1">, </span>
           </span>
         </td>
         <td>
           <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
           <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
-            {{ user.desactive ? 'desactivar' : 'activar' }}
+            {{ user.deactivation_date ? 'Activar' : 'Desactivar' }}
           </button>
         </td>
       </tr>
     </tbody>
   </nz-table>
+  <div class="paginate">
+    <nz-pagination (nzPageIndexChange)="changePage($event)" [nzPageIndex]="pageIndex" [nzTotal]="totalItems"
+    [nzPageSize]="pageSize">
+  </nz-pagination>
+
+  </div>
+  
 </section>
 
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles y Estado" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
@@ -65,8 +62,7 @@
             <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
               nzPlaceHolder="Seleccione roles" [(ngModel)]="selectedRoles" name="roles"
               (ngModelChange)="onRolesChange($event)">
-
-              <nz-option *ngFor="let role of allRoles" [nzLabel]="role" [nzValue]="role"></nz-option>
+              <nz-option *ngFor="let role of roles" [nzLabel]="role.name" [nzValue]="role.id"></nz-option>
             </nz-select>
             <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
           </div>

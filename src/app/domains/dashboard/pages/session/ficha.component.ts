@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
@@ -8,7 +8,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { forkJoin } from 'rxjs';
-import { SessionComponent } from './session/session.component';
+import { SessionComponent } from './session-modal/session.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
@@ -75,7 +75,10 @@ export class FichaComponent {
     // Llamar al servicio para obtener las fichas pendientes y sus sesiones
     this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
       next: (data) => {
-        this.pending_courses = data;  // Asigna las fichas al array
+        if (data && data.length > 0) {
+          this.pending_courses = data;
+          
+        }
       },
       error: (error) => {
         console.error(error);

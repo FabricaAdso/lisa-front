@@ -15,7 +15,12 @@ export class SessionService {
 
   private http = inject(HttpClient);
 
-  url:string = 'sessions';
+  url:string = 'session';
+
+  getSessionShow(id:number,data?:QueryUrl){
+    let url:string = getQueryUrl(`${this.url}/${id}`,data);
+    return this.http.get<SessionModel>(`${url}`);
+  }
 
   getSessionsByFicha(courseId: number) {
     return this.http.get<SessionModel[]>(`/api/ficha/${courseId}/sessions`);

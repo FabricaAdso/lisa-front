@@ -26,6 +26,10 @@ import { CourseService } from '@shared/services/program/course.service';
 import { SessionService } from '@shared/services/program/session.service';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { RapService } from '@shared/services/rap.service';
+import { SubjectService } from '@shared/services/subject.service';
+import { SubjectModel } from '@shared/models/subject-model';
+import { RapModel } from '@shared/models/rap-model';
 
 @Component({
   selector: 'app-session',
@@ -46,9 +50,10 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
-export class SessionComponent implements OnInit,OnChanges, OnDestroy {
+export class SessionComponent implements OnInit, OnDestroy {
 
   @Input() isModalVisible = false;
+  @Input() anotherModalOpen = false;
 
   time = new Date();
 
@@ -59,12 +64,10 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
   private session_service = inject(SessionService)
   private date_pipe = inject(DatePipe)
   private notification = inject(NzNotificationService);
+  private subjectService = inject(SubjectService);
+  private rapService = inject(RapService);
 
   disableDates = () => true; // Desactiva todas las fechas
-
-  // Campos de la base de datos
-  start_date: string | null = null;
-  end_date: string | null = null;
 
   start_time: string | null = null;
   end_time: string | null = null;
@@ -72,19 +75,21 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
 
 
   // Propiedad vinculada al rango del picker
-  date: [Date | null, Date | null] = [null, null];
+  date = null;
 
+  private subjectSelection = new Subject<void>();
   private knowledgeNetworkSelection = new Subject<void>();
   private destroy = new Subject<void>();
 
   selectedId: number | null = null;
   formSession!: FormGroup | null;
-  formRangePicker!: FormGroup | null;
-
   knowledge_network: KnowledgeNetworkModel[] = [];
   instructor: InstructorModel[] = [];
   courses: CourseModel[] = [];
   session: SessionModel[] = [];
+  subjectModel: SubjectModel[] = [];
+  rapModel: RapModel[] = [];
+
   day_of_week = [
     { id: 1, name: 'Lunes' },
     { id: 2, name: 'Martes' },
@@ -95,15 +100,21 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
     { id: 7, name: 'Domingo' }
   ];
   constructor() {
-    this.createForm()
+
+  }
+
+  openAnotherModal() {
+    this.anotherModalOpen = true;
+
+    // Aquí puedes usar otro componente o configuración de modal diferente
   }
 
   ngOnInit(): void {
+    this.createForm()
     this.getData();
     this.changeKnowledgeNetwork();
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    this.changeRaps();
+
   }
 
   ngOnDestroy(): void {
@@ -111,6 +122,8 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
     this.destroy.complete();
     this.knowledgeNetworkSelection.next();
     this.knowledgeNetworkSelection.complete();
+    this.subjectSelection.next();
+    this.subjectSelection.complete();
   }
 
   getData() {
@@ -120,11 +133,15 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
         .pipe(takeUntil(this.destroy)),
       this.course_service
         .getCourses()
-        .pipe(takeUntil(this.destroy))
+        .pipe(takeUntil(this.destroy)),
+      this.subjectService
+        .getSubject()
+        .pipe(takeUntil(this.destroy)),
     ]).subscribe({
-      next: ([knowledgeNetwork, courses]) => {
+      next: ([knowledgeNetwork, courses, subject]) => {
         this.knowledge_network = [...knowledgeNetwork];
         this.courses = [...courses];
+        this.subjectModel = [...subject];
       },
       error: (err) => {
         console.error('Error fetching data:', err);
@@ -137,19 +154,25 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
       .pipe(
         tap(() => {
           this.knowledgeNetworkSelection.next();
+          console.log(this.knowledgeNetworkSelection);
 
           this.instructor = [];
         }),
         filter((value): value is number => value !== null),
         switchMap((knowledgeNetwork: number) => {
           this.fieldInstructor.reset();
+          console.log(knowledgeNetwork);
           return this.instructor_service
             .getInstructorByKnowledgeNetwork(knowledgeNetwork)
             .pipe(
               takeUntil(this.knowledgeNetworkSelection),
               tap((instructor) => {
                 if (instructor.length === 0) {
-                  alert('no se econtraron instructores');
+                  this.notification.create(
+                    'warning',
+                    'Error',
+                    'No hay ningun instructor asociado a la red de conocimiento'
+                  );
                 }
                 this.instructor = [
                   ...new Set([...this.instructor, ...instructor]),
@@ -165,20 +188,62 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
       });
   }
 
+  changeRaps() {
+    this.fieldSubject.valueChanges
+      .pipe(
+        tap(() => {
+          this.subjectSelection.next();
+          console.log(this.subjectSelection);
+
+          this.rapModel = [];
+        }),
+        filter((value): value is number => value !== null),
+        switchMap((subject: number) => {
+          this.fieldRap.reset();
+          console.log(subject);
+
+          return this.rapService
+            .getRapBySubject(subject, { included: ['subject'] })
+            .pipe(
+              takeUntil(this.subjectSelection),
+              tap((rap) => {
+                if (rap.length === 0) {
+                  this.notification.create(
+                    'warning',
+                    'Error',
+                    'No hay ningun rap asociado al subject'
+                  )
+                }
+                this.rapModel = [
+                  ...new Set([...this.rapModel, ...rap]),
+                ]
+              })
+            )
+        }),
+        takeUntil(this.destroy)
+      ).
+      subscribe({
+        error: () =>
+          this.notification.create(
+            'error',
+            'Error',
+            'Error al obtener los raps asociados'
+          )
+      });
+  }
+
 
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
       instructor_id: new FormControl('', Validators.required),
       course_id: new FormControl('', Validators.required),
-      start_time: new FormControl('', Validators.required),
-      end_time: new FormControl('', Validators.required),
-      start_date: new FormControl(null, Validators.required),
-      end_date: new FormControl(null, Validators.required),
+      rap_id: new FormControl('', Validators.required),
+      subject: new FormControl('', Validators.required),
+      start_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
+      end_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
+      start_date: new FormControl(new Date, Validators.required),
       days_of_week: new FormControl([], Validators.required,),
-    });
-    this.formRangePicker = this.formBuilder.group({
-      range_picker: new FormControl('', Validators.required)
     });
   }
   get fieldKnowledgeNetwork() {
@@ -187,8 +252,8 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
   get fieldInstructor() {
     return this.formSession?.get('instructor_id') as FormControl;
   }
-  get fieldRangePicker() {
-    return this.formRangePicker?.get('range_picker') as FormControl;
+  get fieldStartDate() {
+    return this.formSession?.get('start_date') as FormControl;
   }
   get fieldCourse() {
     return this.formSession?.get('course_id') as FormControl;
@@ -201,6 +266,12 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
   }
   get fieldEndTime() {
     return this.formSession?.get('end_time') as FormControl;
+  }
+  get fieldRap() {
+    return this.formSession?.get('rap_id') as FormControl;
+  }
+  get fieldSubject() {
+    return this.formSession?.get('subject') as FormControl;
   }
 
   onTimeChangesStart(timeStart: Date): void {
@@ -221,51 +292,59 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
     }
   }
 
-  onDateChange(dates: [Date | null, Date | null]): { start_date: string | null, end_date: string | null } {
+  onDateChange(dates: Date) {
 
-    let start_date = null;
-    let end_date = null;
+    if (!dates) return;
 
-    if (dates && dates.length === 2) {
-      start_date = this.date_pipe.transform(dates[0], 'yyyy/MM/dd');
-      end_date = this.date_pipe.transform(dates[1], 'yyyy/MM/dd');
+    let start_date = this.date_pipe.transform(dates, 'yyyy/MM/dd');
+
+    if (this.formSession?.get('start_date')?.value !== start_date) {
+      this.formSession?.get('start_date')?.setValue(start_date, { emitEvent: false });
     }
-    this.formSession?.get('start_date')?.setValue(start_date)
-    this.formSession?.get('end_date')?.setValue(end_date)
-
     console.log(this.formSession?.value)
-    return { start_date, end_date }
   }
 
 
   saveForm() {
 
-    const session: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
+    if (this.formSession?.valid) {
 
-    // Transformar el valor del campo day_of_week
-    if (session.days_of_week && Array.isArray(session.days_of_week)) {
-      session.days_of_week = session.days_of_week.join(',');
-    }
+      const session: CreateSessionDTO = this.formSession?.value as CreateSessionDTO
 
-    // Convertir las fechas a solo hora (HH:mm)
-    if (session.start_time) {
-      const startTime = new Date(session.start_time);
-      session.start_time = startTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    if (session.end_time) {
-      const endTime = new Date(session.end_time);
-      session.end_time = endTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    }
-
-
-    this.session_service.createSession(session).subscribe({
-      next: (data) => {
-        let session = [...this.session, data]
-        this.createBasicNotification();
-        this.closeModal()
+      // Transformar el valor del campo day_of_week
+      if (session.days_of_week && Array.isArray(session.days_of_week)) {
+        session.days_of_week = session.days_of_week.join(',');
       }
-    })
+
+      // Convertir las fechas a solo hora (HH:mm)
+      if (session.start_time) {
+        const startTime = new Date(session.start_time);
+        session.start_time = startTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      }
+
+      if (session.end_time) {
+        const endTime = new Date(session.end_time);
+        session.end_time = endTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      }
+
+      this.session_service.createSession(session).subscribe({
+        next: (data) => {
+          let session = [...this.session, data]
+          this.createBasicNotification();
+          this.closeModal()
+        }
+      })
+
+    } else {
+      this.notification.create(
+        'warning',
+        'Error',
+        'Por favor, complete todos los campos'
+      )
+
+    }
+
+
 
   }
 
@@ -284,7 +363,5 @@ export class SessionComponent implements OnInit,OnChanges, OnDestroy {
 
   openModal() {
     this.isModalVisible = true;
-    console.log(this.isModalVisible);
-    
   }
 }

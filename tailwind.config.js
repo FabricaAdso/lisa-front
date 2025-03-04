@@ -8,7 +8,7 @@ module.exports = {
       alex:'200px',
       mobile: '480px',
       tablet: '768px',
-      laptop: '1024px',
+      laptop: '1145px',
       desktop: '1280px',
       desktop_xl: '1536px',
     },

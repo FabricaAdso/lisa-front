@@ -19,13 +19,12 @@ export class CourseService {
   constructor() { }
 
 
-  getCourses(data?:QueryUrl): Observable<CourseModel[]>{
-
+  getCourses(data?:QueryUrl){
     let url:string = getQueryUrl(this.url,data)
-
-
     return this.http.get<CourseModel[]>(url);
   }
+
+  
 
   getCursesInstructorPending(data?:QueryUrl): Observable<SessionModel[]>{
 

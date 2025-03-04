@@ -6,8 +6,12 @@
     <img [src]="Image_logo" alt="Logo de la aplicación" class="h-full w-full" />
   </picture>
 
+  
   <!-- Sección del usuario -->
-  <div class="flex items-center space-x-2">
+  <div class="flex gap-1 items-center space-x-2">
+
+    
+  
     <ng-container *ngIf="isLoggedIn">
       <!-- Nombre completo del usuario, al hacer clic se despliega el menú -->
       <span
@@ -31,6 +35,19 @@
         </button>
       </div>
     </ng-container>
+
+
+    <div class="flex" >
+      <button (click)="goNotifications()" >
+        <nz-badge [nzCount]="notificationCount()">
+          <span class="text-2xl"
+          nz-icon
+          nzType="bell" 
+          >
+          </span>
+        </nz-badge>
+      </button>
+    </div>
 
     <ng-container *ngIf="!isLoggedIn">
       <button

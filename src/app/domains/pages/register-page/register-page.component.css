@@ -33,3 +33,11 @@
 ::ng-deep .ant-select .ant-select-selector:focus:disabled{
   border:none !important;
 }
+
+::ng-deep .ant-select-selection-item {
+  flex: 1 !important;
+  overflow: hidden !important;
+  font-weight: normal !important;
+  white-space: inherit !important;
+  text-overflow: ellipsis !important ;
+}

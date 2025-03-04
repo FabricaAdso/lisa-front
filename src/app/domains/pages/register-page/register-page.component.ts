@@ -117,7 +117,7 @@ export class RegisterPageComponent implements OnInit {
   formRegister = new FormGroup({
     identity_document: new  FormControl('', [Validators.required]),
     document_type_id:  new FormControl('', [Validators.required]),
-    first_name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     last_name: new FormControl('',[Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),

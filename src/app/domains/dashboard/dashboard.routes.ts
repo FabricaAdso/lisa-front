@@ -12,18 +12,11 @@ export const routes: Routes = [
         redirectTo: 'environtments',
       },
       {
-        path: 'fichas/:course_code/attendance',
+        path: 'session/:session_id/:course_code/attendance',
         title: 'Asistencia',
         canActivate: [authGuard],
         data: {breadcrumb: 'Tomar Asistencia'},
         loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
-      },
-      {
-        path: 'assists',
-        title: 'Administrar asistencias',
-        canActivate: [authGuard],
-        data: {breadcrumb:'Asignación de Instructor / Aprendiz'},
-        loadComponent: () => import('@domains/dashboard/pages/assists/assists.component').then(c => c.AssistsComponent)
       },
       {
         path: 'environmentsArea',
@@ -39,11 +32,11 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
       },
       {
-        path:'fichas',
-        title:'Administrar Fichas',
-        data: { breadcrumb: 'Fichas ' },
+        path:'session',
+        title:'Administrar Sesiones',
+        data: { breadcrumb: 'Sesiones ' },
         canActivate: [authGuard],
-        loadComponent:()=>import('@domains/dashboard/pages/ficha/ficha.component').then(c=>c.FichaComponent)
+        loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
       },
       {
         path: 'justification',
@@ -94,19 +87,19 @@ export const routes: Routes = [
       },
 
       {
-        path: 'session',
-        title: 'Sesiónes',
+        path: 'session-calendar',
+        title: 'Calendario',
         data: { breadcrumb: 'Sesiónes' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
 
       {
-        path: 'course',
-        title: 'Cursos',
-        data: { breadcrumb: 'Cursos' },
+        path: 'file',
+        title: 'Fichas',                                                      
+        data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs//course-page/course-page.component').then(c => c.CoursePageComponent)
+        loadComponent: () => import('@domains/dashboard/pages/programs/ficha-page/ficha-page.component').then(c => c.FichaPageComponent)
       },
       {
         path: 'absences',
@@ -115,7 +108,14 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/apprentices-absences/apprentices-absences.component').then(c => c.ApprenticesAbsencesComponent)
       },
+      {
+        path: 'notification',
+        title: 'Notificaciones',
+        data: { breadcrumb: 'Notificaciones'},
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/dashboard-layout/nav-bar/notifications/notifications.component').then(c => c.NotificationsComponent)
 
+      },
       {
         path: 'error_401',
         title: 'Autenticación Requerida',
