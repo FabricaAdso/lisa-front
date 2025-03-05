@@ -36,15 +36,28 @@ import { ChargeButtonComponent } from './charge-button/charge-button.component';
     NzPaginationModule,
     NzPaginationModule,
     NzUploadModule,
-    NzTabsModule],
+    NzTabsModule,
+    ChargeButtonComponent
+],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
 export class RolesComponent implements OnInit {
 
+  //logica para abrir el boton de cargue masivo
+
   @ViewChild('chargeButton') chargeButton:any = ChargeButtonComponent;
 
   private chargeExcelService = inject(ChargeExcelService);
+
+  showModalCargue(): void {
+    this.chargeButton.isVisibleCargue = true;
+    console.log(this.isVisibleCargue);
+
+  }
+
+
+
 
   changePage(newPage: number) {
     this.pageIndex = newPage;
@@ -73,7 +86,7 @@ export class RolesComponent implements OnInit {
     }
   ];
   isVisible = false;
-  isVisibleCargue = false;
+  isVisibleCargue = true;
   users: any[] = [];
   selectedUser: any;
   selectedRoles: any[] = [];
@@ -117,18 +130,6 @@ export class RolesComponent implements OnInit {
   ngOnInit(): void {
     this.getUsers();
     this.allRoles()
-
-    console.log(this.fieldFileExcel.valueChanges);
-
-
-  }
-
-  formExcel = new FormGroup({
-      file: new  FormControl('', [Validators.required]),
-  })
-
-  get fieldFileExcel(){
-    return this.formExcel.get('file') as FormControl;
   }
 
   saveChargeExcel(){
@@ -187,12 +188,7 @@ export class RolesComponent implements OnInit {
     this.pageIndex = 1;
   }
 
-  showModalCargue(): void {
-    this.isVisibleCargue = true;
-    console.log(this.isVisibleCargue);
-
-  }
-
+  
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
@@ -258,27 +254,9 @@ export class RolesComponent implements OnInit {
     console.log(this.pageIndex)
   }
 
- private messageService = inject(NzMessageService)
 
-  handleChange({ file, fileList }: NzUploadChangeParam): void {
-
-    this.chargeExcelService.postExcel(file).subscribe({
-      next: (response: any) => {
-        console.log('fileeeeeeeee:  ',response);
-        this.messageService.success('Archivo cargado correctamente');
-      }
-    })
-
-    const status = file.status;
-    if (status !== 'uploading') {
-      console.log(file, fileList);
-    }
-    if (status === 'done') {
-      this.messageService.success(`${file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      this.messageService.error(`${file.name} file upload failed.`);
-    }
-  }
+  
+  
 }
 
 

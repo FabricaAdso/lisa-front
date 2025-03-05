@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChargeExcelService } from '@shared/services/charge-excel.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -9,6 +9,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzNotificationComponent, NzNotificationModule, NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -41,42 +42,49 @@ export class ChargeButtonComponent {
 
   private messageService = inject(NzMessageService)
   private chargeExcelService = inject(ChargeExcelService)
+  private notification = inject(NzNotificationService)
 
   isVisibleCargue = false;
 
   formExcel = new FormGroup({
-        file: new  FormControl('', [Validator.required]),
-    })
-  
-    get fieldFileExcel(){
-      return this.formExcel.get('file') as FormControl;
-    }
-  
+    file: new FormControl('', [Validators.required]),
+  })
 
-  handleChange({ file, fileList }: NzUploadChangeParam): void {
-  
-      this.chargeExcelService.postExcel(file).subscribe({
-        next: (response: any) => {
-          console.log('fileeeeeeeee:  ',response);
-        }
-      })
-  
-      const status = file.status;
-      if (status !== 'uploading') {
-        console.log(file, fileList);
-      }
-      if (status === 'done') {
-        this.messageService.success(`${file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        this.messageService.error(`${file.name} file upload failed.`);
-      }
+  get fieldFileExcel() {
+    return this.formExcel.get('file') as FormControl;
+  }
+
+  handleFileUpload(event: any) {
+    const file = event.file.originFileObj;
+
+    if (!file) {
+      this.notification.create(
+        'error',
+        'Error',
+        'No se ha seleccionado un archivo'
+      )
     }
 
-  handleCancel(){
+    // Crear FormData y agregar el archivo
+    const formData = new FormData();
+    formData.append('file', file); // El nombre debe coincidir con el backend
+
+    this.chargeExcelService.postExcel(formData).subscribe({
+      next: (response: any) => {
+        console.log('Respuesta del backend:', response);
+      },
+      error: (error) => {
+        console.error('Error en la carga:', error);
+      }
+    });
+
+  }
+
+  handleCancel() {
     this.isVisibleCargue = false;
   }
 
-  handleOk(){
+  handleOk() {
     this.isVisibleCargue = false;
   }
 

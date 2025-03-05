@@ -14,7 +14,7 @@ export class ChargeExcelService {
 
   url: string = 'import-courses';
 
-  postExcel(data:NzUploadFile){
+  postExcel(data:FormData){
     return this.http.post<CoursesChargeModel[]>(this.url, data);
   }
 
