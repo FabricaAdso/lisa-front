@@ -1,0 +1,72 @@
+<nz-modal [(nzVisible)]="isVisibleCargue" nzTitle="Cargue Masivo" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" >
+    <form [formGroup]="formExcel">
+      <ng-container *nzModalContent="" >
+        <nz-tabset >
+          <nz-tab nzTitle="Fichas y Programas">
+            <nz-form-control>
+              <nz-upload
+              nzType="drag"
+              [nzMultiple]="true"
+              name="file"
+              [formControl]="fieldFileExcel"
+  
+              nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              (nzChange)="handleChange($event)"
+            >
+              <p class="ant-upload-drag-icon">
+                <span class="text-2xl"
+                  nz-icon
+                  nzType="inbox"
+                  > </span>
+              </p>
+              <p class="ant-upload-text">Click para subir el archivo de Fichas y Programas</p>
+              <p class="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+              </p>
+            </nz-upload>
+            </nz-form-control>
+          </nz-tab>
+          <nz-tab nzTitle="Aprendices">
+            <nz-upload
+              nzType="drag"
+              [nzMultiple]="true"
+              nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              (nzChange)="handleChange($event)"
+            >
+              <p class="ant-upload-drag-icon">
+                <span class="text-2xl"
+                  nz-icon
+                  nzType="inbox"
+                  > </span>
+              </p>
+              <p class="ant-upload-text">Click para subir el archivo de Aprendices</p>
+              <p class="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+              </p>
+            </nz-upload>
+          </nz-tab>
+          <nz-tab nzTitle="Instructores">
+            <nz-upload
+              nzType="drag"
+              [nzMultiple]="true"
+              nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              (nzChange)="handleChange($event)"
+            >
+              <p class="ant-upload-drag-icon">
+                <span class="text-2xl"
+                  nz-icon
+                  nzType="inbox"
+                  > </span>
+              </p>
+              <p class="ant-upload-text">Click para subir el archivo de Instructores</p>
+              <p class="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+              </p>
+            </nz-upload>
+          </nz-tab>
+        </nz-tabset>
+      </ng-container>
+    </form>
+  </nz-modal>
+  
+  

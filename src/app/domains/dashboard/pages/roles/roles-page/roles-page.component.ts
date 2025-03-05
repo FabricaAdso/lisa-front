@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiRolesService } from '@shared/services/api-roles.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -16,6 +16,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { ChargeExcelService } from '@shared/services/charge-excel.service';
 import { forkJoin } from 'rxjs';
 import { NzFormControlComponent } from 'ng-zorro-antd/form';
+import { ChargeButtonComponent } from './charge-button/charge-button.component';
 
 @Component({
   selector: 'nz-demo-modal-basic',
@@ -35,13 +36,13 @@ import { NzFormControlComponent } from 'ng-zorro-antd/form';
     NzPaginationModule,
     NzPaginationModule,
     NzUploadModule,
-    NzTabsModule,
-  NzFormControlComponent],
+    NzTabsModule],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
 export class RolesComponent implements OnInit {
 
+  @ViewChild('chargeButton') chargeButton:any = ChargeButtonComponent;
 
   private chargeExcelService = inject(ChargeExcelService);
 
