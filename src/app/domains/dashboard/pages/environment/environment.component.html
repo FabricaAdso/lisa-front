@@ -11,7 +11,7 @@
 
     </div>
     <div class="botons">
-      <button>edit</button>
+      <button (click)="openModal()">edita</button>
       <button>delete</button>
       <button>agregar sede</button>
     </div>
@@ -47,7 +47,7 @@
 <!-- modales -->
 
 <app-modal-headquarter></app-modal-headquarter>
-
+<app-modal-environment #modalEnviroment ></app-modal-environment>
 
 
 <!-- <button nz-button nzType="primary" (click)="openModal()">

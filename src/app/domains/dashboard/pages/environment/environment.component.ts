@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, NgModule, OnInit } from '@angular/core';
+import { Component, inject, NgModule, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { EnvironmentService } from '@shared/services/environment.service';
@@ -16,6 +16,7 @@ import { HeadquartersService } from '@shared/services/headquarters.service';
 import { forkJoin } from 'rxjs';
 import { CreateHeadquartersDTO } from '@shared/dto/create-headquartersDTO';
 import { ModalHeadquarterComponent } from "./modal-headquarter/modal-headquarter.component";
+import { ModalEnvironmentComponent } from './modal-environment/modal-environment.component';
 
 
 
@@ -37,7 +38,8 @@ import { ModalHeadquarterComponent } from "./modal-headquarter/modal-headquarter
     NzFormModule,
     NzInputModule,
     NzSelectModule,
-    ModalHeadquarterComponent
+    ModalHeadquarterComponent,
+    ModalEnvironmentComponent
 ],
   templateUrl: './environment.component.html',
   styleUrl: './environment.component.css'
@@ -46,6 +48,12 @@ import { ModalHeadquarterComponent } from "./modal-headquarter/modal-headquarter
 
 
 export class EnvironmentComponent implements OnInit {
+
+  @ViewChild('modalEnviroment') modalEnviroment:any = ModalEnvironmentComponent
+
+  openModal(){
+    this.modalEnviroment.isVisible = true;
+  }
 
   //injectamos los dos servicios 
 

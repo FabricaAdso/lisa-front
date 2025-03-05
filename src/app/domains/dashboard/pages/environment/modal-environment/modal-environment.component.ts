@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './modal-environment.component.css'
 })
 export class ModalEnvironmentComponent {
-
+  isVisible = false
 }

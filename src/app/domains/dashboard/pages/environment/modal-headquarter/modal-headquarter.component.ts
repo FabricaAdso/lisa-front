@@ -27,17 +27,5 @@ export class ModalHeadquarterComponent {
     address: [''],
   });
 
-  constructor(public modal: NzModalService) {}
-
-  submitForm(): void {
-    if (this.form.valid) {
-      this.modal.close(this.form.value); // Cierra el modal y devuelve los datos
-    }
-  }
-
-  closeModal(): void {
-    this.modal.close(); // Cierra el modal sin enviar datos
-  }
-
 
 }
