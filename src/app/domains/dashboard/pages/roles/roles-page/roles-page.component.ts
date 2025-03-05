@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiRolesService } from '@shared/services/api-roles.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -9,9 +9,13 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
-import { log } from 'ng-zorro-antd/core/logger';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { ChargeExcelService } from '@shared/services/charge-excel.service';
+import { forkJoin } from 'rxjs';
+import { NzFormControlComponent } from 'ng-zorro-antd/form';
 
 @Component({
   selector: 'nz-demo-modal-basic',
@@ -19,6 +23,7 @@ import { log } from 'ng-zorro-antd/core/logger';
   imports: [
     FormsModule,
     CommonModule,
+    ReactiveFormsModule,
     NzButtonModule,
     NzModalModule,
     NzTableModule,
@@ -29,11 +34,17 @@ import { log } from 'ng-zorro-antd/core/logger';
     NzInputModule,
     NzPaginationModule,
     NzPaginationModule,
-    NzUploadModule],
+    NzUploadModule,
+    NzTabsModule,
+  NzFormControlComponent],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
 export class RolesComponent implements OnInit {
+
+
+  private chargeExcelService = inject(ChargeExcelService);
+
   changePage(newPage: number) {
     this.pageIndex = newPage;
     this.getUsers(this.pageIndex, this.pageSize);
@@ -61,6 +72,7 @@ export class RolesComponent implements OnInit {
     }
   ];
   isVisible = false;
+  isVisibleCargue = false;
   users: any[] = [];
   selectedUser: any;
   selectedRoles: any[] = [];
@@ -72,13 +84,56 @@ export class RolesComponent implements OnInit {
   pageSize: any;
   totalItems: any;
 
+  tabs = [
+    { title: 'Pestaña 1', description: 'Cargar archivo para la API 1', apiRoute: '/api/upload1' },
+    { title: 'Pestaña 2', description: 'Cargar archivo para la API 2', apiRoute: '/api/upload2' },
+    { title: 'Pestaña 3', description: 'Cargar archivo para la API 3', apiRoute: '/api/upload3' }
+  ];
 
+  selectedFile: File | null = null;
+
+  onFileSelected(event: any, apiRoute: string) {
+    this.selectedFile = event.target.files[0];
+    console.log(`Archivo seleccionado para ${apiRoute}:`, this.selectedFile);
+  }
+
+  uploadFile(apiRoute: string) {
+    if (this.selectedFile) {
+      console.log(`Subiendo archivo a ${apiRoute}...`, this.selectedFile);
+      // Aquí puedes agregar la lógica para subir el archivo a la API correspondiente
+    } else {
+      console.log('No se ha seleccionado ningún archivo.');
+    }
+  }
+
+  closeModal() {
+    console.log('Modal cerrado');
+    // Aquí puedes agregar la lógica para cerrar el modal
+  }
 
   private userService = inject(ApiRolesService);
 
   ngOnInit(): void {
     this.getUsers();
     this.allRoles()
+
+    console.log(this.fieldFileExcel.valueChanges);
+
+
+  }
+
+  formExcel = new FormGroup({
+      file: new  FormControl('', [Validators.required]),
+  })
+
+  get fieldFileExcel(){
+    return this.formExcel.get('file') as FormControl;
+  }
+
+  saveChargeExcel(){
+    const dataSub = forkJoin ([
+      this.chargeExcelService.postExcel,
+    ])
   }
 
   allRoles() {
@@ -132,10 +187,11 @@ export class RolesComponent implements OnInit {
   }
 
   showModalCargue(): void {
-    this.isVisible = true;
+    this.isVisibleCargue = true;
+    console.log(this.isVisibleCargue);
+
   }
 
-  //funcion para seleccionar un usuario
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
@@ -167,6 +223,7 @@ export class RolesComponent implements OnInit {
     });
   }
   handleOk(): void {
+    this.isVisibleCargue = false;
     if (!this.selectedUser || !this.selectedUser.id) {
       console.error('Usuario inválido');
       return;
@@ -186,6 +243,7 @@ export class RolesComponent implements OnInit {
   }
   handleCancel(): void {
     this.isVisible = false;
+    this.isVisibleCargue = false;
   }
   onRolesChange(selected: string[]): void {
     this.selectedRoles = selected; // Sincronizar los roles seleccionados
@@ -199,5 +257,28 @@ export class RolesComponent implements OnInit {
     console.log(this.pageIndex)
   }
 
+ private messageService = inject(NzMessageService)
 
+  handleChange({ file, fileList }: NzUploadChangeParam): void {
+
+    this.chargeExcelService.postExcel(file).subscribe({
+      next: (response: any) => {
+        console.log('fileeeeeeeee:  ',response);
+        this.messageService.success('Archivo cargado correctamente');
+      }
+    })
+
+    const status = file.status;
+    if (status !== 'uploading') {
+      console.log(file, fileList);
+    }
+    if (status === 'done') {
+      this.messageService.success(`${file.name} file uploaded successfully.`);
+    } else if (status === 'error') {
+      this.messageService.error(`${file.name} file upload failed.`);
+    }
+  }
 }
+
+
+
