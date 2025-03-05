@@ -49,6 +49,13 @@ export class PendingModalComponent {
     }
   }
 
+
+  get modalTitle(): string {
+    return this.justification?.file_url
+      ? 'Ver Justificación'
+      : 'Subir Justificación';
+  }
+
   
 
 
