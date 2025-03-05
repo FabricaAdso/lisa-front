@@ -61,7 +61,7 @@ export class JustificationApprenticeComponent {
   selectedJustification!: JustificationModel; 
   filteredData: JustificationModel[] = []; 
 
-  elements: number = 6;
+  elements: number = 9;
   page: number = 1;
   last_page: number = 0;
   total_elements: number = 0;

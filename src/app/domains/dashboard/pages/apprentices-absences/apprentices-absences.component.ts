@@ -49,7 +49,7 @@ export class ApprenticesAbsencesComponent {
   selectedJustification!: JustificationModel;
   filteredData = this.justifications;
 
-  elements: number = 8;
+  elements: number = 9;
   page: number = 1;
   last_page: number = 0;
   total_elements: number = 0;
