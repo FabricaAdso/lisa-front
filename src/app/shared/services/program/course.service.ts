@@ -4,6 +4,7 @@ import { getQueryUrl } from '@shared/functions/url.functions';
 import { CourseModel } from '@shared/models/course.model';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { SessionModel } from '@shared/models/session.model';
+import { RapbysubjectModel } from '@shared/models/subject-model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -46,6 +47,10 @@ export class CourseService {
 
     return this.http.get<SessionModel>(urlSessionNOw);
   }
+
+  getSubjectByCourseModel(id:number){
+      return this.http.get<RapbysubjectModel[]>(`${this.url}/${id}`)
+    }
 
 
 }

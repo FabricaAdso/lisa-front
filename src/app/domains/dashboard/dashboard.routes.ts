@@ -110,13 +110,13 @@ export const routes: Routes = [
 
       },
 
-      /* {
+       {
         path: 'file',
         title: 'Fichas',
         data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/ficha-page/ficha-page.component').then(c => c.FichaPageComponent)
-      }, */
+        loadComponent: () => import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
+      },
       {
         path: 'absences',
         title: 'Inasistencias',

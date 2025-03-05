@@ -68,20 +68,8 @@ export class FichaComponent {
   }
 
   ngOnInit(): void {
-    this.loadData();
   }
 
-  loadData() {
-    // Llamar al servicio para obtener las fichas pendientes y sus sesiones
-    this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
-      next: (data) => {
- // Asigna las fichas al array
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
-  }
   deleteSession(sessionId: number, courseId: number) {
     // Lógica para eliminar la sesión, usando el servicio correspondiente
     // this.courseService.deleteSession(sessionId, courseId).subscribe({

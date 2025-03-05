@@ -6,10 +6,12 @@
 >
   <ng-container *nzModalContent>
     <form [formGroup]="formSession">
+
+
+
       <div class="mb-4">
         <label for="" class="">Red de conocimiento</label>
         <nz-select
-          (change)="changeKnowledgeNetwork()"
           [formControl]="fieldKnowledgeNetwork"
           name="knowledge_network"
           placeholder="Seleccione un Area"
@@ -40,11 +42,14 @@
           }
         </nz-select>
       </div>
+
       <div class="mb-4">
         <label for="" class="">Curso</label>
         <nz-select
           [formControl]="fieldCourse"
           name="course_id"
+          (ngModelChange)="changecourse()"
+
           placeholder="Seleccione una Sede"
           [nzShowSearch]="true"
         >
@@ -57,21 +62,57 @@
         </nz-select>
       </div>
 
+       <div class="mb-4">
+        <label for="" class="">competencia</label>
+        <nz-select
+          [formControl]="fieldSubject"
+          name="subject"
+          placeholder="Seleccione una Sede"
+          [nzShowSearch]="true"
+        >
+          @for (item of subjectList; track $index) {
+          <nz-option
+            [nzLabel]="item.name"
+            [nzValue]="item.id"
+          ></nz-option>
+          }
+        </nz-select>
+      </div>
+      <div class="mb-4">
+        <label class="mb-1 text-sm font-medium text-gray-700">Porcentaje</label>
+        <input nz-input formControlName="percentage" type="number" placeholder="Ingrese el porcentaje" />
+      </div>
+
+      <div class="mb-4">
+        <label for="" class="">rap</label>
+        <nz-select
+          [formControl]="fieldRap"
+          name="rap"
+          placeholder="Seleccione una Sede"
+          [nzShowSearch]="true"
+        >
+          @for (item of rapList; track $index) {
+          <nz-option
+            [nzLabel]="item.description"
+            [nzValue]="item.id"
+          ></nz-option>
+          }
+        </nz-select>
+      </div>
+
       <div class="mb-4">
         <label for="" class="">Fecha de asignacion</label>
-        <nz-range-picker
-          class="w-full"
-          [formControl]="fieldRangePicker"
-          name="range_picker"
-          (ngModelChange)="onDateChange($event)"
-        ></nz-range-picker>
+        <nz-date-picker formControlName="start_date" nzFormat="yyyy/MM/dd"></nz-date-picker>
+
       </div>
+    <br />
+
+
 
       <div class="mb-4 flex gap-5">
         <div class="flex flex-col w-1/2">
           <label class="mb-1 text-sm font-medium text-gray-700">Hora de inicio</label>
           <nz-time-picker
-            (ngModelChange)="onTimeChangesStart($event)"
             [formControl]="fieldStartTime"
             name="start_time"
             [nzFormat]="'HH:mm'"
@@ -81,7 +122,6 @@
         <div class="flex flex-col w-1/2">
           <label class="mb-1 text-sm font-medium text-gray-700">Hora de fin</label>
           <nz-time-picker
-            (ngModelChange)="onTimeChangesEnd($event)"
             [formControl]="fieldEndTime"
             name="end_time"
             [nzFormat]="'HH:mm'"

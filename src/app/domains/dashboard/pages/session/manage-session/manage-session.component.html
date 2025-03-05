@@ -1,3 +1,10 @@
+<div class="flex justify-end">
+  <button nz-button nzType="primary" (click)="openModal()">Crear session</button>
+  <!-- <button nz-button nzType="primary" (click)="openAnotherModal()">Crear otro modal</button> -->
+</div>
+
+<app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
+
 <!-- <nz-select [(ngModel)]="selecion"  (ngModelChange)="FilterSesion($event)" nzAllowClear
   nzPlaceHolder="Choose">
   @for (option of select_sessions; track option) {

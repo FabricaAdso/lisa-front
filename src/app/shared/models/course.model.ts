@@ -1,6 +1,8 @@
+import { Subject } from "rxjs";
 import { ApprenticeModel } from "./apprentice.model";
 import { EnvironmentModel } from "./environment-model";
 import { ProgramModel } from "./program.model";
+import { SubjectModel } from "./subject-model";
 
 export interface CourseModel {
     id:number;
@@ -10,7 +12,7 @@ export interface CourseModel {
     shift:string ;
     state: 'Terminada_por_fecha' | 'En_ejecucion' | 'Terminada' | 'Termindad_por_unificacion';
     stage?: 'PRACTICA' | 'LECTIVA';
-    
+
     //relacion con aprendices
     apprentices?:ApprenticeModel
 
@@ -19,4 +21,10 @@ export interface CourseModel {
     program_id?:number;
     program?:ProgramModel;
 
+}
+
+export interface getSubjectByCourseModel{
+    id:number;
+    code:number;
+    subject?:SubjectModel
 }

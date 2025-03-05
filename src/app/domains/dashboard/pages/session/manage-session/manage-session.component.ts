@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
@@ -13,6 +13,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { SessionComponent } from '../session-modal/session.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { CourseService } from '@shared/services/program/course.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-manage-session',
@@ -27,8 +33,13 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzSpaceModule,
     NzDividerModule,
     NzSelectModule,
-    FormsModule,NzInputModule
-  ],
+    FormsModule, NzInputModule,
+    NzModalModule,
+    NzGridModule,
+    NzTabsModule,
+    SessionComponent,
+    NzButtonModule
+],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
 })
@@ -115,6 +126,51 @@ export class ManageSessionComponent implements OnInit {
       },
     });
   } */
+    @ViewChild('sessionModal') sessionModal:any = SessionComponent;
+    private courseService = inject(CourseService);
+
+    pending_courses:SessionModel[] = [];
+  record_courses:SessionModel[] = [];
+
+    createSessionOpen = false;
+    anotherModalOpen = false;
+
+    //abre modal del hijo session
+    openModal() {
+      if (this.sessionModal) {
+        this.sessionModal.openModal();
+      } else {
+        console.error('No se encontró sessionModal.');
+      }
+    }
+
+    openAnotherModal() {
+      this.anotherModalOpen = true;
+
+      // Aquí puedes usar otro componente o configuración de modal diferente
+    }
+    closeAnotherModal(){
+      this.anotherModalOpen = false;
+
+    }
+    handleAnotherModalOk() {
+      console.log('Otro modal confirmado');
+      this.closeAnotherModal();
+    }
+
+    deleteSession(sessionId: number, courseId: number) {
+      // Lógica para eliminar la sesión, usando el servicio correspondiente
+      // this.courseService.deleteSession(sessionId, courseId).subscribe({
+      //   next: () => {
+      //     // Después de eliminar, recargar las fichas y sus sesiones
+      //     this.loadData();
+      //     console.log('Sesión eliminada');
+      //   },
+      //   error: (error) => {
+      //     console.error('Error al eliminar la sesión', error);
+      //   }
+      // });
+    }
 
 
 }

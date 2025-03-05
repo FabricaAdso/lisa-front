@@ -7,3 +7,10 @@ export interface SubjectModel {
 
   raps:RapModel[];
 }
+
+export interface RapbysubjectModel{
+    id:number;
+    name:string;
+    rap?:RapModel
+}
+

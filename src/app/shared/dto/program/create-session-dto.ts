@@ -7,5 +7,6 @@ export interface CreateSessionDto {
     start_date:Date;
     end_date:Date;
     course_id:number;
-    
+    percentage: number;
+
 }
