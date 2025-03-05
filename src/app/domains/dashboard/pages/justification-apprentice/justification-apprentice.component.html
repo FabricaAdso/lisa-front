@@ -19,8 +19,8 @@
   <thead>
     <tr>
 
-      <!-- <th nzWidth="4%">id J</th> -->
-      <!-- <th nzWidth="4%">id Ass</th> -->
+      <th nzWidth="4%">id J</th>
+      <th nzWidth="4%">id Ass</th>
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
@@ -31,8 +31,8 @@
   <tbody>
     <tr *ngFor="let data of basicTable.data">
 
-      <!-- <td>{{ data.aprobation?.justification_id}}</td> -->
-      <!-- <td>{{ data.assistance_id}}</td> -->
+      <td>{{ data.aprobation?.justification_id}}</td>
+      <td>{{ data.assistance_id}}</td>
       <td>{{ data.assistance?.session?.date}}</td>
       <td>{{ data.assistance!.session!.instructor!.user!.name}} {{
         data.assistance!.session!.instructor!.user!.last_name}}</td>

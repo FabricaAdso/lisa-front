@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationService } from '@shared/services/justification.service';
@@ -31,6 +31,27 @@ export class PendingModalComponent {
     console.log(this.justification)
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isVisible'] && changes['isVisible'].currentValue === true) {
+      // Se abrió el modal, resetear estados
+      this.resetForm();
+    }
+  }
+  
+  resetForm(): void {
+    this.file = undefined!;
+    this.errorMessage = '';
+    this.isLoading = false;
+  
+   
+    if (this.justification) {
+      this.justification.description = this.justification.description || '';
+    }
+  }
+
+  
+
+
   handleFileInput(event: any): void {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
@@ -61,7 +82,7 @@ export class PendingModalComponent {
     }
   
     if (!this.justification.description?.trim()) {
-      this.errorMessage = 'Debe ingresar un motivo.';
+      this.errorMessage = 'Debe ingresar una descripcion.';
       return;
     }
   
