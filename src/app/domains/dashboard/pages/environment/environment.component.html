@@ -1,15 +1,14 @@
 <section class="Environments">
   <div class="content-tittle">
-    <div class="search-box" >
-      <nz-select [(ngModel)]="selectedHeadquarter"  (ngModelChange)="filterByHeadquarters($event)" nzPlaceHolder="Seleccione una sede" nzAllowClear
-        [nzDropdownRender]="renderTemplate">
-        <nz-option *ngFor="let headquarter of headquartersList; trackBy: trackByHeadquarter" [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
-      </nz-select>
-      <ng-template #renderTemplate>
-        @if (isLoading) {
-          <nz-spin></nz-spin>
+    <div class="search-box">
+      <nz-select nzPlaceHolder="Seleccione una sede" [(ngModel)]="selectedHeadquarter"
+        (ngModelChange)="filterEnvironmentsByHeadquarter()" nzAllowClear>
+
+        @for (headquarter of headquartersList; track $index) {
+        <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
         }
-      </ng-template>
+      </nz-select>
+
     </div>
     <div class="botons">
       <button>edit</button>
@@ -33,7 +32,7 @@
       <tr>
         <td>{{ environment.name }}</td>
         <td>{{ environment.capacity }}</td>
-        <td>{{ environment.knowledge_network.name}}</td>
+        <td>{{ environment.knowledge_network?environment.knowledge_network.name:'No tiene area asignada'}}</td>
         <td>
           <button class="btn-accion">delete</button>
           <nz-divider nzType="vertical"></nz-divider>
@@ -43,13 +42,11 @@
       }
     </tbody>
   </nz-table>
-
-
-
-
 </section>
 
+<!-- modales -->
 
+<app-modal-headquarter></app-modal-headquarter>
 
 
 
