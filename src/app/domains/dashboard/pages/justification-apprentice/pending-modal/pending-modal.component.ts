@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JustificationModel } from '@shared/models/justification-model';
-import { JustificationService } from '@shared/services/justification.service';
+
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -23,7 +23,7 @@ export class PendingModalComponent {
 
   file!: File; // Archivo seleccionado
   file_url?: string; // Archivo cargado (del modelo)
-  description: string = ''; // Motivo ingresado
+  description: string = ''; 
   errorMessage: string = ''; // Mensajes de error
   isLoading: boolean = false; // Estado de carga
 
@@ -70,6 +70,9 @@ export class PendingModalComponent {
   
     this.file = selectedFile; // Almacena el archivo seleccionado
     this.errorMessage = '';
+
+      // Previsualización del icono PDF
+    this.file_url = URL.createObjectURL(this.file); // Genera la URL del archivo
   }
 
   handleCancel(): void {
