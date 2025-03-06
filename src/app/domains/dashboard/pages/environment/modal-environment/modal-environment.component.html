@@ -1,4 +1,22 @@
-@if (isVisible) {
-    <p>modal-environment works!</p>
+@if (!isVisible) {
+    <form nz-form [formGroup]="form" >
+        <nz-form-item>
+          <nz-form-label nzRequired>Nombre</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="name" placeholder="Nombre de la sede" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label>Dirección</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="address" placeholder="Dirección de la sede" />
+          </nz-form-control>
+        </nz-form-item>
+        <div class="modal-footer">
+          <button nz-button nzType="default"   (click)="closeModal()">Cancelar</button>
+          <button nz-button nzType="primary" [disabled]="form.invalid">Guardar</button>
+        </div>
+      </form>
+    
 
 }

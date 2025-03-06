@@ -1,18 +1,40 @@
-<form nz-form [formGroup]="form" >
-    <nz-form-item>
-      <nz-form-label nzRequired>Nombre</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="name" placeholder="Nombre de la sede" />
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label>Dirección</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="address" placeholder="Dirección de la sede" />
-      </nz-form-control>
-    </nz-form-item>
-    <div class="modal-footer">
-      <button nz-button nzType="default" >Cancelar</button>
-      <button nz-button nzType="primary" [disabled]="form.invalid">Guardar</button>
-    </div>
-  </form>
+@if(!isVisibleHeadquarter){
+
+  <form nz-form [formGroup]="form" >
+      <nz-form-item>
+        <nz-form-label nzRequired>Nombre</nz-form-label>
+        <nz-form-control>
+          <input nz-input   formControlName="name" placeholder="Nombre de la sede" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired>Dirección</nz-form-label>
+        <nz-form-control>
+          <input nz-input   formControlName="adress" placeholder="Dirección de la sede" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Hora de apertura</nz-form-label>
+        <nz-form-control>
+          <input nz-input  formControlName="opening_time" placeholder="Inicio de programa" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Hora de clausura</nz-form-label>
+        <nz-form-control>
+          <input nz-input   formControlName="closing_time" placeholder="Fin de programa" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Municipio</nz-form-label>
+        <nz-form-control>
+          <input nz-input   formControlName="municipality" placeholder="Municipio" />
+        </nz-form-control>
+      </nz-form-item>         
+      <div class="modal-footer">
+        <button nz-button nzType="default"   (click)="closeModal()">Cancelar</button>
+        <button nz-button nzType="primary" [disabled]="form.invalid" (click)="save()">Guardar</button>
+      </div>
+    </form>
+}
+

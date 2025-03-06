@@ -1,5 +1,5 @@
+import { HeadquarterModel } from "@shared/models/headquarter.model";
 import { AreaModel } from "../models/area-model";
-import { SedeModel } from "../models/sede.model"
 export interface CreateEvironentDTO{
     name:string;
     capacity:number
@@ -8,5 +8,5 @@ export interface CreateEvironentDTO{
     environment_area?:AreaModel;
 
     headquarters_id:number;
-    headquarters?: SedeModel;
+    headquarters?: HeadquarterModel;
 }

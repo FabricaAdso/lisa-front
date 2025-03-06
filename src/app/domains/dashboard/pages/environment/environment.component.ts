@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, NgModule, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { EnvironmentService } from '@shared/services/environment.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import {  NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { SedeModel } from '@shared/models/sede.model';
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { forkJoin } from 'rxjs';
 import { CreateHeadquartersDTO } from '@shared/dto/create-headquartersDTO';
 import { ModalHeadquarterComponent } from "./modal-headquarter/modal-headquarter.component";
 import { ModalEnvironmentComponent } from './modal-environment/modal-environment.component';
+import { HeadquarterModel } from '@shared/models/headquarter.model';
+import { UpdateHeadquartersDTO } from '@shared/dto/update-headquartersDTO';
 
 
 
@@ -40,56 +40,70 @@ import { ModalEnvironmentComponent } from './modal-environment/modal-environment
     NzSelectModule,
     ModalHeadquarterComponent,
     ModalEnvironmentComponent
-],
+  ],
   templateUrl: './environment.component.html',
   styleUrl: './environment.component.css'
-  
+
 })
 
 
 export class EnvironmentComponent implements OnInit {
 
-  @ViewChild('modalEnviroment') modalEnviroment:any = ModalEnvironmentComponent
+  @ViewChild('modalEnviroment') modalEnviroment: any = ModalEnvironmentComponent
+  @ViewChild('modalHeadquarter') modalHeadquarter: any = ModalHeadquarterComponent
 
-  openModal(){
-    this.modalEnviroment.isVisible = true;
-  }
-
+  
   //injectamos los dos servicios 
-
+  
   private environmentService = inject(EnvironmentService);
   private headquarterService = inject(HeadquartersService);
-
-
-//Declaracion de varibales 
-
-  Environments:EnvironmentModel  []=[];
+  
+  
+  //Declaracion de varibales 
+  
+  Environments: EnvironmentModel[] = [];
   filteredEnvironments: EnvironmentModel[] = [];
-  headquartersList: SedeModel [] = [];
+  headquartersList: HeadquarterModel[] = [];
   selectedHeadquarter: number | null = null;
   isLoading = false;
+  
+  
+  //funcion para abrir el modal de environment
+  openModalEnvironment() {
+    this.modalEnviroment.isVisible = false;
+  }
 
-
-
-
+  //funcion para abrir el modal de headquarter 
+  openModalHeadquarter(): void {
+    if (this.selectedHeadquarter) {
+      const selected = this.headquartersList.find(h => h.id === this.selectedHeadquarter);
+      if (selected) {
+        this.modalHeadquarter.setData(selected); // Pasa el objeto seleccionado al hijo
+        this.modalHeadquarter.isVisibleHeadquarter = false; // Muestra el modal
+      }
+    } else {
+      console.warn('No se ha seleccionado una sede');
+    }
+  }
+  
 
   //funcion para mostrar las sedes desde el servicio
 
   getHeadquarters(): void {
-  const data_sub = forkJoin([
-    this.headquarterService.getHeadquarters()]).subscribe({
-      next: ([data]) => {
-        this.headquartersList = [...data];
-        console.log(this.headquartersList);
-      },
-      complete(){
-        data_sub.unsubscribe()
-      } 
-    })
+    const data_sub = forkJoin([
+      this.headquarterService.getHeadquarters()]).subscribe({
+        next: ([data]) => {
+          this.headquartersList = [...data];
+          console.log(this.headquartersList);
+        },
+        complete() {
+          data_sub.unsubscribe()
+        }
+      })
   }
 
-  //funcion para editar sede desde el servicio 
-  editHeadquarter(data:SedeModel): void {
+   //funcion para editar sede desde el servicio 
+   editHeadquarter(data:UpdateHeadquartersDTO): void {
     this.headquarterService.update(data).subscribe({
       next:(response)=>{
         console.log('Edit bien',response);
@@ -98,13 +112,12 @@ export class EnvironmentComponent implements OnInit {
       }
     })
   }
-
   //funcion para cerea una sede desde el servicio
 
-  createHeadquarter(data:CreateHeadquartersDTO){
+  createHeadquarter(data: CreateHeadquartersDTO) {
     this.headquarterService.create(data).subscribe({
-      next:(response)=>{
-        console.log('Creado bien',response);
+      next: (response) => {
+        console.log('Creado bien', response);
         this.getHeadquarters();
 
       }
@@ -112,7 +125,7 @@ export class EnvironmentComponent implements OnInit {
   }
 
   //funcion para eliminar unas sede desde el servicio
-  
+
   deleteHeadquarter(id: number): void {
     this.headquarterService.delete(id).subscribe({
       next: () => {
@@ -156,7 +169,7 @@ export class EnvironmentComponent implements OnInit {
 
   //iniciar el componente 
   ngOnInit(): void {
-    
+
     this.getEnvironments();
     this.getHeadquarters();
   }

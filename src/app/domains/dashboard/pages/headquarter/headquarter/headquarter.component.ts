@@ -5,10 +5,8 @@ import { CreateHeadquartersDTO } from '@shared/dto/create-headquartersDTO';
 import { UpdateHeadquartersDTO } from '@shared/dto/update-headquartersDTO';
 import { despartamentosModel } from '@shared/models/Departamentos.model';
 import { municipiosModel } from '@shared/models/municipios.model';
-import { SedeModel } from '@shared/models/sede.model';
 import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { log } from 'ng-zorro-antd/core/logger';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -18,11 +16,10 @@ import { forkJoin } from 'rxjs';
 import { HeadcuarterFormComponent } from '../components/headcuarter-form/headcuarter-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
-
-
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { LocationService } from '@shared/services/location.service';
 import { TrainingCentreService } from '@shared/services/training-center.service';
+import { HeadquarterModel } from '@shared/models/headquarter.model';
 
 
 @Component({
@@ -54,7 +51,7 @@ export class HeadquarterComponent {
   private nzMessageService = inject(NzMessageService);
 
   // Variables para almacenar datos.
-  headquarters: SedeModel[] = [];
+  headquarters: HeadquarterModel[] = [];
   departments: despartamentosModel[] = [];
   municipalities: municipiosModel[] = [];
   trainingCentres: TrainingCenterModel[] = [];
@@ -158,7 +155,7 @@ export class HeadquarterComponent {
 
 
 
-  openModal(headquarter?: SedeModel): void {
+  openModal(headquarter?: HeadquarterModel): void {
     this.isModalVisible = true;
 
     if (!this.formHeadquarters) {
@@ -188,7 +185,7 @@ export class HeadquarterComponent {
   saveData(): void {
     if (this.formHeadquarters?.valid) {
       if (this.editingHeadquartersId) {
-        const updatedHeadquarter: SedeModel = {
+        const updatedHeadquarter: HeadquarterModel = {
           id: this.editingHeadquartersId, // Incluye el ID de la sede en la actualización.
           ...this.formHeadquarters.value
         };
