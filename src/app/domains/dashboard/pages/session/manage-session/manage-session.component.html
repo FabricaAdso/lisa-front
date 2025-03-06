@@ -1,54 +1,87 @@
-<div class="flex justify-end">
-  <button nz-button nzType="primary" (click)="openModal()">Crear session</button>
-  <!-- <button nz-button nzType="primary" (click)="openAnotherModal()">Crear otro modal</button> -->
+<div class="p-4 space-y-4">
+
+  <div class="flex justify-end">
+    <button nz-button nzType="primary" (click)="openModal()" class="bg-green-500 hover:bg-green-600 focus:bg-green-600 text-white">
+      Crear sesión
+    </button>
+  </div>
+
+  <app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <nz-input-group nzPrefixIcon="search" class="w-full">
+      <input
+        type="text"
+        nz-input
+        name="courseFilter"
+        placeholder="Código de curso"
+        [(ngModel)]="courseFilter"
+        (ngModelChange)="onCourseFilterChange($event)"
+        class="rounded-md border-gray-300 focus:border-green-500 focus:ring-green-500"/>
+    </nz-input-group>
+
+    <nz-input-group nzPrefixIcon="search" class="w-full">
+      <input
+        type="text"
+        nz-input
+        name="rapFilter"
+        placeholder="Filtrar por rap"
+        [(ngModel)]="rapFilter"
+        (ngModelChange)="onRapFilterChange($event)"
+        class="rounded-md border-gray-300 focus:border-green-500 focus:ring-green-500"/>
+    </nz-input-group>
+
+    <nz-input-group nzPrefixIcon="search" class="w-full">
+      <input
+        type="text"
+        nz-input
+        name="instructorFilter"
+        placeholder="Filtrar por instructor"
+        [(ngModel)]="instructorFilter"
+        (ngModelChange)="onInstructorFilterChange($event)"
+        class="rounded-md border-gray-300 focus:border-green-500 focus:ring-green-500"/>
+    </nz-input-group>
+
+    <nz-select
+      style="width: 100%;"
+      [(ngModel)]="selecion"
+      (ngModelChange)="onSelectSessionChange($event)"
+      nzPlaceHolder="Seleccione estado"
+      class="rounded-md border-gray-300 focus:border-green-500 focus:ring-green-500">
+      <nz-option
+        *ngFor="let option of select_sessions"
+        [nzValue]="option"
+        [nzLabel]="option.name">
+      </nz-option>
+    </nz-select>
+  </div>
+
+  <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="sessions" class="mt-4 shadow rounded-lg">
+    <thead class="bg-green-500 text-white">
+      <tr>
+        <th nzWidth="6%">Fecha</th>
+        <th nzWidth="4%">Ficha</th>
+        <th nzWidth="10%">Programa</th>
+        <th nzWidth="10%">Instructor</th>
+        <th nzWidth="4%">Horario</th>
+        <th nzWidth="10%">Rap</th>
+        <th nzWidth="15%">Subject</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let session of basicTable.data" class="hover:bg-gray-100">
+        <td>{{ session.date }}</td>
+        <td>{{ session.course?.code || 'N/D' }}</td>
+        <td>{{ session.course?.program?.name || 'N/D' }}</td>
+        <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
+        <td>{{ session.start_time }} - {{ session.end_time }}</td>
+        <td>
+          {{ session.rap?.description || 'N/D' }}<br>
+          ({{ session.rap?.number_hours || 'N/D' }})
+        </td>
+        <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
 </div>
 
-<app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
-
-<!-- <nz-select [(ngModel)]="selecion"  (ngModelChange)="FilterSesion($event)" nzAllowClear
-  nzPlaceHolder="Choose">
-  @for (option of select_sessions; track option) {
-  <nz-option [nzValue]="option" [nzLabel]="option.name"></nz-option>
-  }
-</nz-select> -->
-
-
-<nz-input-group nzPrefixIcon="search">
-  <input nz-input
-         placeholder="Filtrar por Course (código)"
-         [(ngModel)]="courseFilter"
-         (ngModelChange)="onCourseFilterChange($event)" />
-</nz-input-group>
-
-
-<nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="sessions" [nzScroll]="{ x: '' }">
-  <thead>
-    <tr>
-      <th nzWidth="6%">Fecha</th>
-      <th nzWidth="4%">Ficha</th>
-      <th nzWidth="10%">Programa</th>
-      <th nzWidth="10%">Instructor</th>
-      <th nzWidth="4%">Horario</th>
-      <th nzWidth="10%">Rap</th>
-      <th nzWidth="15%">Subject</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let session of basicTable.data">
-
-       <td>{{ session.date }}</td>
-      <td>{{ session.course?.code || 'N/D' }}</td>
-      <td>{{ session.course?.program?.name || 'N/D' }}</td>
-      <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
-      <td>{{ session.start_time }} - {{ session.end_time }}</td>
-      <td>
-        {{ session.rap?.description || 'N/D' }}<br>
-        ({{ session.rap?.number_hours || 'N/D' }})
-      </td>
-      <td>
-        {{ session.rap?.subject?.name || 'N/D' }}
-
-      </td>
-    </tr>
-  </tbody>
-</nz-table>

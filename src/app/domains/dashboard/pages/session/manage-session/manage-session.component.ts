@@ -19,6 +19,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { CourseService } from '@shared/services/program/course.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
 
 @Component({
   selector: 'app-manage-session',
@@ -38,15 +39,18 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzGridModule,
     NzTabsModule,
     SessionComponent,
-    NzButtonModule
+    NzButtonModule,NzFormModule,
+    NzInputModule,
+    NzSelectModule
 ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
 })
 export class ManageSessionComponent implements OnInit {
-
   sessions: SessionModel[] = [];
   loading = false;
+
+  // Opciones para filtrar por estado de la sesión
   selecion: { name: string, id: number } | null = null;
   select_sessions: { name: string, id: number }[] = [
     { name: "past", id: 1 },
@@ -54,30 +58,100 @@ export class ManageSessionComponent implements OnInit {
     { name: "all", id: 3 }
   ];
 
-  filters: { [key: string]: any } = {};
+  // Objeto de filtros que se enviará en la petición
+  filters: { [key: string]: string | number } = {};
 
-  courseFilter: string = '';
+  // Filtros adicionales:
+  courseFilter: string = '';      // para filtrar por código de curso
+  instructorFilter: string = '';  // para filtrar por instructor
+  rapFilter: string = '';         // para filtrar por rap
+  subjectFilter: string = '';     // para filtrar por competencia (subject)
+
   constructor(private sessionService: ManageSessionService) { }
 
   ngOnInit(): void {
+    // Por defecto, seleccionamos 'pending'
     this.selecion = this.select_sessions[1];
+    this.applySelectFilter();
     this.applyCourseFilter();
+    // Si desea inicializar otros filtros con algún valor por defecto, hágalo aquí.
     this.FilterSesion();
   }
 
+  // Método que se dispara cuando cambia el input para el código de curso
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
     if (value && value.trim().length > 0) {
-      this.filters['course_'] = value;
+      // Usamos la clave 'course_' para filtrar por código de curso
+      this.filters['course_'] = value.trim();
     } else {
       delete this.filters['course_'];
     }
+    console.log('Filters after course change:', this.filters);
     this.FilterSesion();
   }
 
+  // Método para cuando se cambia el filtro de instructor
+  onInstructorFilterChange(value: string): void {
+    this.instructorFilter = value;
+    if (value && value.trim().length > 0) {
+      this.filters['instructor_'] = value.trim();
+    } else {
+      delete this.filters['instructor_'];
+    }
+    console.log('Filters after instructor change:', this.filters);
+    this.FilterSesion();
+  }
+
+  // Método para cuando se cambia el filtro de rap
+  onRapFilterChange(value: string): void {
+    this.rapFilter = value;
+    if (value && value.trim().length > 0) {
+      this.filters['rap_'] = value.trim();
+    } else {
+      delete this.filters['rap_'];
+    }
+    console.log('Filters after rap change:', this.filters);
+    this.FilterSesion();
+  }
+
+  // Método para cuando se cambia el filtro de competencia (subject)
+  onSubjectFilterChange(value: string): void {
+    this.subjectFilter = value;
+    if (value && value.trim().length > 0) {
+      this.filters['subject_'] = value.trim();
+    } else {
+      delete this.filters['subject_'];
+    }
+    console.log('Filters after subject change:', this.filters);
+    this.FilterSesion();
+  }
+
+  // Método para el filtro del estado de la sesión (pending, past o all)
+  onSelectSessionChange(selection: { name: string, id: number }): void {
+    this.selecion = selection;
+    this.applySelectFilter();
+    this.FilterSesion();
+  }
+
+  private applySelectFilter(): void {
+    if (this.selecion) {
+      if (this.selecion.name === 'pending') {
+        this.filters['pending'] = 'true';
+        delete this.filters['past'];
+      } else if (this.selecion.name === 'past') {
+        this.filters['past'] = 'true';
+        delete this.filters['pending'];
+      } else { // "all"
+        delete this.filters['pending'];
+        delete this.filters['past'];
+      }
+    }
+  }
+
   private applyCourseFilter(): void {
-    if (this.selecion && this.selecion.name !== 'all') {
-      this.filters['course_'] = this.selecion.name;
+    if (this.courseFilter && this.courseFilter.trim().length > 0) {
+      this.filters['course_'] = this.courseFilter.trim();
     } else {
       delete this.filters['course_'];
     }
@@ -101,41 +175,15 @@ export class ManageSessionComponent implements OnInit {
     });
   }
 
-
- /*  ngOnInit(): void {
-    this.selecion = this.select_sessions[0];
-     this.FilterSesion(this.selecion)
-  }
-
-  FilterSesion(tipo?:{ name: string, id: number }| null) {
-    console.log(tipo);
-    let filter= {};
-    if (tipo && tipo.name !=='all'){
-      filter = {[tipo.name]: true}
-    }
-
-    this.sessionService.getSessions({
-      filter: filter,
-      included: ['instructor.user', 'course.program'
-        ,'rap', 'rap.subject']
-    }).subscribe({
-      next: (sessions) => {
-        console.log('Sesiones recibidas:', sessions);
-
-        this.sessions  = [...sessions]
-      },
-    });
-  } */
-    @ViewChild('sessionModal') sessionModal:any = SessionComponent;
+    // metodos relacionados al modal y demas
+    @ViewChild('sessionModal') sessionModal!: SessionComponent;
     private courseService = inject(CourseService);
 
-    pending_courses:SessionModel[] = [];
-  record_courses:SessionModel[] = [];
-
+    pending_courses: SessionModel[] = [];
+    record_courses: SessionModel[] = [];
     createSessionOpen = false;
     anotherModalOpen = false;
 
-    //abre modal del hijo session
     openModal() {
       if (this.sessionModal) {
         this.sessionModal.openModal();
@@ -146,31 +194,18 @@ export class ManageSessionComponent implements OnInit {
 
     openAnotherModal() {
       this.anotherModalOpen = true;
-
-      // Aquí puedes usar otro componente o configuración de modal diferente
     }
-    closeAnotherModal(){
+
+    closeAnotherModal() {
       this.anotherModalOpen = false;
-
     }
+
     handleAnotherModalOk() {
       console.log('Otro modal confirmado');
       this.closeAnotherModal();
     }
-
-    deleteSession(sessionId: number, courseId: number) {
-      // Lógica para eliminar la sesión, usando el servicio correspondiente
-      // this.courseService.deleteSession(sessionId, courseId).subscribe({
-      //   next: () => {
-      //     // Después de eliminar, recargar las fichas y sus sesiones
-      //     this.loadData();
-      //     console.log('Sesión eliminada');
-      //   },
-      //   error: (error) => {
-      //     console.error('Error al eliminar la sesión', error);
-      //   }
-      // });
-    }
-
-
 }
+
+
+
+

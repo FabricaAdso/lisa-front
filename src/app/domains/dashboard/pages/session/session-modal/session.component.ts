@@ -53,7 +53,7 @@ import { RapModel } from '@shared/models/rap-model';
 export class SessionComponent implements OnInit, OnDestroy {
 
   @Input() isModalVisible = false;
-  @Input()  anotherModalOpen = false;
+  @Input() anotherModalOpen = false;
 
   time = new Date();
 
@@ -64,8 +64,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   private session_service = inject(SessionService)
   private date_pipe = inject(DatePipe)
   private notification = inject(NzNotificationService);
-  private rap_service = inject (RapService)
-  private subject = inject (SubjectService)
+  private rap_service = inject(RapService)
+  private subject = inject(SubjectService)
 
   disableDates = () => true; // Desactiva todas las fechas
 
@@ -82,7 +82,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private knowledgeNetworkSelection = new Subject<void>();
   private destroy = new Subject<void>();
-  private courseSelection = new  Subject<void>();
+  private courseSelection = new Subject<void>();
 
   selectedId: number | null = null;
   formSession!: FormGroup | null;
@@ -91,7 +91,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   instructor: InstructorModel[] = [];
   courses: CourseModel[] = [];
   session: SessionModel[] = [];
-  subjectList: SubjectModel[] =[];
+  subjectList: SubjectModel[] = [];
   rapList: RapModel[] = [];
   day_of_week = [
     { id: 1, name: 'Lunes' },
@@ -108,8 +108,6 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   openAnotherModal() {
     this.anotherModalOpen = true;
-
-    //puedes usar otro componente o configuración de modal diferente
   }
 
   ngOnInit(): void {
@@ -129,6 +127,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.courseSelection.complete();
   }
 
+
   getData() {
     forkJoin([
       this.knowledge_network_service
@@ -137,15 +136,15 @@ export class SessionComponent implements OnInit, OnDestroy {
       this.course_service
         .getCourses()
         .pipe(takeUntil(this.destroy)),
-
-
-
     ]).subscribe({
-      next: ([knowledgeNetwork, courses, ]) => {
+      next: ([knowledgeNetwork, courses,]) => {
         this.knowledge_network = [...knowledgeNetwork];
-        this.courses = [...courses];
+/*         this.courses = [...courses];
+ */
+        this.courses = courses.filter(course =>course.state === 'En_ejecucion')
 
-      },
+
+},
       error: (err) => {
         console.error('Error fetching data:', err);
       },
@@ -231,20 +230,20 @@ export class SessionComponent implements OnInit, OnDestroy {
         startWith(this.fieldCourse.value),
         tap(() => {
           this.courseSelection.next();
-          // Reiniciamos la lista de subjects
+          // reinicia la lista de subjects
           this.subjectList = [];
         }),
         filter((value): value is number => value !== null && value !== ''),
         switchMap((courseId: number) => {
-          // Reiniciamos el campo de subject
+          // reinicia el campo de subject
           this.fieldSubject.reset();
-          // Buscamos el objeto del curso seleccionado a partir del id
+          //el objeto del curso seleccionado a partir del id
           const selectedCourse = this.courses.find(c => c.id === courseId);
           if (!selectedCourse || !selectedCourse.code) {
-            // Si no se encuentra, retornamos un observable vacío
+            // si no  encuentra, retonra un observable vacio
             return of([]);
           }
-          // Llamamos al servicio, enviando el código del curso
+          // llama al servici enviando el codigo del curso
           return this.subject.getSubjectByCourse(selectedCourse.code.toString()).pipe(
             takeUntil(this.courseSelection),
             tap((subjects: SubjectModel[]) => {
@@ -255,7 +254,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                   'No se encontraron subjects para este curso'
                 );
               }
-              // Asignamos directamente el array de subjects
+              // asigna directamente el array de subjects
               this.subjectList = subjects;
             })
           );
@@ -281,7 +280,7 @@ export class SessionComponent implements OnInit, OnDestroy {
       days_of_week: new FormControl([], Validators.required,),
       rap_id: new FormControl([], Validators.required,),
       subject_id: new FormControl([], Validators.required,),
-      percentage: new FormControl('',Validators.required)
+      percentage: new FormControl('', Validators.required)
     });
 
   }
@@ -306,7 +305,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   get fieldRap() {
     return this.formSession?.get('rap_id') as FormControl;
   }
-  get fieldSubject(){
+  get fieldSubject() {
     return this.formSession?.get('subject_id') as FormControl;
   }
 
@@ -330,14 +329,14 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   onDateChange(selectedDate: Date | Date[] | null): void {
     let date: Date | null = null;
-    if (selectedDate){
-      if (Array.isArray(selectedDate)){
-        date = selectedDate [0];
+    if (selectedDate) {
+      if (Array.isArray(selectedDate)) {
+        date = selectedDate[0];
       } else {
         date = selectedDate;
       }
     }
-    const start_date = date? this.date_pipe.transform(date, 'yyyy/MM/dd'): null;
+    const start_date = date ? this.date_pipe.transform(date, 'yyyy/MM/dd') : null;
     this.formSession?.get('start_date')?.setValue(start_date);
   }
 
@@ -346,12 +345,12 @@ export class SessionComponent implements OnInit, OnDestroy {
     if (this.formSession?.valid) {
       const session: CreateSessionDTO = this.formSession.value as CreateSessionDTO;
 
-      // Convertir days_of_week a cadena si es un array
+      // convertir days_of_week a cadena si es un array
       if (session.days_of_week && Array.isArray(session.days_of_week)) {
         session.days_of_week = session.days_of_week.join(',');
       }
 
-      // Convertir start_time a "HH:mm"
+      // convertir start_time a "HH:mm"
       if (session.start_time) {
         const startTime = new Date(session.start_time);
         const formattedStartTime = this.date_pipe.transform(startTime, 'HH:mm')?.trim();
@@ -391,6 +390,10 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
 
+
+
+
+
   createBasicNotification(): void {
     this.notification
       .blank(
@@ -407,5 +410,5 @@ export class SessionComponent implements OnInit, OnDestroy {
   openModal() {
     this.isModalVisible = true;
   }
-  
+
 }

@@ -21,17 +21,17 @@ export class SessionService {
     return this.http.get<SessionModel[]>(`/api/${courseId}/sessions`);
   }
 
-  // Método modificado para aceptar filtros e inclusiones
+  // metodo para aceptar filtros e inclusiones
   getAll(filters?: { [key: string]: string }, included?: string | string[]): Observable<SessionModel[]> {
     let params = new HttpParams();
 
-    // Si se especifican relaciones a incluir, se añaden
+    // si se especifican relaciones incluir, se añaden
     if (included) {
       const includeStr = Array.isArray(included) ? included.join(',') : included;
       params = params.set('included', includeStr);
     }
 
-    // Si se especifican filtros, se añaden a los parámetros
+    // si se especifican filtros, se añaden a los parametros
     if (filters) {
       Object.keys(filters).forEach(key => {
         params = params.set(`filter[${key}]`, filters[key]);
@@ -53,4 +53,5 @@ export class SessionService {
     const { id } = data;
     return this.http.put<SessionModel>(`${this.url}/${id}`, data);
   }
+
 }
