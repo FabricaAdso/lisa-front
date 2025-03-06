@@ -34,7 +34,7 @@
     </div>
   </ng-container>
   <ng-template #modalFooter>
-    <button nz-button nzType="primary" (click)="handleApprove()">
+    <button nz-button nzType="primary" (click)="handleApprove()" [disabled]="isRejecting">
       Aprobar
     </button>
     <button *ngIf="!isRejecting" nz-button nzType="default" (click)="handleReject()">
