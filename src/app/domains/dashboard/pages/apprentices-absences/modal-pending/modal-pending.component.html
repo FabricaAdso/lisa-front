@@ -13,12 +13,10 @@
       </div>
       <p *ngIf="!justification.file_url" style="text-align: center;">No hay un archivo cargado.</p>
 
-
-
-
       <div class="motive-box">
+        <p>Descripción de la justificación</p>
         <p >
-          {{ justification.description || "Motivo no especificado" }}
+          {{ justification.description || "Descripcion no especificado" }}
         </p>
       </div>
 
@@ -26,9 +24,13 @@
 
 
 
-      <div *ngIf="isRejecting">
+      <div class="motive-instructor" *ngIf="isRejecting">
         <label for="motive">Motivo del Rechazo:</label>
-        <textarea id="motive" [(ngModel)]="motive" placeholder="Escribe el motivo del rechazo..." rows="4"
+        <textarea 
+        id="motive" 
+        [(ngModel)]="motive" 
+        placeholder="Escribe el motivo del rechazo..." 
+        rows="4"
           style="width: 100%"></textarea>
       </div>
     </div>

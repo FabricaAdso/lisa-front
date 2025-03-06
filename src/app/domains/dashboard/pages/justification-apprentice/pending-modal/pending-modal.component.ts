@@ -23,7 +23,7 @@ export class PendingModalComponent {
 
   file!: File; // Archivo seleccionado
   file_url?: string; // Archivo cargado (del modelo)
-  description: string = ''; 
+  description?: string = ''; 
   errorMessage: string = ''; // Mensajes de error
   isLoading: boolean = false; // Estado de carga
 
@@ -95,10 +95,7 @@ export class PendingModalComponent {
       return;
     }
   
-    if (!this.description?.trim()) {
-      this.errorMessage = 'Debe ingresar una descripcion.';
-      return;
-    }
+ 
   
     const updatedJustification: JustificationModel = {
       ...this.justification,
