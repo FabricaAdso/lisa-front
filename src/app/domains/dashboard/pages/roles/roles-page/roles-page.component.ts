@@ -131,13 +131,6 @@ export class RolesComponent implements OnInit {
     this.getUsers();
     this.allRoles()
   }
-
-  saveChargeExcel(){
-    const dataSub = forkJoin ([
-      this.chargeExcelService.postExcel,
-    ])
-  }
-
   allRoles() {
     this.userService.getRoles().subscribe({
       next: (data) => {

@@ -12,10 +12,22 @@ export class ChargeExcelService {
   constructor() { }
   private http = inject(HttpClient);
 
-  url: string = 'import-courses';
+  url: string = 'import-';
 
-  postExcel(data:FormData){
-    return this.http.post<CoursesChargeModel[]>(this.url, data);
+  urlCourses: string = `${this.url}courses`
+  urlApprentices: string = `${this.url}apprentices`
+  urlInstructors: string = `${this.url}instructors`
+  
+
+  
+  postExcelCourse(data:FormData){
+    return this.http.post<CoursesChargeModel[]>(this.urlCourses, data);
+  }
+  postExcelApprentices(data:FormData){
+    return this.http.post<CoursesChargeModel[]>(this.urlApprentices, data);
+  }
+  postExcelInstructors(data:FormData){
+    return this.http.post<CoursesChargeModel[]>(this.urlInstructors, data);
   }
 
 

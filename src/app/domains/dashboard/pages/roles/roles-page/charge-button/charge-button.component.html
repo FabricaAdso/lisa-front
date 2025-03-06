@@ -1,57 +1,90 @@
-<nz-modal [(nzVisible)]="isVisibleCargue" nzTitle="Cargue Masivo" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" >
-      <ng-container *nzModalContent="" >
-        <nz-tabset >
-          <nz-tab nzTitle="Fichas y Programas">
-            <div class="flex items-center justify-center w-full">
-              <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-              <label
-                class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
-                <span class="material-icons text-gray-400">upload_file</span>
-                <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
-                <input type="file" class="hidden" (change)="handleFileUpload($event)" />
-              </label>
-            </div>
-          </nz-tab>
-          <nz-tab nzTitle="Aprendices">
-            <nz-upload
-              nzType="drag"
-              [nzMultiple]="true"
-              nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              (nzChange)="handleFileUpload($event)"
-            >
-              <p class="ant-upload-drag-icon">
-                <span class="text-2xl"
-                  nz-icon
-                  nzType="inbox"
-                  > </span>
-              </p>
-              <p class="ant-upload-text">Click para subir el archivo de Aprendices</p>
-              <p class="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
-              </p>
-            </nz-upload>
-          </nz-tab>
-          <nz-tab nzTitle="Instructores">
-            <nz-upload
-              nzType="drag"
-              [nzMultiple]="true"
-              nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              (nzChange)="handleFileUpload($event)"
-            >
-              <p class="ant-upload-drag-icon">
-                <span class="text-2xl"
-                  nz-icon
-                  nzType="inbox"
-                  > </span>
-              </p>
-              <p class="ant-upload-text">Click para subir el archivo de Instructores</p>
-              <p class="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
-              </p>
-            </nz-upload>
-          </nz-tab>
+<nz-modal
+    [(nzVisible)]="isVisibleCargue"
+    nzTitle="Cargue Masivo"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+>
+    <ng-container *nzModalContent>
+        <nz-tabset>
+            <form [formGroup]="formExcel">
+                <nz-tab nzTitle="Fichas y Programas">
+                  <div class="flex items-center justify-center w-full">
+                    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+                    <label class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
+                        <span class="material-icons text-gray-400">upload_file</span>
+                        <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
+                        <span
+                            *ngIf="selectedFile['file_courses']"
+                            class="text-sm text-green-600 mt-2"
+                        >
+                            {{ selectedFile['file_courses'].name }}
+                        </span>
+                        <input
+                            name="file_courses"
+                            [formControl]="fieldFileExcelCourse"
+                            type="file"
+                            class="hidden"
+                            (change)="handleFileSelection($event, 'file_courses')"
+                        >
+                    </label>
+                </div>
+                </nz-tab>
+                <nz-tab nzTitle="Aprendices">
+                    <div class="flex items-center justify-center w-full">
+                        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+                        <label class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
+                            <span class="material-icons text-gray-400">upload_file</span>
+                            <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
+                            <span
+                                *ngIf="selectedFile['file_apprentices']"
+                                class="text-sm text-green-600 mt-2"
+                            >
+                                {{ selectedFile['file_apprentices'].name }}
+                            </span>
+                            <input
+                                name="file_apprentices"
+                                [formControl]="fieldFileExcelApprentices"
+                                type="file"
+                                class="hidden"
+                                (change)="handleFileSelection($event, 'file_apprentices')"
+                            >
+                        </label>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="Instructores">
+                    <div class="flex items-center justify-center w-full">
+                        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+                        <label class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
+                            <span class="material-icons text-gray-400">upload_file</span>
+                            <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
+                            <input
+                                name="file_instructors"
+                                [formControl]="fieldFileExcelInstructors"
+                                type="file"
+                                class="hidden"
+                                (change)="handleFileSelection($event, 'file_instructors')"
+                            >
+                        </label>
+                    </div>
+                </nz-tab>
+            </form>
         </nz-tabset>
-      </ng-container>
-  </nz-modal>
-  
-  
+        <div class="flex justify-end mt-4">
+            <button
+                nz-button
+                nzType="primary"
+                (click)="fileUpload()"
+            >
+                Subir Archivos
+            </button>
+        </div>
+         <!-- Carga diferida con @defer -->
+         @defer (when isUploading()) {
+          <p>Subiendo archivos...</p>
+        } @loading {
+          <p>Cargando...</p>
+        } @placeholder {
+          <p>Esperando acción...</p>
+        }
+    </ng-container>
+</nz-modal>
