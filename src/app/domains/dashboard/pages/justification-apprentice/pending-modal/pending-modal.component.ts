@@ -40,12 +40,16 @@ export class PendingModalComponent {
   
   resetForm(): void {
     this.file = undefined!;
+    this.file_url = undefined;
     this.errorMessage = '';
     this.isLoading = false;
   
-   
+    // Si es modo edición (hay una justificación previa), llenamos el form
     if (this.justification) {
-      this.justification.description = this.justification.description || '';
+      this.description = this.justification.description || '';
+      this.file_url = this.justification.file_url || undefined;
+    } else {
+      this.description = ''; // nuevo
     }
   }
 
@@ -91,7 +95,7 @@ export class PendingModalComponent {
       return;
     }
   
-    if (!this.justification.description?.trim()) {
+    if (!this.description?.trim()) {
       this.errorMessage = 'Debe ingresar una descripcion.';
       return;
     }
@@ -99,7 +103,7 @@ export class PendingModalComponent {
     const updatedJustification: JustificationModel = {
       ...this.justification,
       file: this.file,
-      description: this.justification.description
+      description: this.description
     };
   
     // Emitir los datos al padre
