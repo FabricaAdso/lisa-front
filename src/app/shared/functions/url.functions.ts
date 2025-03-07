@@ -6,7 +6,7 @@ export function getQueryUrl(url: string, data?: QueryUrl): string {
   if (data) {
     // almacena un array pra cada paremetro
     let params: string[] = [];
-    const { included, filter, page,  } = data;
+    const { included, filter, page, elements } = data;
     // si inclided se unen en una cadena separa por coma
     if (included) {
       params.push(`included=${included.join(',')}`);
@@ -29,12 +29,12 @@ export function getQueryUrl(url: string, data?: QueryUrl): string {
     }
 
     if (page) {
-      params.push(`page_number=${page}`);
+      params.push(`page=${page}`);
     }
 
-    /* if (page_size) {
-      params.push(`page_size=${page_size}`);
-    } */
+    if (elements) {
+      params.push(`elements=${elements}`);
+    }
 
     url += '?' + params.join('&');
   }

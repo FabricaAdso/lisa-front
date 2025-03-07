@@ -17,7 +17,7 @@ import { KnowledgeNetworkService } from '@shared/services/knowledge-network.serv
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalComponent, NzModalContentDirective } from 'ng-zorro-antd/modal';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
-import { filter, forkJoin, of, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { debounceTime, filter, forkJoin, of, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { CourseModel } from '@shared/models/course.model';
@@ -134,15 +134,15 @@ export class SessionComponent implements OnInit, OnDestroy {
         .getknowledgeNetwork()
         .pipe(takeUntil(this.destroy)),
       this.course_service
-        .getCourses()
+        .getCourseLeader()
         .pipe(takeUntil(this.destroy)),
     ]).subscribe({
       next: ([knowledgeNetwork, courses,]) => {
         this.knowledge_network = [...knowledgeNetwork];
-/*         this.courses = [...courses];
- */
-        this.courses = courses.filter(course =>course.state === 'En_ejecucion')
+        this.courses = [...courses];
 
+/*         this.courses = courses.filter(course =>course.state === 'En_ejecucion')
+ */
 
 },
       error: (err) => {
