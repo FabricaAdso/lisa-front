@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, NgModule, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { EnvironmentService } from '@shared/services/environment.service';
@@ -12,11 +12,10 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { forkJoin } from 'rxjs';
-import { CreateHeadquartersDTO } from '@shared/dto/create-headquartersDTO';
 import { ModalHeadquarterComponent } from "./modal-headquarter/modal-headquarter.component";
 import { ModalEnvironmentComponent } from './modal-environment/modal-environment.component';
 import { HeadquarterModel } from '@shared/models/headquarter.model';
-import { UpdateHeadquartersDTO } from '@shared/dto/update-headquartersDTO';
+
 
 
 
@@ -52,40 +51,40 @@ export class EnvironmentComponent implements OnInit {
   @ViewChild('modalEnviroment') modalEnviroment: any = ModalEnvironmentComponent
   @ViewChild('modalHeadquarter') modalHeadquarter: any = ModalHeadquarterComponent
 
-  
-  //injectamos los dos servicios 
-  
+
+  //injectamos los dos servicios
+
   private environmentService = inject(EnvironmentService);
   private headquarterService = inject(HeadquartersService);
-  
-  
-  //Declaracion de varibales 
-  
+
+
+  //Declaracion de varibales
+
   Environments: EnvironmentModel[] = [];
   filteredEnvironments: EnvironmentModel[] = [];
   headquartersList: HeadquarterModel[] = [];
   selectedHeadquarter: number | null = null;
   isLoading = false;
-  
-  
+
+
   //funcion para abrir el modal de environment
   openModalEnvironment() {
     this.modalEnviroment.isVisible = false;
   }
 
-  //funcion para abrir el modal de headquarter 
+  //funcion para abrir el modal de headquarter de editar sede selecionada
   openModalHeadquarter(): void {
-    if (this.selectedHeadquarter) {
+    if (this.selectedHeadquarter !== null) {
       const selected = this.headquartersList.find(h => h.id === this.selectedHeadquarter);
       if (selected) {
-        this.modalHeadquarter.setData(selected); // Pasa el objeto seleccionado al hijo
+        this.modalHeadquarter.setData(selected); // Aquí se envía el objeto completo
         this.modalHeadquarter.isVisibleHeadquarter = false; // Muestra el modal
       }
     } else {
-      console.warn('No se ha seleccionado una sede');
+      console.log('No se ha seleccionado una sede');
     }
   }
-  
+
 
   //funcion para mostrar las sedes desde el servicio
 
@@ -102,43 +101,7 @@ export class EnvironmentComponent implements OnInit {
       })
   }
 
-   //funcion para editar sede desde el servicio 
-   editHeadquarter(data:UpdateHeadquartersDTO): void {
-    this.headquarterService.update(data).subscribe({
-      next:(response)=>{
-        console.log('Edit bien',response);
-        this.getHeadquarters();
-
-      }
-    })
-  }
-  //funcion para cerea una sede desde el servicio
-
-  createHeadquarter(data: CreateHeadquartersDTO) {
-    this.headquarterService.create(data).subscribe({
-      next: (response) => {
-        console.log('Creado bien', response);
-        this.getHeadquarters();
-
-      }
-    })
-  }
-
-  //funcion para eliminar unas sede desde el servicio
-
-  deleteHeadquarter(id: number): void {
-    this.headquarterService.delete(id).subscribe({
-      next: () => {
-        console.log('Sede eliminada correctamente');
-        this.getHeadquarters(); // Actualiza la lista de sedes
-      },
-      error: (error) => {
-        console.error('Error al eliminar la sede:', error);
-      }
-    });
-  }
-
-  //funcion para filtrar los ambientes dependiendo si perteneces a una sede 
+  //funcion para filtrar los ambientes dependiendo si perteneces a una sede
 
   filterEnvironmentsByHeadquarter(): void {
     if (this.selectedHeadquarter) {
@@ -148,6 +111,11 @@ export class EnvironmentComponent implements OnInit {
     } else {
       this.filteredEnvironments = [];
     }
+  }
+
+  onSelectHeadquarter(headquarterId: number): void {
+    this.selectedHeadquarter = headquarterId;
+    this.filterEnvironmentsByHeadquarter();
   }
   //funcion para mostrar los ambientes desde el servicio
 
@@ -167,7 +135,7 @@ export class EnvironmentComponent implements OnInit {
     return item.id;
   }
 
-  //iniciar el componente 
+  //iniciar el componente
   ngOnInit(): void {
 
     this.getEnvironments();

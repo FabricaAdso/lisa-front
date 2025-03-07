@@ -62,13 +62,13 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c => c.TrainingCentrePageComponent)
       },
 
-      {
-        path: 'headquarters',
-        title: 'Administrar sedes',
-        data: { breadcrumb: 'Administrar Sedes ' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
-      },
+      // {
+      //   path: 'headquarters',
+      //   title: 'Administrar sedes',
+      //   data: { breadcrumb: 'Administrar Sedes ' },
+      //   canActivate: [authGuard],
+      //   loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
+      // },
 
       {
         path: 'environments',
@@ -126,7 +126,7 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
-      
+
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',

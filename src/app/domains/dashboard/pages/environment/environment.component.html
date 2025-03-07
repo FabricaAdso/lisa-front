@@ -1,8 +1,10 @@
 <section class="Environments">
   <div class="content-tittle">
     <div class="search-box">
-      <nz-select nzPlaceHolder="Seleccione una sede" [(ngModel)]="selectedHeadquarter"
-        (ngModelChange)="filterEnvironmentsByHeadquarter()" nzAllowClear>
+      <nz-select
+      nzPlaceHolder="Seleccione una sede"
+      [(ngModel)]="selectedHeadquarter"
+      (ngModelChange)="onSelectHeadquarter($event)" nzAllowClear>
 
         @for (headquarter of headquartersList; track $index) {
         <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
@@ -48,7 +50,8 @@
 
 <!-- modales -->
 
-<app-modal-headquarter #modalHeadquarter  (saveData)="editHeadquarter($event)" ></app-modal-headquarter>
+<app-modal-headquarter #modalHeadquarter
+(updatedHeadquarter)="getHeadquarters()" ></app-modal-headquarter>
 <app-modal-environment #modalEnviroment ></app-modal-environment>
 
 
