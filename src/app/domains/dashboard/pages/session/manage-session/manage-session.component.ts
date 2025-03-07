@@ -168,8 +168,7 @@ export class ManageSessionComponent implements OnInit {
         'course',
         'course.program',
         'rap.subject'
-      ],
-      elements: 10
+      ]
     }).subscribe({
       next: (resp: PaginatedResponse<SessionModel>) => {
         this.sessions = resp.data;
