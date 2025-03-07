@@ -1,6 +1,6 @@
 <nz-modal
   [(nzVisible)]="isVisible"
-  nzTitle="Justificación Aprobada"
+  nzTitle="Justificación Aprobada4444444444"
   [nzFooter]="null"
   (nzOnCancel)="closeModal()"
 >
@@ -19,26 +19,13 @@
         </div>
 
 
-
-
-
-
       
       <div class="motive-box">
         <p >
-          {{ justification.description || "Motivo no especificado" }}
+         {{ justification.description || "descripción no especificado" }}
         </p>
       </div>
-      <div *ngIf="isRejecting" class="motive-box">
-        <label for="motive">Motivo del Rechazo:</label>
-        <textarea
-          id="motive"
-          [(ngModel)]="motive"
-          placeholder="Escribe el motivo del rechazo..."
-          rows="4"
-          style="width: 100%"
-        ></textarea>
-      </div>
+     
     </div>
   </ng-container>
 </nz-modal>

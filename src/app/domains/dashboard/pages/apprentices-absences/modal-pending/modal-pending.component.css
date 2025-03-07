@@ -30,19 +30,34 @@
     font-size: 22px;
     margin-right: 8px;
   }
+  .motive-box p:first-of-type {
+ 
+    color: rgb(61, 59, 59);
+    
+}
   
   .motive-box {
     background: #fdfdfd;
-    padding: 27px 40px;
+    padding: 18px 13px;
     border-radius:10px;
-    
-    
     
     font-size: 14px;
     color: #444;
-    text-align: center;
+    text-align: left;
     width: 100%;
   }
+
+  .motive-instructor{
+    padding: 18px 13px;
+    border-radius:10px;
+
+  }
+  textarea {
+    border: solid 1px rgb(167, 165, 165);
+    border-radius: 5px;
+    padding: 10px;
+}
+
   
   ::ng-deep .ant-modal-body{
     padding: 10;

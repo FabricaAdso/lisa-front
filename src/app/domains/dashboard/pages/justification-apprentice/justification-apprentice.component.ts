@@ -61,7 +61,7 @@ export class JustificationApprenticeComponent {
   selectedJustification!: JustificationModel; 
   filteredData: JustificationModel[] = []; 
 
-  elements: number = 10;
+  elements: number = 9;
   page: number = 1;
   last_page: number = 0;
   total_elements: number = 0;
@@ -150,20 +150,14 @@ export class JustificationApprenticeComponent {
     this.filter = filter;
     this.changePage(1);
 
-    // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
-    if (filter && filter['state'] !== 'Vencida') {
-      this.isInasistencias = false;
+    // Si el filtro tiene 'aprobationState', ajusta el valor de isInasistencias.
+    if (filter && filter['aprobationState'] !== EstadoJustificacionEnum.VENCIDA) {
+        this.isInasistencias = false;
     } else {
-      this.isInasistencias = true;
+        this.isInasistencias = true;
     }
+}
 
-    // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
-    if (this.filter && this.filter['state']) {
-      this.filter['aprobationState'] = this.filter['state'];
-      delete this.filter['state']; // Elimina 'state' si ya no es necesario
-    }
-
-  }
 
 
   setActiveTab(tab: string) {
