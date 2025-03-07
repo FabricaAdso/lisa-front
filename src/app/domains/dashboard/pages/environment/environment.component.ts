@@ -15,6 +15,7 @@ import { forkJoin } from 'rxjs';
 import { ModalHeadquarterComponent } from "./modal-headquarter/modal-headquarter.component";
 import { ModalEnvironmentComponent } from './modal-environment/modal-environment.component';
 import { HeadquarterModel } from '@shared/models/headquarter.model';
+import { id } from 'date-fns/locale';
 
 
 
@@ -60,6 +61,7 @@ export class EnvironmentComponent implements OnInit {
 
   //Declaracion de varibales
 
+
   Environments: EnvironmentModel[] = [];
   filteredEnvironments: EnvironmentModel[] = [];
   headquartersList: HeadquarterModel[] = [];
@@ -72,7 +74,9 @@ export class EnvironmentComponent implements OnInit {
     this.modalEnviroment.isVisible = false;
   }
 
-  //funcion para abrir el modal de headquarter de editar sede selecionada
+
+  //funcion para abrir el modal de sedes para editar la sede selecionada
+  //  se le envia la informacion para que se visualice el formulario 
   openModalHeadquarter(): void {
     if (this.selectedHeadquarter !== null) {
       const selected = this.headquartersList.find(h => h.id === this.selectedHeadquarter);
@@ -83,6 +87,14 @@ export class EnvironmentComponent implements OnInit {
     } else {
       console.log('No se ha seleccionado una sede');
     }
+  }
+
+
+  openCreateModalHeadquarter() {
+    this.modalHeadquarter.formHeadquarter.reset();
+    this.selectedHeadquarter = null; // Limpia los datos
+    this.modalHeadquarter.isVisibleHeadquarter = false;
+    this.getEnvironments();
   }
 
 
@@ -101,6 +113,16 @@ export class EnvironmentComponent implements OnInit {
       })
   }
 
+  deleteHeadquarter(id:number):void{
+    this.headquarterService.delete(id).subscribe({
+      next: () => {
+        this.getEnvironments();
+        this.getHeadquarters();
+      }
+    })
+
+  }
+
   //funcion para filtrar los ambientes dependiendo si perteneces a una sede
 
   filterEnvironmentsByHeadquarter(): void {
@@ -113,11 +135,25 @@ export class EnvironmentComponent implements OnInit {
     }
   }
 
+  //funcion para selecionar una sede 
+
   onSelectHeadquarter(headquarterId: number): void {
     this.selectedHeadquarter = headquarterId;
     this.filterEnvironmentsByHeadquarter();
+    
   }
-  //funcion para mostrar los ambientes desde el servicio
+
+
+  onDeleteHeadquarter(): void {
+    if (this.selectedHeadquarter !== null) {
+      this.deleteHeadquarter(this.selectedHeadquarter);
+    } else {
+      console.log('Debe seleccionar una sede para eliminar');
+    }
+  }
+
+
+  //funcion para mostrar los ambientes desde el servicio, incluyendo el area y su sede 
 
   getEnvironments(): void {
     const query = {
@@ -134,6 +170,7 @@ export class EnvironmentComponent implements OnInit {
   trackByHeadquarter(index: number, item: any): number {
     return item.id;
   }
+
 
   //iniciar el componente
   ngOnInit(): void {

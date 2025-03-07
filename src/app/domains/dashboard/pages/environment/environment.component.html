@@ -8,14 +8,14 @@
 
         @for (headquarter of headquartersList; track $index) {
         <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
-        }
+      }
       </nz-select>
-
+      
     </div>
     <div class="botons">
       <button (click)="openModalHeadquarter()" >edita</button>
-      <button>delete</button>
-      <button>agregar sede</button>
+      <button (click)="onDeleteHeadquarter()">delete</button>
+      <button (click)="openCreateModalHeadquarter()">agregar sede</button>
     </div>
 
   </div>

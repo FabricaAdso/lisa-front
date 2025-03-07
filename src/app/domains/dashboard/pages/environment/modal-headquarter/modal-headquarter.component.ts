@@ -97,6 +97,9 @@ export class ModalHeadquarterComponent {
 
   closeModal() {
     this.isVisibleHeadquarter = true
+    this.formHeadquarter.reset();
+
+  
   }
 
 
