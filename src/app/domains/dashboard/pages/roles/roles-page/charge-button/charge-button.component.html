@@ -8,26 +8,55 @@
         <nz-tabset>
             <form [formGroup]="formExcel">
                 <nz-tab nzTitle="Fichas y Programas">
-                  <div class="flex items-center justify-center w-full">
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-                    <label class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
-                        <span class="material-icons text-gray-400">upload_file</span>
-                        <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
-                        <span
-                            *ngIf="selectedFile['file_courses']"
-                            class="text-sm text-green-600 mt-2"
+                    <div class="flex items-center justify-center w-full">
+                        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+                        <label class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
+                            <span class="material-icons text-gray-400">upload_file</span>
+                            <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
+                            <span
+                                *ngIf="selectedFile['file_courses']"
+                                class="text-sm text-green-600 mt-2"
+                            >
+                                {{ selectedFile['file_courses'].name }}
+                            </span>
+                            <input
+                                [accept]="requiredFileType"
+                                name="file_courses"
+                                [formControl]="fieldFileExcelCourse"
+                                type="file"
+                                class="hidden"
+                                (change)="handleFileSelection($event, 'file_courses')"
+                            >
+                        </label>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button
+                            nz-button
+                            nzType="primary"
+                            (click)="fileUpload('file_courses')"
                         >
-                            {{ selectedFile['file_courses'].name }}
-                        </span>
-                        <input
-                            name="file_courses"
-                            [formControl]="fieldFileExcelCourse"
-                            type="file"
-                            class="hidden"
-                            (change)="handleFileSelection($event, 'file_courses')"
-                        >
-                    </label>
-                </div>
+                            Subir Archivos
+                        </button>
+                    </div>
+                    <!-- Mensaje de Cargando -->
+                    <p *ngIf="uploading && !uploadComplete">
+                        <i
+                            nz-icon
+                            nzType="loading"
+                            nzTheme="outline"
+                        ></i>
+                        Subiendo archivo de cursos...
+                    </p>
+
+                    <!-- Mensaje de Éxito -->
+                    <p *ngIf="uploadComplete && !uploading">
+                        <i
+                            nz-icon
+                            nzType="check-circle"
+                            nzTheme="twotone"
+                        ></i>
+                        Archivo de cursos subido con éxito.
+                    </p>
                 </nz-tab>
                 <nz-tab nzTitle="Aprendices">
                     <div class="flex items-center justify-center w-full">
@@ -50,6 +79,15 @@
                             >
                         </label>
                     </div>
+                    <div class="flex justify-end mt-4">
+                        <button
+                            nz-button
+                            nzType="primary"
+                            (click)="fileUpload('file_apprentices')"
+                        >
+                            Subir Archivos
+                        </button>
+                    </div>
                 </nz-tab>
                 <nz-tab nzTitle="Instructores">
                     <div class="flex items-center justify-center w-full">
@@ -57,6 +95,12 @@
                         <label class="flex flex-col items-center justify-center w-full max-w-xs p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-700">
                             <span class="material-icons text-gray-400">upload_file</span>
                             <p class="mt-2 text-sm">Haz clic o arrastra un archivo aquí</p>
+                            <span
+                                *ngIf="selectedFile['file_instructors']"
+                                class="text-sm text-green-600 mt-2"
+                            >
+                                {{ selectedFile['file_instructors'].name }}
+                            </span>
                             <input
                                 name="file_instructors"
                                 [formControl]="fieldFileExcelInstructors"
@@ -66,25 +110,17 @@
                             >
                         </label>
                     </div>
+                    <div class="flex justify-end mt-4">
+                        <button
+                            nz-button
+                            nzType="primary"
+                            (click)="fileUpload('file_instructors')"
+                        >
+                            Subir Archivos
+                        </button>
+                    </div>
                 </nz-tab>
             </form>
         </nz-tabset>
-        <div class="flex justify-end mt-4">
-            <button
-                nz-button
-                nzType="primary"
-                (click)="fileUpload()"
-            >
-                Subir Archivos
-            </button>
-        </div>
-         <!-- Carga diferida con @defer -->
-         @defer (when isUploading()) {
-          <p>Subiendo archivos...</p>
-        } @loading {
-          <p>Cargando...</p>
-        } @placeholder {
-          <p>Esperando acción...</p>
-        }
     </ng-container>
 </nz-modal>

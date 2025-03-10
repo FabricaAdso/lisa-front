@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChargeExcelService } from '@shared/services/charge-excel.service';
 import { NullEncryptedPrivateChannel } from 'laravel-echo/dist/channel';
@@ -16,7 +17,8 @@ import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzUploadChangeParam, NzUploadModule } from 'ng-zorro-antd/upload';
-import { lastValueFrom } from 'rxjs';
+import { finalize, lastValueFrom, Subscription } from 'rxjs';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 
 @Component({
   selector: 'app-charge-button',
@@ -34,19 +36,30 @@ import { lastValueFrom } from 'rxjs';
     NzInputModule,
     NzPaginationModule,
     NzUploadModule,
-    NzTabsModule
+    NzTabsModule,
+    NzProgressModule
+
   ],
   templateUrl: './charge-button.component.html',
   styleUrl: './charge-button.component.css'
 })
 export class ChargeButtonComponent implements OnInit {
 
+  @Input() requiredFileType: string | null = null;
+
+  uploading = false
+  uploadComplete = false
+
+  uploadSub: Subscription | null = null;
+
+
   private messageService = inject(NzMessageService)
   private chargeExcelService = inject(ChargeExcelService)
   private notification = inject(NzNotificationService)
 
-  isUploading = signal(false);
-  isVisibleCargue= false
+  isVisibleCargue = false
+
+  fileName = '';
 
   selectedFile: { [key: string]: File | null } = {
     file_courses: null,
@@ -55,7 +68,6 @@ export class ChargeButtonComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.isUploading()
   }
 
   formExcel = new FormGroup({
@@ -74,65 +86,62 @@ export class ChargeButtonComponent implements OnInit {
     return this.formExcel.get('file_instructors') as FormControl;
   }
 
-  handleFileSelection(event: any, field: string) {
-    const file = event.target.files[0];
+  handleFileSelection(event: any, field: keyof typeof this.selectedFile) {
+    const file: File = event.target.files[0];
 
-    if (!file) {
+
+    if (file) {
+      this.selectedFile[field] = file;
+      console.log(`Archivo seleccionado para ${field}:`, file.name);
+    } else {
       this.notification.create(
         'warning',
         'Advertencia',
         'No se ha seleccionado un archivo'
-      )
+      );
     }
-
-    this.selectedFile[field] = file;
   }
 
-  // Función para iniciar la carga con defer
-  async fileUpload() {
-    if (!this.selectedFile['file_courses'] && 
-        !this.selectedFile['file_apprentices'] && 
-        !this.selectedFile['file_instructors']) {
-      console.warn('No hay archivos seleccionados.');
+  fileUpload(fileType:string) {
+
+    const file = this.selectedFile[fileType];
+
+    if (!file) {
+      this.notification.create('warning', 'Advertencia', 'Debe seleccionar un archivo antes de subirlo.');
       return;
     }
 
-    this.isUploading.set(true); // Activa @defer
+    const formData = new FormData();
+    formData.append('file', file);
 
-    
-  try {
-    const uploadPromises = [];
 
-    for (const fileType of Object.keys(this.selectedFile)) {
-      const file = this.selectedFile[fileType];
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
+    this.uploading = true
+    this.uploadComplete = false
+    let uploadService
 
-        let uploadService;
-        if (fileType === 'file_courses') {
-          uploadService = this.chargeExcelService.postExcelCourse(formData);
-        } else if (fileType === 'file_apprentices') {
-          uploadService = this.chargeExcelService.postExcelApprentices(formData);
-        } else if (fileType === 'file_instructors') {
-          uploadService = this.chargeExcelService.postExcelInstructors(formData);
-        }
+    if (fileType === 'file_courses') {
+        uploadService = this.chargeExcelService.postExcelCourse(formData)
+        
 
-        if (uploadService) {
-          uploadPromises.push(lastValueFrom(uploadService));
-        }
-      }
+    } else if (fileType === 'file_apprentices') {
+      this.chargeExcelService.postExcelApprentices(formData);
+    } else if (fileType === 'file_instructors') {
+      this.chargeExcelService.postExcelInstructors(formData);
     }
 
-    await Promise.all(uploadPromises);
-    console.log('Todos los archivos fueron subidos con éxito');
-  } catch (error) {
-    console.error('Error en la carga de archivos', error);
-  } finally {
-    this.isUploading.set(false); // ✅ Desactivar la carga cuando el backend responda
-    this.selectedFile = {}; // ✅ Ahora puede ser un objeto vacío
+    // Realizar la carga
+    uploadService?.pipe(
+      finalize(() => this.uploading = false)
+    ).subscribe({
+      next: (event: HttpEvent<any>) => {
+        if (event.type === HttpEventType.Response) {
+          this.uploadComplete = true;
+          console.log('Respuesta backend:', event.body);
+        }
+      }
+    });
 
-  }
+
   }
 
   handleCancel() {
@@ -142,5 +151,8 @@ export class ChargeButtonComponent implements OnInit {
   handleOk() {
     this.isVisibleCargue = false;
   }
+
+
+  
 
 }

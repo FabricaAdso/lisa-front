@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CoursesChargeDTO } from '@shared/dto/create-courses-chargeDTO';
 import { CoursesChargeModel } from '@shared/models/courses-charge.model';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,11 @@ export class ChargeExcelService {
   
 
   
-  postExcelCourse(data:FormData){
-    return this.http.post<CoursesChargeModel[]>(this.urlCourses, data);
+  postExcelCourse(data:FormData): Observable<HttpEvent<any>>{
+    return this.http.post<CoursesChargeModel[]>(this.urlCourses, data,{
+      reportProgress: true,
+      observe: 'events'
+    });
   }
   postExcelApprentices(data:FormData){
     return this.http.post<CoursesChargeModel[]>(this.urlApprentices, data);
