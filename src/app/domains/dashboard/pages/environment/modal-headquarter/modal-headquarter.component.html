@@ -1,40 +1,63 @@
-@if(!isVisibleHeadquarter){
+<!-- modal-headquarter.component.html -->
+@if (!isVisibleHeadquarter) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <form nz-form [formGroup]="formHeadquarter">
+        <nz-form-item>
+          <nz-form-label nzRequired>Nombre</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="name" placeholder="Nombre de la sede" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Dirección</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="adress" placeholder="Dirección de la sede" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label for="opening_time">Hora de apertura</nz-form-label>
+          <nz-form-control>
+            <input nz-input type="time" formControlName="opening_time" placeholder="Inicio de programa" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label for="closing_time">Hora de clausura</nz-form-label>
+          <nz-form-control>
+            <input nz-input type="time" formControlName="closing_time" placeholder="Fin de programa" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label>Municipio</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="municipality" placeholder="Municipio" />
+          </nz-form-control>
+        </nz-form-item>
 
-  <form nz-form [formGroup]="formHeadquarter" >
-      <nz-form-item>
-        <nz-form-label nzRequired>Nombre</nz-form-label>
-        <nz-form-control>
-          <input nz-input   formControlName="name" placeholder="Nombre de la sede" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzRequired>Dirección</nz-form-label>
-        <nz-form-control>
-          <input nz-input   formControlName="adress" placeholder="Dirección de la sede" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label for="opening_time">Hora de apertura</nz-form-label>
-        <nz-form-control>
-          <input nz-input type="time"  formControlName="opening_time" placeholder="Inicio de programa" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label for="closing_time">Hora de clausura</nz-form-label>
-        <nz-form-control>
-          <input nz-input  type="time" formControlName="closing_time" placeholder="Fin de programa" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label>Municipio</nz-form-label>
-        <nz-form-control>
-          <input nz-input   formControlName="municipality" placeholder="Municipio" />
-        </nz-form-control>
-      </nz-form-item>
-      <div class="modal-footer">
-        <button nz-button nzType="default"   (click)="closeModal()">Cancelar</button>
-        <button nz-button nzType="primary" [disabled]="formHeadquarter.invalid" (click)="editHeadquarter()"> Guardar</button>
-      </div>
-    </form>
+        <!-- Mostrar el campo training_center_id solo en modo creación -->
+        @if (!isEdit) {
+          <nz-form-item>
+            <nz-form-label nzRequired>Centro de Formación</nz-form-label>
+            <nz-form-control>
+              <nz-select
+                nzPlaceHolder="Seleccione un centro de formación"
+                formControlName="training_center_id"
+              >
+                @for (center of trainingCentersList; track center.id) {
+                  <nz-option [nzValue]="center.id" [nzLabel]="center.name"></nz-option>
+                }
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        }
+
+        <div class="modal-footer">
+          <button nz-button nzType="default" (click)="closeModal()">Cancelar</button>
+          <button nz-button nzType="primary" (click)="saveHeadquarter()">
+            {{ isEdit ? 'Actualizar' : 'Crear' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 }
-
