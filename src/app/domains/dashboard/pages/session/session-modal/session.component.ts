@@ -54,6 +54,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;
+  @Input() anotherModalOpen = false;
 
   time = new Date();
 
@@ -80,6 +81,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   selectedDate: Date | null = new Date();
 
+  private subjectSelection = new Subject<void>();
   private knowledgeNetworkSelection = new Subject<void>();
   private destroy = new Subject<void>();
   private courseSelection = new Subject<void>();
@@ -161,6 +163,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           console.log('Valor de knowledge_network:', value);
 
           this.knowledgeNetworkSelection.next();
+          console.log(this.knowledgeNetworkSelection);
 
           this.instructor = [];
         }),
@@ -168,6 +171,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         filter((value): value is number => value !== null && value !== ''), // que no sea nulo ni vacío
         switchMap((knowledgeNetwork: number) => {
           this.fieldInstructor.reset();
+          console.log(knowledgeNetwork);
           return this.instructor_service
             .getInstructorByKnowledgeNetwork(knowledgeNetwork)
             .pipe(

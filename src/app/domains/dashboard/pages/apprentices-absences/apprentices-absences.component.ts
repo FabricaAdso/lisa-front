@@ -15,6 +15,7 @@ import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { ModalPendingComponent } from "./modal-pending/modal-pending.component";
 import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
+import { UnjustifiedComponent } from './unjustified/unjustified.component';
 
 @Component({
   selector: 'app-apprentices-absences',
@@ -27,9 +28,11 @@ import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
     NzTagModule,
     ModalApprovedComponent,
     ModalRejectedComponent,
+   
     NzPaginationModule,
     ModalPendingComponent,
-    ModalExpiredComponent
+    ModalExpiredComponent,
+    UnjustifiedComponent
 ],
   templateUrl: './apprentices-absences.component.html',
   styleUrl: './apprentices-absences.component.css',
@@ -46,7 +49,7 @@ export class ApprenticesAbsencesComponent {
   selectedJustification!: JustificationModel;
   filteredData = this.justifications;
 
-  elements: number = 10;
+  elements: number = 9;
   page: number = 1;
   last_page: number = 0;
   total_elements: number = 0;
@@ -57,6 +60,9 @@ export class ApprenticesAbsencesComponent {
     'assistance.session.course',
     'assistance.apprentice.user',
   ];
+
+  activeTabClass = 'inasistencias'; // Estado inicial
+
   filter?: { [key: string]: string | EstadoJustificacionEnum };
 
   ngOnInit(): void {
@@ -98,27 +104,64 @@ export class ApprenticesAbsencesComponent {
     this.page_options = Array.from({ length: last_page }, (_, i) => i + 1);
   }
 
-  getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
-    this.filter = filter;
-    this.changePage(1);
 
-    // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
-    if (filter && filter['state'] !== 'Vencida') {
-      this.isInasistencias = false;
-    } else {
-      this.isInasistencias = true;
-    }
 
-    // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
-    if (this.filter && this.filter['state']) {
-      this.filter['aprobationState'] = this.filter['state'];
-      delete this.filter['state']; // Elimina 'state' si ya no es necesario
-    }
+getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
+  this.filter = filter;
+  this.changePage(1);
 
+  // Verifica que la clave 'state' se mapee correctamente a 'aprobationState'
+  if (filter && filter['state'] !== 'Vencida') {
+    this.isInasistencias = false;
+  } else {
+    this.isInasistencias = true;
   }
 
+  // Asegúrate de que 'state' se mapea a 'aprobationState' en lugar de 'state'
+  if (this.filter && this.filter['state']) {
+    this.filter['aprobationState'] = this.filter['state'];
+    delete this.filter['state']; // Elimina 'state' si ya no es necesario
+  }
+
+}
+
+
+setActiveTab(tab: string) {
+  this.activeTabClass = tab;
+}
+
+getEstadoClass(estado: string | null | undefined): string {
+  if (!estado) return 'estado-pendiente'; // Default a 'Pendiente'
+
+  switch (estado) {
+    case this.estadoJustificacionEnum.PENDIENTE:
+      return 'estado-pendiente';
+    case this.estadoJustificacionEnum.RECHAZADO:
+      return 'estado-rechazado';
+    case this.estadoJustificacionEnum.APROBADO:
+      return 'estado-aprobado';
+    case this.estadoJustificacionEnum.VENCIDA:
+      return 'estado-vencida';
+    case this.estadoJustificacionEnum.EN_ESPERA:
+      return 'estado-en-espera';  
+    default:
+      return 'estado-inasistencia';
+  }
+}
+
+setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
+  this.estadoJustificacion = estado;
+}
+
+
+
+
+
+
+
+
   changePage(page: number) {
-    console.log(page);
+    console.log("Solicitando página:", page);
     this.justificationService
       .getJustifications({
         included: this.included,
@@ -128,18 +171,16 @@ export class ApprenticesAbsencesComponent {
       })
       .subscribe({
         next: (justifications) => {
-          const {
-            data,
-            per_page,
-            current_page,
-            last_page,
-            total: to,
-          } = justifications;
+          console.log("Datos recibidos:", justifications); // 🟢 Verifica si llegan datos
+          const { data, per_page, current_page, last_page, total: to } = justifications;
           this.setPage(current_page, per_page, last_page, to);
           this.justifications = [...data];
         },
+        error: (err) => {
+          console.error("Error al obtener justificaciones:", err);
+        }
       });
-  }
+}
 
   handleSubmission(data: { file: File; reason: string }): void {
     console.log('Archivo cargado:', data.file);
@@ -147,9 +188,7 @@ export class ApprenticesAbsencesComponent {
     this.isModalVisible = false;
   }
 
-  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
-    this.estadoJustificacion = estado;
-  }
+
 
   openModal(justification: JustificationModel): void {
     this.isModalVisible = false;
@@ -177,5 +216,11 @@ export class ApprenticesAbsencesComponent {
           console.error('Error al actualizar la justificación:', err);
         },
       });
+  }
+
+  onRejectionDataReceived(data: { status: EstadoJustificacionEnum, motive: string }) {
+    if (this.selectedJustification) {
+      this.updateJustificationStatus(this.selectedJustification, data.status, data.motive);
+    }
   }
 }

@@ -6,12 +6,13 @@ import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-modal-pending',
   standalone: true,
   imports: [
-    CommonModule, NzModalModule, NzButtonModule,FormsModule
+    CommonModule, NzModalModule, NzButtonModule,FormsModule, NzIconModule
   ],
   templateUrl: './modal-pending.component.html',
   styleUrl: './modal-pending.component.css'
@@ -22,6 +23,8 @@ export class ModalPendingComponent {
   @Input() justification!: JustificationModel;
   @Output() close = new EventEmitter<boolean>();
   @Output() statusChange = new EventEmitter<EstadoJustificacionEnum>();
+  @Output() rejectionData = new EventEmitter<{ status: EstadoJustificacionEnum, motive: string }>();
+
   motive: string = ''; 
   isRejecting: boolean = false; 
   private justificationService = inject(JustificationsInstructorService);
@@ -38,23 +41,19 @@ export class ModalPendingComponent {
   handleReject(): void {
     this.isRejecting = true; 
   }
+
   sendRejection(): void {
     if (this.motive.trim() === '') {
       alert('Por favor ingresa el motivo del rechazo.');
       return;
     }
-    this.statusChange.emit(EstadoJustificacionEnum.RECHAZADO);
-    this.close.emit();
-    this.isVisible = false;
-    this.justificationService.updateJustificationStatus(this.justification.id, EstadoJustificacionEnum.RECHAZADO, this.motive)
-      .subscribe({
-        next: (response) => {
-          console.log('Justificación rechazada con motivo:', this.motive);
-        },
-        error: (err) => {
-          console.error('Error al actualizar la justificación:', err);
-        }
-      });
+  
+    this.rejectionData.emit({
+      status: EstadoJustificacionEnum.RECHAZADO,
+      motive: this.motive
+    });
+  
+    this.close.emit(false);
   }
   
   closeModal(): void {

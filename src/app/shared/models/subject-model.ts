@@ -1,16 +1,13 @@
+import { ProgramModel } from "./program.model";
 import { RapModel } from "./rap-model";
 
-export interface SubjectModel {
-  id:number;
-  name:string;
-  total_number_hours:number;
+export interface SubjectModel{
+    id: number;
+    name: string;
+    total_number_hours: number;
+    program_id: number;
+    program?:ProgramModel
 
-  raps:RapModel[];
+    //relacion con raps
+    rap?:RapModel;
 }
-
-export interface RapbysubjectModel{
-    id:number;
-    name:string;
-    rap?:RapModel
-}
-

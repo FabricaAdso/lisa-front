@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
@@ -70,6 +70,20 @@ export class FichaComponent {
   ngOnInit(): void {
   }
 
+  loadData() {
+    // Llamar al servicio para obtener las fichas pendientes y sus sesiones
+    this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
+      next: (data) => {
+        if (data && data.length > 0) {
+          this.pending_courses = data;
+
+        }
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
   deleteSession(sessionId: number, courseId: number) {
     // Lógica para eliminar la sesión, usando el servicio correspondiente
     // this.courseService.deleteSession(sessionId, courseId).subscribe({

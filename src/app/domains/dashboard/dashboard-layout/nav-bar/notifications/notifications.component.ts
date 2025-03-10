@@ -1,40 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NotificationModel } from '@shared/models/notification-model';
 import { UserModel } from '@shared/models/user.model';
 import { AuthService } from '@shared/services/auth.service';
+import { NotificationService } from '@shared/services/notification.service';
+import { SharedDataService } from '@shared/services/shared-data.service';
 import { WebSocketService } from '@shared/services/websocket.service';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
+  imports: [ReactiveFormsModule,CommonModule,NzAlertModule],
   standalone: true
 })
 export class NotificationsComponent implements OnInit {
 
-  private websocketService = inject(WebSocketService);
-  private authService = inject(AuthService); // Suponiendo que tienes un servicio de autenticación
+  private dataSharedService = inject(SharedDataService);
   message = { message: '' };
   userId:number = 0
   userModel: UserModel | null = null
+  notificationModel: NotificationModel[] | null = null
 
   ngOnInit(): void {
-    this.listenNotification()
-  }
     
-
-  listenNotification(){
-    // Obtener el userId desde el servicio de autenticación
-    this.authService.me().subscribe({
-      next: (user) => {
-        this.userModel = user;
-        this.userId = this.userModel!.id
-
-        this.websocketService.listen(`notifications.${this.userId}`, '.notification.received', (data: any) => {
-          console.log('Mensaje recibido:', data);
-        });
-      }
-    }); 
   }
+
+  notifications = this.dataSharedService.notifications;
   
 
 }

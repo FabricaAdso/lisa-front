@@ -17,6 +17,7 @@ import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.componen
 import { AuthService } from '@shared/services/auth.service';
 import { UserModel } from '@shared/models/user.model';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedDataService } from '@shared/services/shared-data.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -37,6 +38,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class NavBarComponent implements OnInit {
 
   private router = inject(Router);
+
+  private dataSharedService = inject(SharedDataService);
+  notificationCount = this.dataSharedService.notificationCount;
 
   private breackpoint_observer = inject(BreakpointObserver);
 
@@ -153,4 +157,7 @@ export class NavBarComponent implements OnInit {
       this.cdr.detectChanges();
     }
   }
+
+  
+ 
 }

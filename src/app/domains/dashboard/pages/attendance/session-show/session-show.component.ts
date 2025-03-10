@@ -24,6 +24,7 @@ export class SessionShowComponent implements OnInit {
   ngOnInit(): void {
     this.getData()
   }
+
   getData(){
     this.instructor_service.getInstructors({included: ['sessions']}).subscribe({
      next : (instructor) => {

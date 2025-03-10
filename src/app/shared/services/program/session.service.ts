@@ -17,8 +17,9 @@ export class SessionService {
   private http = inject(HttpClient);
 
   url:string = 'session';
-  getSessionsByFicha(courseId: number): Observable<SessionModel[]> {
-    return this.http.get<SessionModel[]>(`/api/${courseId}/sessions`);
+
+  getSessionsByFicha(courseId: number) {
+    return this.http.get<SessionModel[]>(`/api/ficha/${courseId}/sessions`);
   }
 
   // metodo para aceptar filtros e inclusiones
