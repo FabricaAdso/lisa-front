@@ -77,14 +77,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
       },
-      {
-        path: 'manage',
-        title: 'manage',
-        data: { breadcrumb: 'manageee'},
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/session/manage/manage.component').then(c =>c.ManageComponent)
-
-      },
+     
 
       {
         path: 'programs',
@@ -112,7 +105,7 @@ export const routes: Routes = [
 
        {
         path: 'file',
-        title: 'Fichas',                                                      
+        title: 'Fichas',
         data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)

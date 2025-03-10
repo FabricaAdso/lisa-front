@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { RapbysubjectModel, SubjectModel } from '@shared/models/subject-model';
+import { SubjectModel } from '@shared/models/subject-model';
 import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class SubjectService {
   URL:string = 'subject'
 
   getRapbysubjectModel(id:number){
-    return this.http.get<RapbysubjectModel[]>(`${this.URL}/${id}`)
+    return this.http.get<SubjectModel[]>(`${this.URL}/${id}`)
   }
 
   getSubject(){

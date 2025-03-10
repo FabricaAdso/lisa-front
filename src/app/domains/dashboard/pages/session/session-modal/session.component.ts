@@ -54,7 +54,6 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;
-  @Input() anotherModalOpen = false;
 
   time = new Date();
 
