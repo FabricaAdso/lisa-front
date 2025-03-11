@@ -1,25 +1,26 @@
-<div [ngClass]="{
-  'inasistencias':!estadoJustificacion,
-  'pendientes':estadoJustificacion === estadoJustificacionEnum.PENDIENTE,
-  'rechazadas':estadoJustificacion === estadoJustificacionEnum.RECHAZADO,
-  'aprobadas':estadoJustificacion === estadoJustificacionEnum.APROBADO,
-  'vencida':estadoJustificacion === estadoJustificacionEnum.VENCIDA,
+<nz-tabset [ngClass]="activeTabClass">
+  <nz-tab nzTitle="Inasistencias" (nzClick)="setActiveTab('inasistencias'); getFilterJustificacion()"></nz-tab>
 
-}">
-  <nz-tabset >
-    <nz-tab nzTitle="Inasistencias"   (nzClick)="setEstadoJustificacion()"></nz-tab>
-    <nz-tab nzTitle="Pendientes" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.PENDIENTE)"></nz-tab>
-    <nz-tab nzTitle="Rechazadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.RECHAZADO)"></nz-tab>
-    <nz-tab nzTitle="Aprobadas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.APROBADO)"></nz-tab>
-    <nz-tab nzTitle="Vencidas" (nzClick)="setEstadoJustificacion(estadoJustificacionEnum.VENCIDA)"></nz-tab>
-  </nz-tabset>
-</div>
+  <nz-tab nzTitle="Sin justificar"
+    (nzClick)="setActiveTab('En_espera'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.EN_ESPERA})"></nz-tab>
 
+  <nz-tab nzTitle="Pendiente de aprobación"
+    (nzClick)="setActiveTab('pendientes'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.PENDIENTE })"></nz-tab>
+  <nz-tab nzTitle="Rechazadas"
+    (nzClick)="setActiveTab('rechazadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.RECHAZADO })"></nz-tab>
+  <nz-tab nzTitle="Aprobadas"
+    (nzClick)="setActiveTab('aprobadas'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.APROBADO })"></nz-tab>
+  <nz-tab nzTitle="Vencidas"
+    (nzClick)="setActiveTab('vencida'); getFilterJustificacion({ aprobationState: estadoJustificacionEnum.VENCIDA })"></nz-tab>
+</nz-tabset>
 
-<nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'"
-  [nzData]="justifications|byEstadoJustificacion:estadoJustificacion" [nzScroll]="{ x: '1200px' }">
+<nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'" [nzData]="justifications" [nzScroll]="{ x: '1200px' }"
+  [nzShowPagination]="false">
   <thead>
     <tr>
+
+      <!-- <th nzWidth="4%">id J</th> -->
+      <!-- <th nzWidth="4%">id Ass</th> -->
       <th nzWidth="25%">Sesión</th>
       <th nzWidth="25%">Instructor</th>
       <th nzWidth="25%">Jornada</th>
@@ -29,46 +30,41 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data">
+
+      <!-- <td>{{ data.aprobation?.justification_id}}</td> -->
+      <!-- <td>{{ data.assistance_id}}</td> -->
       <td>{{ data.assistance?.session?.date}}</td>
-      <td>{{ data.assistance!.session!.instructor!.user!.name}}</td>
+      <td>{{ data.assistance!.session!.instructor!.user!.name}} {{
+        data.assistance!.session!.instructor!.user!.last_name}}</td>
       <td>{{ data.assistance?.session?.course?.shift}}</td>
-      <td>{{ data.aprobation?.state || 'Pendiente'}}</td>
+      <td>
+        <span class="estado-indicador" [ngClass]="getEstadoClass(data.aprobation?.state)"></span>
+        {{ data.aprobation?.state === 'En_espera' ? 'Sin justificar' : data.aprobation?.state }}
+      </td>
       <td>
         <button nz-button nzType="link" (click)="openModal(data)">Ver</button>
       </td>
     </tr>
   </tbody>
 </nz-table>
+<nz-pagination (nzPageIndexChange)="changePage($event)" [nzTotal]="total_elements" [nzPageIndex]="page"
+  [nzPageSize]="elements" [nzResponsive]="true" [nzHideOnSinglePage]="true">
+</nz-pagination>
 
-<!-- Modal para Pendientes -->
-<app-pending-modal
-*ngIf="selectedJustification?.aprobation?.state == null || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
-  (submit)="handleSubmission($event)"
-></app-pending-modal>
+<!-- Modal para cargar justificacion  -->
+<!-- <app-pending-modal *ngIf="selectedJustification?.aprobation?.state == null || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE" -->
+<app-pending-modal *ngIf="selectedJustification?.aprobation?.state ===estadoJustificacionEnum.EN_ESPERA || selectedJustification?.aprobation?.state == estadoJustificacionEnum.PENDIENTE"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"
+  (submit)="handleSubmission($event)"></app-pending-modal>
 
 <!-- Modal para Rechazadas -->
-<app-rejected-modal
-  *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.RECHAZADO"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
-></app-rejected-modal>
+<app-rejected-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.RECHAZADO"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-rejected-modal>
 
 <!-- Modal para Aprobadas -->
-<app-approved-modal
-  *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.APROBADO"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
-></app-approved-modal>
+<app-approved-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.APROBADO"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-approved-modal>
 
 <!-- Modal para Vencidas -->
-<app-expired-modal
-  *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.VENCIDA"
-  [isVisible]="isModalVisible"
-  [justification]="selectedJustification"
-  (close)="closeModal()"
-></app-expired-modal>
+<app-expired-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.VENCIDA"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-expired-modal>
