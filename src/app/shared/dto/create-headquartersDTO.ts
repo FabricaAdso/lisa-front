@@ -7,6 +7,5 @@ export interface CreateHeadquartersDTO {
     training_center_id?: number;
     training_center?:TrainingCenterModel;
     opening_time:string;
-
     closing_time:string;
   }

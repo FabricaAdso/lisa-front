@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { EnvironmentService } from '@shared/services/environment.service';
@@ -40,7 +40,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   templateUrl: './environment.component.html',
   styleUrl: './environment.component.css',
 })
-export class EnvironmentComponent implements OnInit {
+export class EnvironmentComponent {
+
+
   @ViewChild('modalEnviroment') modalEnviroment: any =
     ModalEnvironmentComponent;
   @ViewChild('modalHeadquarter') modalHeadquarter: any =
@@ -54,19 +56,47 @@ export class EnvironmentComponent implements OnInit {
 
   //Declaracion de varibales
 
-  Environments: EnvironmentModel[] = [];
+  EnvironmentsList: EnvironmentModel[] = [];
+  selectedEnvironment:number | null = null;
   filteredEnvironments: EnvironmentModel[] = [];
   headquartersList: HeadquarterModel[] = [];
   selectedHeadquarter: number | null = null;
 
   //funcion para abrir el modal de environment
-  openModalEnvironment() {
-    this.modalEnviroment.isVisible = false;
+  openModalEnvironment(id:number):void {
+
+    this.selectedEnvironment = id
+    console.log('Selected Environment:', this.selectedEnvironment); // Depuración
+    if(this.selectedEnvironment !== null ) {
+      const selected = this.EnvironmentsList.find(
+        (e) => e.id === this.selectedEnvironment,
+
+
+      );
+      if(selected){
+        this.modalEnviroment.setData(selected);
+        this.modalEnviroment.openModal();
+
+      }
+    }else{
+      this.message.warning(
+        'No se ha seleccionado un ambiente '
+      )
+    }
+
   }
 
-  //funcion para abrir el modal de sedes para editar la sede selecionada
+
+  openCreateModalEnvironment(){
+    this.modalEnviroment.openModal()
+
+
+
+  }
+  //funcion para abrir el modal de sedes, para editar la sede selecionada
   //  se le envia la informacion para que se visualice el formulario
   openModalHeadquarter(): void {
+    console.log('sede depurada:', this.selectedHeadquarter); // Depuración
     if (this.selectedHeadquarter !== null) {
       const selected = this.headquartersList.find(
         (h) => h.id === this.selectedHeadquarter
@@ -77,7 +107,7 @@ export class EnvironmentComponent implements OnInit {
       }
     } else {
       this.message.warning(
-        'No se ha seleccionado una sede, por favor selecciona una '
+        'No se ha seleccionado una sede, por favor selecciona una  '
       );
     }
   }
@@ -121,12 +151,12 @@ export class EnvironmentComponent implements OnInit {
           this.getHeadquarters(); // Actualizar la lista de sedes
           this.getEnvironments(); // Actualizar la lista de ambientes
         },
-        error: (err) => {
+        error: () => {
           this.message.error('Error al eliminar la sede'); // Mensaje de error
         },
       });
     } else {
-      this.message.error('Eliminación cancelada');
+      this.message.error('Eliminación  de sede cancelada');
     }
   }
 
@@ -137,7 +167,7 @@ export class EnvironmentComponent implements OnInit {
     if (this.selectedHeadquarter !== null) {
       this.deleteHeadquarter(this.selectedHeadquarter);
     } else {
-      this.message.error('Debe seleccionar una sede para eliminar ');
+      this.message.warning('Debe seleccionar una sede para eliminar ');
     }
   }
 
@@ -145,7 +175,7 @@ export class EnvironmentComponent implements OnInit {
 
   filterEnvironmentsByHeadquarter(): void {
     if (this.selectedHeadquarter) {
-      this.filteredEnvironments = this.Environments.filter(
+      this.filteredEnvironments = this.EnvironmentsList.filter(
         (environment) =>
           environment.headquarters?.id === this.selectedHeadquarter
       );
@@ -169,14 +199,11 @@ export class EnvironmentComponent implements OnInit {
     };
 
     this.environmentService.getEnvironments(query).subscribe((environments) => {
-      this.Environments = environments;
+      this.EnvironmentsList = environments;
       this.filteredEnvironments = [];
     });
   }
 
-  trackByHeadquarter(index: number, item: any): number {
-    return item.id;
-  }
 
   //iniciar el componente
   ngOnInit(): void {

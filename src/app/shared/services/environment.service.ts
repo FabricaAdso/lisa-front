@@ -19,7 +19,7 @@ export class EnvironmentService {
 
   getEnvironments(data?:QueryUrl): Observable<EnvironmentModel[]>{
     let url:string = getQueryUrl(this.url,data)
-    
+
     console.log('ambientes',url);
     return this.http.get<EnvironmentModel[]>(url);
   }
@@ -37,6 +37,7 @@ export class EnvironmentService {
     return this.http.delete<void>(`${this.url}/${id}`);
 
   }
+  
 
 
 

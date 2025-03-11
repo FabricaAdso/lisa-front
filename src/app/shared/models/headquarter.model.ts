@@ -7,9 +7,6 @@ export interface HeadquarterModel {
     adress: string;
     training_center_id?: number;
     training_center?: TrainingCenterModel;
-
-
     opening_time:string;
-
     closing_time:string;
   }

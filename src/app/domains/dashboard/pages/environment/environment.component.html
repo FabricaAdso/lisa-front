@@ -10,12 +10,13 @@
         <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
       }
       </nz-select>
-      
+
     </div>
     <div class="botons">
-      <button (click)="openModalHeadquarter()" >edita</button>
-      <button (click)="onDeleteHeadquarter()">delete</button>
-      <button (click)="openCreateModalHeadquarter()">agregar sede</button>
+      <button (click)="openModalHeadquarter()" >Edit</button>
+      <button (click)="onDeleteHeadquarter()">Delete</button>
+      <button (click)="openCreateModalHeadquarter()">Add headquarters</button>
+      <button (click)="openCreateModalEnvironment()">Add environments</button>
     </div>
 
   </div>
@@ -30,15 +31,15 @@
       </tr>
     </thead>
     <tbody>
-      @for (environment of basicTable.data; track environment) {
+      @for (environment of basicTable.data; track environment.id) {
       <tr>
         <td>{{ environment.name }}</td>
         <td>{{ environment.capacity }}</td>
         <td>{{ environment.knowledge_network?environment.knowledge_network.name:'No tiene area asignada'}}</td>
         <td>
-          <button class="btn-accion" (click)="openModalEnvironment()">delete</button>
+          <button class="btn-accion" (click)="openModalEnvironment(environment.id)">Edit</button>
           <nz-divider nzType="vertical"></nz-divider>
-          <button clas>delete</button>
+          <button >Delete</button>
         </td>
       </tr>
       }

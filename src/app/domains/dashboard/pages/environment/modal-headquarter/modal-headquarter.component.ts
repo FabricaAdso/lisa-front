@@ -31,25 +31,27 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrl: './modal-headquarter.component.css',
 })
 export class ModalHeadquarterComponent {
+
+  //Declaracion de variables
+
   trainingCentersList: TrainingCenterModel[] = [];
   formHeadquarter!: FormGroup;
   isVisibleHeadquarter = true;
   isEdit: boolean = false;
 
+
+
   @Output() updatedHeadquarter: EventEmitter<void> = new EventEmitter();
   @Input() headquarterData?: HeadquarterModel | null;
+
+  //injeccion de servicios
 
   private headquarterService = inject(HeadquartersService);
   private trainingCenterService = inject(TrainingCentreService);
   private message = inject(NzMessageService);
 
-  getTrainingCenters() {
-    this.trainingCenterService.getCentros().subscribe({
-      next: (data) => {
-        this.trainingCentersList = data;
-      },
-    });
-  }
+
+
 
   // Reiniciar el modal
   resetModal(): void {
@@ -61,6 +63,11 @@ export class ModalHeadquarterComponent {
   }
 
   ngOnInit(): void {
+    this.formData();
+
+  }
+
+  formData():void{
     this.formHeadquarter = new FormGroup({
       name: new FormControl(null, Validators.required),
       adress: new FormControl(null, Validators.required),
@@ -78,7 +85,23 @@ export class ModalHeadquarterComponent {
     if (!this.isEdit) {
       this.getTrainingCenters();
     }
+
   }
+
+
+  //Metodopra traer los centros de formación
+
+  getTrainingCenters() {
+    this.trainingCenterService.getCentros().subscribe({
+      next: (data) => {
+        this.trainingCentersList = data;
+      },
+    });
+  }
+
+
+
+  //funcion para recibir los datos al formulario para editarlos
 
   setData(data: HeadquarterModel): void {
     this.headquarterData = data;
@@ -96,12 +119,11 @@ export class ModalHeadquarterComponent {
     // Deshabilitar el campo training_center_id en modo edición
     this.formHeadquarter.get('training_center_id')?.disable();
   }
+
+
+  //funcion pra guardar los datos, dependeindo si esta editando o creando una sede
+
   saveHeadquarter(): void {
-    if (this.formHeadquarter.invalid) {
-      console.log('Formulario no válido');
-      this.formHeadquarter.markAllAsTouched();
-      return;
-    }
 
     const data = this.formHeadquarter.value;
 
@@ -115,6 +137,8 @@ export class ModalHeadquarterComponent {
       data.training_center_id =
         this.formHeadquarter.get('training_center_id')?.value;
       this.formHeadquarter.get('training_center_id')?.disable(); // Volver a deshabilitar el campo
+
+
       // Si estamos en modo edición, actualizamos
       this.headquarterService.update(data).subscribe({
         next: () => {
