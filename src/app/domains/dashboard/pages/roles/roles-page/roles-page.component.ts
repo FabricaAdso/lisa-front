@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiRolesService } from '@shared/services/api-roles.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -9,9 +9,14 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
-import { log } from 'ng-zorro-antd/core/logger';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { ChargeExcelService } from '@shared/services/charge-excel.service';
+import { forkJoin } from 'rxjs';
+import { NzFormControlComponent } from 'ng-zorro-antd/form';
+import { ChargeButtonComponent } from './charge-button/charge-button.component';
 
 @Component({
   selector: 'nz-demo-modal-basic',
@@ -19,6 +24,7 @@ import { log } from 'ng-zorro-antd/core/logger';
   imports: [
     FormsModule,
     CommonModule,
+    ReactiveFormsModule,
     NzButtonModule,
     NzModalModule,
     NzTableModule,
@@ -29,11 +35,26 @@ import { log } from 'ng-zorro-antd/core/logger';
     NzInputModule,
     NzPaginationModule,
     NzPaginationModule,
-    NzUploadModule],
+    NzUploadModule,
+    NzTabsModule,
+    ChargeButtonComponent
+],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css'
 })
 export class RolesComponent implements OnInit {
+
+  //logica para abrir el boton de cargue masivo
+
+  @ViewChild('chargeButton') chargeButton:any = ChargeButtonComponent;
+
+  private chargeExcelService = inject(ChargeExcelService);
+
+  showModalCargue(): void {
+    this.chargeButton.isVisibleCargue = true;
+  }
+
+
   changePage(newPage: number) {
     this.pageIndex = newPage;
     this.getUsers(this.pageIndex, this.pageSize);
@@ -61,6 +82,7 @@ export class RolesComponent implements OnInit {
     }
   ];
   isVisible = false;
+  isVisibleCargue = true;
   users: any[] = [];
   selectedUser: any;
   selectedRoles: any[] = [];
@@ -72,7 +94,32 @@ export class RolesComponent implements OnInit {
   pageSize: any;
   totalItems: any;
 
+  tabs = [
+    { title: 'Pestaña 1', description: 'Cargar archivo para la API 1', apiRoute: '/api/upload1' },
+    { title: 'Pestaña 2', description: 'Cargar archivo para la API 2', apiRoute: '/api/upload2' },
+    { title: 'Pestaña 3', description: 'Cargar archivo para la API 3', apiRoute: '/api/upload3' }
+  ];
 
+  selectedFile: File | null = null;
+
+  onFileSelected(event: any, apiRoute: string) {
+    this.selectedFile = event.target.files[0];
+    console.log(`Archivo seleccionado para ${apiRoute}:`, this.selectedFile);
+  }
+
+  uploadFile(apiRoute: string) {
+    if (this.selectedFile) {
+      console.log(`Subiendo archivo a ${apiRoute}...`, this.selectedFile);
+      // Aquí puedes agregar la lógica para subir el archivo a la API correspondiente
+    } else {
+      console.log('No se ha seleccionado ningún archivo.');
+    }
+  }
+
+  closeModal() {
+    console.log('Modal cerrado');
+    // Aquí puedes agregar la lógica para cerrar el modal
+  }
 
   private userService = inject(ApiRolesService);
 
@@ -80,7 +127,6 @@ export class RolesComponent implements OnInit {
     this.getUsers();
     this.allRoles()
   }
-
   allRoles() {
     this.userService.getRoles().subscribe({
       next: (data) => {
@@ -108,7 +154,7 @@ export class RolesComponent implements OnInit {
                 roles: user.training_centers?.map((tc: { role_id: any; }) => tc.role_id) || []
             }));
             console.log(this.users);
-            
+
             // Asigna los usuarios filtrados
             this.filteredUsers = [...this.users];
 
@@ -130,7 +176,8 @@ export class RolesComponent implements OnInit {
     );
     this.pageIndex = 1;
   }
-  //funcion para seleccionar un usuario
+
+  
   showModal(user: any): void {
     this.isVisible = true;
     this.selectedUser = user;
@@ -162,6 +209,7 @@ export class RolesComponent implements OnInit {
     });
   }
   handleOk(): void {
+    this.isVisibleCargue = false;
     if (!this.selectedUser || !this.selectedUser.id) {
       console.error('Usuario inválido');
       return;
@@ -181,6 +229,7 @@ export class RolesComponent implements OnInit {
   }
   handleCancel(): void {
     this.isVisible = false;
+    this.isVisibleCargue = false;
   }
   onRolesChange(selected: string[]): void {
     this.selectedRoles = selected; // Sincronizar los roles seleccionados
@@ -195,4 +244,9 @@ export class RolesComponent implements OnInit {
   }
 
 
+  
+  
 }
+
+
+

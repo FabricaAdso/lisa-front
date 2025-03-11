@@ -8,13 +8,8 @@
 
 ::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
   color: #fff;
-  border-color:  #439e15!important;
-  background:  #439e15!important;
-}
-
-::ng-deep .ant-btn-primary{
-  background-color: #52c41a !important;
-  border-color:  #52c41a !important;
+  border-color:  #52c41a;
+  background:  #52c41a;
 }
 
 ::ng-deep .ant-btn:hover, .ant-btn:focus {
