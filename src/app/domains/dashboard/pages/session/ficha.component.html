@@ -9,38 +9,6 @@
     <!-- modales -->
     <app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
 
-    <!-- modal para sesiones
-    <nz-modal [(nzVisible)]="anotherModalOpen" nzTitle="Fichas" (nzOnCancel)="closeAnotherModal()"
-  (nzOnOk)="handleAnotherModalOk()">
-  <ng-container *nzModalContent>
-    <nz-tabs [nzTabPosition]="'top'">
-      <nz-tab *ngFor="let session of pending_courses" [nzTab]="session.course?.code">
-        <ng-template #content>
-          <div *ngFor="let ses of session.sessions">
-            <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '2px' }">
-              <div class="ficha-header">Sesión: {{ ses.start_time }} - {{ ses.end_time }}</div>
-              <div class="ficha-content">
-                <p><strong>Programa:</strong> {{ session.course?.program?.name || 'No disponible' }}</p>
-                <p><strong>Sede:</strong> {{ session.course?.environment?.headquarters?.name || 'No disponible' }}</p>
-                <p><strong>Ambiente:</strong> {{ session.course?.environment?.name || 'No disponible' }}</p>
-                <div class="ficha-details">
-                  <p><strong>Fecha:</strong> {{ ses.date }}</p>
-                </div>
-                <button nz-button nzType="default" (click)="deleteSession(ses.id, session.course?.id)">Eliminar sesión</button>
-              </div>
-            </nz-card>
-          </div>
-        </ng-template>
-      </nz-tab>
-    </nz-tabs>
-  </ng-container>
-</nz-modal> -->
-
-
-    <!-- -------------------------------------------------------------------------------------------------------------- -->
-
-
-
     <div nz-row [nzGutter]="16">
       <div nz-col [nzSpan]="6" *ngFor="let session of pending_courses">
         <a [routerLink]="[session.id,session.course!.code,'attendance']">

@@ -71,20 +71,20 @@ export class FichaComponent {
     this.loadData();
   }
 
-  loadData() {
-    // Llamar al servicio para obtener las fichas pendientes y sus sesiones
+  loadData(): void {
     this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
-      next: (data) => {
-        if (data && data.length > 0) {
-          this.pending_courses = data;
-          
+      next: (courses) => {
+        if (!Array.isArray(courses) || courses.length === 0) {
+          return;
         }
+        this.pending_courses = courses;
       },
-      error: (error) => {
-        console.error(error);
+      error: (err) => {
+        console.error('Error al cargar los cursos pendientes:', err);
       }
     });
   }
+  
   deleteSession(sessionId: number, courseId: number) {
     // Lógica para eliminar la sesión, usando el servicio correspondiente
     // this.courseService.deleteSession(sessionId, courseId).subscribe({
