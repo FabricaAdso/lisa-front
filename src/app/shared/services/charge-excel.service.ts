@@ -28,10 +28,16 @@ export class ChargeExcelService {
     });
   }
   postExcelApprentices(data:FormData){
-    return this.http.post<CoursesChargeModel[]>(this.urlApprentices, data);
+    return this.http.post<CoursesChargeModel[]>(this.urlApprentices, data,{
+      reportProgress: true,
+      observe: 'events'
+    });
   }
   postExcelInstructors(data:FormData){
-    return this.http.post<CoursesChargeModel[]>(this.urlInstructors, data);
+    return this.http.post<CoursesChargeModel[]>(this.urlInstructors, data,{
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
 

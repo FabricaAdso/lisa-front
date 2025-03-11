@@ -34,29 +34,11 @@
                             nz-button
                             nzType="primary"
                             (click)="fileUpload('file_courses')"
+                            [nzLoading]="uploading"
                         >
                             Subir Archivos
                         </button>
                     </div>
-                    <!-- Mensaje de Cargando -->
-                    <p *ngIf="uploading && !uploadComplete">
-                        <i
-                            nz-icon
-                            nzType="loading"
-                            nzTheme="outline"
-                        ></i>
-                        Subiendo archivo de cursos...
-                    </p>
-
-                    <!-- Mensaje de Éxito -->
-                    <p *ngIf="uploadComplete && !uploading">
-                        <i
-                            nz-icon
-                            nzType="check-circle"
-                            nzTheme="twotone"
-                        ></i>
-                        Archivo de cursos subido con éxito.
-                    </p>
                 </nz-tab>
                 <nz-tab nzTitle="Aprendices">
                     <div class="flex items-center justify-center w-full">
@@ -71,6 +53,7 @@
                                 {{ selectedFile['file_apprentices'].name }}
                             </span>
                             <input
+                                [accept]="requiredFileType"
                                 name="file_apprentices"
                                 [formControl]="fieldFileExcelApprentices"
                                 type="file"
@@ -84,6 +67,7 @@
                             nz-button
                             nzType="primary"
                             (click)="fileUpload('file_apprentices')"
+                            [nzLoading]="uploading"
                         >
                             Subir Archivos
                         </button>
@@ -102,6 +86,7 @@
                                 {{ selectedFile['file_instructors'].name }}
                             </span>
                             <input
+                              [accept]="requiredFileType"
                                 name="file_instructors"
                                 [formControl]="fieldFileExcelInstructors"
                                 type="file"
@@ -115,6 +100,7 @@
                             nz-button
                             nzType="primary"
                             (click)="fileUpload('file_instructors')"
+                            [nzLoading]="uploading"
                         >
                             Subir Archivos
                         </button>

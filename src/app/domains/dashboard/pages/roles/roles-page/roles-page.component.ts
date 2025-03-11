@@ -52,11 +52,7 @@ export class RolesComponent implements OnInit {
 
   showModalCargue(): void {
     this.chargeButton.isVisibleCargue = true;
-    console.log(this.isVisibleCargue);
-
   }
-
-
 
 
   changePage(newPage: number) {

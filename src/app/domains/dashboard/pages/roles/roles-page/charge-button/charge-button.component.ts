@@ -10,7 +10,7 @@ import { NzFormControlComponent } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationComponent, NzNotificationModule, NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
@@ -52,14 +52,9 @@ export class ChargeButtonComponent implements OnInit {
 
   uploadSub: Subscription | null = null;
 
-
-  private messageService = inject(NzMessageService)
   private chargeExcelService = inject(ChargeExcelService)
   private notification = inject(NzNotificationService)
-
   isVisibleCargue = false
-
-  fileName = '';
 
   selectedFile: { [key: string]: File | null } = {
     file_courses: null,
@@ -92,7 +87,6 @@ export class ChargeButtonComponent implements OnInit {
 
     if (file) {
       this.selectedFile[field] = file;
-      console.log(`Archivo seleccionado para ${field}:`, file.name);
     } else {
       this.notification.create(
         'warning',
@@ -100,9 +94,10 @@ export class ChargeButtonComponent implements OnInit {
         'No se ha seleccionado un archivo'
       );
     }
+
   }
 
-  fileUpload(fileType:string) {
+  fileUpload(fileType: string) {
 
     const file = this.selectedFile[fileType];
 
@@ -120,39 +115,50 @@ export class ChargeButtonComponent implements OnInit {
     let uploadService
 
     if (fileType === 'file_courses') {
-        uploadService = this.chargeExcelService.postExcelCourse(formData)
-        
-
+      uploadService = this.chargeExcelService.postExcelCourse(formData)
     } else if (fileType === 'file_apprentices') {
-      this.chargeExcelService.postExcelApprentices(formData);
+      uploadService = this.chargeExcelService.postExcelApprentices(formData);
     } else if (fileType === 'file_instructors') {
-      this.chargeExcelService.postExcelInstructors(formData);
+      uploadService = this.chargeExcelService.postExcelInstructors(formData);
     }
 
     // Realizar la carga
-    uploadService?.pipe(
-      finalize(() => this.uploading = false)
-    ).subscribe({
+    this.uploadSub = uploadService!
+    .pipe(
+      finalize(() => this.reset())
+    )
+    .subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.Response) {
           this.uploadComplete = true;
-          console.log('Respuesta backend:', event.body);
-        }
+          this.selectedFile[fileType] = null
+          this.notification.create(
+            'success',
+            'Exito',
+            'Archivo subido correctamente, porfavor recarga la pagina'
+          )
+        } 
       }
     });
 
+  }
 
+  reset() {
+    this.uploading = false;
+    this.uploadSub = null;
   }
 
   handleCancel() {
+    if (this.uploading) return
     this.isVisibleCargue = false;
   }
 
   handleOk() {
+    if (this.uploading) return
     this.isVisibleCargue = false;
   }
 
 
-  
+
 
 }
