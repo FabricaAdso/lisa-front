@@ -67,6 +67,14 @@ export const menuItems: MenuItem[] = [
     Role: 'Usuario',
   },
   {
+    title: 'Gestion',
+    icon: 'profile',
+    route: 'managesession',
+    theme: 'outline',
+    state: false,
+    Role: 'Usuario',
+  },
+  {
     title: 'Calendario',
     icon: 'calendar',
     route: 'session-calendar',

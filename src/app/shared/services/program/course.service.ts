@@ -4,6 +4,7 @@ import { getQueryUrl } from '@shared/functions/url.functions';
 import { CourseModel } from '@shared/models/course.model';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { SessionModel } from '@shared/models/session.model';
+import { SubjectModel } from '@shared/models/subject-model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,38 +13,47 @@ import { Observable } from 'rxjs';
 export class CourseService {
 
   private http = inject(HttpClient);
-  url:string = 'course'
+  url: string = 'course'
   //
-  urlSessionNOw:string = 'course/sessionsNow'
+  urlSessionNOw: string = 'course/sessionsNow'
 
   constructor() { }
 
 
-  getCourses(data?:QueryUrl){
-    let url:string = getQueryUrl(this.url,data)
+  getCourses(data?: QueryUrl): Observable<CourseModel[]> {
+
+    let url: string = getQueryUrl(this.url, data)
+
+
     return this.http.get<CourseModel[]>(url);
   }
 
-  
+  getCursesInstructorPending(data?: QueryUrl): Observable<SessionModel[]> {
 
-  getCursesInstructorPending(data?:QueryUrl): Observable<SessionModel[]>{
-
-    let url:string = getQueryUrl(`${this.url}/Instructorsessions`,data)
+    let url: string = getQueryUrl(`${this.url}/Instructorsessions`, data)
 
     return this.http.get<SessionModel[]>(url);
   }
 
-  getCursesInstructorRecord(data?:QueryUrl): Observable<SessionModel[]>{
-    let url:string = getQueryUrl(`${this.url}/sessions`,data)
+  getCursesInstructorRecord(data?: QueryUrl): Observable<SessionModel[]> {
+    let url: string = getQueryUrl(`${this.url}/sessions`, data)
 
     return this.http.get<SessionModel[]>(url);
   }
 
-  getCursesInstructorNow(data?:QueryUrl){
+  getCursesInstructorNow(data?: QueryUrl) {
 
-    let urlSessionNOw:string = getQueryUrl(this.urlSessionNOw,data)
+    let urlSessionNOw: string = getQueryUrl(this.urlSessionNOw, data)
 
     return this.http.get<SessionModel>(urlSessionNOw);
+  }
+
+  getSubjectByCourseModel(id: number) {
+    return this.http.get<SubjectModel[]>(`${this.url}/${id}`)
+  }
+
+  getCourseLeader(): Observable<CourseModel[]> {
+    return this.http.get<CourseModel[]>(`${this.url}/leader`);
   }
 
 

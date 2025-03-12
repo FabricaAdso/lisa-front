@@ -31,13 +31,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
       },
-      {
+      /* {
         path:'session',
         title:'Administrar Sesiones',
         data: { breadcrumb: 'Sesiones ' },
         canActivate: [authGuard],
         loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
-      },
+      }, */
       {
         path: 'justification',
         title: 'justificaciones',
@@ -77,6 +77,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
       },
+     
 
       {
         path: 'programs',
@@ -93,13 +94,21 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
-
       {
+        path: 'managesession',
+        title: 'Gestionar sesiones',
+        data: { breadcrumb: 'Gestion de sesiones'},
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/session/manage-session/manage-session.component').then(c =>c.ManageSessionComponent)
+
+      },
+
+       {
         path: 'file',
-        title: 'Fichas',                                                      
+        title: 'Fichas',
         data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/ficha-page/ficha-page.component').then(c => c.FichaPageComponent)
+        loadComponent: () => import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
       },
       {
         path: 'absences',
@@ -116,6 +125,7 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/dashboard-layout/nav-bar/notifications/notifications.component').then(c => c.NotificationsComponent)
 
       },
+
       {
         path: 'error_401',
         title: 'Autenticación Requerida',
@@ -126,13 +136,15 @@ export const routes: Routes = [
         title: 'Error de Servidor',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-500/error-500.component').then(c => c.Error500Component)
       },
-      
+
       //Tiene que ir de ultimo, por alguna razón xD
       {
         path: '**',
         title: 'Página no encontrada',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-404/error-404.component').then(c => c.Error404Component)
       },
+
+
     ]
   }
 ];
