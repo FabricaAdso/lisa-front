@@ -1,3 +1,17 @@
 nz-select{
     width: 100%;
 }
+
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+    color: #fff;
+    border-color: #52c41a;
+    background: #00af00;
+}
+
+::ng-deep .ant-btn-primary {
+    border-color: #52c41a;
+    color: white;
+    background-color: #52c41a;
+    outline: none;
+}
+

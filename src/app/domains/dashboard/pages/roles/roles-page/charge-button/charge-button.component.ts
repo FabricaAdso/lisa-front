@@ -19,6 +19,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzUploadChangeParam, NzUploadModule } from 'ng-zorro-antd/upload';
 import { finalize, lastValueFrom, Subscription } from 'rxjs';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 @Component({
   selector: 'app-charge-button',
@@ -37,7 +38,8 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     NzPaginationModule,
     NzUploadModule,
     NzTabsModule,
-    NzProgressModule
+    NzProgressModule,
+    NzCardModule
 
   ],
   templateUrl: './charge-button.component.html',

@@ -99,6 +99,8 @@ export class JustificationApprenticeComponent {
         const { data, per_page, current_page, last_page, total } = justifications;
         this.setPage(current_page, per_page, last_page, total);
         this.justifications = [...data];
+        console.log(data);
+        
         
       },
       error: (err) => {
