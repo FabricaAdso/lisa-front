@@ -1,7 +1,7 @@
 export const environment = {
     API_URL:"http://127.0.0.1:8000/api",
     production: false,
-    pusherKey: 'erodrsqvrpgfy6pxvi7o',
+    pusherKey: '',//clave de reverb
     pusherCluster: 'mt1',
     pusherForceTLS: false,
     pusherHost: 'localhost',
