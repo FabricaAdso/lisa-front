@@ -31,13 +31,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
       },
-      /* {
+      {
         path:'session',
         title:'Administrar Sesiones',
         data: { breadcrumb: 'Sesiones ' },
         canActivate: [authGuard],
         loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
-      }, */
+      },
       {
         path: 'justification',
         title: 'justificaciones',
