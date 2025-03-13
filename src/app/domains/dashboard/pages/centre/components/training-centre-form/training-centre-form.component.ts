@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, inject, Input, input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TrainingCentreModel } from '@shared/models/training-centre-model';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
@@ -71,14 +71,39 @@ export class TrainingCentreFormComponent {
 
   }
 
+
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['centre'] && this.centre) {
+      console.log('Centro recibido:', this.centre); // 🔍 Verifica si se actualiza
+
+      // Actualizar el formulario con los valores del centro recibido
+      this.form.patchValue({
+        name: this.centre.name || '',
+        code: this.centre.code || '',
+        regional_id: this.centre.regional_id || null
+      });
+
+      // Agregar ID si existe (para edición)
+      if (this.centre.id) {
+        if (!this.form.contains('id')) {
+          this.form.addControl('id', new FormControl(this.centre.id));
+        } else {
+          this.form.get('id')!.setValue(this.centre.id);
+        }
+      }
+    }
+  }
+
+
+
+
+
   loadRegions() {
     this.regionalService.getAllRegional().subscribe((data) => {
       console.log("🚀 Regiones obtenidas:", data); // 📌 Verifica si llegan datos
-      if (data && data.length > 0) {
-        this.regions = data;
-      } else {
-        console.warn('⚠️ No hay regiones disponibles.');
-      }
+      this.regions = data || [];
     });
   }
 
@@ -86,16 +111,16 @@ export class TrainingCentreFormComponent {
     if(this.saveSub) this.saveSub.unsubscribe();
   }
 
-  editCentre(){
-    if(this.form.invalid) return; 
+  editCentre() {
+    if (this.form.invalid) return;
     this.loading = true;
-    const {value} = this.form;
-    this.saveSub = this.centreService.update(value)
-      .subscribe({
-        next:(new_centre)=>{
-          this.update.emit(new_centre);
-        }
-      });
+    const { value } = this.form;
+    this.saveSub = this.centreService.update(value).subscribe({
+      next: (new_centre) => {
+        this.update.emit(new_centre);
+        this.closeModal.emit();
+      }
+    });
   }
 
   createCentre() {

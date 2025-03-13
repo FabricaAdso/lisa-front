@@ -132,10 +132,10 @@ export class TrainingCentrePageComponent {
  
     
   }
-  update(idItemTable?:number){
-    const item = this.centres.find((centre:TrainingCentreModel)=>centre.id == idItemTable)
-    if(item){
-      this.centreUpdate = item
+  update(idItemTable?: number) {
+    const item = this.centres.find((centre: TrainingCentreModel) => centre.id === idItemTable);
+    if (item) {
+      this.centreUpdate = { ...item }; // Clonar para evitar modificar el original antes de guardar
       this.isModalVisible = true;
     }
   }
