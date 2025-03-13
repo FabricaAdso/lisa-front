@@ -30,6 +30,8 @@ import { RapService } from '@shared/services/program/rap.service';
 import { SubjectService } from '@shared/services/program/subject.service';
 import { SubjectModel } from '@shared/models/subject-model';
 import { RapModel } from '@shared/models/rap-model';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+
 
 @Component({
   selector: 'app-session',
@@ -45,8 +47,9 @@ import { RapModel } from '@shared/models/rap-model';
     NzModalComponent,
     NzTimePickerModule,
     FormsModule,
-    NzModalContentDirective
-  ],
+    NzModalContentDirective,
+    NzInputNumberModule,
+],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
@@ -413,5 +416,9 @@ export class SessionComponent implements OnInit, OnDestroy {
   openModal() {
     this.isModalVisible = true;
   }
+
+
+defaultOpenValue = new Date(0, 0, 0, 0, 0);
+
 
 }
