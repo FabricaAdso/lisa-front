@@ -10,6 +10,9 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { Subscription } from 'rxjs';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { RegionalService } from '@shared/services/regional.service';
+import { RegionalModel } from '@shared/models/regional.model';
 
 @Component({
   selector: 'app-training-centre-form',
@@ -22,6 +25,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzInputModule,
     NzButtonModule,
     ReactiveFormsModule,
+    NzSelectModule
   ],
   templateUrl: './training-centre-form.component.html',
   styleUrl: './training-centre-form.component.css'
@@ -30,6 +34,7 @@ export class TrainingCentreFormComponent {
 
   private formBuilder = inject(FormBuilder);
   private centreService = inject(TrainingCentreService);
+  private regionalService = inject(RegionalService);
 
   @Input()centre?: TrainingCentreModel | undefined;
   @Input() isVisible:boolean | undefined ;
@@ -42,11 +47,14 @@ export class TrainingCentreFormComponent {
   saveSub:Subscription|null = null;
   dataSub:Subscription|null = null;
   loading:boolean  = false;
+  regions: RegionalModel[] = [];
 
 
   constructor(private notification: NzNotificationService){
     this.form = this.formBuilder.group({
-      name:new FormControl(null,[Validators.required, Validators.minLength(5),noWhiteSpaceValidator()])
+      name:new FormControl(null,[Validators.required, Validators.minLength(5),noWhiteSpaceValidator()]),
+      code: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
+      regional_id: new FormControl(null, [Validators.required])
     },);
   }
 
@@ -59,7 +67,21 @@ export class TrainingCentreFormComponent {
       this.form.addControl('id',new FormControl(this.centre.id));
       this.form.get('name')!.setValue(this.centre.name);
     }
+    this.loadRegions();
+
   }
+
+  loadRegions() {
+    this.regionalService.getAllRegional().subscribe((data) => {
+      console.log("🚀 Regiones obtenidas:", data); // 📌 Verifica si llegan datos
+      if (data && data.length > 0) {
+        this.regions = data;
+      } else {
+        console.warn('⚠️ No hay regiones disponibles.');
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     if(this.saveSub) this.saveSub.unsubscribe();
   }

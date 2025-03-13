@@ -19,8 +19,13 @@ export class TrainingCentreService {
   constructor() { }
 
 
-  getCentros(data?:QueryUrl) {
-    let url:string = getQueryUrl(this.url,data)
+  getCentros(data?: QueryUrl) {
+    let queryParams: QueryUrl = {
+      included: ['regional'],  // Aquí agregamos 'regional'
+      ...data // Mantiene cualquier otro parámetro existente
+    };
+  
+    let url: string = getQueryUrl(this.url, queryParams);
     return this.http.get<TrainingCentreModel[]>(url);
   }
 
