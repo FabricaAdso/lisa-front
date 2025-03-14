@@ -51,7 +51,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzInputModule,
     NzSelectModule,
     NzPaginationModule,
-    NzIconModule
+    NzIconModule,NzPaginationModule
 
 ],
   templateUrl: './manage-session.component.html',
@@ -62,8 +62,6 @@ export class ManageSessionComponent implements OnInit {
 
   loading = false;
 
-
-  // Filtro de estado (por defecto, "pending")
   selecion: { name: string, id: number } | null = null;
   select_sessions: { name: string, id: number }[] = [
     { name: "past", id: 1 },
@@ -71,24 +69,19 @@ export class ManageSessionComponent implements OnInit {
     { name: "all", id: 3 }
   ];
 
-  // Filtros adicionales (los valores actuales de cada select)
   courseFilter: string = '';
   rapFilter: string = '';
   instructorFilter: string = '';
   subjectFilter: string = '';
 
-  // Arrays para las opciones de cada select
   courseOptions: Array<{ value: string, label: string }> = [];
   rapOptions: Array<{ value: string, label: string }> = [];
   instructorOptions: Array<{ value: string, label: string }> = [];
 
-  // Objeto de filtros que se enviará en la petición
   filters: { [key: string]: string | number } = {};
 
-  // Subject para aplicar debounce en los filtros
   private filterSubject = new Subject<void>();
 
-  // Inyección de servicios (puedes usar DI con inject o en el constructor)
   private sessionService = inject(ManageSessionService);
   private courseService = inject(CourseService);
   private rapService = inject(RapService);
@@ -97,11 +90,9 @@ export class ManageSessionComponent implements OnInit {
   private sessionse = inject(SessionService)
 
   ngOnInit(): void {
-    // 1. Establecer el filtro por defecto para el estado ("pending")
     this.selecion = this.select_sessions.find(s => s.name === 'pending') || this.select_sessions[1];
     this.applySelectFilter();
 
-    // 2. Configurar el subject para agrupar (debounce) cambios en los filtros
     this.filterSubject.pipe(debounceTime(500))
       .subscribe(() => {
         this.FilterSesion();
@@ -119,7 +110,7 @@ export class ManageSessionComponent implements OnInit {
     this.sessionse.getAlltwo(stringFilters, ['instructor.user', 'course', 'rap'])
       .subscribe((response: PaginateModel<SessionModel>) => {
         console.log('Respuesta completa de getAlltwo:', response);
-        const sessionsArray = response.data; // Accedes al array real de sesiones
+        const sessionsArray = response.data;
         console.log('Array de sesiones:', sessionsArray);
 
         const rapMap = new Map<string, { value: string, label: string }>();
@@ -157,9 +148,6 @@ export class ManageSessionComponent implements OnInit {
       });
 
   }
-
-
-  // Métodos que se disparan cuando cambian los valores de cada select
 
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
@@ -209,7 +197,6 @@ export class ManageSessionComponent implements OnInit {
     this.filterSubject.next();
   }
 
-  // Aplica el filtro de estado en el objeto filters según la opción seleccionada
   private applySelectFilter(): void {
     if (this.selecion) {
       if (this.selecion.name === 'pending') {
@@ -225,62 +212,57 @@ export class ManageSessionComponent implements OnInit {
     }
   }
 
-  // Lógica para hacer la petición al backend con los filtros aplicados
- FilterSesion(): void {
-  console.log('Filtros aplicados:', this.filters);
-  const stringFilters: { [key: string]: string } = Object.keys(this.filters).reduce((acc, key) => {
-    acc[key] = this.filters[key].toString();
-    return acc;
-  }, {} as { [key: string]: string });
-  const params = { ...stringFilters, page: this.page, elements: this.elements };
+page: number = 1;
+elements: number = 10;
+total_elements: number = 0;
 
-  this.sessionse.getAlltwo(stringFilters, ['instructor.user', 'course', 'course.program', 'rap.subject'])
+FilterSesion(): void {
+  this.filters['page'] = this.page.toString();
+  this.filters['per_page'] = this.elements.toString();
+
+  const requestFilters: { [key: string]: string } = {};
+  Object.keys(this.filters).forEach(key => {
+    requestFilters[key] = this.filters[key].toString();
+  });
+
+  this.sessionse.getAlltwo(requestFilters, ['instructor.user', 'course', 'course.program', 'rap.subject'])
     .subscribe({
       next: (resp: PaginateModel<SessionModel>) => {
-        console.log('Respuesta de sesiones:', resp);
         this.sessions = resp.data;
-         // Actualizamos la paginación según la respuesta
-         this.page = resp.current_page;
-         this.elements = resp.per_page;
-         this.total_elements = resp.total;
-        console.log('Número de sesiones:', this.sessions.length);
+        this.total_elements = resp.total;
+        this.page = resp.current_page;
+        this.elements = resp.per_page;
       },
       error: (err) => console.error(err)
     });
 }
 
-trackBySession(index: number, session: SessionModel): number {
-  return session.id;
-}
-changePage(page: number): void {
-  console.log('Cambio a la página:', page);
-  this.page = page;
+changePage(newPage: number): void {
+  this.page = newPage;
   this.FilterSesion();
 }
 
 
+trackBySession(index: number, session: SessionModel): number {
+  return session.id;
+}
+
 onDeleteSession(id: number): void {
-  // Opcional: confirmar la eliminación
   if (!confirm('¿Estás seguro de eliminar esta sesión?')) {
     return;
   }
 
-  // Llamada al servicio para borrar la sesión
   this.sessionse.deleteSession(id).subscribe({
     next: (res) => {
-      // Actualiza la lista eliminando el item borrado
       this.sessions = this.sessions.filter(session => session.id !== id);
-      // Opcional: muestra una notificación de éxito
       this.notification.success('Eliminado', 'Sesión eliminada exitosamente');
     },
     error: (err) => {
       console.error('Error al eliminar la sesión', err);
-      // Opcional: muestra una notificación de error
       this.notification.error('Error', 'No se pudo eliminar la sesión');
     }
   });
 }
-  // Resto de métodos para el modal
   @ViewChild('sessionModal') sessionModal!: SessionComponent;
 
   pending_courses: SessionModel[] = [];
@@ -311,16 +293,10 @@ onDeleteSession(id: number): void {
   }
 
   onSessionCreated(newSession: SessionModel): void {
-    // En lugar de solo agregar el objeto, recarga la tabla completa:
     this.FilterSesion();
   }
 
 
-  // Paginado
 
-  // Variables de paginación
-  page: number = 1;
-  elements: number = 10; // registros por página
-  total_elements: number = 0;
 
 }

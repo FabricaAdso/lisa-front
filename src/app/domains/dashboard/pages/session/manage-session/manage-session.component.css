@@ -15,21 +15,25 @@ nz-table {
 }
 
 
-
-
 ::ng-deep .bame {
-  letter-spacing: 0px; /* Reduce la distancia entre letras */
+  letter-spacing: 0px; /* espacio entre letras */
   line-height: 1.0;
   text-align: center !important;
 }
 
 
 
-/* Espaciado entre el Collapse y el Footer */
+/* espacio entre el collapse y el footer */
 nz-collapse {
   margin-top: 16px;
   border-radius: 4px;
   border: 1px solid #e0e0e0;
   background-color: white;
 }
+
+:host ::ng-deep .ant-pagination ul {
+  width: max-content;
+  margin: 0 auto;
+}
+
 

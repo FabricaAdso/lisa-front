@@ -62,20 +62,30 @@ export class SessionService {
   }
 
  // Método para obtener sesiones con paginación (getAlltwo)
-  getAlltwo(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
-    let params = new HttpParams();
-    if (included) {
-      const includeStr = Array.isArray(included) ? included.join(',') : included;
-      params = params.set('included', includeStr);
-      console.log('Included:', includeStr);
-    }
-    if (filters) {
-      Object.keys(filters).forEach(key => {
-        params = params.set(`filter[${key}]`, filters[key]);
-        console.log('Setting filter:', key, filters[key]);
-      });
-      console.log('Request URL:', this.url);
-    }
-    return this.http.get<PaginateModel<SessionModel>>(this.url, { params });
+  // En session.service.ts
+getAlltwo(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
+  let params = new HttpParams();
+
+  // 1. Manejar includes
+  if (included) {
+    const includeStr = Array.isArray(included) ? included.join(',') : included;
+    params = params.set('included', includeStr);
   }
+
+  // 2. Manejar filtros y paginación
+  if (filters) {
+    Object.keys(filters).forEach(key => {
+      // Parámetros de paginación SIN prefijo filter[]
+      if (key === 'page' || key === 'per_page') {
+        params = params.set(key, filters[key]);
+      }
+      // Otros filtros CON prefijo filter[]
+      else {
+        params = params.set(`filter[${key}]`, filters[key]);
+      }
+    });
+  }
+
+  return this.http.get<PaginateModel<SessionModel>>(this.url, { params });
+}
 }

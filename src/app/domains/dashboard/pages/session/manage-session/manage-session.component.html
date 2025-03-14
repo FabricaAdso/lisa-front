@@ -51,7 +51,9 @@
     </nz-select>
   </div>
 
-  <nz-table #basicTable [nzData]="sessions" nzBordered nzSize="middle" style="margin-top: 1rem;">
+  <nz-table #basicTable [nzData]="sessions" nzBordered nzSize="middle" [nzFrontPagination]="false"   style="margin-top: 1rem;">
+
+
     <thead style="background-color: #52c41a; color: #fff;">
       <tr>
         <th nzWidth="6%">Fecha</th>
@@ -79,4 +81,12 @@
           <button nz-button nzType="default" nzDanger="" (click)="onDeleteSession(session.id)">Eliminar</button></td>
       </tr>
     </tbody>
+
+      <nz-pagination
+      [nzPageIndex]="page"
+      [nzTotal]="total_elements"
+      [nzPageSize]="elements"
+      (nzPageIndexChange)="changePage($event)"
+    ></nz-pagination>
+
   </nz-table>
