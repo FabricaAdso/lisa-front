@@ -57,7 +57,7 @@ export class TrainingCentrePageComponent {
 
 
    // Paginación
-   elements: number = 3;
+   elements: number = 10;
    page: number = 1;
    last_page: number = 0;
    total_elements: number = 0;
@@ -96,7 +96,7 @@ export class TrainingCentrePageComponent {
     
         // Actualizar valores de paginación con la respuesta de la API
         this.total_elements = response.total;
-        this.elements = response.per_page;
+        
         this.last_page = response.last_page;
       
         this.page_options = Array.from({ length: this.last_page }, (_, i) => i + 1);

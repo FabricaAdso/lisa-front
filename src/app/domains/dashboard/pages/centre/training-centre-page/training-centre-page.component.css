@@ -10,8 +10,8 @@
   }
 
   .edit-btn {
-    color: #182fa4; /* Verde */
-    border: 2px solid #6763773e;
+    color: #4f8832;
+    border: 2px solid #39a90144;
     background: transparent;
     padding: 5px 10px;
     border-radius: 5px;
@@ -22,7 +22,7 @@
   
 
   .edit-btn:hover {
-    background: #4c5eaf94;
+    background: #38A901;
     color: white;
   }
 
