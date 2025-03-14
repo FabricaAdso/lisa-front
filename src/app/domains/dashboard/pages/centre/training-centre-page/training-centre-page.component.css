@@ -1,4 +1,46 @@
-.action-btn {
-    margin-right: 8px;
+.action-buttons {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+    flex-wrap: wrap; /* Hace que los botones bajen en pantallas pequeñas */
+  }
+
+  .material-icons {
+    font-size: 18px; /* Ajusta el tamaño del icono */
+    vertical-align: middle; /* Alinea mejor con el texto */
+  }
+
+  .edit-btn {
+    color: #182fa4; /* Verde */
+    border: 2px solid #6763773e;
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
   
+
+  .edit-btn:hover {
+    background: #4c5eaf94;
+    color: white;
+  }
+
+
+  
+/* Botón de Eliminar */
+.delete-btn {
+    color: #F44336;
+    border: 2px solid #f4433622;
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .delete-btn:hover {
+    background: #f44336ae;
+    color: white;
+  }

@@ -1,5 +1,6 @@
 <!-- training-centre-page.component.html -->
 <!-- Botón para crear un nuevo centro -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 @if (isModalVisible) {
 <app-training-centre-form [centre]="centreUpdate" [isVisible]="isModalVisible" (update)="actualizarTabla($event)"
   (create)="actualizarTabla($event)" (closeModal)="closeModal()">
@@ -25,12 +26,15 @@
       }
 
       <td>
-        <button class="action-btn" nz-button nzType="default" (click)="update(centre.idItem)">Editar</button>
+        <div class="action-buttons">
+        <button class="edit-btn" nz-button nzType="default" (click)="update(centre.idItem)">
+          <span class="material-icons">edit_note</span>Editar</button>
 
-        <button class="action-btn" nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?"
+        <button class="delete-btn" nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?"
           (nzOnConfirm)="deleteCentre(centre.idItem)" (nzOnCancel)="cancel()" nz-button nzType="default" nzDanger>
-          Delete
+          <span class="material-icons">delete_forever</span>Eliminar
         </button>
+      </div>
 
 
       </td>
