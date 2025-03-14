@@ -232,12 +232,17 @@ export class ManageSessionComponent implements OnInit {
     acc[key] = this.filters[key].toString();
     return acc;
   }, {} as { [key: string]: string });
+  const params = { ...stringFilters, page: this.page, elements: this.elements };
 
   this.sessionse.getAlltwo(stringFilters, ['instructor.user', 'course', 'course.program', 'rap.subject'])
     .subscribe({
-      next: (resp: PaginatedResponse<SessionModel>) => {
+      next: (resp: PaginateModel<SessionModel>) => {
         console.log('Respuesta de sesiones:', resp);
         this.sessions = resp.data;
+         // Actualizamos la paginación según la respuesta
+         this.page = resp.current_page;
+         this.elements = resp.per_page;
+         this.total_elements = resp.total;
         console.log('Número de sesiones:', this.sessions.length);
       },
       error: (err) => console.error(err)
@@ -246,6 +251,11 @@ export class ManageSessionComponent implements OnInit {
 
 trackBySession(index: number, session: SessionModel): number {
   return session.id;
+}
+changePage(page: number): void {
+  console.log('Cambio a la página:', page);
+  this.page = page;
+  this.FilterSesion();
 }
 
 
@@ -308,11 +318,9 @@ onDeleteSession(id: number): void {
 
   // Paginado
 
-  elements: number = 9;
+  // Variables de paginación
   page: number = 1;
-  last_page: number = 0;
+  elements: number = 10; // registros por página
   total_elements: number = 0;
-  page_options: number[] = [];
 
-  
 }

@@ -12,6 +12,10 @@
       style="background-color: #52c41a; color: #fff;">
       Crear sesión
     </button>
+   <button>
+  <span nz-icon nzType="caret-right" nzTheme="outline"></span>
+</button>
+
   </div>
 
   <app-session [isModalVisible]="createSessionOpen"   (sessionCreated)="onSessionCreated($event)"
@@ -71,7 +75,7 @@
         <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
         <td>
           <button nz-button nzType="default">Editar</button>
-          
+
           <button nz-button nzType="default" nzDanger="" (click)="onDeleteSession(session.id)">Eliminar</button></td>
       </tr>
     </tbody>
