@@ -13,10 +13,16 @@
 
     </div>
     <div class="botons">
-      <button (click)="openModalHeadquarter()" >Edit</button>
-      <button (click)="onDeleteHeadquarter()">Delete</button>
-      <button (click)="openCreateModalHeadquarter()">Add headquarters</button>
-      <button (click)="openCreateModalEnvironment()">Add environments</button>
+      <button class="add-environment-btn"
+       (click)="openModalHeadquarter()" >Edit</button>
+      <button class="add-environment-btn"
+       (click)="onDeleteHeadquarter()">Delete</button>
+      <button class="add-environment-btn"
+       (click)="openCreateModalHeadquarter()">Add headquarters</button>
+      <button 
+      class="add-environment-btn"
+      (click)="openCreateModalEnvironment()"
+      [disabled]="!selectedHeadquarter">Add environments</button>
     </div>
 
   </div>
@@ -39,7 +45,7 @@
         <td>
           <button class="btn-accion" (click)="openModalEnvironment(environment.id)">Edit</button>
           <nz-divider nzType="vertical"></nz-divider>
-          <button >Delete</button>
+          <button (click)="deleteEnvironment(environment.id)" >Delete</button>
         </td>
       </tr>
       }
@@ -53,6 +59,8 @@
 
 <app-modal-headquarter #modalHeadquarter
 (updatedHeadquarter)="getHeadquarters()" ></app-modal-headquarter>
-<app-modal-environment #modalEnviroment ></app-modal-environment>
+<app-modal-environment #modalEnviroment 
+(updateEnvironment)="handleEnvironmentUpdate()"
+ ></app-modal-environment>
 
 

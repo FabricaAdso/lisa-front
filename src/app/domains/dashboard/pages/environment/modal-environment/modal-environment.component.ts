@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,11 +9,14 @@ import {
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { HeadquarterModel } from '@shared/models/headquarter.model';
 import { KnowledgeNetworkByInstructorModel } from '@shared/models/knowledg-network.model';
+import { EnvironmentService } from '@shared/services/environment.service';
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { KnowledgeNetworkService } from '@shared/services/knowledge-network.service';
+import { he } from 'date-fns/locale';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
 @Component({
@@ -35,6 +38,7 @@ export class ModalEnvironmentComponent {
 
 
 
+  @Output() updateEnvironment: EventEmitter<void> = new EventEmitter;
   @Input() environmentData?: EnvironmentModel | null;
 
   //Declaracion de varibales
@@ -45,8 +49,10 @@ export class ModalEnvironmentComponent {
   knowlwdegeList: KnowledgeNetworkByInstructorModel[] = [];
 
   //injeccion de servicios
+  private environmentService = inject(EnvironmentService)
   private headquarterService = inject(HeadquartersService);
   private knowledgeService = inject(KnowledgeNetworkService);
+  private message = inject(NzMessageService);
 
   ngOnInit() {
     this.formData();
@@ -72,7 +78,52 @@ export class ModalEnvironmentComponent {
     });
   }
 
+  saveData(){
+    const data = this.formEnvironment.value;
+
+
+    
+    if(this.isEdit){
+      this.formEnvironment.get('headquarters_id')?.enable();
+      data.headquarters_id = this.formEnvironment.get('headquarters_id')?.value;
+      this.formEnvironment.get('headquarters_id')?.disable();
+
+      this.environmentService.update(data).subscribe({
+        next: () => {
+          this.updateEnvironment.emit();
+          this.message.success('Ambiente actualizado correctamente');
+          this.closeModal();
+        },
+        error: (error) => {
+          this.message.error('Erro al actualizar sede',error);
+        },
+      });
+    }else{
+
+      this.environmentService.create(data).subscribe({
+        next: () => {
+          this.updateEnvironment.emit();
+          this.message.success('Ambiente creada correctamente');
+          this.closeModal();
+        },
+        error: (error) => {
+          this.message.error('Error al crear la sede',error)
+        },
+
+      });
+    }
+  }
+  
+
+  setSelectedHeadquarter(id:number):void{
+    this.formEnvironment.patchValue({
+      headquarters_id: id
+    })
+
+  }
+
   setData(data: EnvironmentModel): void {
+    this.isEdit = true
     this.environmentData = data;
 
 
@@ -83,6 +134,8 @@ export class ModalEnvironmentComponent {
       knowledge_network_id: data.knowledge_network_id,
       headquarters_id: data.headquarters_id,
     });
+
+    this.formEnvironment.get('headquarters_id')?.disable();
   }
 
   formData(): void {
@@ -93,15 +146,19 @@ export class ModalEnvironmentComponent {
       headquarters_id: new FormControl(null, Validators.required),
       knowledge_network_id: new FormControl(null, Validators.required),
 
-    });
-
+    }) ;
 
   }
 
+  resetModal(){
+    this.isEdit = false
+    this.formEnvironment.reset();
+  }
   openModal() {
     this.isVisible = true;
   }
   closeModal() {
+    this.resetModal();
     this.isVisible = false;
   }
 }

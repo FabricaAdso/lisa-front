@@ -1,5 +1,5 @@
 <!-- modal-headquarter.component.html -->
-@if (!isVisibleHeadquarter) {
+@if (isVisibleHeadquarter) {
   <div class="modal-overlay" (click)="closeModal()">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <form nz-form [formGroup]="formHeadquarter">
@@ -27,12 +27,7 @@
             <input nz-input type="time" formControlName="closing_time" placeholder="Fin de programa" />
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-label>Municipio</nz-form-label>
-          <nz-form-control>
-            <input nz-input formControlName="municipality" placeholder="Municipio" />
-          </nz-form-control>
-        </nz-form-item>
+       
 
         <!-- Mostrar el campo training_center_id solo en modo creación -->
         @if (!isEdit) {
@@ -47,6 +42,14 @@
                   <nz-option [nzValue]="center.id" [nzLabel]="center.name"></nz-option>
                 }
               </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+
+          <nz-form-item>
+            <nz-form-label>Municipio</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="municipality" placeholder="Municipio" />
             </nz-form-control>
           </nz-form-item>
         }

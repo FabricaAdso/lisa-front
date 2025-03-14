@@ -42,11 +42,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class EnvironmentComponent {
 
-
+//metodos para comunicar eventos entere el padre y los hijos 
   @ViewChild('modalEnviroment') modalEnviroment: any =
     ModalEnvironmentComponent;
   @ViewChild('modalHeadquarter') modalHeadquarter: any =
     ModalHeadquarterComponent;
+
 
   //injectamos los dos servicios
 
@@ -62,7 +63,8 @@ export class EnvironmentComponent {
   headquartersList: HeadquarterModel[] = [];
   selectedHeadquarter: number | null = null;
 
-  //funcion para abrir el modal de environment
+
+  //funcion para abrir el modal de ambiente para editar los datos del ambiente
   openModalEnvironment(id:number):void {
 
     this.selectedEnvironment = id
@@ -70,40 +72,73 @@ export class EnvironmentComponent {
     if(this.selectedEnvironment !== null ) {
       const selected = this.EnvironmentsList.find(
         (e) => e.id === this.selectedEnvironment,
-
-
       );
       if(selected){
         this.modalEnviroment.setData(selected);
         this.modalEnviroment.openModal();
-
       }
     }else{
       this.message.warning(
         'No se ha seleccionado un ambiente '
       )
     }
+  }
+  
+  //funcion para abrir el modal de crear ambiente
+  
+    openCreateModalEnvironment(){
+      if(this.selectedHeadquarter){
+        this.modalEnviroment.setSelectedHeadquarter(this.selectedHeadquarter);
+        this.modalEnviroment.openModal()
+      } else {
+        this.message.info('Debes seleccionar una sede para crear un ambiente',)
+      }
+    }
 
+
+
+  handleEnvironmentUpdate() {
+    this.getEnvironments(); // Actualiza la lista de ambientes
+    this.filterEnvironmentsByHeadquarter();
   }
 
 
-  openCreateModalEnvironment(){
-    this.modalEnviroment.openModal()
+  //funcion para eliminar un ambiente seleccionado 
+  deleteEnvironment(id:number):void{
+    this.selectedEnvironment = id
+    console.log(id);
+    const confrimacion = window.confirm('Estas seguro que quieres eliminar el ambiente, esta acción no se puede deshacer');
+    if(confrimacion){
+      this.environmentService.delete(id).subscribe({
+        next: () => {
+         
+         this.handleEnvironmentUpdate();
+          
+          this.message.success('Ambiente eliminado correctamente');
+        },error:(error)=>{
+          this.message.error('Error al eliminar el ambiente',error)
+        }
+      })
+    } else{
+      this.message.error('Se ha cancelado la eliminación del ambiente');
 
-
-
+    }
   }
+
+
+
+
   //funcion para abrir el modal de sedes, para editar la sede selecionada
   //  se le envia la informacion para que se visualice el formulario
+
   openModalHeadquarter(): void {
-    console.log('sede depurada:', this.selectedHeadquarter); // Depuración
     if (this.selectedHeadquarter !== null) {
       const selected = this.headquartersList.find(
         (h) => h.id === this.selectedHeadquarter
       );
       if (selected) {
         this.modalHeadquarter.setData(selected); // Aquí se envía el objeto completo
-        this.modalHeadquarter.isVisibleHeadquarter = false; // Muestra el modal
+        this.modalHeadquarter.isVisibleHeadquarter = true; // Muestra el modal
       }
     } else {
       this.message.warning(
@@ -112,13 +147,15 @@ export class EnvironmentComponent {
     }
   }
 
+
+
   //funcion pra abrie el modal pero para crear una sede
 
   openCreateModalHeadquarter() {
     this.getEnvironments();
     this.modalHeadquarter.formHeadquarter.reset();
     this.selectedHeadquarter = null; // Limpia los datos
-    this.modalHeadquarter.isVisibleHeadquarter = false;
+    this.modalHeadquarter.isVisibleHeadquarter = true;
   }
 
   //funcion para mostrar las sedes desde el servicio
@@ -142,7 +179,6 @@ export class EnvironmentComponent {
     const confirmacion = window.confirm(
       '¿Estás seguro de eliminar esta sede? Esta acción no se puede deshacer.'
     );
-
     if (confirmacion) {
       this.headquarterService.delete(id).subscribe({
         next: () => {
@@ -159,6 +195,8 @@ export class EnvironmentComponent {
       this.message.error('Eliminación  de sede cancelada');
     }
   }
+
+
 
   //funcion para eliminar la sede seleccionda consumiendo
   //  la funcion que hace el llamado al servicio
@@ -197,10 +235,9 @@ export class EnvironmentComponent {
     const query = {
       included: ['headquarters', 'knowledgeNetwork'],
     };
-
     this.environmentService.getEnvironments(query).subscribe((environments) => {
       this.EnvironmentsList = environments;
-      this.filteredEnvironments = [];
+      this.filterEnvironmentsByHeadquarter();
     });
   }
 

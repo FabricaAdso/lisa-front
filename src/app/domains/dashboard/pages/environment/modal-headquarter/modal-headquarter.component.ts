@@ -36,7 +36,7 @@ export class ModalHeadquarterComponent {
 
   trainingCentersList: TrainingCenterModel[] = [];
   formHeadquarter!: FormGroup;
-  isVisibleHeadquarter = true;
+  isVisibleHeadquarter = false;
   isEdit: boolean = false;
 
 
@@ -44,8 +44,9 @@ export class ModalHeadquarterComponent {
   @Output() updatedHeadquarter: EventEmitter<void> = new EventEmitter();
   @Input() headquarterData?: HeadquarterModel | null;
 
+  
+  
   //injeccion de servicios
-
   private headquarterService = inject(HeadquartersService);
   private trainingCenterService = inject(TrainingCentreService);
   private message = inject(NzMessageService);
@@ -67,7 +68,7 @@ export class ModalHeadquarterComponent {
 
   }
 
-  formData():void{
+  formData(): void {
     this.formHeadquarter = new FormGroup({
       name: new FormControl(null, Validators.required),
       adress: new FormControl(null, Validators.required),
@@ -118,6 +119,7 @@ export class ModalHeadquarterComponent {
     });
     // Deshabilitar el campo training_center_id en modo edición
     this.formHeadquarter.get('training_center_id')?.disable();
+    this.formHeadquarter.get('municipality')?.disable();
   }
 
 
@@ -133,19 +135,25 @@ export class ModalHeadquarterComponent {
 
     if (this.isEdit) {
       // Habilitar temporalmente el campo training_center_id para incluirlo en la solicitud
+      
       this.formHeadquarter.get('training_center_id')?.enable();
-      data.training_center_id =
-        this.formHeadquarter.get('training_center_id')?.value;
+      data.training_center_id =this.formHeadquarter.get('training_center_id')?.value;
       this.formHeadquarter.get('training_center_id')?.disable(); // Volver a deshabilitar el campo
+      
+      this.formHeadquarter.get('municipality')?.enable();
+      data.municipality = this.formHeadquarter.get('municipality')?.value;
+      this.formHeadquarter.get('municipality')?.disable(); // Volver a deshabilitaer
+
 
 
       // Si estamos en modo edición, actualizamos
       this.headquarterService.update(data).subscribe({
         next: () => {
-          this.message.success('Sede actualizada correctamente'); // Mensaje de éxito
-          this.isVisibleHeadquarter = true;
           this.resetModal(); // Reiniciar el modal después de guardar
           this.updatedHeadquarter.emit();
+          this.isVisibleHeadquarter = false;
+          this.message.success('Sede actualizada correctamente'); // Mensaje de éxito
+
         },
         error: (err) => {
           this.message.error('Error al actualizar sede', err);
@@ -155,10 +163,10 @@ export class ModalHeadquarterComponent {
       // Si estamos en modo creación, creamos
       this.headquarterService.create(data).subscribe({
         next: () => {
-          this.message.success('Sede creada correctamente'); // Mensaje de éxito
-          this.isVisibleHeadquarter = true;
           this.resetModal(); // Reiniciar el modal después de guardar
           this.updatedHeadquarter.emit();
+          this.isVisibleHeadquarter = false;
+          this.message.success('Sede creada correctamente'); // Mensaje de éxito
         },
         error: (err) => {
           this.message.error('Error al crear sede', err);
@@ -177,6 +185,6 @@ export class ModalHeadquarterComponent {
 
   closeModal() {
     this.resetModal(); // Reiniciar el modal después de guardar
-    this.isVisibleHeadquarter = true;
+    this.isVisibleHeadquarter = false;
   }
 }
