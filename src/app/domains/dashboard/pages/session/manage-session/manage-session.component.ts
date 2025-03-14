@@ -27,6 +27,7 @@ import { RapService } from '@shared/services/rap.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-manage-session',
@@ -49,14 +50,16 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzButtonModule,NzFormModule,
     NzInputModule,
     NzSelectModule,
-    NzPaginationModule
+    NzPaginationModule,
+    NzIconModule
+
 ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
 })
 export class ManageSessionComponent implements OnInit {
   sessions: SessionModel[] = [];
- 
+
   loading = false;
 
 
@@ -244,6 +247,29 @@ export class ManageSessionComponent implements OnInit {
 trackBySession(index: number, session: SessionModel): number {
   return session.id;
 }
+
+
+onDeleteSession(id: number): void {
+  // Opcional: confirmar la eliminación
+  if (!confirm('¿Estás seguro de eliminar esta sesión?')) {
+    return;
+  }
+
+  // Llamada al servicio para borrar la sesión
+  this.sessionse.deleteSession(id).subscribe({
+    next: (res) => {
+      // Actualiza la lista eliminando el item borrado
+      this.sessions = this.sessions.filter(session => session.id !== id);
+      // Opcional: muestra una notificación de éxito
+      this.notification.success('Eliminado', 'Sesión eliminada exitosamente');
+    },
+    error: (err) => {
+      console.error('Error al eliminar la sesión', err);
+      // Opcional: muestra una notificación de error
+      this.notification.error('Error', 'No se pudo eliminar la sesión');
+    }
+  });
+}
   // Resto de métodos para el modal
   @ViewChild('sessionModal') sessionModal!: SessionComponent;
 
@@ -253,6 +279,7 @@ trackBySession(index: number, session: SessionModel): number {
   anotherModalOpen = false;
 
   openModal() {
+
     if (this.sessionModal) {
       this.sessionModal.openModal();
     } else {
@@ -272,4 +299,20 @@ trackBySession(index: number, session: SessionModel): number {
     console.log('Otro modal confirmado');
     this.closeAnotherModal();
   }
+
+  onSessionCreated(newSession: SessionModel): void {
+    // En lugar de solo agregar el objeto, recarga la tabla completa:
+    this.FilterSesion();
+  }
+
+
+  // Paginado
+
+  elements: number = 9;
+  page: number = 1;
+  last_page: number = 0;
+  total_elements: number = 0;
+  page_options: number[] = [];
+
+  
 }

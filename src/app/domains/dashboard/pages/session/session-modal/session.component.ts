@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -57,6 +57,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;
+  @Output() sessionCreated = new EventEmitter<SessionModel>();
 
   time = new Date();
 
@@ -119,6 +120,35 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.getData();
     this.changeKnowledgeNetwork();
     this.changeSubject();
+    this.fieldCourse.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fieldSubject.enable();
+      } else {
+        this.fieldSubject.disable();
+        this.fieldSubject.reset();
+        this.fieldRap.disable();
+        this.fieldRap.reset();
+      }
+    });
+
+    this.fieldSubject.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fieldRap.enable();
+      } else {
+        this.fieldRap.disable();
+        this.fieldRap.reset();
+      }
+    });
+
+    this.fieldKnowledgeNetwork.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fieldInstructor.enable();
+        this.changeKnowledgeNetwork();
+      } else {
+        this.fieldInstructor.disable();
+        this.fieldInstructor.reset();
+      }
+    });
 
   }
 
@@ -277,15 +307,15 @@ export class SessionComponent implements OnInit, OnDestroy {
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl('', Validators.required),
+      instructor_id: new FormControl({value: '',disable:true}, Validators.required),
       course_id: new FormControl('', Validators.required),
       start_time: new FormControl(null, Validators.required),
       end_time: new FormControl(null, Validators.required),
 /*       end_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
  */      start_date: new FormControl(new Date(), Validators.required),
       days_of_week: new FormControl([], Validators.required,),
-      rap_id: new FormControl([], Validators.required,),
-      subject_id: new FormControl([], Validators.required,),
+      rap_id: new FormControl({value: '', disabled:true}, Validators.required,),
+      subject_id: new FormControl({value: '',disabled:true}, Validators.required,),
       percentage: new FormControl('', Validators.required)
     });
 
@@ -381,7 +411,8 @@ export class SessionComponent implements OnInit, OnDestroy {
       this.session_service.createSession(session).subscribe({
         next: (data) => {
           const newSession: SessionModel = Array.isArray(data) ? data[0] : data;
-          this.session = [...this.session, newSession];
+// Cuando se crea la sesión
+        this.sessionCreated.emit(newSession);
           this.createBasicNotification();
           this.closeModal();
         },
@@ -414,7 +445,13 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   openModal() {
-    this.isModalVisible = true;
+    if (!this.fieldKnowledgeNetwork.value) {
+      this.fieldInstructor.disable();
+      this.fieldInstructor.reset();
+    } else {
+      this.fieldInstructor.enable();
+    }
+  this.isModalVisible = true;
   }
 
 

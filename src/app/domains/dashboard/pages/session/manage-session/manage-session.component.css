@@ -17,7 +17,11 @@ nz-table {
 
 
 
-
+::ng-deep .bame {
+  letter-spacing: 0px; /* Reduce la distancia entre letras */
+  line-height: 1.0;
+  text-align: center !important;
+}
 
 
 
