@@ -17,6 +17,7 @@ import { PaginateModel } from '@shared/models/paginate.model';
 export class TrainingCentreService {
   private http= inject(HttpClient);
   url:string = 'trainingCenters/page';
+  url2:string = 'trainingCenters';
   constructor() { }
 
 
@@ -31,16 +32,16 @@ export class TrainingCentreService {
   }
 
   create(data:CreateCentreDTO){
-    return this.http.post<TrainingCentreModel>(this.url,data);
+    return this.http.post<TrainingCentreModel>(this.url2,data);
 
   }
   update(data:UpdateCentreDTO){
     const{id} = data;
-    return this.http.put<TrainingCentreModel>(`${this.url}/${id}`,data) ;
+    return this.http.put<TrainingCentreModel>(`${this.url2}/${id}`,data) ;
 
   }
   delete(id:number){
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete(`${this.url2}/${id}`);
   }
 
 
