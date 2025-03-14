@@ -77,7 +77,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
       },
-     
+
 
       {
         path: 'programs',
@@ -102,6 +102,8 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/session/manage-session/manage-session.component').then(c =>c.ManageSessionComponent)
 
       },
+
+    
 
        {
         path: 'file',

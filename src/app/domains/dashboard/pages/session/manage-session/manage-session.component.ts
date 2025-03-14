@@ -22,6 +22,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { debounceTime, Subject } from 'rxjs';
 import { PaginateModel } from '@shared/models/paginate.model';
+import { InstructorService } from '@shared/services/instructor.service';
+import { RapService } from '@shared/services/rap.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { ChangeDetectorRef } from '@angular/core';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-manage-session',
@@ -43,16 +48,19 @@ import { PaginateModel } from '@shared/models/paginate.model';
     SessionComponent,
     NzButtonModule,NzFormModule,
     NzInputModule,
-    NzSelectModule
+    NzSelectModule,
+    NzPaginationModule
 ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
 })
 export class ManageSessionComponent implements OnInit {
   sessions: SessionModel[] = [];
+ 
   loading = false;
 
-  // Opciones para filtrar por estado de la sesión
+
+  // Filtro de estado (por defecto, "pending")
   selecion: { name: string, id: number } | null = null;
   select_sessions: { name: string, id: number }[] = [
     { name: "past", id: 1 },
@@ -60,38 +68,96 @@ export class ManageSessionComponent implements OnInit {
     { name: "all", id: 3 }
   ];
 
+  // Filtros adicionales (los valores actuales de cada select)
+  courseFilter: string = '';
+  rapFilter: string = '';
+  instructorFilter: string = '';
+  subjectFilter: string = '';
+
+  // Arrays para las opciones de cada select
+  courseOptions: Array<{ value: string, label: string }> = [];
+  rapOptions: Array<{ value: string, label: string }> = [];
+  instructorOptions: Array<{ value: string, label: string }> = [];
+
   // Objeto de filtros que se enviará en la petición
   filters: { [key: string]: string | number } = {};
 
-  // Filtros adicionales:
-  courseFilter: string = '';      // para filtrar por código de curso
-  instructorFilter: string = '';  // para filtrar por instructor
-  rapFilter: string = '';         // para filtrar por rap
-  subjectFilter: string = '';     // para filtrar por competencia (subject)
-
-  // Subject para disparar la búsqueda con debounce
+  // Subject para aplicar debounce en los filtros
   private filterSubject = new Subject<void>();
 
-  constructor(private sessionService: ManageSessionService) {}
-
+  // Inyección de servicios (puedes usar DI con inject o en el constructor)
+  private sessionService = inject(ManageSessionService);
+  private courseService = inject(CourseService);
+  private rapService = inject(RapService);
+  private instructorService = inject(InstructorService);
+  private notification = inject(NzNotificationService);
+  private sessionse = inject(SessionService)
 
   ngOnInit(): void {
-    // Por defecto, seleccionamos 'pending'
-    this.selecion = this.select_sessions[1];
-    this.applySelectFilter();  // Ajusta el filtro para 'pending'
+    // 1. Establecer el filtro por defecto para el estado ("pending")
+    this.selecion = this.select_sessions.find(s => s.name === 'pending') || this.select_sessions[1];
+    this.applySelectFilter();
 
-    // Suscribirse al Subject con debounce
-    this.filterSubject.pipe(
-      debounceTime(500) // Espera 500ms después del último cambio
-    ).subscribe(() => {
-      this.FilterSesion();
-    });
-
-    // Llamar a la búsqueda inicial
+    // 2. Configurar el subject para agrupar (debounce) cambios en los filtros
+    this.filterSubject.pipe(debounceTime(500))
+      .subscribe(() => {
+        this.FilterSesion();
+      });
     this.FilterSesion();
+
+
+    const stringFilters: { [key: string]: string } = Object.keys(this.filters).reduce((acc, key) => {
+      acc[key] = this.filters[key].toString();
+      return acc;
+    }, {} as { [key: string]: string });
+
+    console.log('String filters:', stringFilters);
+
+    this.sessionse.getAlltwo(stringFilters, ['instructor.user', 'course', 'rap'])
+      .subscribe((response: PaginateModel<SessionModel>) => {
+        console.log('Respuesta completa de getAlltwo:', response);
+        const sessionsArray = response.data; // Accedes al array real de sesiones
+        console.log('Array de sesiones:', sessionsArray);
+
+        const rapMap = new Map<string, { value: string, label: string }>();
+        const courseMap = new Map<string, { value: string, label: string }>();
+        const instructorMap = new Map<string, { value: string, label: string }>();
+
+        sessionsArray.forEach(session => {
+          if (session.rap && session.rap.id) {
+            rapMap.set(session.rap.id.toString(), {
+              value: session.rap.description.toString(),
+              label: session.rap.description
+            });
+          }
+          if (session.course && session.course.id) {
+            courseMap.set(session.course.id.toString(), {
+              value: session.course.code.toString(),
+              label: session.course.code.toString()
+            });
+          }
+          if (session.instructor && session.instructor.user) {
+            instructorMap.set(session.instructor.id.toString(), {
+              value: session.instructor.user.name.toString(),
+              label: session.instructor.user.name + ' ' + session.instructor.user.last_name
+            });
+          }
+        });
+
+        this.instructorOptions = Array.from(instructorMap.values());
+        this.rapOptions = Array.from(rapMap.values());
+        this.courseOptions = Array.from(courseMap.values());
+
+        console.log('Opciones de RAP:', this.rapOptions);
+        console.log('Opciones de Curso:', this.courseOptions);
+        console.log('Opciones de Instructor:', Array.from(instructorMap.values()));
+      });
+
   }
 
-  // Cuando cambie el input de código de curso
+
+  // Métodos que se disparan cuando cambian los valores de cada select
+
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
     if (value && value.trim().length > 0) {
@@ -99,22 +165,11 @@ export class ManageSessionComponent implements OnInit {
     } else {
       delete this.filters['course_'];
     }
-    // En lugar de llamar directamente a FilterSesion, disparamos el Subject
+    console.log('Filtros actualizados:', this.filters);
+
     this.filterSubject.next();
   }
 
-  // Filtro instructor
-  onInstructorFilterChange(value: string): void {
-    this.instructorFilter = value;
-    if (value && value.trim().length > 0) {
-      this.filters['instructor_'] = value.trim();
-    } else {
-      delete this.filters['instructor_'];
-    }
-    this.filterSubject.next();
-  }
-
-  // Filtro rap
   onRapFilterChange(value: string): void {
     this.rapFilter = value;
     if (value && value.trim().length > 0) {
@@ -125,7 +180,16 @@ export class ManageSessionComponent implements OnInit {
     this.filterSubject.next();
   }
 
-  // Filtro subject
+  onInstructorFilterChange(value: string): void {
+    this.instructorFilter = value;
+    if (value && value.trim().length > 0) {
+      this.filters['instructor_'] = value.trim();
+    } else {
+      delete this.filters['instructor_'];
+    }
+    this.filterSubject.next();
+  }
+
   onSubjectFilterChange(value: string): void {
     this.subjectFilter = value;
     if (value && value.trim().length > 0) {
@@ -136,13 +200,13 @@ export class ManageSessionComponent implements OnInit {
     this.filterSubject.next();
   }
 
-  // Filtro de estado de la sesión
   onSelectSessionChange(selection: { name: string, id: number }): void {
     this.selecion = selection;
     this.applySelectFilter();
     this.filterSubject.next();
   }
 
+  // Aplica el filtro de estado en el objeto filters según la opción seleccionada
   private applySelectFilter(): void {
     if (this.selecion) {
       if (this.selecion.name === 'pending') {
@@ -158,28 +222,30 @@ export class ManageSessionComponent implements OnInit {
     }
   }
 
-  // Lógica que hace la petición al backend
-  FilterSesion(): void {
-    console.log('Filtros aplicados:', this.filters);
-    this.sessionService.getSessions({
-      filter: this.filters,
-      included: [
-        'instructor.user',
-        'course',
-        'course.program',
-        'rap.subject'
-      ]
-    }).subscribe({
+  // Lógica para hacer la petición al backend con los filtros aplicados
+ FilterSesion(): void {
+  console.log('Filtros aplicados:', this.filters);
+  const stringFilters: { [key: string]: string } = Object.keys(this.filters).reduce((acc, key) => {
+    acc[key] = this.filters[key].toString();
+    return acc;
+  }, {} as { [key: string]: string });
+
+  this.sessionse.getAlltwo(stringFilters, ['instructor.user', 'course', 'course.program', 'rap.subject'])
+    .subscribe({
       next: (resp: PaginatedResponse<SessionModel>) => {
+        console.log('Respuesta de sesiones:', resp);
         this.sessions = resp.data;
+        console.log('Número de sesiones:', this.sessions.length);
       },
       error: (err) => console.error(err)
     });
-  }
+}
 
+trackBySession(index: number, session: SessionModel): number {
+  return session.id;
+}
   // Resto de métodos para el modal
   @ViewChild('sessionModal') sessionModal!: SessionComponent;
-  private courseService = inject(CourseService);
 
   pending_courses: SessionModel[] = [];
   record_courses: SessionModel[] = [];

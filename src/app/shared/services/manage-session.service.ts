@@ -6,14 +6,6 @@ import { QueryUrl } from '@shared/models/query-url.model';
 import { PaginatedResponse, SessionModel } from '@shared/models/session.model';
 import { Observable } from 'rxjs';
 
-export interface SessionFilters {
-  included?: string[]; // ['instructor.user','course.program.subjects', ...]
-  course_?: string;    // valor a filtrar por course
-  rap_?: string;       // valor a filtrar por rap
-  subject_?: string;   // valor a filtrar por subject
-  // agrega más si necesitas
-}
-
 @Injectable({
   providedIn: 'root'
 })

@@ -30,39 +30,49 @@
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
     "
-  >
-    <!-- Filtro: Código de curso -->
-    <nz-input-group nzPrefixIcon="search" style="width: 100%;">
-      <input
-        type="text"
-        nz-input
-        placeholder="Código de curso"
-        [(ngModel)]="courseFilter"
-        (ngModelChange)="onCourseFilterChange($event)"
-      />
-    </nz-input-group>
+  ><!-- Filtro: Código de curso -->
+<nz-select
+style="width: 100%;"
+[(ngModel)]="courseFilter"
+(ngModelChange)="onCourseFilterChange($event)"
+nzPlaceHolder="Código de curso"
+[nzShowSearch]="true">
+<nz-option
+  *ngFor="let option of courseOptions"
+  [nzValue]="option.value"
+  [nzLabel]="option.label">
+</nz-option>
+</nz-select>
 
-    <!-- Filtro: rap -->
-    <nz-input-group nzPrefixIcon="search" style="width: 100%;">
-      <input
-        type="text"
-        nz-input
-        placeholder="Filtrar por rap"
-        [(ngModel)]="rapFilter"
-        (ngModelChange)="onRapFilterChange($event)"
-      />
-    </nz-input-group>
+<!-- Filtro: Rap -->
+<nz-select
+style="width: 100%;"
+[(ngModel)]="rapFilter"
+(ngModelChange)="onRapFilterChange($event)"
+nzPlaceHolder="Filtrar por rap"
+[nzShowSearch]="true">
+<nz-option
+  *ngFor="let option of rapOptions"
+  [nzValue]="option.value"
+  [nzLabel]="option.label">
+</nz-option>
+</nz-select>
 
-    <!-- Filtro: instructor -->
-    <nz-input-group nzPrefixIcon="search" style="width: 100%;">
-      <input
-        type="text"
-        nz-input
-        placeholder="Filtrar por instructor"
-        [(ngModel)]="instructorFilter"
-        (ngModelChange)="onInstructorFilterChange($event)"
-      />
-    </nz-input-group>
+<!-- Filtro: Instructor -->
+<!-- Filtro: Instructor -->
+<nz-select
+  style="width: 100%;"
+  [(ngModel)]="instructorFilter"
+  (ngModelChange)="onInstructorFilterChange($event)"
+  nzPlaceHolder="Filtrar por instructor"
+  [nzShowSearch]="true">
+  <nz-option
+    *ngFor="let option of instructorOptions"
+    [nzValue]="option.value"
+    [nzLabel]="option.label">
+  </nz-option>
+</nz-select>
+
 
     <!-- Select: Estado de la sesión -->
     <nz-select
@@ -80,13 +90,7 @@
   </div>
 
   <!-- Tabla de sesiones -->
-  <nz-table
-    #basicTable
-    [nzBordered]="true"
-    [nzSize]="'middle'"
-    [nzData]="sessions"
-    style="margin-top: 1rem;"
-  >
+  <nz-table #basicTable [nzData]="sessions" nzBordered nzSize="middle" style="margin-top: 1rem;">
     <thead style="background-color: #52c41a; color: #fff;">
       <tr>
         <th nzWidth="6%">Fecha</th>
@@ -99,23 +103,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let session of basicTable.data"
-        class="hover:bg-gray-100"
-      >
+      <tr *ngFor="let session of sessions ; trackBy: trackBySession" class="hover:bg-gray-100">
         <td>{{ session.date }}</td>
         <td>{{ session.course?.code || 'N/D' }}</td>
         <td>{{ session.course?.program?.name || 'N/D' }}</td>
         <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
         <td>{{ session.start_time }} - {{ session.end_time }}</td>
-        <td>
-          {{ session.rap?.description || 'N/D' }}
-          ({{ session.rap?.number_hours || 'N/D' }})
-        </td>
-        <td>
-          {{ session.rap?.subject?.name || 'N/D' }}
-        </td>
+        <td>{{ session.rap?.description || 'N/D' }} ({{ session.rap?.number_hours || 'N/D' }})</td>
+        <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
       </tr>
     </tbody>
   </nz-table>
-</div>
+

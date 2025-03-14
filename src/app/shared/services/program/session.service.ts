@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { UpdateCourseDto } from '@shared/dto/program/update-course-dto';
 import { getQueryUrl } from '@shared/functions/url.functions';
+import { PaginateModel } from '@shared/models/paginate.model';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { SessionModel } from '@shared/models/session.model';
 import { Observable } from 'rxjs';
@@ -60,4 +61,21 @@ export class SessionService {
     return this.http.put<SessionModel>(`${this.url}/${id}`, data);
   }
 
+ // Método para obtener sesiones con paginación (getAlltwo)
+  getAlltwo(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
+    let params = new HttpParams();
+    if (included) {
+      const includeStr = Array.isArray(included) ? included.join(',') : included;
+      params = params.set('included', includeStr);
+      console.log('Included:', includeStr);
+    }
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        params = params.set(`filter[${key}]`, filters[key]);
+        console.log('Setting filter:', key, filters[key]);
+      });
+      console.log('Request URL:', this.url);
+    }
+    return this.http.get<PaginateModel<SessionModel>>(this.url, { params });
+  }
 }

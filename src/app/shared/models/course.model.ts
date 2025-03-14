@@ -22,6 +22,7 @@ export interface CourseModel {
     environment:EnvironmentModel;
     program_id?:number;
     program?:ProgramModel;
+    course_leader_id:number
 
 }
 
