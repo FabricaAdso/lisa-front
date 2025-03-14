@@ -1,21 +1,15 @@
-
 <!-- training-centre-page.component.html -->
 <!-- Botón para crear un nuevo centro -->
 @if (isModalVisible) {
-<app-training-centre-form 
-[centre]="centreUpdate" 
-[isVisible]="isModalVisible" 
-(update)="actualizarTabla($event)"
-(create)="actualizarTabla($event)" 
-
-(closeModal)="closeModal()">
+<app-training-centre-form [centre]="centreUpdate" [isVisible]="isModalVisible" (update)="actualizarTabla($event)"
+  (create)="actualizarTabla($event)" (closeModal)="closeModal()">
 </app-training-centre-form>
 }
 
 <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
 
 <!-- Tabla para listar centros de formación -->
-<nz-table [nzData]="Datetable.Datos" [nzPageSize]="5">
+<nz-table [nzData]="Datetable.Datos" [nzShowPagination]="false">
   <thead>
     <tr>
       @for (titulo of Datetable.Titles; track $index) {
@@ -31,23 +25,14 @@
       }
 
       <td>
-        <button nz-button nzType="default" (click)="update(centre.idItem)">Editar</button>
+        <button class="action-btn" nz-button nzType="default" (click)="update(centre.idItem)">Editar</button>
 
-        <button 
-  nz-popconfirm 
-  nzPopconfirmTitle="¿Está seguro que desea eliminar?" 
-  (nzOnConfirm)="deleteCentre(centre.idItem)" 
-  (nzOnCancel)="cancel()"
-  nz-button 
-  nzType="default" 
-  nzDanger>
-  Delete
-</button>
-        
-        
-        <!-- <button nz-popconfirm (click)="deleteCentre(centre.idItem)">
+        <button class="action-btn" nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?"
+          (nzOnConfirm)="deleteCentre(centre.idItem)" (nzOnCancel)="cancel()" nz-button nzType="default" nzDanger>
           Delete
-        </button> -->
+        </button>
+
+
       </td>
 
     </tr>
