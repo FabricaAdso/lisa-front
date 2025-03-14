@@ -6,6 +6,7 @@ import { UpdateCentreDTO } from '../dto/update-centreDTO';
 import { CreateCentreDTO } from '../dto/create-centreDTO';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { getQueryUrl } from '@shared/functions/url.functions';
+import { PaginateModel } from '@shared/models/paginate.model';
 
 
 
@@ -15,7 +16,7 @@ import { getQueryUrl } from '@shared/functions/url.functions';
 })
 export class TrainingCentreService {
   private http= inject(HttpClient);
-  url:string = 'trainingCenters';
+  url:string = 'trainingCenters/page';
   constructor() { }
 
 
@@ -26,7 +27,7 @@ export class TrainingCentreService {
     };
   
     let url: string = getQueryUrl(this.url, queryParams);
-    return this.http.get<TrainingCentreModel[]>(url);
+    return this.http.get<PaginateModel<TrainingCentreModel>>(url);
   }
 
   create(data:CreateCentreDTO){

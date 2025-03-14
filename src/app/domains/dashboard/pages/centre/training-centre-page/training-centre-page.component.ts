@@ -20,6 +20,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { RegionalService } from '@shared/services/regional.service';
 import { RegionalModel } from '@shared/models/regional.model';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-training-centre-page',
@@ -35,7 +36,8 @@ import { RegionalModel } from '@shared/models/regional.model';
     NzInputModule,
     NzPopconfirmModule,
     TrainingCentreFormComponent,
-    NzSelectModule
+    NzSelectModule,
+    NzPaginationModule
   ],
   templateUrl: './training-centre-page.component.html',
   styleUrl: './training-centre-page.component.css'
@@ -52,35 +54,85 @@ export class TrainingCentrePageComponent {
   isModalVisible = false;
 
   regions: RegionalModel[] = [];
-  
 
 
-  ngOnInit(): void {
-    // Cargar las regiones primero
+   // Paginación
+   elements: number = 3;
+   page: number = 1;
+   last_page: number = 0;
+   total_elements: number = 0;
+   page_options: number[] = [];
+ 
+
+   ngOnInit(): void {
     this.regionalService.getAllRegional().subscribe({
       next: (regions) => {
         this.regions = regions;
-  
-        // Ahora sí, cargar los centros y asignar las regiones
-        this.trainingCentreService.getCentros().subscribe({
-          next: (centres) => {
-            this.centres = centres.map(centre => ({
-              ...centre,
-              regional: this.regions.find(r => r.id === centre.regional_id) || { id: 0, name: "Sin región" }
-            }));
-  
-            this.Datetable = this.mapToTable(this.centres);
-          },
-          error: error => {
-            this.nzMessageService.error(error);
-          }
-        });
+        this.loadCentres(); // Llamamos a la función con la paginación
       },
-      error: error => {
+      error: (error) => {
         this.nzMessageService.error("Error al cargar las regiones: " + error);
       }
     });
   }
+
+  changePage(pageIndex: number) {
+    this.page = pageIndex;
+    this.loadCentres(); 
+  }
+
+  loadCentres() {
+    this.trainingCentreService.getCentros({ 
+      page: this.page, 
+      per_page: this.elements 
+    }).subscribe({
+      next: (response) => {
+       
+        // Asumiendo que la API devuelve un objeto con `data`, `total` y `last_page`
+        this.centres = response.data.map(centre => ({
+          ...centre,
+          regional: this.regions.find(r => r.id === centre.regional_id) || { id: 0, name: "Sin región" }
+        }));
+    
+        // Actualizar valores de paginación con la respuesta de la API
+        this.total_elements = response.total;
+        this.elements = response.per_page;
+        this.last_page = response.last_page;
+      
+        this.page_options = Array.from({ length: this.last_page }, (_, i) => i + 1);
+    
+        this.updateTable();
+      },
+      error: error => this.nzMessageService.error(error)
+    });
+  }
+
+
+  updateTable() {
+    this.Datetable = this.mapToTable(this.centres);
+  }
+
+  nextPage() {
+    if (this.page < this.last_page) {
+      this.page++;
+      this.loadCentres();
+    }
+  }
+  
+  goToPage(pageNumber: number) {
+    if (pageNumber >= 1 && pageNumber <= this.last_page) {
+      this.page = pageNumber;
+      this.loadCentres();
+    }
+  }
+
+
+
+
+
+
+
+
   mapToTable(centres:TrainingCentreModel[]):tableComponteModel{
     return{
       Titles:["ID","Nombre","Code", "Región", "Acciones"],
@@ -100,6 +152,10 @@ export class TrainingCentrePageComponent {
       acciones:true,
     };
   }
+
+
+
+
 
   actualizarTabla(centro: TrainingCentreModel) {
     const index = this.centres.findIndex(c => c.id === centro.id);
