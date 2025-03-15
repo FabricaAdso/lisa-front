@@ -78,4 +78,23 @@ export class SessionService {
     }
     return this.http.get<PaginateModel<SessionModel>>(this.url, { params });
   }
+
+  getLeaderSessions(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
+    let params = new HttpParams();
+
+    if (included) {
+      const includeStr = Array.isArray(included) ? included.join(',') : included;
+      params = params.set('included', includeStr);
+    }
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        params = params.set(`filter[${key}]`, filters[key]);
+      });
+    }
+
+    // Suponiendo que la URL base es 'session' y el endpoint para líder es 'session/leader'
+    return this.http.get<PaginateModel<SessionModel>>(`${this.url}/leader`, { params });
+  }
+
+
 }

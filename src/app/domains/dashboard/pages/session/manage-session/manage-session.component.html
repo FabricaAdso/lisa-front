@@ -31,17 +31,17 @@
       gap: 1rem;
     "
   ><!-- Filtro: Código de curso -->
-<nz-select
-style="width: 100%;"
-[(ngModel)]="courseFilter"
-(ngModelChange)="onCourseFilterChange($event)"
-nzPlaceHolder="Código de curso"
-[nzShowSearch]="true">
-<nz-option
-  *ngFor="let option of courseOptions"
-  [nzValue]="option.value"
-  [nzLabel]="option.label">
-</nz-option>
+  <nz-select
+  style="width: 100%;"
+  [(ngModel)]="courseFilter"
+  (ngModelChange)="onCourseFilterChange($event)"
+  nzPlaceHolder="Código de curso"
+  [nzShowSearch]="true">
+  <nz-option
+    *ngFor="let option of courseOptions"
+    [nzValue]="option.value"
+    [nzLabel]="option.label">
+  </nz-option>
 </nz-select>
 
 <!-- Filtro: Rap -->
