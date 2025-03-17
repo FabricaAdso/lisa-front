@@ -57,6 +57,7 @@
         <th nzWidth="4%">Horario</th>
         <th nzWidth="15%">competencia</th>
         <th nzWidth="10%">Rap</th>
+        <th nzWidth="3%">Accion</th>
       </tr>
     </thead>
     <tbody>
@@ -68,6 +69,15 @@
         <td>{{ session.start_time }} - {{ session.end_time }}</td>
         <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
         <td>{{ session.rap?.description || 'N/D' }} ({{ session.rap?.number_hours || 'N/D' }})</td>
+        <td>
+          <span nz-icon nz-t>
+
+          </span>
+          <a nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?" (nzOnConfirm)="onDeleteSession(session.id)">
+            Eliminar
+          </a>
+        </td>
+
       </tr>
     </tbody>
   </nz-table>

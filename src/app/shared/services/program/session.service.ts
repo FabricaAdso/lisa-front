@@ -96,5 +96,10 @@ export class SessionService {
     return this.http.get<PaginateModel<SessionModel>>(`${this.url}/leader`, { params });
   }
 
+  getFilterOptions(): Observable<any> {
+    // Suponiendo que la URL para obtener las opciones es 'session/leadersession'
+    return this.http.get<any>(`${this.url}/leadersession`);
+  }
+
 
 }
