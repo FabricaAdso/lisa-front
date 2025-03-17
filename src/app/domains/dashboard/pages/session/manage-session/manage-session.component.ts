@@ -28,6 +28,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-manage-session',
@@ -50,7 +51,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzButtonModule,NzFormModule,
     NzInputModule,
     NzSelectModule,
-    NzPaginationModule,NzPopconfirmModule
+    NzPaginationModule,NzPopconfirmModule, NzIconModule
 ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
@@ -59,13 +60,20 @@ export class ManageSessionComponent implements OnInit {
   sessions: SessionModel[] = [];
   loading = false;
 
+  page: number = 1;
+  elements: number = 10;
+  last_page: number = 1;
+  total: number = 0;
+  page_options: number[] = [];
+
   // Filtro de estado (por defecto, "pending")
   selecion: { name: string, id: number } | null = null;
   select_sessions: { name: string, id: number }[] = [
-    { name: "past", id: 1 },
-    { name: "pending", id: 2 },
-    { name: "all", id: 3 }
+    { name: "Realizadas", id: 1 },
+    { name: "Pendientes", id: 2 },
+    { name: "Todas", id: 3 }
   ];
+
 
   // Filtros adicionales (los valores actuales de cada select)
   courseFilter: string = '';
@@ -73,20 +81,16 @@ export class ManageSessionComponent implements OnInit {
   instructorFilter: string = '';
   subjectFilter: string = '';
 
-  // Arrays para las opciones de cada select
   courseOptions: Array<{ value: string, label: string }> = [];
   rapOptions: Array<{ value: string, label: string }> = [];
   instructorOptions: Array<{ value: string, label: string }> = [];
 
-  // Variables para conservar la lista completa de opciones
   allCourseOptions: Array<{ value: string, label: string }> = [];
   allRapOptions: Array<{ value: string, label: string }> = [];
   allInstructorOptions: Array<{ value: string, label: string }> = [];
 
-  // Objeto de filtros que se enviará en la petición
   filters: { [key: string]: string | number } = {};
 
-  // Subject para aplicar debounce en los filtros (si lo llegas a usar)
   private filterSubject = new Subject<void>();
 
   // Inyección de servicios
@@ -95,35 +99,52 @@ export class ManageSessionComponent implements OnInit {
   private rapService = inject(RapService);
   private instructorService = inject(InstructorService);
   private notification = inject(NzNotificationService);
-  private sessionse = inject(SessionService); // Este es el servicio que usamos para las peticiones de sesión
+  private sessionse = inject(SessionService);
 
   ngOnInit(): void {
-    // Establecer el filtro por defecto para el estado ("pending")
     this.selecion = this.select_sessions.find(s => s.name === 'pending') || this.select_sessions[1];
     this.applySelectFilter();
 
-    // Cargar inicialmente las sesiones de líder para la tabla
     this.loadLeaderSessions();
 
-    // Cargar las opciones completas para los selects desde el endpoint específico
     this.loadFilterOptions();
   }
 
-  loadLeaderSessions(): void {
-    const stringFilters: { [key: string]: string } = this.buildFilters();
-    this.sessionse.getLeaderSessions(stringFilters, ['instructor.user', 'course', 'course.program', 'rap.subject'])
-      .subscribe({
-        next: (resp: PaginateModel<SessionModel>) => {
-          console.log('Sesiones de líder:', resp);
-          this.sessions = resp.data;
-          // Opcional: si quieres poblar las opciones a partir de las sesiones filtradas, pero en este caso se usan los full options.
-          // this.populateSelectOptions(this.sessions);
-        },
-        error: (err) => console.error(err)
-      });
+  loadLeaderSessions(page: number = 1): void {
+    const filters: { [key: string]: string } = this.buildFilters();
+    const queryParams = {
+      ...filters,
+      page: page.toString(),
+      elements: this.elements.toString()
+    };
+
+    this.sessionse.getLeaderSessions(queryParams, [
+      'instructor.user',
+      'course',
+      'course.program',
+      'rap.subject'
+    ]).subscribe({
+      next: (resp: PaginateModel<SessionModel>) => {
+        console.log('Sesiones de líder:', resp);
+        this.sessions = resp.data;
+        this.page = resp.current_page;
+        this.elements = resp.per_page;
+        this.last_page = resp.last_page;
+        this.total = resp.total;
+        this.page_options = Array.from({ length: this.last_page }, (_, i) => i + 1);
+      },
+      error: (err) => console.error(err)
+    });
   }
 
-  // Método para construir los filtros a enviar
+
+
+  changePage(page: number): void {
+    this.loadLeaderSessions(page);
+  }
+
+
+
   buildFilters(): { [key: string]: string } {
     const filtersCopy = { ...this.filters };
     return Object.keys(filtersCopy).reduce((acc, key) => {
@@ -132,8 +153,6 @@ export class ManageSessionComponent implements OnInit {
     }, {} as { [key: string]: string });
   }
 
-  // Este método ya no se usará para poblar los selects, pues tendremos un endpoint dedicado,
-  // pero lo dejamos aquí en caso de necesitarlo.
   populateSelectOptions(sessions: SessionModel[]): void {
     const courseMap = new Map<string, { value: string, label: string }>();
     const rapMap = new Map<string, { value: string, label: string }>();
@@ -173,6 +192,7 @@ export class ManageSessionComponent implements OnInit {
     console.log('Opciones de Curso:', this.courseOptions);
     console.log('Opciones de RAP:', this.rapOptions);
     console.log('Opciones de Instructor:', this.instructorOptions);
+
   }
 
   loadFilterOptions(): void {
@@ -311,4 +331,6 @@ export class ManageSessionComponent implements OnInit {
     console.log('Otro modal confirmado');
     this.closeAnotherModal();
   }
+
+
 }
