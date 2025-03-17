@@ -49,16 +49,17 @@ export class CalendarComponent {
   }
 
   loadSessions(): void {
-    this.sessionService.getAll({included:['course.program','instructor.user','course','assistances.apprentice.user','course.environment']})
-    .subscribe({
-      next: (sessions) => {
-        this.initialEvents = sessions;
-        this.updateCalendarEvents(); // Actualiza los eventos del calendario
-      },
-      error: (err) => {
-        console.error('Error loading sessions:', err);
-      },
-    });
+    this.sessionService.getAll({}, ['course.program','instructor.user','course','assistances.apprentice.user','course.environment'])
+  .subscribe({
+    next: (sessions) => {
+      this.initialEvents = sessions;
+      this.updateCalendarEvents();
+    },
+    error: (err) => {
+      console.error('Error loading sessions:', err);
+    },
+});
+
   }
 
     // Obtiene el color para el timeline
@@ -67,28 +68,28 @@ export class CalendarComponent {
       const today = new Date();
       const dateSesion = new Date(session.date)
       const hasAssistanceTaken =  session.assistances.length > 0;
-  
+
       if (dateSesion === today) {
         return 'blue'; // Sesión actual
       }
-    
+
       // 2. Gris: Si la sesión aún no ha ocurrido
       if (dateSesion > today) {
         return 'gray'; // Sesión futura
       }
-      
+
       if (dateSesion< today && hasAssistanceTaken) {
         return 'green'; // Sesión pasada con al menos una asistencia tomada
       }
-    
+
       // 4. Rojo: Si la sesión ya ocurrió pero no se tomó asistencia
       if (dateSesion < today && !hasAssistanceTaken) {
         return 'red'; // Sesión pasada sin asistencia tomada
       }
-    
+
       // Por defecto (esto nunca debería ocurrir, pero es por seguridad)
       return 'gray';
-    }   
+    }
 
   // Maneja el clic en un evento para mostrar el modal
   handleEventClick(clickInfo: EventClickArg) {
@@ -135,7 +136,7 @@ export class CalendarComponent {
     if (!time) return "Sin Asignar"; // Maneja valores nulos o indefinidos
     return time.split(':').slice(0, 2).join(':'); // Obtiene solo las horas y minutos
   }
-  
+
 
   // Oculta el modal
   handleCancel() {

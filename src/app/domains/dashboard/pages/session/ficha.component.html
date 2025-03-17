@@ -14,7 +14,7 @@
         <a [routerLink]="[session.id,session.course!.code,'attendance']">
           <nz-card [nzBordered]="true" [nzBodyStyle]="{ padding: '2px' }">
             <div class="ficha-header">Ficha: {{ session.course!.code || 'No disponible' }}</div>
-            
+
             <div class="ficha-content">
               <p><strong>Id:</strong> {{ session.id }}</p>
               <p><strong>Programa:</strong> {{ session.course?.program?.name || 'No disponible' }}</p>

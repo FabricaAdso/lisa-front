@@ -1,0 +1,35 @@
+nz-tag {
+  margin: 2px;
+}
+
+nz-table {
+  margin: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+  color: #fff;
+  border-color:  #52c41a!important;
+  background:  #52c41a!important;
+}
+
+
+
+
+::ng-deep .ant-btn-primary{
+ background-color: #52c41a;
+ border-color: #52c41a;
+}
+
+
+
+/* Espaciado entre el Collapse y el Footer */
+nz-collapse {
+  margin-top: 16px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+}
+
+
