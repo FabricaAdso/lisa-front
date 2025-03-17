@@ -17,7 +17,10 @@ nz-table {
 
 
 
-
+::ng-deep .ant-btn-primary{
+ background-color: #52c41a;
+ border-color: #52c41a;
+}
 
 
 
@@ -28,4 +31,5 @@ nz-collapse {
   border: 1px solid #e0e0e0;
   background-color: white;
 }
+
 

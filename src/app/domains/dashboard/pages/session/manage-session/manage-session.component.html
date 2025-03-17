@@ -1,4 +1,3 @@
-<!-- Contenedor principal con ancho máximo y centrado -->
 <div style="
   max-width: 1200px;
   margin: 0 auto;
@@ -8,88 +7,46 @@
   gap: 1rem;
 ">
 
-  <!-- Botón para crear sesión -->
   <div style="display: flex; justify-content: flex-end;">
-    <button
-      nz-button
-      nzType="primary"
-      (click)="openModal()"
-      style="background-color: #52c41a; color: #fff; padding: 0.5rem 1rem;"
-    >
+    <button nz-button nzType="primary" (click)="openModal()"
+      style="background-color: #52c41a; color: #fff; padding: 0.5rem 1rem;">
       Crear sesión
     </button>
   </div>
 
-  <!-- Componente de creación de sesión -->
   <app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
 
-  <!-- Contenedor de filtros en un grid responsivo -->
-  <div
-    style="
+  <div style="
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
-    "
-  ><!-- Filtro: Código de curso -->
-  <nz-select
-  style="width: 100%;"
-  [(ngModel)]="courseFilter"
-  (ngModelChange)="onCourseFilterChange($event)"
-  nzPlaceHolder="Código de curso"
-  [nzShowSearch]="true">
-  <nz-option
-    *ngFor="let option of courseOptions"
-    [nzValue]="option.value"
-    [nzLabel]="option.label">
-  </nz-option>
-</nz-select>
+    ">
+    <nz-select style="width: 100%;" [(ngModel)]="courseFilter" (ngModelChange)="onCourseFilterChange($event)"
+      nzPlaceHolder="Código de curso" [nzShowSearch]="true" nzAllowClear="">
 
-<!-- Filtro: Rap -->
-<nz-select
-style="width: 100%;"
-[(ngModel)]="rapFilter"
-(ngModelChange)="onRapFilterChange($event)"
-nzPlaceHolder="Filtrar por rap"
-[nzShowSearch]="true">
-<nz-option
-  *ngFor="let option of rapOptions"
-  [nzValue]="option.value"
-  [nzLabel]="option.label">
-</nz-option>
-</nz-select>
+      <nz-option *ngFor="let option of courseOptions" [nzValue]="option.value" [nzLabel]="option.label">
+      </nz-option>
+    </nz-select>
 
-<!-- Filtro: Instructor -->
-<!-- Filtro: Instructor -->
-<nz-select
-  style="width: 100%;"
-  [(ngModel)]="instructorFilter"
-  (ngModelChange)="onInstructorFilterChange($event)"
-  nzPlaceHolder="Filtrar por instructor"
-  [nzShowSearch]="true">
-  <nz-option
-    *ngFor="let option of instructorOptions"
-    [nzValue]="option.value"
-    [nzLabel]="option.label">
-  </nz-option>
-</nz-select>
+    <nz-select style="width: 100%;" nzAllowClear="" [(ngModel)]="rapFilter" (ngModelChange)="onRapFilterChange($event)"
+      nzPlaceHolder="Filtrar por rap" [nzShowSearch]="true">
+      <nz-option *ngFor="let option of rapOptions" [nzValue]="option.value" [nzLabel]="option.label">
+      </nz-option>
+    </nz-select>
+
+    <nz-select nzAllowClear="" style="width: 100%;" [(ngModel)]="instructorFilter"
+      (ngModelChange)="onInstructorFilterChange($event)" nzPlaceHolder="Filtrar por instructor" [nzShowSearch]="true">
+      <nz-option *ngFor="let option of instructorOptions" [nzValue]="option.value" [nzLabel]="option.label">
+      </nz-option>
+    </nz-select>
 
 
-    <!-- Select: Estado de la sesión -->
-    <nz-select
-      style="width: 100%;"
-      [(ngModel)]="selecion"
-      (ngModelChange)="onSelectSessionChange($event)"
-      nzPlaceHolder="Seleccione estado"
-    >
-      <nz-option
-        *ngFor="let option of select_sessions"
-        [nzValue]="option"
-        [nzLabel]="option.name"
-      ></nz-option>
+    <nz-select style="width: 100%;" [(ngModel)]="selecion" (ngModelChange)="onSelectSessionChange($event)"
+      nzPlaceHolder="Seleccione estado">
+      <nz-option *ngFor="let option of select_sessions" [nzValue]="option" [nzLabel]="option.name"></nz-option>
     </nz-select>
   </div>
 
-  <!-- Tabla de sesiones -->
   <nz-table #basicTable [nzData]="sessions" nzBordered nzSize="middle" style="margin-top: 1rem;">
     <thead style="background-color: #52c41a; color: #fff;">
       <tr>
@@ -98,8 +55,8 @@ nzPlaceHolder="Filtrar por rap"
         <th nzWidth="10%">Programa</th>
         <th nzWidth="10%">Instructor</th>
         <th nzWidth="4%">Horario</th>
+        <th nzWidth="15%">competencia</th>
         <th nzWidth="10%">Rap</th>
-        <th nzWidth="15%">Subject</th>
       </tr>
     </thead>
     <tbody>
@@ -109,9 +66,8 @@ nzPlaceHolder="Filtrar por rap"
         <td>{{ session.course?.program?.name || 'N/D' }}</td>
         <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
         <td>{{ session.start_time }} - {{ session.end_time }}</td>
-        <td>{{ session.rap?.description || 'N/D' }} ({{ session.rap?.number_hours || 'N/D' }})</td>
         <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
+        <td>{{ session.rap?.description || 'N/D' }} ({{ session.rap?.number_hours || 'N/D' }})</td>
       </tr>
     </tbody>
   </nz-table>
-

@@ -122,9 +122,7 @@ export class ManageSessionComponent implements OnInit {
   buildFilters(): { [key: string]: string } {
     // Si el endpoint de líder no debe usar el filtro de instructor, lo removemos.
     const filtersCopy = { ...this.filters };
-    if (filtersCopy['instructor_']) {
-      delete filtersCopy['instructor_'];
-    }
+
     // Convertimos a string
     return Object.keys(filtersCopy).reduce((acc, key) => {
       acc[key] = filtersCopy[key].toString();
@@ -153,10 +151,11 @@ export class ManageSessionComponent implements OnInit {
       }
       if (session.instructor && session.instructor.user) {
         instructorMap.set(session.instructor.id.toString(), {
-          value: session.instructor.id.toString(),
-          label: `${session.instructor.user.name} ${session.instructor.user.last_name}`
+          value: session.instructor.id.toString(),  // Este es el valor que se enviará
+          label: `${session.instructor.user.name} ${session.instructor.user.last_name}` // Lo que se muestra al usuario
         });
       }
+
     });
 
     // Si es la primera carga, guardamos la lista completa
