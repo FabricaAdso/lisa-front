@@ -1,5 +1,5 @@
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Pendiente de respuesta" [nzFooter]="modalFooter"
-  (nzOnCancel)="closeModal()">
+  (nzOnCancel)="closeModal()"  [nzMaskClosable]="false">
   <ng-container *nzModalContent>
     <div>
       <!-- <strong>{{ justification.file_url || "Archivo no disponible" }}</strong> -->
