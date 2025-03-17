@@ -53,10 +53,22 @@
 
   }
   textarea {
-    border: solid 1px rgb(167, 165, 165);
-    border-radius: 5px;
-    padding: 10px;
-}
+    padding: 10px; 
+    width: 100%;
+    margin-top: 8px;
+    max-height: 150px;
+    overflow: auto;
+    resize: vertical;
+    border: 1px solid #ccc; 
+    outline: none; 
+    transition: border 0.2s ease-in-out; 
+  }
+  
+  /* Cuando el textarea está enfocado (clic dentro) */
+  textarea:focus {
+    border: 1px solid #1a355250; /* Cambia el color del borde, pero mantiene el grosor */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Opcional: Efecto de sombra sutil */
+  }
 
   
   ::ng-deep .ant-modal-body{

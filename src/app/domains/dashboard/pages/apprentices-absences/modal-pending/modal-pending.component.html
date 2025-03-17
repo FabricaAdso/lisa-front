@@ -22,12 +22,38 @@
 
       <div class="motive-instructor" *ngIf="isRejecting">
         <label for="motive">Motivo del Rechazo:</label>
+
         <textarea 
-        id="motive" 
-        [(ngModel)]="motive" 
-        placeholder="Escribe el motivo del rechazo..." 
-        rows="4"
-          style="width: 100%"></textarea>
+          id="motive" 
+          nz-input rows="4" 
+          placeholder="Escribe el motivo del rechazo..." 
+          [(ngModel)]="motive" 
+          (input)="validateMotive()"
+          maxlength="255"
+          style="width: 100%; margin-top: 8px; max-height: 150px; overflow: auto; resize: vertical;">
+       
+        </textarea>
+
+        
+  <!-- 🚨 Mensaje si el campo está vacío -->
+  <p *ngIf="isMotiveRequired" style="color: red; font-size: 12px; margin-top: 4px;">
+    ⚠️ El motivo es obligatorio.
+  </p>
+
+  <!-- 🚨 Mensaje si una palabra es demasiado larga -->
+  <p *ngIf="wordTooLongMotive" style="color: orange; font-size: 12px; margin-top: 4px;">
+    ⚠️ Hay una palabra demasiado larga, agrega espacios.
+  </p>
+
+  <!-- 🚨 Mensaje si se superan los 255 caracteres -->
+  <p *ngIf="charLimitExceededMotive" style="color: red; font-size: 12px; margin-top: 4px;">
+    ⚠️ No puedes escribir más de 255 caracteres.
+  </p>
+
+  <!-- Contador de caracteres -->
+  <p style="font-size: 12px; color: gray;">{{ motive.length }} / 255 caracteres</p>
+
+
       </div>
     </div>
   </ng-container>

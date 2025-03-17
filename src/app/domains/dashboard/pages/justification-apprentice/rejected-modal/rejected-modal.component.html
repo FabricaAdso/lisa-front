@@ -1,4 +1,8 @@
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Justificación Rechazada" (nzOnCancel)="handleCancel()" [nzFooter]="null">
+<nz-modal [(nzVisible)]="isVisible" 
+nzTitle="Justificación Rechazada" 
+(nzOnCancel)="handleCancel()" 
+[nzFooter]="null">
+
   <ng-container *nzModalContent>
     <div class="modal-container">
       <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->

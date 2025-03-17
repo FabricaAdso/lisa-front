@@ -34,7 +34,7 @@
       <p *ngIf="errorMessage" style="color: red; margin-top: 8px;">{{ errorMessage }}</p>
 
       <!-- Mostrar descripción (modo visualización) -->
-      <div *ngIf="justification?.file_url" >
+      <div *ngIf="justification?.file_url">
         <label for="justificacion">Justificación</label>
 
         <div *ngIf="justification?.description; else noDescription"
@@ -53,9 +53,37 @@
       <!-- Mostrar textarea (modo carga) -->
       <div *ngIf="!justification?.file_url">
         <label for="justificacion">Justificación</label>
-        <textarea id="justificacion" nz-input rows="4" placeholder="Escriba su descripción aquí..."
-          [(ngModel)]="description" style="width: 100%; margin-top: 8px;">
-  </textarea>
+        <div class="description-apprentice">
+
+        <textarea 
+        id="justificacion" 
+        nz-input rows="4" 
+        placeholder="Escriba su descripción aquí..."
+          [(ngModel)]="description" 
+          (input)="validateText()" 
+          maxlength="255"
+          style="width: 100%; margin-top: 8px; max-height: 150px; overflow: auto; resize: vertical;">
+        </textarea>
+
+      </div>
+      
+
+        
+  <!-- 🚨 Mensaje si una palabra es demasiado larga -->
+  <p *ngIf="wordTooLong" style="color: orange; font-size: 12px; margin-top: 4px;">
+    ⚠️ Por favor, agrega espacios. Hay una palabra demasiado larga.
+  </p>
+
+  <!-- 🚨 Mensaje si se superan los 255 caracteres -->
+  <p *ngIf="charLimitExceeded" style="color: red; font-size: 12px; margin-top: 4px;">
+    ⚠️ No puedes escribir más de 255 caracteres.
+  </p>
+
+  <!-- Contador de caracteres -->
+  <p style="font-size: 12px; color: gray;">{{ description?.length }} / 255 caracteres</p>
+
+       
+
       </div>
 
 
