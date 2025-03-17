@@ -58,14 +58,22 @@
     </div>
   </ng-container>
   <ng-template #modalFooter>
-    <button nz-button nzType="primary" (click)="handleApprove()" [disabled]="isRejecting">
+    <button 
+    nz-button 
+    nzType="primary" 
+    class="boton-enviar"
+    [disabled]="isRejecting"
+    (click)="handleApprove()" 
+    >
       Aprobar
     </button>
     <button *ngIf="!isRejecting" nz-button nzType="default" (click)="handleReject()">
       Rechazar
     </button>
 
-    <button *ngIf="isRejecting" nz-button nzType="primary" (click)="sendRejection()">
+    <button 
+    class="boton-enviar"
+    *ngIf="isRejecting" nz-button nzType="primary" (click)="sendRejection()">
       Enviar Motivo de Rechazo
     </button>
   </ng-template>

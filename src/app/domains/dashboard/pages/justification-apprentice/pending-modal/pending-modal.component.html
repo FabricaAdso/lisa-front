@@ -92,7 +92,13 @@
         <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
 
 
-        <button nz-button nzType="primary" [disabled]="!file || isLoading" (click)="handleSubmit()">
+        <button 
+        nz-button 
+        nzType="primary"   
+        class="boton-enviar" 
+        [disabled]="!file || isLoading" 
+        [ngClass]="{'boton-enviar-activo': file && !isLoading, 'boton-enviar-desactivado': !file || isLoading}" 
+        (click)="handleSubmit()">
           <i *ngIf="isLoading" nz-icon nzType="loading" nzTheme="outline"></i> Enviar
         </button>
       </div>
