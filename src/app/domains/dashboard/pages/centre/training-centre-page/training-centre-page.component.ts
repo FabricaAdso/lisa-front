@@ -135,16 +135,17 @@ export class TrainingCentrePageComponent {
 
   mapToTable(centres:TrainingCentreModel[]):tableComponteModel{
     return{
-      Titles:["ID","Nombre","Code", "Región", "Acciones"],
+      Titles:["Código","Nombre", "Región", "Acciones"],
       Datos:centres.map((centre:TrainingCentreModel)=>this.mapToTableDatos(centre)) 
     }
   }
   mapToTableDatos(centres:TrainingCentreModel):tableDataComponteModel{
     return{
       Datos:[
-        centres.id.toString(),
-        centres.name, 
+        // centres.id.toString(),
         centres.code || "N/A",
+        centres.name, 
+        
         centres.regional?.name || "Sin región"
       ],
       idItem:centres.id,
