@@ -109,3 +109,20 @@ nz-modal {
     margin-top: 4px;
     display: block;
   }
+
+  ::ng-deep .ant-modal-footer .ant-btn-primary {
+    background-color: #38A901 !important;
+    border-color: #38A901 !important;
+  }
+  ::ng-deep .ant-modal-footer .ant-btn-primary:hover {
+    background-color: #2b7a04 !important;
+    border-color: #2b7a04 !important;
+  }
+
+  /* Estilos cuando el botón está deshabilitado */
+::ng-deep .ant-modal-footer .ant-btn-primary[disabled] {
+  background-color: rgb(179, 177, 177) !important; /* Color para botón deshabilitado */
+  border-color: rgb(162, 162, 162) !important;
+  opacity: 0.5; /* Opcional: hace que se vea más tenue */
+  cursor: not-allowed;
+}
