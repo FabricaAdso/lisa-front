@@ -67,15 +67,14 @@
         <td>{{ session.course?.program?.name || 'N/D' }}</td>
         <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
         <td>{{ session.start_time }} - {{ session.end_time }}</td>
-        <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
-        <td>{{ session.rap?.description || 'N/D' }} ({{ session.rap?.number_hours || 'N/D' }})</td>
+        <td>{{ session.rap.subject?.name || 'N/D' }}</td>
+        <td>{{ session.rap.description || 'N/D' }} ({{ session.rap.number_hours || 'N/D' }})</td>
         <td>
-          <span nz-icon nz-t>
-
-          </span>
-          <a nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?" (nzOnConfirm)="onDeleteSession(session.id)">
-            Eliminar
-          </a>
+          {{ session.rap.description || 'N/D' }}
+          ({{ session.rap.number_hours || 'N/D' }})
+        </td>
+        <td>
+          {{ session.rap.subject?.name || 'N/D' }}
         </td>
 
       </tr>

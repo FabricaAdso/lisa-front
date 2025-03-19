@@ -68,6 +68,7 @@ export class FichaComponent {
   }
 
   ngOnInit(): void {
+    this.loadData()
   }
 
   loadData(): void {

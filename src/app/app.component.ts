@@ -37,6 +37,7 @@ export class AppComponent implements OnInit,OnDestroy{
 
   ngOnInit(): void {
     this.listenNotification();
+    this.getNotification()
   }
 
   ngOnDestroy(): void {

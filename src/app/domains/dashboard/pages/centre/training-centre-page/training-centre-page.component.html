@@ -6,8 +6,9 @@
   (create)="actualizarTabla($event)" (closeModal)="closeModal()">
 </app-training-centre-form>
 }
-
+<div class="btn-container">
 <button class="crear-btn " nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
+</div>
 
 <!-- Tabla para listar centros de formación -->
 <nz-table [nzData]="Datetable.Datos" [nzShowPagination]="false">
