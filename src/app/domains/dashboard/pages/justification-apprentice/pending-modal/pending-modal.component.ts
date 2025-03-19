@@ -10,7 +10,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-pending-modal',
   standalone: true,
-  imports: [CommonModule, NzModalModule, NzButtonModule,FormsModule,NzIconModule],
+  imports: [CommonModule, NzModalModule, NzButtonModule, FormsModule, NzIconModule],
   templateUrl: './pending-modal.component.html',
   styleUrl: './pending-modal.component.css'
 })
@@ -23,7 +23,13 @@ export class PendingModalComponent {
 
   file!: File; // Archivo seleccionado
   file_url?: string; // Archivo cargado (del modelo)
-  description?: string = ''; 
+
+  description?: string = '';
+  charLimitExceeded: boolean = false;
+  wordTooLong: boolean = false;
+  maxLength: number = 255;
+  maxWordLength: number = 50; // Máximo de caracteres permitidos en una palabra
+
   errorMessage: string = ''; // Mensajes de error
   isLoading: boolean = false; // Estado de carga
 
@@ -37,13 +43,13 @@ export class PendingModalComponent {
       this.resetForm();
     }
   }
-  
+
   resetForm(): void {
     this.file = undefined!;
     this.file_url = undefined;
     this.errorMessage = '';
     this.isLoading = false;
-  
+
     // Si es modo edición (hay una justificación previa), llenamos el form
     if (this.justification) {
       this.description = this.justification.description || '';
@@ -59,30 +65,46 @@ export class PendingModalComponent {
       ? 'Ver Justificación'
       : 'Subir Justificación';
   }
-
+  validateText() {
+    if (!this.description) { 
+      this.description = '';  // Evita valores undefined
+    }
   
+    // 1️⃣ Verificar si hay palabras sin espacios demasiado largas
+    const words = this.description.split(/\s+/); // Divide el texto en palabras
+    this.wordTooLong = words.some(word => word.length > this.maxWordLength);
+  
+    // 2️⃣ Verificar si supera el límite total de caracteres
+    if (this.description.length > this.maxLength) {
+      this.charLimitExceeded = true;
+    } else {
+      this.charLimitExceeded = false;
+    }
+  }
+
+
 
 
   handleFileInput(event: any): void {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
-  
+
     if (selectedFile.type !== 'application/pdf') {
       this.errorMessage = 'El archivo debe ser en formato PDF.';
       this.file = undefined!;
       return;
     }
-  
+
     if (selectedFile.size > 5 * 1024 * 1024) {
       this.errorMessage = 'El archivo no debe superar los 5MB.';
       this.file = undefined!;
       return;
     }
-  
+
     this.file = selectedFile; // Almacena el archivo seleccionado
     this.errorMessage = '';
 
-      // Previsualización del icono PDF
+    // Previsualización del icono PDF
     this.file_url = URL.createObjectURL(this.file); // Genera la URL del archivo
   }
 
@@ -94,23 +116,23 @@ export class PendingModalComponent {
       this.errorMessage = 'Debe seleccionar un archivo antes de enviar.';
       return;
     }
-  
- 
-  
+
+
+
     const updatedJustification: JustificationModel = {
       ...this.justification,
       file: this.file,
       description: this.description
     };
-  
+
     // Emitir los datos al padre
     this.submit.emit(updatedJustification);
-  
+
     // Cerrar el modal
     this.handleCancel();
   }
-  
 
-  
+
+
 }
 
