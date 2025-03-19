@@ -49,11 +49,21 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     FormsModule,
     NzModalContentDirective,
     NzInputNumberModule,
+    NzDatePickerModule
 ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
 export class SessionComponent implements OnInit, OnDestroy {
+
+
+  disabledDate = (current: Date): boolean => {
+    // Deshabilita las fechas anteriores al inicio del día actual
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return current && current < today;
+  }
+
 
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;

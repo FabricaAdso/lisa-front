@@ -332,5 +332,6 @@ export class ManageSessionComponent implements OnInit {
     this.closeAnotherModal();
   }
 
+// En tu componente TS
 
 }
