@@ -25,20 +25,25 @@
     background-color: #3e8e41;
     }
   .edit-btn {
-    color: #4f8832;
-    border: 2px solid #346e1644;
-    background: transparent;
+    color: white !important;
+
+   
+    background: #38A901 !important;
+    border-color: #38A901 !important;
     padding: 5px 10px;
     border-radius: 5px;
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+
   }
   
 
   .edit-btn:hover {
-    background: #38A901;
-    color: white;
+    background: #2b7a04 !important;  /* Color más oscuro al pasar el mouse */
+    border-color: #2e8c01 !important;
+  
   }
 
 

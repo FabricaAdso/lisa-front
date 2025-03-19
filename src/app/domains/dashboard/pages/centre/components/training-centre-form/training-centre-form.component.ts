@@ -102,7 +102,7 @@ export class TrainingCentreFormComponent {
 
   loadRegions() {
     this.regionalService.getAllRegional().subscribe((data) => {
-      console.log("🚀 Regiones obtenidas:", data); // 📌 Verifica si llegan datos
+      
       this.regions = data || [];
     });
   }
