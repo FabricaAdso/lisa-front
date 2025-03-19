@@ -1,50 +1,53 @@
-<div class="p-4">
-    <!-- Botón para crear un nuevo centro -->
-    <button nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
+<!-- training-centre-page.component.html -->
+<!-- Botón para crear un nuevo centro -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+@if (isModalVisible) {
+<app-training-centre-form [centre]="centreUpdate" [isVisible]="isModalVisible" (update)="actualizarTabla($event)"
+  (create)="actualizarTabla($event)" (closeModal)="closeModal()">
+</app-training-centre-form>
+}
+<div class="btn-container">
+<button class="crear-btn " nz-button nzType="primary" (click)="openModal()">Crear Centro de Formación</button>
+</div>
 
-    <!-- Tabla para listar centros de formación -->
-    <nz-table #centreTables [nzData]="centres" [nzPageSize]="5">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (centre of centreTables.data; track $index) {
-        <tr >
-          <td>{{ centre.id }}</td>
-          <td>{{ centre.name }}</td>
-          <td>
-            <button nz-button nzType="default" (click)="openModal(centre)">Editar</button>
-            <button nz-button nzDanger (click)="deleteCentre(centre.id)">Eliminar</button>
-          </td>
-        </tr>
+<!-- Tabla para listar centros de formación -->
+<nz-table [nzData]="Datetable.Datos" [nzShowPagination]="false">
+  <thead>
+    <tr>
+      @for (titulo of Datetable.Titles; track $index) {
+      <th>{{titulo}}</th>
       }
-      </tbody>
-    </nz-table>
+    </tr>
+  </thead>
+  <tbody>
+    @for (centre of Datetable.Datos; track $index) {
+    <tr>
+      @for (item of centre.Datos; track $index) {
+      <td>{{ item }}</td>
+      }
 
-    <!-- Modal para crear o editar un centro de formación -->
-  <nz-modal [(nzVisible)]="isModalVisible" nzTitle="{{ indexCentre !== null ? 'Editar' : 'Crear' }} Centro de Formación"
-    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formCentres?.invalid" >
+      <td>
+        <div class="action-buttons">
+          <button class="edit-btn " nz-button nzType="default" (click)="update(centre.idItem)">
+            <span class="material-icons"></span>Editar</button>
 
-    <ng-container *nzModalContent>
-      <form nz-form *ngIf="formCentres" [formGroup]="formCentres">
-
-        <label for="name">Nombre del Centro</label>
-        <input nz-input formControlName="name" id="name" placeholder="Nombre del centro" />
-
-        <!-- Validación del campo de nombre -->
-        <div *ngIf="formCentres.controls['name'].invalid && formCentres.controls['name'].touched">
-          <small class="text-red-500">El nombre es requerido y debe tener al menos 5 caracteres</small>
+          <button class="delete-btn" nz-popconfirm nzPopconfirmTitle="¿Está seguro que desea eliminar?"
+            (nzOnConfirm)="deleteCentre(centre.idItem)" (nzOnCancel)="cancel()" nz-button nzType="default" nzDanger>
+            <span class="material-icons"></span>Eliminar
+          </button>
         </div>
 
-      </form>
-    </ng-container>
+
+      </td>
+
+    </tr>
+    }
+  </tbody>
+</nz-table>
 
 
-
-
-  </nz-modal>
-  </div>
+<div class="pagination">
+  <nz-pagination (nzPageIndexChange)="changePage($event)" [nzTotal]="total_elements" [nzPageIndex]="page"
+    [nzPageSize]="elements" [nzResponsive]="true" [nzHideOnSinglePage]="true">
+  </nz-pagination>
+</div>
