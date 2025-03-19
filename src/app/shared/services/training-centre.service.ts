@@ -7,6 +7,7 @@ import { CreateCentreDTO } from '../dto/create-centreDTO';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { PaginateModel } from '@shared/models/paginate.model';
+import { Observable } from 'rxjs';
 
 
 
@@ -42,6 +43,12 @@ export class TrainingCentreService {
   }
   delete(id:number){
     return this.http.delete(`${this.url2}/${id}`);
+  }
+
+   
+  checkCodeExists(code: string): Observable<{ exists: boolean }> {
+    const url = `${this.url2}/check-code?code=${code}`;
+    return this.http.get<{ exists: boolean }>(url);
   }
 
 
