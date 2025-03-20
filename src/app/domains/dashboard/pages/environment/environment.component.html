@@ -1,28 +1,28 @@
 <section class="Environments">
   <div class="content-tittle">
     <div class="search-box">
-      <nz-select
+      <nz-select class="border-2 border-solid"
       nzPlaceHolder="Seleccione una sede"
       [(ngModel)]="selectedHeadquarter"
       (ngModelChange)="onSelectHeadquarter($event)" nzAllowClear>
 
         @for (headquarter of headquartersList; track $index) {
-        <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
+        <nz-option  [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
       }
       </nz-select>
 
     </div>
     <div class="botons">
       <button class="add-environment-btn"
-       (click)="openModalHeadquarter()" >Edit</button>
+       (click)="openModalHeadquarter()" >Editar sede </button>
       <button class="add-environment-btn"
-       (click)="onDeleteHeadquarter()">Delete</button>
+       (click)="onDeleteHeadquarter()">Eliminar sede</button>
       <button class="add-environment-btn"
-       (click)="openCreateModalHeadquarter()">Add headquarters</button>
+       (click)="openCreateModalHeadquarter()">Añadir sedes </button>
       <button 
       class="add-environment-btn"
       (click)="openCreateModalEnvironment()"
-      [disabled]="!selectedHeadquarter">Add environments</button>
+      [disabled]="!selectedHeadquarter">Añadir ambientes</button>
     </div>
 
   </div>
@@ -30,10 +30,10 @@
   <nz-table #basicTable [nzData]="filteredEnvironments">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Capacity</th>
+        <th>Nombre</th>
+        <th>Capacidad</th>
         <th>Area</th>
-        <th>Action</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -43,9 +43,9 @@
         <td>{{ environment.capacity }}</td>
         <td>{{ environment.knowledge_network?environment.knowledge_network.name:'No tiene area asignada'}}</td>
         <td>
-          <button class="btn-accion" (click)="openModalEnvironment(environment.id)">Edit</button>
+          <button class="btn-accion" (click)="openModalEnvironment(environment.id)">Editar</button>
           <nz-divider nzType="vertical"></nz-divider>
-          <button (click)="deleteEnvironment(environment.id)" >Delete</button>
+          <button (click)="deleteEnvironment(environment.id)" >Eliminar</button>
         </td>
       </tr>
       }

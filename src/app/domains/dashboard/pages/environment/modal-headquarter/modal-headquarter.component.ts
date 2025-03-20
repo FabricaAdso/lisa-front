@@ -119,7 +119,7 @@ export class ModalHeadquarterComponent {
     });
     // Deshabilitar el campo training_center_id en modo edición
     this.formHeadquarter.get('training_center_id')?.disable();
-    this.formHeadquarter.get('municipality')?.disable();
+   
   }
 
 
@@ -140,9 +140,7 @@ export class ModalHeadquarterComponent {
       data.training_center_id =this.formHeadquarter.get('training_center_id')?.value;
       this.formHeadquarter.get('training_center_id')?.disable(); // Volver a deshabilitar el campo
       
-      this.formHeadquarter.get('municipality')?.enable();
-      data.municipality = this.formHeadquarter.get('municipality')?.value;
-      this.formHeadquarter.get('municipality')?.disable(); // Volver a deshabilitaer
+  
 
 
 

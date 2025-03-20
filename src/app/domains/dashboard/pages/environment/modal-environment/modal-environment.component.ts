@@ -35,9 +35,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 })
 export class ModalEnvironmentComponent {
 
-
-
-
+  //eventos
   @Output() updateEnvironment: EventEmitter<void> = new EventEmitter;
   @Input() environmentData?: EnvironmentModel | null;
 
@@ -64,7 +62,7 @@ export class ModalEnvironmentComponent {
     this.headquarterService.getHeadquarters().subscribe({
       next: (data) => {
         this.headquarterList = data;
-        console.log('sedes', data);
+
       },
     });
   }
@@ -73,17 +71,15 @@ export class ModalEnvironmentComponent {
     this.knowledgeService.getknowledgeNetwork().subscribe({
       next: (data) => {
         this.knowlwdegeList = data;
-        console.log('areas', data);
+
       },
     });
   }
 
-  saveData(){
+
+  saveData() {
     const data = this.formEnvironment.value;
-
-
-    
-    if(this.isEdit){
+    if (this.isEdit) {
       this.formEnvironment.get('headquarters_id')?.enable();
       data.headquarters_id = this.formEnvironment.get('headquarters_id')?.value;
       this.formEnvironment.get('headquarters_id')?.disable();
@@ -95,11 +91,14 @@ export class ModalEnvironmentComponent {
           this.closeModal();
         },
         error: (error) => {
-          this.message.error('Erro al actualizar sede',error);
+          this.message.error('Erro al actualizar sede', error);
         },
       });
-    }else{
-
+    } else {
+      this.formEnvironment.get('headquarters_id')?.enable();
+      data.headquarters_id = this.formEnvironment.get('headquarters_id')?.value;
+      this.formEnvironment.get('headquarters_id')?.disable();
+      
       this.environmentService.create(data).subscribe({
         next: () => {
           this.updateEnvironment.emit();
@@ -107,21 +106,26 @@ export class ModalEnvironmentComponent {
           this.closeModal();
         },
         error: (error) => {
-          this.message.error('Error al crear la sede',error)
+          this.message.error('Error al crear la sede', error)
         },
 
       });
     }
   }
-  
 
-  setSelectedHeadquarter(id:number):void{
+
+
+  //Metodo envirar la sede   
+  setSelectedHeadquarter(id: number): void {
     this.formEnvironment.patchValue({
       headquarters_id: id
     })
 
   }
 
+
+
+  //Metodo para recibir los datos y asiganrlos al formulario cuadno se edita
   setData(data: EnvironmentModel): void {
     this.isEdit = true
     this.environmentData = data;
@@ -138,6 +142,8 @@ export class ModalEnvironmentComponent {
     this.formEnvironment.get('headquarters_id')?.disable();
   }
 
+
+  //Metodo para validar los datos que entran al formulario  
   formData(): void {
     this.formEnvironment = new FormGroup({
       id: new FormControl(null),
@@ -146,17 +152,25 @@ export class ModalEnvironmentComponent {
       headquarters_id: new FormControl(null, Validators.required),
       knowledge_network_id: new FormControl(null, Validators.required),
 
-    }) ;
+    });
+    this.formEnvironment.get('headquarters_id')?.disable();
 
   }
 
-  resetModal(){
+
+
+  //Metodo para limpiar el modal de cualquier dato
+  resetModal() {
     this.isEdit = false
     this.formEnvironment.reset();
   }
+
+  //Metodo para abrir el modal 
   openModal() {
     this.isVisible = true;
   }
+
+  //Metodo para cerrar el modal 
   closeModal() {
     this.resetModal();
     this.isVisible = false;
