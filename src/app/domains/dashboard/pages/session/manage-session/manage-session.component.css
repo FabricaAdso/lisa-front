@@ -40,3 +40,20 @@ nz-collapse {
   overflow-y: auto; /* Activa el scroll vertical solo aquí */
   overflow-x: hidden; /* Evita que haya scroll horizontal innecesario */
 }
+
+
+::ng-deep nz-table[_ngcontent-ng-c3885107666]{
+margin:0
+}
+
+
+::ng-deep .ant-table-body {
+  scrollbar-width: none; /* Para Firefox */
+  -ms-overflow-style: none;  /* Para Internet Explorer 10+ */
+}
+
+::ng-deep .ant-table-body::-webkit-scrollbar {
+  display: none; /* Para Chrome, Safari y Opera */
+}
+
+
