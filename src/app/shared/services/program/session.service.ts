@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { UpdateCourseDto } from '@shared/dto/program/update-course-dto';
+import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { PaginateModel } from '@shared/models/paginate.model';
 import { QueryUrl } from '@shared/models/query-url.model';
@@ -52,6 +53,13 @@ export class SessionService {
     return this.http.post<SessionModel[]>(this.url, data);
   }
 
+  updateSession(data: any): Observable<SessionModel> {
+    const { id } = data;
+    return this.http.put<SessionModel>(`session/update/${id}`, data);
+  }
+
+
+
   deleteSession(id: number) {
     return this.http.delete(`${this.url}/${id}`);
   }
@@ -100,6 +108,7 @@ export class SessionService {
     // Suponiendo que la URL para obtener las opciones es 'session/leadersession'
     return this.http.get<any>(`${this.url}/leadersession`);
   }
+
 
 
 }
