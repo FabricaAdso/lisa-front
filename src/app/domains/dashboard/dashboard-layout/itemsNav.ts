@@ -51,14 +51,6 @@ export const menuItems: MenuItem[] = [
     Role: 'Usuario',
   },
   {
-    title: 'Fichas',
-    icon: 'read',
-    route: 'file',
-    theme: 'outline',
-    state: false,
-    Role: 'Usuario',
-  },
-  {
     title: 'Sesiones',
     icon: 'profile',
     route: 'session',
