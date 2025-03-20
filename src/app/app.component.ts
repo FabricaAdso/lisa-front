@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { LoginPageComponent } from "./domains/pages/login-page/login-page.component";
@@ -9,7 +9,7 @@ import { UserModel } from '@shared/models/user.model';
 import { SharedDataService } from '@shared/services/shared-data.service';
 import { NotificationService } from '@shared/services/notification.service';
 import { NotificationModel } from '@shared/models/notification-model';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit,OnDestroy{
+export class AppComponent implements OnInit {
   title = 'lisa-front';
 
   notificationModel: NotificationModel[] = [];
