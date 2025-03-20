@@ -1,3 +1,5 @@
+
+
 nz-tag {
   margin: 2px;
 }
@@ -33,3 +35,8 @@ nz-collapse {
 }
 
 
+.tabla-con-scroll {
+  flex: 1; /* Ocupa todo el espacio disponible */
+  overflow-y: auto; /* Activa el scroll vertical solo aquí */
+  overflow-x: hidden; /* Evita que haya scroll horizontal innecesario */
+}

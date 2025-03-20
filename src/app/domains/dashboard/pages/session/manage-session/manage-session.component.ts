@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PaginatedResponse, SessionModel } from '@shared/models/session.model';
@@ -14,7 +14,7 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { SessionComponent } from '../session-modal/session.component';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { CourseService } from '@shared/services/program/course.service';
@@ -28,6 +28,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { SessionEditComponent } from '../session-edit/session-edit.component';
 
 @Component({
   selector: 'app-manage-session',
@@ -47,11 +49,11 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzGridModule,
     NzTabsModule,
     SessionComponent,
-    NzButtonModule,NzFormModule,
+    NzButtonModule, NzFormModule,
     NzInputModule,
     NzSelectModule,
-    NzPaginationModule,NzPopconfirmModule
-],
+    NzPaginationModule, NzPopconfirmModule, NzIconModule, SessionEditComponent
+  ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
 })
@@ -59,34 +61,37 @@ export class ManageSessionComponent implements OnInit {
   sessions: SessionModel[] = [];
   loading = false;
 
-  // Filtro de estado (por defecto, "pending")
-  selecion: { name: string, id: number } | null = null;
-  select_sessions: { name: string, id: number }[] = [
-    { name: "past", id: 1 },
-    { name: "pending", id: 2 },
-    { name: "all", id: 3 }
+  page: number = 1;
+  elements: number = 10;
+  last_page: number = 1;
+  total: number = 0;
+  page_options: number[] = [];
+
+  selecion: { name: string,  value: string, id: number } | null = null;
+  select_sessions: { name: string, value:string, id: number }[] = [
+    { name: "Realizadas", value: 'past', id: 1 },
+  { name: "Pendientes", value: 'pending', id: 2 },
+  { name: "Todas", value: 'all', id: 3 }
   ];
 
-  // Filtros adicionales (los valores actuales de cada select)
+
+
+
   courseFilter: string = '';
   rapFilter: string = '';
   instructorFilter: string = '';
   subjectFilter: string = '';
 
-  // Arrays para las opciones de cada select
   courseOptions: Array<{ value: string, label: string }> = [];
   rapOptions: Array<{ value: string, label: string }> = [];
   instructorOptions: Array<{ value: string, label: string }> = [];
 
-  // Variables para conservar la lista completa de opciones
   allCourseOptions: Array<{ value: string, label: string }> = [];
   allRapOptions: Array<{ value: string, label: string }> = [];
   allInstructorOptions: Array<{ value: string, label: string }> = [];
 
-  // Objeto de filtros que se enviará en la petición
   filters: { [key: string]: string | number } = {};
 
-  // Subject para aplicar debounce en los filtros (si lo llegas a usar)
   private filterSubject = new Subject<void>();
 
   // Inyección de servicios
@@ -95,35 +100,52 @@ export class ManageSessionComponent implements OnInit {
   private rapService = inject(RapService);
   private instructorService = inject(InstructorService);
   private notification = inject(NzNotificationService);
-  private sessionse = inject(SessionService); // Este es el servicio que usamos para las peticiones de sesión
+  private sessionse = inject(SessionService);
 
   ngOnInit(): void {
-    // Establecer el filtro por defecto para el estado ("pending")
-    this.selecion = this.select_sessions.find(s => s.name === 'pending') || this.select_sessions[1];
+    this.selecion = this.select_sessions.find(s => s.name === 'Pendientes') || this.select_sessions[1];
     this.applySelectFilter();
 
-    // Cargar inicialmente las sesiones de líder para la tabla
     this.loadLeaderSessions();
 
-    // Cargar las opciones completas para los selects desde el endpoint específico
     this.loadFilterOptions();
   }
 
-  loadLeaderSessions(): void {
-    const stringFilters: { [key: string]: string } = this.buildFilters();
-    this.sessionse.getLeaderSessions(stringFilters, ['instructor.user', 'course', 'course.program', 'rap.subject'])
-      .subscribe({
-        next: (resp: PaginateModel<SessionModel>) => {
-          console.log('Sesiones de líder:', resp);
-          this.sessions = resp.data;
-          // Opcional: si quieres poblar las opciones a partir de las sesiones filtradas, pero en este caso se usan los full options.
-          // this.populateSelectOptions(this.sessions);
-        },
-        error: (err) => console.error(err)
-      });
+  loadLeaderSessions(page: number = 1): void {
+    const filters: { [key: string]: string } = this.buildFilters();
+    const queryParams = {
+      ...filters,
+      page: page.toString(),
+      elements: this.elements.toString()
+    };
+
+    this.sessionse.getLeaderSessions(queryParams, [
+      'instructor.user',
+      'course',
+      'course.program',
+      'rap.subject'
+    ]).subscribe({
+      next: (resp: PaginateModel<SessionModel>) => {
+        //console.log('Sesiones de líder:', resp);
+        this.sessions = resp.data;
+        this.page = resp.current_page;
+        this.elements = resp.per_page;
+        this.last_page = resp.last_page;
+        this.total = resp.total;
+        this.page_options = Array.from({ length: this.last_page }, (_, i) => i + 1);
+      },
+      error: (err) => console.error(err)
+    });
   }
 
-  // Método para construir los filtros a enviar
+
+
+  changePage(page: number): void {
+    this.loadLeaderSessions(page);
+  }
+
+
+
   buildFilters(): { [key: string]: string } {
     const filtersCopy = { ...this.filters };
     return Object.keys(filtersCopy).reduce((acc, key) => {
@@ -132,8 +154,6 @@ export class ManageSessionComponent implements OnInit {
     }, {} as { [key: string]: string });
   }
 
-  // Este método ya no se usará para poblar los selects, pues tendremos un endpoint dedicado,
-  // pero lo dejamos aquí en caso de necesitarlo.
   populateSelectOptions(sessions: SessionModel[]): void {
     const courseMap = new Map<string, { value: string, label: string }>();
     const rapMap = new Map<string, { value: string, label: string }>();
@@ -170,15 +190,16 @@ export class ManageSessionComponent implements OnInit {
     this.rapOptions = [...this.allRapOptions];
     this.instructorOptions = [...this.allInstructorOptions];
 
-    console.log('Opciones de Curso:', this.courseOptions);
-    console.log('Opciones de RAP:', this.rapOptions);
-    console.log('Opciones de Instructor:', this.instructorOptions);
+    //console.log('Opciones de Curso:', this.courseOptions);
+    //console.log('Opciones de RAP:', this.rapOptions);
+    //console.log('Opciones de Instructor:', this.instructorOptions);
+
   }
 
   loadFilterOptions(): void {
     this.sessionse.getFilterOptions().subscribe({
       next: (res: any) => {
-        console.log('Opciones de filtros:', res);
+        //console.log('Opciones de filtros:', res);
         this.allCourseOptions = res.courses.map((course: any) => ({
           value: course.code.toString(),
           label: course.code ? course.code.toString() : 'N/D'
@@ -207,7 +228,7 @@ export class ManageSessionComponent implements OnInit {
     } else {
       delete this.filters['course_'];
     }
-    console.log('Filtros actualizados:', this.filters);
+    //console.log('Filtros actualizados:', this.filters);
     this.loadLeaderSessions();
   }
 
@@ -218,7 +239,7 @@ export class ManageSessionComponent implements OnInit {
     } else {
       delete this.filters['rap_'];
     }
-    console.log('Filtros actualizados:', this.filters);
+    //console.log('Filtros actualizados:', this.filters);
     this.loadLeaderSessions();
   }
 
@@ -229,7 +250,7 @@ export class ManageSessionComponent implements OnInit {
     } else {
       delete this.filters['instructor_'];
     }
-    console.log('Filtros actualizados:', this.filters);
+    //console.log('Filtros actualizados:', this.filters);
     this.loadLeaderSessions();
   }
 
@@ -244,19 +265,19 @@ export class ManageSessionComponent implements OnInit {
     this.loadLeaderSessions();
   }
 
-  onSelectSessionChange(selection: { name: string, id: number }): void {
+  onSelectSessionChange(selection: { name: string,value:string, id: number }): void {
     this.selecion = selection;
     this.applySelectFilter();
-    console.log('Filtros actualizados (estado):', this.filters);
+    //console.log('Filtros actualizados (estado):', this.filters);
     this.loadLeaderSessions();
   }
 
   private applySelectFilter(): void {
     if (this.selecion) {
-      if (this.selecion.name === 'pending') {
+      if (this.selecion.value  === 'pending') {
         this.filters['pending'] = 'true';
         delete this.filters['past'];
-      } else if (this.selecion.name === 'past') {
+      } else if (this.selecion.value === 'past') {
         this.filters['past'] = 'true';
         delete this.filters['pending'];
       } else { // "all"
@@ -308,7 +329,50 @@ export class ManageSessionComponent implements OnInit {
   }
 
   handleAnotherModalOk(): void {
-    console.log('Otro modal confirmado');
     this.closeAnotherModal();
   }
+
+
+  private modalService = inject(NzModalService);
+
+  openEditModal(sessionId: number): void {
+    const modalRef = this.modalService.create({
+      nzTitle: 'Editar Sesión',
+      nzContent: SessionEditComponent,
+      nzFooter: null
+    });
+
+    modalRef.afterOpen.subscribe(() => {
+      const contentComponent = modalRef.getContentComponent() as SessionEditComponent;
+      if (contentComponent) {
+        contentComponent.sessionId = sessionId;
+        contentComponent.ngOnChanges({
+          sessionId: {
+            currentValue: sessionId,
+            previousValue: undefined,
+            firstChange: true,
+            isFirstChange: () => true
+          }
+        });
+      }
+    });
+  }
+
+  isSessionEditable(session: SessionModel): boolean {
+    const sessionDate = new Date(session.date);
+    const sessionDateOnly = new Date(
+      sessionDate.getFullYear(),
+      sessionDate.getMonth(),
+      sessionDate.getDate()
+    );
+
+    const today = new Date();
+    const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    return sessionDateOnly >= todayOnly;
+  }
+
+
+
+
 }
