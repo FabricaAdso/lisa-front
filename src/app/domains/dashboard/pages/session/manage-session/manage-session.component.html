@@ -49,18 +49,18 @@
     </nz-select>
   </div>
 
-  <nz-table class="" #basicTable [nzData]="sessions" nzBordered nzSize="middle"  style="margin-top: 1rem;   overflow: hidden; " >
+  <nz-table   #basicTable [nzData]="sessions" [nzFrontPagination]="false"   nzBordered nzSize="middle"  [nzScroll]="{ y: '400px' }"  style="margin-top: 1rem;   overflow: hidden; " >
     <thead style="background-color: #52c41a; color: #fff;">
       <tr>
-        <th style="min-width: 90px; width:90px">Fecha</th>
+        <th nzWidth="10%">Fecha</th>
         <!-- <th nzWidth="4%">Ficha</th> -->
-        <th nzWidth="20%">Programa</th>
+        <th nzWidth="15%">Programa</th>
         <th nzWidth="15%">Instructor</th>
-        <th style="min-width: 50px; width: 50px">Horario</th>
-        <th nzWidth="27%">competencia</th>
-        <th nzWidth="28%">Rap</th>
-        <th style="min-width: 50px; width: 50px">Accion</th>
-        <th>id</th>
+        <th nzWidth="10%">Horario</th>
+        <th nzWidth="20%">competencia</th>
+        <th nzWidth="20%">Rap</th>
+        <th nzWidth="10%">Accion</th>
+        <!-- <th>id</th> -->
       </tr>
     </thead>
     <tbody class="" >
@@ -83,7 +83,7 @@
 
           </a>
         </td>
-        <td>{{ session.id || 'Sin id' }}</td>
+        <!--<td>{{ session.id || 'Sin id' }}</td> -->
 
 
       </tr>
