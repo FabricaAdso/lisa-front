@@ -68,22 +68,28 @@ export class FichaComponent {
   }
 
   ngOnInit(): void {
+    this.loadData()
   }
 
-  loadData() {
-    // Llamar al servicio para obtener las fichas pendientes y sus sesiones
-    this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
-      next: (data) => {
-        if (data && data.length > 0) {
-          this.pending_courses = data;
-
+  loadData(): void {
+    const data_sub = forkJoin([
+      this.courseService.getCursesInstructorNow({ included: ['course.program'] }),
+      this.courseService.getCouurseSessionsPast({ included: ['course.program'] }),
+    ]).subscribe({
+      next: ([courses,course_past]) => {
+        if (!Array.isArray(courses) || courses.length === 0) {
+          return;
         }
+        this.pending_courses = courses;
+        this.record_courses = course_past
       },
-      error: (error) => {
-        console.error(error);
+      error: (err) => {
+        console.error('Error al cargar los cursos pendientes:', err);
       }
-    });
+    })
+    
   }
+  
   deleteSession(sessionId: number, courseId: number) {
     // Lógica para eliminar la sesión, usando el servicio correspondiente
     // this.courseService.deleteSession(sessionId, courseId).subscribe({

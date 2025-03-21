@@ -1,21 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateAreaDTO } from '@shared/dto/create-areaDTO';
-import { CreateEvironentDTO } from '@shared/dto/create-environmentDTO';
-import { AreaModel } from '@shared/models/area-model';
+import { Component, inject, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
-import { SedeModel } from '@shared/models/sede.model';
-import { AreaService } from '@shared/services/area.service';
 import { EnvironmentService } from '@shared/services/environment.service';
-import { HeadquartersService } from '@shared/services/headquarters.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { HeadquartersService } from '@shared/services/headquarters.service';
 import { forkJoin } from 'rxjs';
+import { ModalHeadquarterComponent } from './modal-headquarter/modal-headquarter.component';
+import { ModalEnvironmentComponent } from './modal-environment/modal-environment.component';
+import { HeadquarterModel } from '@shared/models/headquarter.model';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-environment',
@@ -24,152 +24,227 @@ import { forkJoin } from 'rxjs';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NzModalModule,
+    NzDividerModule,
+    NzTableModule,
+    FormsModule,
+    NzSelectModule,
+    NzSpinModule,
     NzTableModule,
     NzButtonModule,
     NzFormModule,
     NzInputModule,
     NzSelectModule,
+    ModalHeadquarterComponent,
+    ModalEnvironmentComponent,
   ],
   templateUrl: './environment.component.html',
-  styleUrl: './environment.component.css'
+  styleUrl: './environment.component.css',
 })
 export class EnvironmentComponent {
 
-  private formBuilder = inject(FormBuilder);
+//metodos para comunicar eventos entere el padre y los hijos 
+  @ViewChild('modalEnviroment') modalEnviroment: any =
+    ModalEnvironmentComponent;
+  @ViewChild('modalHeadquarter') modalHeadquarter: any =
+    ModalHeadquarterComponent;
+
+
+  //injectamos los dos servicios
+
   private environmentService = inject(EnvironmentService);
-  private areaService = inject(AreaService);
   private headquarterService = inject(HeadquartersService);
+  private message = inject(NzMessageService);
 
- 
+  //Declaracion de varibales
 
-  environments: EnvironmentModel[] = [];
-  areas: AreaModel[] = [];
-  headquarters: SedeModel[] = [];
-
-  formEnvironments!: FormGroup | null;
-  isModalVisible = false;
-  editingEnvironment: number | null = null;
-
-  nameFilter = ''; // Variable para almacenar el valor del filtro de nombre
-  filteredEnvironments: EnvironmentModel[] = []; // Arreglo para datos filtrados
-
-  ngOnInit(): void {
-    this.loadData();// Carga los datos iniciales.
-    this.createForm();
-  }
-
-  loadData() {
-    // const datasub = forkJoin([
-    //   this.environmentService.get(),
-    //   this.areaService.get(),
-    //   this.headquarterService.getHeadquartes(),
+  EnvironmentsList: EnvironmentModel[] = [];
+  selectedEnvironment:number | null = null;
+  filteredEnvironments: EnvironmentModel[] = [];
+  headquartersList: HeadquarterModel[] = [];
+  selectedHeadquarter: number | null = null;
 
 
-    // ]).subscribe({
-    //   next: ([enviroments, areas, headquarters]) => {
-    //     this.environments = [...enviroments]
-    //     this.filteredEnvironments = [...this.environments]; 
-    //     this.areas = [...areas]
-    //     this.headquarters = [...headquarters]
+  //funcion para abrir el modal de ambiente para editar los datos del ambiente
+  openModalEnvironment(id:number):void {
 
-
-
-    //     console.log(enviroments)
-    //     console.log('Sedes:', this.headquarters);
-    //     console.log('Áreas:', this.areas);
-
-    //   },
-    //   complete: () => {
-    //     datasub.unsubscribe();
-    //   }
-    // });
-  }
-
-  applyFilter() {
-    const filterValue = this.nameFilter.trim().toLowerCase();
-    this.filteredEnvironments = this.environments.filter(environment =>
-      environment.name.toLowerCase().includes(filterValue)
-    );
-  }
-  trackById(index: number, item: EnvironmentModel): number {
-    return item.id;
-  }
-
-  createForm() {
-    this.formEnvironments = this.formBuilder.group({
-      name: new FormControl(null, [Validators.required]),
-      capacity: new FormControl(null, [Validators.required]),
-      headquarters_id: new FormControl(null, [Validators.required]),
-      environment_area_id: new FormControl(null, [Validators.required]),
-
-    });
-  }
-
-  // Cargar las sedes existentes
-  loadEnvironments() {
-    // this.environmentService.get().subscribe(data => {
-    //   this.environments = data;
-    // });
-  }
-  deleteHeadquarters(id: number) { //para el boton
-    const deleteSub = this.environmentService.delete(id).subscribe(() => {
-      this.loadEnvironments(); // Recarga la lista de sedes.
-      deleteSub.unsubscribe(); // Desuscribe del observable.
-    });
-  }
-
-  openModal(enviroment?: EnvironmentModel): void {
-    this.isModalVisible = true;
-
-    if (!this.formEnvironments) {
-      this.createForm();
-    }
-
-    if (enviroment) {
-      this.editingEnvironment = enviroment.id;
-      this.formEnvironments?.patchValue({
-        ...enviroment,
-
-      });
-
-    } else {
-      this.editingEnvironment = null;
-      this.formEnvironments?.reset();
+    this.selectedEnvironment = id
+    console.log('Selected Environment:', this.selectedEnvironment); // Depuración
+    if(this.selectedEnvironment !== null ) {
+      const selected = this.EnvironmentsList.find(
+        (e) => e.id === this.selectedEnvironment,
+      );
+      if(selected){
+        this.modalEnviroment.setData(selected);
+        this.modalEnviroment.openModal();
+      }
+    }else{
+      this.message.warning(
+        'No se ha seleccionado un ambiente '
+      )
     }
   }
-  closeModal(): void {
-    this.isModalVisible = false;
-    this.formEnvironments?.reset();
-    this.editingEnvironment = null;
-  }
-
-  saveData(): void {
-    if (this.formEnvironments?.valid) {
-      if (this.editingEnvironment) {
-        const updatedEnvironment: EnvironmentModel = {
-          id: this.editingEnvironment,
-          ...this.formEnvironments.value
-        };
-
-
-        this.environmentService.update(updatedEnvironment).subscribe(() => {
-          this.loadEnvironments();
-          this.closeModal();
-        });
+  
+  //funcion para abrir el modal de crear ambiente
+  
+    openCreateModalEnvironment(){
+      if(this.selectedHeadquarter){
+        this.modalEnviroment.setSelectedHeadquarter(this.selectedHeadquarter);
+        this.modalEnviroment.openModal()
       } else {
-        // Si estamos creando un nuevo area
-        const newEnvironment:CreateEvironentDTO = this.formEnvironments.value;
-        this.environmentService.create(newEnvironment).subscribe(() => {
-          this.loadEnvironments();  // Recargar la lista de sedes
-          this.closeModal();        // Cerrar el modal
-        });
+        this.message.info('Debes seleccionar una sede para crear un ambiente',)
+      }
+    }
+
+
+
+  handleEnvironmentUpdate() {
+    this.getEnvironments(); // Actualiza la lista de ambientes
+    this.filterEnvironmentsByHeadquarter();
+  }
+
+
+  //funcion para eliminar un ambiente seleccionado 
+  deleteEnvironment(id:number):void{
+    this.selectedEnvironment = id
+    console.log(id);
+    const confrimacion = window.confirm('Estas seguro que quieres eliminar el ambiente, esta acción no se puede deshacer');
+    if(confrimacion){
+      this.environmentService.delete(id).subscribe({
+        next: () => {
+         
+         this.handleEnvironmentUpdate();
+          
+          this.message.success('Ambiente eliminado correctamente');
+        },error:(error)=>{
+          this.message.error('Error al eliminar el ambiente',error)
+        }
+      })
+    } else{
+      this.message.error('Se ha cancelado la eliminación del ambiente');
+
+    }
+  }
+
+
+
+
+  //funcion para abrir el modal de sedes, para editar la sede selecionada
+  //  se le envia la informacion para que se visualice el formulario
+
+  openModalHeadquarter(): void {
+    if (this.selectedHeadquarter !== null) {
+      const selected = this.headquartersList.find(
+        (h) => h.id === this.selectedHeadquarter
+      );
+      if (selected) {
+        this.modalHeadquarter.setData(selected); // Aquí se envía el objeto completo
+        this.modalHeadquarter.isVisibleHeadquarter = true; // Muestra el modal
       }
     } else {
-      alert('Formulario incompleto o con errores.');
+      this.message.warning(
+        'No se ha seleccionado una sede, por favor selecciona una  '
+      );
     }
   }
 
 
 
+  //funcion pra abrie el modal pero para crear una sede
+
+  openCreateModalHeadquarter() {
+    this.getEnvironments();
+    this.modalHeadquarter.formHeadquarter.reset();
+    this.selectedHeadquarter = null; // Limpia los datos
+    this.modalHeadquarter.isVisibleHeadquarter = true;
+  }
+
+  //funcion para mostrar las sedes desde el servicio
+
+  getHeadquarters(): void {
+    const data_sub = forkJoin([
+      this.headquarterService.getHeadquarters(),
+    ]).subscribe({
+      next: ([data]) => {
+        this.headquartersList = [...data];
+      },
+      complete() {
+        data_sub.unsubscribe();
+      },
+    });
+  }
+
+  //funcion para eliminar una sede desde el servicio  con mensaje de confirmacion
+
+  deleteHeadquarter(id: number): void {
+    const confirmacion = window.confirm(
+      '¿Estás seguro de eliminar esta sede? Esta acción no se puede deshacer.'
+    );
+    if (confirmacion) {
+      this.headquarterService.delete(id).subscribe({
+        next: () => {
+          this.message.success('Sede eliminada correctamente'); // Mensaje de éxito
+          this.selectedHeadquarter = null; //volver al valor determinado
+          this.getHeadquarters(); // Actualizar la lista de sedes
+          this.getEnvironments(); // Actualizar la lista de ambientes
+        },
+        error: () => {
+          this.message.error('Error al eliminar la sede'); // Mensaje de error
+        },
+      });
+    } else {
+      this.message.error('Eliminación  de sede cancelada');
+    }
+  }
+
+
+
+  //funcion para eliminar la sede seleccionda consumiendo
+  //  la funcion que hace el llamado al servicio
+
+  onDeleteHeadquarter(): void {
+    if (this.selectedHeadquarter !== null) {
+      this.deleteHeadquarter(this.selectedHeadquarter);
+    } else {
+      this.message.warning('Debe seleccionar una sede para eliminar ');
+    }
+  }
+
+  //funcion para filtrar los ambientes dependiendo si perteneces a una sede
+
+  filterEnvironmentsByHeadquarter(): void {
+    if (this.selectedHeadquarter) {
+      this.filteredEnvironments = this.EnvironmentsList.filter(
+        (environment) =>
+          environment.headquarters?.id === this.selectedHeadquarter
+      );
+    } else {
+      this.filteredEnvironments = [];
+    }
+  }
+
+  //funcion para selecionar una sede y aplicar el filtro de ambientes
+
+  onSelectHeadquarter(id: number): void {
+    this.selectedHeadquarter = id;
+    this.filterEnvironmentsByHeadquarter();
+  }
+
+  //funcion para mostrar los ambientes desde el servicio, incluyendo el area y su sede
+
+  getEnvironments(): void {
+    const query = {
+      included: ['headquarters', 'knowledgeNetwork'],
+    };
+    this.environmentService.getEnvironments(query).subscribe((environments) => {
+      this.EnvironmentsList = environments;
+      this.filterEnvironmentsByHeadquarter();
+    });
+  }
+
+
+  //iniciar el componente
+  ngOnInit(): void {
+    this.getEnvironments();
+    this.getHeadquarters();
+  }
 }

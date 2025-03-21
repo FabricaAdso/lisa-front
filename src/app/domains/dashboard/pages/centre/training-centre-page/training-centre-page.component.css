@@ -1,0 +1,75 @@
+.pagination {
+  display: flex;
+  justify-content: end;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+    flex-wrap: wrap; /* Hace que los botones bajen en pantallas pequeñas */
+  }
+
+  .material-icons {
+    font-size: 18px; /* Ajusta el tamaño del icono */
+    vertical-align: middle; /* Alinea mejor con el texto */
+  }
+  .crear-btn {
+    background-color: #38A901; /* Color de fondo del botón */
+    border: none;
+    margin-bottom: 20px;
+    margin-right: 20px; /* Agrega margen a la derecha */
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px; /* Espaciado de la derecha */
+}
+
+
+  .crear-btn:hover {
+    background-color: #3e8e41;
+    }
+  .edit-btn {
+    color: white !important;
+
+   
+    background: #38A901 !important;
+    border-color: #38A901 !important;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+
+  }
+  
+
+  .edit-btn:hover {
+    background: #2b7a04 !important;  /* Color más oscuro al pasar el mouse */
+    border-color: #2e8c01 !important;
+  
+  }
+
+
+  
+/* Botón de Eliminar */
+.delete-btn {
+    color: #F44336;
+    border: 2px solid #f4433622;
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .delete-btn:hover {
+    background: #f44336ae;
+    color: white;
+  }
+

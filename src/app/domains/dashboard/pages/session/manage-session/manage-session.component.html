@@ -6,12 +6,15 @@
   gap: 1rem;
 ">
 
-  <div style="display: flex; justify-content: flex-end;">
-    <button nz-button nzType="primary" nzSize="large" (click)="openModal()"
-      style="background-color: #52c41a; color: #fff;;">
-      Crear sesión
-    </button>
-  </div>
+<div class="flex justify-end">
+  <button
+      nz-button
+      nzType="primary"
+      (click)="openModal()"
+  >
+      Crear session
+  </button>
+</div>
 
   <app-session [isModalVisible]="createSessionOpen" #sessionModal (sessionCreated)="loadLeaderSessions()"></app-session>
 

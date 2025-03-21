@@ -53,10 +53,55 @@
 
   }
   textarea {
-    border: solid 1px rgb(167, 165, 165);
-    border-radius: 5px;
-    padding: 10px;
+    padding: 10px; 
+    width: 100%;
+    margin-top: 8px;
+    max-height: 150px;
+    overflow: auto;
+    resize: vertical;
+    border: 1px solid #ccc; 
+    outline: none; 
+    transition: border 0.2s ease-in-out; 
+  }
+  
+  /* Cuando el textarea está enfocado (clic dentro) */
+  textarea:focus {
+    border: 1px solid #1a355250; /* Cambia el color del borde, pero mantiene el grosor */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Opcional: Efecto de sombra sutil */
+  }
+
+
+  /* Estilo cuando el botón está activo */
+.boton-enviar {
+  background: #38A901 !important;  /* Color normal */
+  border-color: #38A901 !important;
+  color: white !important;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
+
+/* Efecto hover (cuando el cursor está encima) */
+.boton-enviar:hover {
+  background: #2b7a04 !important;  /* Color más oscuro al pasar el mouse */
+  border-color: #2e8c01 !important;
+}
+
+/* Estilo cuando el botón está deshabilitado */
+.boton-enviar:disabled, 
+.boton-enviar[disabled] {
+  background: #d9d9d9 !important; /* Color gris deshabilitado */
+  border-color: #d9d9d9 !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Evitar que el hover afecte el botón cuando está deshabilitado */
+.boton-enviar:disabled:hover, 
+.boton-enviar[disabled]:hover {
+  background: #d9d9d9 !important;
+  border-color: #d9d9d9 !important;
+}
+
 
   
   ::ng-deep .ant-modal-body{

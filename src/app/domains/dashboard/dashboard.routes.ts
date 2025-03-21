@@ -31,13 +31,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/roles/roles-page/roles-page.component').then(c => c.RolesComponent),
       },
-      /* {
+      {
         path:'session',
         title:'Administrar Sesiones',
         data: { breadcrumb: 'Sesiones ' },
         canActivate: [authGuard],
         loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
-      }, */
+      },
       {
         path: 'justification',
         title: 'justificaciones',
@@ -62,13 +62,13 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c => c.TrainingCentrePageComponent)
       },
 
-      {
-        path: 'headquarters',
-        title: 'Administrar sedes',
-        data: { breadcrumb: 'Administrar Sedes ' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
-      },
+      // {
+      //   path: 'headquarters',
+      //   title: 'Administrar sedes',
+      //   data: { breadcrumb: 'Administrar Sedes ' },
+      //   canActivate: [authGuard],
+      //   loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
+      // },
 
       {
         path: 'environments',

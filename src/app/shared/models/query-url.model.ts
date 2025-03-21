@@ -3,4 +3,5 @@ export interface QueryUrl{
     filter?:{[key:string]:string|boolean|number}
     page?:number;
     elements?:number;
+    per_page?: number; 
 }
