@@ -10,7 +10,7 @@ import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { UserModel } from '@shared/models/user.model';
 import { DocumentTypeService } from '@shared/services/document-type.service';
 import { RegionalService } from '@shared/services/regional.service';
-import { TrainingCentreService } from '@shared/services/training-center.service';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 import { UserService } from '@shared/services/user.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
