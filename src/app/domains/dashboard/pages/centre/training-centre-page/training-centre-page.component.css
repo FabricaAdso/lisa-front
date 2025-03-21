@@ -14,13 +14,21 @@
     vertical-align: middle; /* Alinea mejor con el texto */
   }
   .crear-btn {
-    background-color: #4CAF50; /* Color de fondo del botón */
+    background-color: #38A901; /* Color de fondo del botón */
     border: none;
     margin-bottom: 20px;
+    margin-right: 20px; /* Agrega margen a la derecha */
     border-radius: 2px;
     cursor: pointer;
+}
 
-  }
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px; /* Espaciado de la derecha */
+}
+
+
   .crear-btn:hover {
     background-color: #3e8e41;
     }

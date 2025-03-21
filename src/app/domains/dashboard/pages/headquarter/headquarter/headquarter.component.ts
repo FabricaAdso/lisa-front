@@ -22,7 +22,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { LocationService } from '@shared/services/location.service';
-import { TrainingCentreService } from '@shared/services/training-center.service';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 
 
 @Component({
