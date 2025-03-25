@@ -20,8 +20,14 @@ export class SessionService {
 
   url:string = 'session';
 
+  getSession(data?:QueryUrl){
+    return this.http.get<SessionModel[]>(this.url);
+  }
+
   getSessionShow(id:number,data?:QueryUrl){
     let url:string = getQueryUrl(`${this.url}/${id}`,data);
+    console.log(url);
+    
     return this.http.get<SessionModel>(`${url}`);
   }
 
