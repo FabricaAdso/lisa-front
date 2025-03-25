@@ -5,7 +5,6 @@ nz-tag {
 }
 
 nz-table {
-  margin: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -26,20 +25,8 @@ nz-table {
 
 
 
-/* Espaciado entre el Collapse y el Footer */
-nz-collapse {
-  margin-top: 16px;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  background-color: white;
-}
 
 
-.tabla-con-scroll {
-  flex: 1; /* Ocupa todo el espacio disponible */
-  overflow-y: auto; /* Activa el scroll vertical solo aquí */
-  overflow-x: hidden; /* Evita que haya scroll horizontal innecesario */
-}
 
 
 ::ng-deep nz-table[_ngcontent-ng-c3885107666]{
@@ -47,13 +34,9 @@ margin:0
 }
 
 
-::ng-deep .ant-table-body {
-  scrollbar-width: none; /* Para Firefox */
-  -ms-overflow-style: none;  /* Para Internet Explorer 10+ */
-}
 
-::ng-deep .ant-table-body::-webkit-scrollbar {
-  display: none; /* Para Chrome, Safari y Opera */
-}
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
