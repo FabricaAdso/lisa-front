@@ -115,8 +115,8 @@ nz-modal {
     border-color: #38A901 !important;
   }
   ::ng-deep .ant-modal-footer .ant-btn-primary:hover {
-    background-color: #2b7a04 !important;
-    border-color: #2b7a04 !important;
+    background-color: #0EB304 !important;
+    border-color: #0EB304 !important;
   }
 
   /* Estilos cuando el botón está deshabilitado */
