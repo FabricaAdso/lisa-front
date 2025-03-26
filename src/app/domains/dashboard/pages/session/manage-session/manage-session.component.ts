@@ -400,6 +400,14 @@ export class ManageSessionComponent implements OnInit {
     return sessionDateOnly >= todayOnly;
   }
 
+  onSessionCreated(response: SessionModel): void {
+    // Actualiza la tabla
+    this.loadLeaderSessions(this.page);
+    // Actualiza las opciones de filtros
+    this.loadFilterOptions();
+
+  }
+
 
 
 

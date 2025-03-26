@@ -4,15 +4,18 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { SessionModel } from '@shared/models/session.model';
 import { SessionService } from '@shared/services/program/session.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 @Component({
   selector: 'app-session-edit',
   standalone: true,
-  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule],
+  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule],
   templateUrl: './session-edit.component.html',
   styleUrl: './session-edit.component.css'
 })

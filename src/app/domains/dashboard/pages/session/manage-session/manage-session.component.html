@@ -15,7 +15,7 @@
 
 
     <app-session [isModalVisible]="createSessionOpen" #sessionModal
-      (sessionCreated)="loadLeaderSessions()"></app-session>
+      (sessionCreated)="onSessionCreated($event)"></app-session>
 
     <div style="
       display: grid;
