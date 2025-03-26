@@ -196,41 +196,72 @@ export class ManageSessionComponent implements OnInit {
 
   }
 
+  rapsByCourse: { [courseCode: string]: Array<{ value: string, label: string }> } = {};
+  instructorsByCourse: { [courseCode: string]: Array<{ value: string, label: string }> } = {};
+
+  // ... otros métodos
+
   loadFilterOptions(): void {
     this.sessionse.getFilterOptions().subscribe({
       next: (res: any) => {
-        //console.log('Opciones de filtros:', res);
+        // Asigna y mapea las opciones de curso usando el code
         this.allCourseOptions = res.courses.map((course: any) => ({
           value: course.code.toString(),
           label: course.code ? course.code.toString() : 'N/D'
         }));
-        this.allInstructorOptions = res.instructors.map((instr: any) => ({
-          value: instr.id.toString(),
-          label: `${instr.user.name} ${instr.user.last_name}`
-        }));
-        this.allRapOptions = res.raps.map((rap: any) => ({
-          value: rap.id.toString(),
-          label: rap.description ? rap.description : 'N/D'
-        }));
-
+        // Asegúrate de que courseOptions también reciba esos datos
         this.courseOptions = [...this.allCourseOptions];
-        this.instructorOptions = [...this.allInstructorOptions];
-        this.rapOptions = [...this.allRapOptions];
+
+        // Mapear RAPs por curso (haciendo type assertion para TypeScript)
+        this.rapsByCourse = {};
+        Object.entries(res.rapsByCourse as Record<string, any[]>).forEach(([courseCode, raps]) => {
+          this.rapsByCourse[courseCode] = raps.map(rap => ({
+            value: rap.id.toString(),
+            label: rap.description || 'N/D'
+          }));
+        });
+
+        // Mapear Instructores por curso
+        this.instructorsByCourse = {};
+        Object.entries(res.instructorsByCourse as Record<string, any[]>).forEach(([courseCode, instructors]) => {
+          this.instructorsByCourse[courseCode] = instructors.map(instructor => ({
+            value: instructor.id.toString(),
+            label: `${instructor.user.name} ${instructor.user.last_name}`
+          }));
+        });
+
+        // Opciones iniciales vacías para RAP e Instructor
+        this.rapOptions = [];
+        this.instructorOptions = [];
       },
       error: (err) => console.error('Error al cargar opciones de filtros:', err)
     });
   }
 
+
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
-    if (value && value.trim().length > 0) {
+    if (value) {
       this.filters['course_'] = value.trim();
+      // Actualiza las opciones según el código de curso seleccionado
+      this.rapOptions = this.rapsByCourse[value] || [];
+      this.instructorOptions = this.instructorsByCourse[value] || [];
     } else {
       delete this.filters['course_'];
+      this.rapOptions = [];
+      this.instructorOptions = [];
     }
-    //console.log('Filtros actualizados:', this.filters);
+
+    // Reiniciar filtros dependientes
+    this.rapFilter = '';
+    this.instructorFilter = '';
+    delete this.filters['rap_'];
+    delete this.filters['instructor_'];
+
     this.loadLeaderSessions();
   }
+
+
 
   onRapFilterChange(value: string): void {
     this.rapFilter = value;

@@ -427,14 +427,22 @@ export class SessionComponent implements OnInit, OnDestroy {
           this.closeModal();
         },
         error: (err) => {
-          this.notification.create(
-            'error',
-            'Error',
-            'Error al crear la sesión: ' + err.message
-          )}
+          // Mensaje de error base
+          let errorMessage = 'Error al crear la sesión.';
+          // Verificar si el backend devolvió un objeto de error con propiedades 'message' y 'conflict_session'
+          if (err.error) {
+            if (err.error.message) {
+              errorMessage = err.error.message;
+            }
+            if (err.error.conflict_session) {
+              // Puedes formatear o extraer información relevante del conflicto, por ejemplo:
+              // Convertir el conflicto a cadena o mostrar algunos datos clave
+              errorMessage += ' Detalle del conflicto: ' + JSON.stringify(err.error.conflict_session);
+            }
+          }
+          this.notification.create('error', 'Error', errorMessage);
+        }
       });
-    } else {
-      this.notification.create('warning', 'Advertencia', 'Por favor, complete todos los campos');
     }
   }
 

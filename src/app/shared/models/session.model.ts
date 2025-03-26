@@ -17,7 +17,7 @@ export interface SessionModel {
   assistances: AssistanceModel[];
   subject:SubjectModel;
   rap:RapModel;
-
+  end_date:string;
 
 
   //relaciones

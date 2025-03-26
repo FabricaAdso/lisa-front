@@ -1,4 +1,3 @@
-
 <div style="
   margin: 0 auto;
   display: flex;
@@ -7,42 +6,44 @@
   padding:1rem
 ">
 
-<div style="position: sticky; top: 0; background: #fff; z-index: 10;">
-  <div class="flex justify-end" style="margin-bottom:1rem">
-    <button nz-button nzType="primary" (click)="openModal()">
-      Crear session
-    </button>
-  </div>
+  <div style="position: sticky; top: 0; background: #fff; z-index: 2;">
+    <div class="flex justify-end" style="margin-bottom:1rem">
+      <button nz-button nzType="primary" (click)="openModal()">
+        Crear session
+      </button>
+    </div>
 
 
-  <app-session [isModalVisible]="createSessionOpen" #sessionModal (sessionCreated)="loadLeaderSessions()"></app-session>
+    <app-session [isModalVisible]="createSessionOpen" #sessionModal
+      (sessionCreated)="loadLeaderSessions()"></app-session>
 
-  <div style="
+    <div style="
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
     ">
-    <nz-select style="width: 100%;" [(ngModel)]="courseFilter" (ngModelChange)="onCourseFilterChange($event)"
-      nzPlaceHolder="Código de curso" [nzShowSearch]="true" nzAllowClear>
-      <nz-option *ngFor="let option of courseOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
-    </nz-select>
+      <nz-select style="width: 100%;" [(ngModel)]="courseFilter" (ngModelChange)="onCourseFilterChange($event)"
+        nzPlaceHolder="Código de curso" [nzShowSearch]="true" nzAllowClear>
+        <nz-option *ngFor="let option of courseOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
+      </nz-select>
 
-    <nz-select style="width: 100%;" nzAllowClear [(ngModel)]="rapFilter" (ngModelChange)="onRapFilterChange($event)"
-      nzPlaceHolder="Filtrar por rap" [nzShowSearch]="true">
-      <nz-option *ngFor="let option of rapOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
-    </nz-select>
+      <nz-select style="width: 100%;" nzAllowClear [(ngModel)]="rapFilter" (ngModelChange)="onRapFilterChange($event)"
+        nzPlaceHolder="Filtrar por rap" [nzShowSearch]="true">
+        <nz-option *ngFor="let option of rapOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
+      </nz-select>
 
-    <nz-select nzAllowClear style="width: 100%;" [(ngModel)]="instructorFilter"
-      (ngModelChange)="onInstructorFilterChange($event)" nzPlaceHolder="Filtrar por instructor" [nzShowSearch]="true">
-      <nz-option *ngFor="let option of instructorOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
-    </nz-select>
+      <nz-select nzAllowClear style="width: 100%;" [(ngModel)]="instructorFilter"
+        (ngModelChange)="onInstructorFilterChange($event)" nzPlaceHolder="Filtrar por instructor" [nzShowSearch]="true">
+        <nz-option *ngFor="let option of instructorOptions" [nzValue]="option.value"
+          [nzLabel]="option.label"></nz-option>
+      </nz-select>
 
-    <nz-select style="width: 100%;" [(ngModel)]="selecion" (ngModelChange)="onSelectSessionChange($event)"
-      nzPlaceHolder="Seleccione estado">
-      <nz-option *ngFor="let option of select_sessions" [nzValue]="option" [nzLabel]="option.name"></nz-option>
-    </nz-select>
+      <nz-select style="width: 100%;" [(ngModel)]="selecion" (ngModelChange)="onSelectSessionChange($event)"
+        nzPlaceHolder="Seleccione estado">
+        <nz-option *ngFor="let option of select_sessions" [nzValue]="option" [nzLabel]="option.name"></nz-option>
+      </nz-select>
+    </div>
   </div>
-</div>
 
   <!-- Eliminamos el contenedor "scroll-hidden" -->
   <nz-table #basicTable [nzData]="sessions" [nzFrontPagination]="false" nzBordered nzSize="middle"
@@ -67,19 +68,22 @@
         <td>{{ session.rap.subject?.name || 'N/D' }}</td>
         <td>{{ session.rap.description || 'N/D' }} ({{ session.rap.number_hours || 'N/D' }})</td>
         <td nzWidth="10%">
-          <a *ngIf="isSessionEditable(session)" (click)="openEditModal(session.id)" style="margin-right: 8px;">Editar</a>
-          <a *ngIf="isSessionEditable(session)" nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?" (nzOnConfirm)="onDeleteSession(session.id)">
+          <!-- Si solo quieres que aparezca cuando sea editable -->
+          <button *ngIf="isSessionEditable(session)" nz-button nzSize="small" nzType="default" (click)="openEditModal(session.id)">
+            <!-- <i nz-icon nzType="edit" nzTheme="outline"></i> -->
+            Editar
+          </button>
+
+            <button *ngIf="isSessionEditable(session)" nz-button nzSize="small" nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?"
+            (nzOnConfirm)="onDeleteSession(session.id)">
             Eliminar
-          </a>
+          </button>
         </td>
       </tr>
     </tbody>
   </nz-table>
 
-  <nz-pagination
-    [nzPageIndex]="page"
-    [nzTotal]="total"
-    [nzPageSize]="elements"
+  <nz-pagination [nzPageIndex]="page" [nzTotal]="total" [nzPageSize]="elements"
     (nzPageIndexChange)="changePage($event)">
   </nz-pagination>
 
