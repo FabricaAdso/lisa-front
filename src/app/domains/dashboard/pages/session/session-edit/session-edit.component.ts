@@ -21,6 +21,7 @@ export class SessionEditComponent implements OnInit, OnChanges {
   sessionForm!: FormGroup;
   loading = false;
   sessionData!: SessionModel;
+  isVisible = false;
 
   defaultOpenValue = new Date(1970, 0, 1, 0, 0);
 
@@ -31,7 +32,6 @@ export class SessionEditComponent implements OnInit, OnChanges {
   };
 
   constructor(
-    private modal: NzModalRef,
     private fb: FormBuilder,
     private sessionService: SessionService
   ) {}
@@ -42,7 +42,6 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sessionId'] && changes['sessionId'].currentValue) {
-      console.log('ngOnChanges - sessionId actualizado:', changes['sessionId'].currentValue);
       this.loadSessionData();
     }
   }
@@ -120,9 +119,18 @@ export class SessionEditComponent implements OnInit, OnChanges {
     }
   }
 
-  cancel(): void {
-    this.modal.destroy();
+
+
+  openModal(): void {
+    this.isVisible = true;
   }
+
+  cancel(): void {
+    this.isVisible = false;
+  }
+
+
+
 
   // Método simplificado para enviar solo los campos editables usando PUT
   submitForm(): void {
@@ -149,8 +157,8 @@ export class SessionEditComponent implements OnInit, OnChanges {
         console.log('Sesión actualizada:', response);
               this.sessionCreated.emit(response);
 
-        this.modal.destroy(response);
-      },
+              this.isVisible = false;
+            },
       error: (err) => {
         console.error('Error al actualizar la sesión:', err);
       }

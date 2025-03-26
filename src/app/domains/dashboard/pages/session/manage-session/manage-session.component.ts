@@ -364,30 +364,27 @@ export class ManageSessionComponent implements OnInit {
   }
 
 
-  private modalService = inject(NzModalService);
+  @ViewChild('sessionEdit') sessionEditComponent!: SessionEditComponent;
+
 
   openEditModal(sessionId: number): void {
-    const modalRef = this.modalService.create({
-      nzTitle: 'Editar Sesión',
-      nzContent: SessionEditComponent,
-      nzFooter: null
-    });
-
-    modalRef.afterOpen.subscribe(() => {
-      const contentComponent = modalRef.getContentComponent() as SessionEditComponent;
-      if (contentComponent) {
-        contentComponent.sessionId = sessionId;
-        contentComponent.ngOnChanges({
-          sessionId: {
-            currentValue: sessionId,
-            previousValue: undefined,
-            firstChange: true,
-            isFirstChange: () => true
-          }
-        });
-      }
-    });
+    if (this.sessionEditComponent) {
+      this.sessionEditComponent.sessionId = sessionId;
+      this.sessionEditComponent.ngOnChanges({
+        sessionId: {
+          currentValue: sessionId,
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true
+        }
+      });
+      this.sessionEditComponent.openModal();
+    } else {
+      console.error('No se encontró la instancia de SessionEditComponent');
+    }
   }
+
+
 
   isSessionEditable(session: SessionModel): boolean {
     const sessionDate = new Date(session.date);

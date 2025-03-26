@@ -1,4 +1,7 @@
-<nz-modal [nzVisible]="true" nzTitle="Editar Sesión" (nzOnCancel)="cancel()" [nzFooter]="null">
+<nz-modal   [(nzVisible)]="isVisible"
+nzTitle="Editar Sesión"
+(nzOnCancel)="cancel()"
+(nzOnOk)="submitForm()">
   <ng-container *nzModalContent>
     <form [formGroup]="sessionForm" (ngSubmit)="submitForm()">
       <nz-form-item>
