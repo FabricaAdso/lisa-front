@@ -82,7 +82,7 @@ export class TrainingCentrePageComponent {
   }
 
   loadCentres() {
-    this.trainingCentreService.getCentros({ 
+    this.trainingCentreService.getCentrosPag({ 
       page: this.page, 
       per_page: this.elements 
     }).subscribe({
