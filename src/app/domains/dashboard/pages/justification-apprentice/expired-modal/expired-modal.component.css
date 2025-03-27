@@ -1,0 +1,4 @@
+::ng-deep .ant-modal-body {
+    margin-top: -13px !important;
+    
+  }
