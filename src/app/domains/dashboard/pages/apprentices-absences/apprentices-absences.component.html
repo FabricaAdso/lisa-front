@@ -70,10 +70,9 @@
   (rejectionData)="onRejectionDataReceived($event)">
 </app-modal-pending>
 
-<app-modal-expired *ngIf="selectedJustification?.aprobation!.state =='Vencida'" [isVisible]="isModalVisible"
-  [justification]="selectedJustification" (close)="closeModal()"
-  (statusChange)="updateJustificationStatus(selectedJustification, $event)">
-</app-modal-expired>
+<app-expired-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.VENCIDA"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()">
+</app-expired-modal>
 
 
 <!-- Modal  sin justificación -->
