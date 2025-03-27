@@ -10,8 +10,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
 
-import { SessionModel } from '@shared/models/session.model';
+import { CalendarEvent, SessionModel } from '@shared/models/session.model';
 import { SessionService } from '@shared/services/program/session.service';
+import { QueryUrl } from '@shared/models/query-url.model';
 
 @Component({
   selector: 'app-calendar',
@@ -38,64 +39,100 @@ export class CalendarComponent {
     plugins: [interactionPlugin, dayGridPlugin, listPlugin],
     initialView: 'dayGridMonth',
     locale: esLocale,
-    events: [], // Inicialmente vacío
+    events: [] as CalendarEvent[],
     eventClick: this.handleEventClick.bind(this),
   };
 
-  constructor(private sessionService: SessionService) {}
+  constructor(private sessionService: SessionService) { }
 
   ngOnInit(): void {
     this.loadSessions();
   }
 
   loadSessions(): void {
-    this.sessionService.getAll({}, ['course.program','instructor.user','course','assistances.apprentice.user','course.environment'])
-  .subscribe({
-    next: (sessions) => {
-      this.initialEvents = sessions;
-      this.updateCalendarEvents();
-    },
-    error: (err) => {
-      console.error('Error loading sessions:', err);
-    },
-});
+    const queryParams: QueryUrl = {
+      included: [
+        'instructor.user',
+        'course',
+        'course.program',
+        'assistances.apprentice.user',
+        'course.environment'
+      ]
+    };
 
+    this.sessionService.getSessionByMount(queryParams).subscribe({
+      next: (resp: { [month: string]: SessionModel[] }) => {
+        const dailyEvents: CalendarEvent[] = [];
+
+
+        Object.keys(resp).forEach((month: string) => {
+          const sessions: SessionModel[] = resp[month];
+
+          const sessionsByDay = sessions.reduce(
+            (acc: { [day: string]: SessionModel[] }, session: SessionModel): { [day: string]: SessionModel[] } => {
+              const day: string = session.date;
+              if (!acc[day]) {
+                acc[day] = [];
+              }
+              acc[day].push(session);
+              return acc;
+            },
+            {} as { [day: string]: SessionModel[] }
+          );
+
+          Object.keys(sessionsByDay).forEach((day: string) => {
+            dailyEvents.push({
+              title: `${sessionsByDay[day].length} Sesión${sessionsByDay[day].length > 1 ? 'es' : ''}`,
+              start: `${day}T00:00:00`,
+              description: `${sessionsByDay[day].length} sesiones programadas`,
+              extendedProps: { sessions: sessionsByDay[day] },
+              display: 'block'
+            });
+          });
+        });
+
+        this.calendarOptions.events = dailyEvents;
+      },
+      error: (err: any) => console.error(err)
+    });
   }
 
-    // Obtiene el color para el timeline
-    getTimelineColor(session: SessionModel): string {
-      console.log(session)
-      const today = new Date();
-      const dateSesion = new Date(session.date)
-      const hasAssistanceTaken =  session.assistances.length > 0;
 
-      if (dateSesion === today) {
-        return 'blue'; // Sesión actual
-      }
 
-      // 2. Gris: Si la sesión aún no ha ocurrido
-      if (dateSesion > today) {
-        return 'gray'; // Sesión futura
-      }
 
-      if (dateSesion< today && hasAssistanceTaken) {
-        return 'green'; // Sesión pasada con al menos una asistencia tomada
-      }
 
-      // 4. Rojo: Si la sesión ya ocurrió pero no se tomó asistencia
-      if (dateSesion < today && !hasAssistanceTaken) {
-        return 'red'; // Sesión pasada sin asistencia tomada
-      }
+  // Obtiene el color para el timeline
+  getTimelineColor(session: SessionModel): string {
+    console.log(session);
+    const today = new Date();
+    const dateSesion = new Date(session.date);
+    // Usa un arreglo vacío si session.assistances es undefined
+    const hasAssistanceTaken = (session.assistances || []).length > 0;
 
-      // Por defecto (esto nunca debería ocurrir, pero es por seguridad)
-      return 'gray';
+    // Se compara la fecha ignorando la hora
+    if (dateSesion.toDateString() === today.toDateString()) {
+      return 'blue'; // Sesión actual
     }
+    if (dateSesion > today) {
+      return 'gray'; // Sesión futura
+    }
+    if (dateSesion < today && hasAssistanceTaken) {
+      return 'green'; // Sesión pasada con asistencia
+    }
+    if (dateSesion < today && !hasAssistanceTaken) {
+      return 'red'; // Sesión pasada sin asistencia
+    }
+    return 'gray';
+  }
+
 
   // Maneja el clic en un evento para mostrar el modal
-  handleEventClick(clickInfo: EventClickArg) {
+  handleEventClick(clickInfo: EventClickArg): void {
     const eventDate = clickInfo.event.startStr.split('T')[0];
-    console.log(eventDate)
-    const sessionsForDay = this.getSessionsForDay(eventDate);
+  console.log('Datos de sesiones en extendedProps:', clickInfo.event.extendedProps['sessions']);
+
+    // Accede a las sesiones usando la notación de corchetes
+    const sessionsForDay: SessionModel[] = clickInfo.event.extendedProps['sessions'] || [];
 
     this.selectedEvent = {
       title: `Sesiones del día ${eventDate}`,
@@ -105,46 +142,41 @@ export class CalendarComponent {
     this.isVisible = true;
   }
 
+
   // Obtiene las sesiones para una fecha específica
   getSessionsForDay(date: string): SessionModel[] {
-    return this.initialEvents.filter((event) => event.date === date);
+    return this.initialEvents.filter((event: SessionModel) => event.date === date);
   }
 
-  // Agrupa las sesiones en días y actualiza los eventos del calendario
-  updateCalendarEvents(): void {
-    const groupedEvents = this.getGroupedSessions();
-    this.calendarOptions.events = groupedEvents; // Actualiza los eventos dinámicamente
-  }
-
-  // Agrupa las sesiones en días
-  getGroupedSessions() {
+  // Método alternativo de agrupación de sesiones (si se requiere en otro contexto)
+  getGroupedSessions(): CalendarEvent[] {
     const groupedEvents: { [key: string]: number } = {};
 
-    this.initialEvents.forEach((event) => {
+    this.initialEvents.forEach((event: SessionModel) => {
       groupedEvents[event.date] = (groupedEvents[event.date] || 0) + 1;
     });
 
-    return Object.keys(groupedEvents).map((date) => ({
+    return Object.keys(groupedEvents).map((date: string) => ({
       title: `${groupedEvents[date]} Sesión${groupedEvents[date] !== 1 ? 'es' : ''}`,
       start: `${date}T00:00:00`,
       description: `${groupedEvents[date]} sesiones programadas`,
+      extendedProps: { sessions: this.initialEvents.filter((event: SessionModel) => event.date === date) },
       display: 'block',
     }));
   }
 
   formatTimeWithoutSeconds(time: string): string {
     if (!time) return "Sin Asignar"; // Maneja valores nulos o indefinidos
-    return time.split(':').slice(0, 2).join(':'); // Obtiene solo las horas y minutos
+    return time.split(':').slice(0, 2).join(':'); // Obtiene solo horas y minutos
   }
 
-
   // Oculta el modal
-  handleCancel() {
+  handleCancel(): void {
     this.isVisible = false;
   }
 
   // Confirma el modal
-  handleOk() {
+  handleOk(): void {
     this.isVisible = false;
   }
 }

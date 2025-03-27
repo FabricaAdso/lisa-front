@@ -109,6 +109,8 @@ export class SessionService {
     return this.http.get<any>(`${this.url}/leadersession`);
   }
 
-
-
+  getSessionByMount(data?: QueryUrl): Observable<any> {
+    const url: string = getQueryUrl(`sessions/mount`, data);
+    return this.http.get<any>(url);
+  }
 }
