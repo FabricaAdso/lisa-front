@@ -51,7 +51,7 @@
           </span>
         </td>
         <td>
-          <button (click)="showModal(user)" class="btn btn-primary">
+          <button (click)="openModalRoles(user)" class="btn btn-primary">
             Editar Roles
           </button>
           <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
@@ -75,8 +75,7 @@
 <nz-modal
   [(nzVisible)]="isVisible"
   nzTitle="Editar Roles y Estado"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="handleOk()">
+ >
   <ng-container *nzModalContent>
     <div class="modal-content">
       <div class="modal-body">
@@ -112,3 +111,4 @@
 </nz-modal>
 
 <app-charge-button #chargeButton></app-charge-button>
+<app-edit-roles-modal #modalRoles></app-edit-roles-modal>

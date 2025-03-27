@@ -26,22 +26,22 @@
           </nz-select>
         </nz-form-control>
       </nz-form-item>
-     
-@if(!isEdit){
 
-  <nz-form-item>
-    <nz-form-label>Sede</nz-form-label>
-    <nz-form-control>
-      <nz-select nzPlaceHolder="Seleccione una sede" formControlName="headquarters_id">
-        @for (headquarter of headquarterList; track headquarter.id) {
-          <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
-        }
-      </nz-select>
-    </nz-form-control>
-  </nz-form-item>
-}
+      @if(!isEdit){
 
-      
+      <nz-form-item>
+        <nz-form-label>Sede</nz-form-label>
+        <nz-form-control>
+          <nz-select nzPlaceHolder="Seleccione una sede" formControlName="headquarters_id">
+            @for (headquarter of headquarterList; track headquarter.id) {
+            <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      }
+
+
 
 
       <div class="modal-footer">

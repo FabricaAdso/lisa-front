@@ -18,6 +18,10 @@ import { ChargeExcelService } from '@shared/services/charge-excel.service';
 import { ChargeButtonComponent } from './charge-button/charge-button.component';
 import { UserService } from '@shared/services/user.service';
 import { UserModel } from '@shared/models/user.model';
+import { RoleModel } from '@shared/models/rolemodel-model';
+import { EditRolesModalComponent } from './edit-roles-modal/edit-roles-modal.component';
+import { log } from 'ng-zorro-antd/core/logger';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'nz-demo-modal-basic',
@@ -39,33 +43,45 @@ import { UserModel } from '@shared/models/user.model';
     NzUploadModule,
     NzTabsModule,
     ChargeButtonComponent,
-  ],
+    EditRolesModalComponent
+],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css',
 })
 export class RolesComponent implements OnInit {
+
+
   //logica para abrir el boton de cargue masivo
-
   @ViewChild('chargeButton') chargeButton: any = ChargeButtonComponent;
-
-  private chargeExcelService = inject(ChargeExcelService);
-
+  @ViewChild('modalRoles') modalRoles: any = EditRolesModalComponent;
   
-  isVisible = false;
+  
+  //injeccion de servicios
+  private rolesService = inject(ApiRolesService);
+  private userService = inject(UserService);
+  private notification = inject(NzNotificationService)
+ 
+  
+  //Declaracion de variables
   isVisibleCargue = true;
   isDropdownOpen = false;
   allUsers: UserModel[] = [];
-  users: any[] = [];
-  selectedUser: any;
-  selectedRoles: any[] = [];
+  users: UserModel[] = [];
+  selectedUser: number |null = null;
+  selectedRoles: RoleModel[] = [];
   isActive: boolean = true;
-  roles: any = [];
+  roles: RoleModel[] = [];
   filteredUsers: any[] = [];
   searchTerm: string = '';
   pageIndex: any;
   pageSize: any;
   totalItems: any;
   selectedFile: File | null = null;
+  isVisible = false;
+ 
+ 
+
+
   
   showModalCargue(): void {
     this.chargeButton.isVisibleCargue = true;
@@ -83,36 +99,58 @@ onRolesChange(selectedRoles: any[]): void {
   // Cierra el dropdown después de seleccionar
   this.isDropdownOpen = false;
   
-  // Aquí puedes mantener cualquier otra lógica que ya tengas
+} 
+openModalRoles(id:number):void{
+
+  this.selectedUser = id
+
+  console.log('abriendo modal');
+  if(this.selectedUser !== null){
+    const selected = this.allUsers.find(
+      (user) => user.id === this.selectedUser
+    );
+    if(selected){ 
+      this.modalRoles.setData(selected)
+      this.modalRoles.openModal()
+      console.log(selected);
+      
+    }
+  }else{
+    this.notification.error('Error al cargar un usario','')
+  }
+  
+
 }
+
+
+tabs = [
+  {
+    title: 'Pestaña 1',
+    description: 'Cargar archivo para la API 1',
+    apiRoute: '/api/upload1',
+  },
+  {
+    title: 'Pestaña 2',
+    description: 'Cargar archivo para la API 2',
+    apiRoute: '/api/upload2',
+  },
+  {
+    title: 'Pestaña 3',
+    description: 'Cargar archivo para la API 3',
+    apiRoute: '/api/upload3',
+  },
+];
+
 
 // Opcional: si quieres manejar la apertura/cierre manualmente
 toggleDropdown(): void {
   this.isDropdownOpen = !this.isDropdownOpen;
-}
+}  
 
 // Opcional: si usas búsqueda en el select
 onSearchChange(searchText: string): void {
   // Puedes agregar lógica de búsqueda aquí si es necesario
-}
-
-  tabs = [
-    {
-      title: 'Pestaña 1',
-      description: 'Cargar archivo para la API 1',
-      apiRoute: '/api/upload1',
-    },
-    {
-      title: 'Pestaña 2',
-      description: 'Cargar archivo para la API 2',
-      apiRoute: '/api/upload2',
-    },
-    {
-      title: 'Pestaña 3',
-      description: 'Cargar archivo para la API 3',
-      apiRoute: '/api/upload3',
-    },
-  ];
+}  
 
 
   onFileSelected(event: any, apiRoute: string) {
@@ -134,8 +172,6 @@ onSearchChange(searchText: string): void {
     // Aquí puedes agregar la lógica para cerrar el modal
   }
 
-  private rolesService = inject(ApiRolesService);
-  private userService = inject(UserService);
 
   ngOnInit(): void {
     this.getUsers();
@@ -236,25 +272,27 @@ onSearchChange(searchText: string): void {
       },
     });
   }
-  handleOk(): void {
-    this.isVisibleCargue = false;
-    if (!this.selectedUser || !this.selectedUser.id) {
-      console.error('Usuario inválido');
-      return;
-    }
+  // handleOk(id:number): void {
+  //   this.isVisibleCargue = false;
+  //   this.selectedUser = id
+    
+  //   if (this.selectedUser !== null) {
+  //     console.error('Usuario inválido');
+  //     return;
+  //   }
 
-    // Asegúrate de que los roles sean IDs numéricos
-    const roleIds = this.selectedRoles.map((role) => Number(role));
+  //   // Asegúrate de que los roles sean IDs numéricos
+  //   const roleIds = this.selectedRoles.map((role) => Number(role));
 
-    this.rolesService.assignRoles(this.selectedUser.id, roleIds).subscribe({
-      next: () => {
-        console.log('Roles asignados correctamente');
-        this.selectedUser.roles = [...roleIds]; // Actualiza la UI
-        this.isVisible = false;
-      },
-      error: (error) => console.error('Error al asignar roles', error),
-    });
-  }
+  //   this.rolesService.assignRoles(this.selectedUser.id, roleIds).subscribe({
+  //     next: () => {
+  //       console.log('Roles asignados correctamente');
+  //       this.selectedUser.roles = [...roleIds]; // Actualiza la UI
+  //       this.isVisible = false;
+  //     },
+  //     error: (error) => console.error('Error al asignar roles', error),
+  //   });
+  // }
   handleCancel(): void {
     this.isVisible = false;
     this.isVisibleCargue = false;
