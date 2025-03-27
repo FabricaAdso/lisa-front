@@ -24,18 +24,19 @@ export class NotificationsComponent implements OnInit {
   userId:number = 0
   userModel: UserModel | null = null
   notificationModel: NotificationModel[] | null = null
-  notifications = signal<NotificationModel[]>([]);
+  messages = signal<NotificationModel[]>([]);
 
   ngOnInit(): void {
-    this.notifications = this.dataSharedService.notifications;
+    this.messages = this.dataSharedService.messages;
   }
 
   markAsRead(id: number, index: number){
     this.notification_service.markAsRead(id).subscribe({
       next: () =>{
-        this.notifications.update(notifications => {
+        this.messages.update(notifications => {
           const updatedNotifications = [...notifications];
-          updatedNotifications[index] = { ...updatedNotifications[index], read: new Date().toISOString() };
+          updatedNotifications[index] = { ...updatedNotifications[index], read_at: new Date().toISOString() }; 
+          this.dataSharedService.updateNotifications(updatedNotifications)   
           return updatedNotifications;
         });
       }

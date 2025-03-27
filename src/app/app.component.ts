@@ -79,6 +79,7 @@ export class AppComponent implements OnInit,OnDestroy{
         next: (notifications) => {
           this.notificationModel = notifications;
           this.dataSharedService.updateNotifications(notifications);
+          this.dataSharedService.updateMessages(notifications)
         },
       });
   }

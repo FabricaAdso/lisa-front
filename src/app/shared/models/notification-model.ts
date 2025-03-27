@@ -6,6 +6,6 @@ export interface NotificationModel {
     user_id: number;
     user_recieved:string;
     type: 'success' | 'error' | 'warning' | 'info';
-    read:string
+    read_at:string 
 }
 

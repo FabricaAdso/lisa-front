@@ -1,10 +1,10 @@
-@for (item of notifications(); track $index) {
+@for (item of messages(); track $index) {
     <nz-alert 
       nzBanner 
       [nzMessage]="item.message" 
-      [nzType]="item.read ? 'info' : item.type" 
+      [nzType]="item.read_at ? 'info' : item.type" 
       [nzShowIcon]="true" 
-      [nzAction]="item.type === 'warning' && !item.read ? actionTemplate1 : null">
+      [nzAction]="item.type === 'warning' && !item.read_at ? actionTemplate1 : null">
     </nz-alert>
   
     <ng-template #actionTemplate1>
