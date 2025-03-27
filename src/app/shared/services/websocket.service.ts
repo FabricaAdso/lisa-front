@@ -48,20 +48,12 @@ export class WebSocketService {
 
   // Escuchar un canal
   listen(channel: string, event: string, callback: Function): void {
-    if (!this.echo) {
-      console.error('Echo no está inicializado');
-      return;
-    }
-    this.echo.private(channel).listen(event, callback);
+    this.echo?.private(channel).listen(event, callback);
   }
 
   // Dejar de escuchar un canal
   unlisten(channel: string): void {
-    if (!this.echo) {
-      console.error('Echo no está inicializado');
-      return;
-    }
-    this.echo.leave(channel);
+    this.echo?.leave(channel);
   }
 
   // Desconectar Echo
