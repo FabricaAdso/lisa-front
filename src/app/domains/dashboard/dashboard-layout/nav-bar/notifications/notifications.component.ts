@@ -7,16 +7,20 @@ import { NotificationService } from '@shared/services/notification.service';
 import { SharedDataService } from '@shared/services/shared-data.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { timestamp } from 'rxjs';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
-  imports: [ReactiveFormsModule,CommonModule,NzAlertModule, NzIconModule],
+  imports: [ReactiveFormsModule,CommonModule,NzAlertModule, NzIconModule, NzSpaceModule, NzDrawerModule],
   standalone: true
 })
 export class NotificationsComponent implements OnInit {
+
+  size: 'large' | 'default' = 'default';
+  visible = false;
 
   private dataSharedService = inject(SharedDataService);
   private notification_service = inject(NotificationService);
@@ -26,8 +30,21 @@ export class NotificationsComponent implements OnInit {
   notificationModel: NotificationModel[] | null = null
   messages = signal<NotificationModel[]>([]);
 
-  ngOnInit(): void {
+  ngOnInit(){
     this.messages = this.dataSharedService.messages;
+  }
+
+  showLarge(){
+    this.size = 'large';
+    this.open();
+  }
+
+  open(){
+    this.visible = true;
+  }
+
+  close(){
+    this.visible = false;
   }
 
   markAsRead(id: number, index: number){

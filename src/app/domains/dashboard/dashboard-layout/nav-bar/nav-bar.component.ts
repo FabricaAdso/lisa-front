@@ -9,6 +9,7 @@ import {
   inject,
   signal,
   CUSTOM_ELEMENTS_SCHEMA,
+  ViewChild,
 } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -18,6 +19,7 @@ import { AuthService } from '@shared/services/auth.service';
 import { UserModel } from '@shared/models/user.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedDataService } from '@shared/services/shared-data.service';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 @Component({
   selector: 'app-nav-bar',
@@ -29,7 +31,7 @@ import { SharedDataService } from '@shared/services/shared-data.service';
     DropDownMenuComponent,
     ReactiveFormsModule,
     NzBadgeModule,
-    
+    NotificationsComponent
 ],
   templateUrl: './nav-bar.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -38,6 +40,8 @@ import { SharedDataService } from '@shared/services/shared-data.service';
 export class NavBarComponent implements OnInit {
 
   private router = inject(Router);
+
+  @ViewChild('messages') messages:any = NotificationsComponent;
 
   private dataSharedService = inject(SharedDataService);
   notificationCount = this.dataSharedService.notificationCount;
@@ -56,6 +60,11 @@ export class NavBarComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   private auth_service = inject(AuthService);
+
+  openNotifications(){
+    this.messages.visible = true;
+  }
+
   ngOnInit(): void {
     this.breackpoint_observer
       .observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
@@ -86,9 +95,7 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['auth/login']);
   }
 
-  goNotifications(){
-    this.router.navigate(['dashboard/notification']);
-  }
+  
 
   logout(){
     console.log('Cerrar sesión...');
