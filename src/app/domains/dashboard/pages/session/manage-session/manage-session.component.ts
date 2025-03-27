@@ -196,41 +196,72 @@ export class ManageSessionComponent implements OnInit {
 
   }
 
+  rapsByCourse: { [courseCode: string]: Array<{ value: string, label: string }> } = {};
+  instructorsByCourse: { [courseCode: string]: Array<{ value: string, label: string }> } = {};
+
+  // ... otros métodos
+
   loadFilterOptions(): void {
     this.sessionse.getFilterOptions().subscribe({
       next: (res: any) => {
-        //console.log('Opciones de filtros:', res);
+        // Asigna y mapea las opciones de curso usando el code
         this.allCourseOptions = res.courses.map((course: any) => ({
           value: course.code.toString(),
           label: course.code ? course.code.toString() : 'N/D'
         }));
-        this.allInstructorOptions = res.instructors.map((instr: any) => ({
-          value: instr.id.toString(),
-          label: `${instr.user.name} ${instr.user.last_name}`
-        }));
-        this.allRapOptions = res.raps.map((rap: any) => ({
-          value: rap.id.toString(),
-          label: rap.description ? rap.description : 'N/D'
-        }));
-
+        // Asegúrate de que courseOptions también reciba esos datos
         this.courseOptions = [...this.allCourseOptions];
-        this.instructorOptions = [...this.allInstructorOptions];
-        this.rapOptions = [...this.allRapOptions];
+
+        // Mapear RAPs por curso (haciendo type assertion para TypeScript)
+        this.rapsByCourse = {};
+        Object.entries(res.rapsByCourse as Record<string, any[]>).forEach(([courseCode, raps]) => {
+          this.rapsByCourse[courseCode] = raps.map(rap => ({
+            value: rap.id.toString(),
+            label: rap.description || 'N/D'
+          }));
+        });
+
+        // Mapear Instructores por curso
+        this.instructorsByCourse = {};
+        Object.entries(res.instructorsByCourse as Record<string, any[]>).forEach(([courseCode, instructors]) => {
+          this.instructorsByCourse[courseCode] = instructors.map(instructor => ({
+            value: instructor.id.toString(),
+            label: `${instructor.user.name} ${instructor.user.last_name}`
+          }));
+        });
+
+        // Opciones iniciales vacías para RAP e Instructor
+        this.rapOptions = [];
+        this.instructorOptions = [];
       },
       error: (err) => console.error('Error al cargar opciones de filtros:', err)
     });
   }
 
+
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
-    if (value && value.trim().length > 0) {
+    if (value) {
       this.filters['course_'] = value.trim();
+      // Actualiza las opciones según el código de curso seleccionado
+      this.rapOptions = this.rapsByCourse[value] || [];
+      this.instructorOptions = this.instructorsByCourse[value] || [];
     } else {
       delete this.filters['course_'];
+      this.rapOptions = [];
+      this.instructorOptions = [];
     }
-    //console.log('Filtros actualizados:', this.filters);
+
+    // Reiniciar filtros dependientes
+    this.rapFilter = '';
+    this.instructorFilter = '';
+    delete this.filters['rap_'];
+    delete this.filters['instructor_'];
+
     this.loadLeaderSessions();
   }
+
+
 
   onRapFilterChange(value: string): void {
     this.rapFilter = value;
@@ -333,30 +364,27 @@ export class ManageSessionComponent implements OnInit {
   }
 
 
-  private modalService = inject(NzModalService);
+  @ViewChild('sessionEdit') sessionEditComponent!: SessionEditComponent;
+
 
   openEditModal(sessionId: number): void {
-    const modalRef = this.modalService.create({
-      nzTitle: 'Editar Sesión',
-      nzContent: SessionEditComponent,
-      nzFooter: null
-    });
-
-    modalRef.afterOpen.subscribe(() => {
-      const contentComponent = modalRef.getContentComponent() as SessionEditComponent;
-      if (contentComponent) {
-        contentComponent.sessionId = sessionId;
-        contentComponent.ngOnChanges({
-          sessionId: {
-            currentValue: sessionId,
-            previousValue: undefined,
-            firstChange: true,
-            isFirstChange: () => true
-          }
-        });
-      }
-    });
+    if (this.sessionEditComponent) {
+      this.sessionEditComponent.sessionId = sessionId;
+      this.sessionEditComponent.ngOnChanges({
+        sessionId: {
+          currentValue: sessionId,
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true
+        }
+      });
+      this.sessionEditComponent.openModal();
+    } else {
+      console.error('No se encontró la instancia de SessionEditComponent');
+    }
   }
+
+
 
   isSessionEditable(session: SessionModel): boolean {
     const sessionDate = new Date(session.date);
@@ -370,6 +398,14 @@ export class ManageSessionComponent implements OnInit {
     const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     return sessionDateOnly >= todayOnly;
+  }
+
+  onSessionCreated(response: SessionModel): void {
+    // Actualiza la tabla
+    this.loadLeaderSessions(this.page);
+    // Actualiza las opciones de filtros
+    this.loadFilterOptions();
+
   }
 
 
