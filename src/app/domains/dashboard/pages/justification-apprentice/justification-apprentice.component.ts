@@ -9,17 +9,13 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { RejectedModalComponent } from './rejected-modal/rejected-modal.component';
 import { ApprovedModalComponent } from './approved-modal/approved-modal.component';
 import { ExpiredModalComponent } from './expired-modal/expired-modal.component';
-import { AssistanceModel } from '@shared/models/assistance.model';
 import { forkJoin } from 'rxjs';
 import { ApprovedModel } from '@shared/models/aproved-model';
-import { AprobationService } from '@shared/services/aprobation.service';
 import { JustificationService } from '@shared/services/justification.service';
 import { JustificationModel } from '@shared/models/justification-model';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
-import { ThisReceiver } from '@angular/compiler';
-import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
 
 
 @Component({

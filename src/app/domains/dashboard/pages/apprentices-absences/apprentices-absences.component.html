@@ -55,14 +55,14 @@
   [nzPageSize]="elements" [nzResponsive]="true" [nzHideOnSinglePage]="true">
 </nz-pagination>
 
+<!-- Modal para Rechazadas -->
+<app-rejected-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.RECHAZADO"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-rejected-modal>
 
-<app-modal-rejected *ngIf="selectedJustification?.aprobation!.state =='Rechazada'" [isVisible]="isModalVisible"
-  [justification]="selectedJustification" (close)="closeModal()"></app-modal-rejected>
+<!-- Modal para Aprobadas -->
+<app-approved-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.APROBADO"
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-approved-modal>
 
-<app-modal-approved *ngIf="selectedJustification?.aprobation!.state =='Aprobada'" [isVisible]="isModalVisible"
-  [justification]="selectedJustification" (close)="closeModal()"
-  (statusChange)="updateJustificationStatus(selectedJustification, $event)">
-</app-modal-approved>
 
 <app-modal-pending *ngIf="selectedJustification?.aprobation!.state =='Pendiente' || selectedJustification?.aprobation!.state == null" [isVisible]="isModalVisible"
   [justification]="selectedJustification" (close)="closeModal()"
