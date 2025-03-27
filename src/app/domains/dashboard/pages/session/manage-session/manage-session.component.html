@@ -1,5 +1,4 @@
 <div style="
-  max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
   display: flex;
@@ -7,14 +6,17 @@
   gap: 1rem;
 ">
 
-  <div style="display: flex; justify-content: flex-end;">
-    <button nz-button nzType="primary" (click)="openModal()"
-      style="background-color: #52c41a; color: #fff; padding: 0.5rem 1rem;">
-      Crear sesión
-    </button>
-  </div>
+<div class="flex justify-end">
+  <button
+      nz-button
+      nzType="primary"
+      (click)="openModal()"
+  >
+      Crear session
+  </button>
+</div>
 
-  <app-session [isModalVisible]="createSessionOpen" #sessionModal></app-session>
+  <app-session [isModalVisible]="createSessionOpen" #sessionModal (sessionCreated)="loadLeaderSessions()"></app-session>
 
   <div style="
       display: grid;
@@ -47,37 +49,49 @@
     </nz-select>
   </div>
 
-  <nz-table #basicTable [nzData]="sessions" nzBordered nzSize="middle" style="margin-top: 1rem;">
+  <nz-table   #basicTable [nzData]="sessions" [nzFrontPagination]="false"   nzBordered nzSize="middle"  [nzScroll]="{ y: '400px' }"  style="margin-top: 1rem;   overflow: hidden; " >
     <thead style="background-color: #52c41a; color: #fff;">
       <tr>
-        <th nzWidth="6%">Fecha</th>
-        <th nzWidth="4%">Ficha</th>
-        <th nzWidth="10%">Programa</th>
-        <th nzWidth="10%">Instructor</th>
-        <th nzWidth="4%">Horario</th>
-        <th nzWidth="15%">competencia</th>
-        <th nzWidth="10%">Rap</th>
-        <th nzWidth="3%">Accion</th>
+        <th nzWidth="10%">Fecha</th>
+        <!-- <th nzWidth="4%">Ficha</th> -->
+        <th nzWidth="15%">Programa</th>
+        <th nzWidth="15%">Instructor</th>
+        <th nzWidth="10%">Horario</th>
+        <th nzWidth="20%">competencia</th>
+        <th nzWidth="20%">Rap</th>
+        <th nzWidth="10%">Accion</th>
+        <!-- <th>id</th> -->
       </tr>
     </thead>
-    <tbody>
+    <tbody class="" >
       <tr *ngFor="let session of sessions ; trackBy: trackBySession" class="hover:bg-gray-100">
         <td>{{ session.date }}</td>
-        <td>{{ session.course?.code || 'N/D' }}</td>
+        <!-- <td>{{ session.course?.code || 'N/D' }}</td> -->
         <td>{{ session.course?.program?.name || 'N/D' }}</td>
         <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
         <td>{{ session.start_time }} - {{ session.end_time }}</td>
-        <td>{{ session.rap?.subject?.name || 'N/D' }}</td>
-        <td>{{ session.rap?.description || 'N/D' }} ({{ session.rap?.number_hours || 'N/D' }})</td>
-        <td>
-          <span nz-icon nz-t>
+        <td>{{ session.rap.subject?.name || 'N/D' }}</td>
 
-          </span>
-          <a nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?" (nzOnConfirm)="onDeleteSession(session.id)">
+        <td>{{ session.rap.description || 'N/D' }} ({{ session.rap.number_hours || 'N/D' }})</td>
+        <td>
+              <a *ngIf="isSessionEditable(session)" (click)="openEditModal(session.id)" style="margin-right: 8px;">Editar</a>
+
+
+          <a *ngIf="isSessionEditable(session)" nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?" (nzOnConfirm)="onDeleteSession(session.id)">
             Eliminar
+                        <!-- <i nz-icon nzType="delete" style="font-size: 24px;"></i> -->
+
           </a>
         </td>
+        <!--<td>{{ session.id || 'Sin id' }}</td> -->
+
 
       </tr>
     </tbody>
   </nz-table>
+  <nz-pagination
+  [nzPageIndex]="page"
+  [nzTotal]="total"
+  [nzPageSize]="elements"
+  (nzPageIndexChange)="changePage($event)">
+</nz-pagination>

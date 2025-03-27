@@ -68,20 +68,26 @@ export class FichaComponent {
   }
 
   ngOnInit(): void {
+    this.loadData()
   }
 
   loadData(): void {
-    this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
-      next: (courses) => {
+    const data_sub = forkJoin([
+      this.courseService.getCursesInstructorNow({ included: ['course.program'] }),
+      this.courseService.getCouurseSessionsPast({ included: ['course.program'] }),
+    ]).subscribe({
+      next: ([courses,course_past]) => {
         if (!Array.isArray(courses) || courses.length === 0) {
           return;
         }
         this.pending_courses = courses;
+        this.record_courses = course_past
       },
       error: (err) => {
         console.error('Error al cargar los cursos pendientes:', err);
       }
-    });
+    })
+    
   }
   
   deleteSession(sessionId: number, courseId: number) {

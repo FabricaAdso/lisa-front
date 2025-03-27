@@ -8,37 +8,31 @@ import { Observable } from 'rxjs';
 import { WebSocketService } from './websocket.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-
-  constructor() { }
-
   private websocketService = inject(WebSocketService);
-
   private http = inject(HttpClient);
 
-  user = signal<UserModel|null>(null);
+  user = signal<UserModel | null>(null);
 
-  login(data:LoginDTO){
-    return this.http.post<TokenModel>(`login`,data).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.access_token);
+  login(data: LoginDTO): Observable<TokenModel> {
+    return this.http.post<TokenModel>('login', data).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.access_token); // Guardar el token
+        this.websocketService.initializeEcho(); // Reinicializar el WebSocket con el nuevo token
       })
     );
   }
 
-  logout(){
+  logout(): void {
     localStorage.removeItem('token');
-  localStorage.removeItem('pusherTransportNonTLS'); 
-
-  this.user.set(null); // Limpiar usuario
-
-  this.websocketService.disconnect(); 
+    localStorage.removeItem('pusherTransportNonTLS');
+    this.user.set(null); // Limpiar el usuario
+    this.websocketService.disconnect(); // Desconectar el WebSocket
   }
 
-  isAuth() {
+  isAuth(): boolean {
     return localStorage.getItem('token') !== null;
   }
 
@@ -50,7 +44,8 @@ export class AuthService {
     return this.http.post<UserModel>('me', {}).pipe(
       tap({
         next: (user) => {
-          this.user.set(user);  // Llenar el signal con los datos del usuario
+          this.user.set(user); // Actualizar el signal con los datos del usuario
+          this.subscribeToNotifications(user.id); // Suscribir al canal de notificaciones
         },
         error: (err) => {
           console.error('Error al cargar el usuario:', err);
@@ -60,4 +55,7 @@ export class AuthService {
     );
   }
 
+  subscribeToNotifications(userId: number): void {
+    this.websocketService.listen(`notifications.${userId}`, '.notification.received', (data: any) => {});
+  }
 }

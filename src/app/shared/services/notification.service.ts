@@ -11,7 +11,6 @@ export class NotificationService {
 
   private http = inject(HttpClient);
   url:string = 'message'
-
     getNotifications(){
       return this.http.get<NotificationModel[]>(`${this.url}`);
     }

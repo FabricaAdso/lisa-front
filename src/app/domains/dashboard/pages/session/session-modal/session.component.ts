@@ -49,11 +49,20 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     FormsModule,
     NzModalContentDirective,
     NzInputNumberModule,
-],
+  ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
 export class SessionComponent implements OnInit, OnDestroy {
+
+
+  disabledDate = (current: Date): boolean => {
+    // Deshabilita las fechas anteriores al inicio del día actual
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return current && current < today;
+  }
+
 
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;
@@ -177,10 +186,10 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.knowledge_network = [...knowledgeNetwork];
         this.courses = [...courses];
 
-/*         this.courses = courses.filter(course =>course.state === 'En_ejecucion')
- */
+        /*         this.courses = courses.filter(course =>course.state === 'En_ejecucion')
+         */
 
-},
+      },
       error: (err) => {
         console.error('Error fetching data:', err);
       },
@@ -309,15 +318,14 @@ export class SessionComponent implements OnInit, OnDestroy {
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl({value: '',disable:true}, Validators.required),
+      instructor_id: new FormControl({ value: '', disable: true }, Validators.required),
       course_id: new FormControl('', Validators.required),
       start_time: new FormControl(null, Validators.required),
       end_time: new FormControl(null, Validators.required),
-/*       end_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
- */      start_date: new FormControl(new Date(), Validators.required),
+      start_date: new FormControl(new Date(), Validators.required),
       days_of_week: new FormControl([], Validators.required,),
-      rap_id: new FormControl({value: '', disabled:true}, Validators.required,),
-      subject_id: new FormControl({value: '',disabled:true}, Validators.required,),
+      rap_id: new FormControl({ value: '', disabled: true }, Validators.required,),
+      subject_id: new FormControl({ value: '', disabled: true }, Validators.required,),
       percentage: new FormControl('', Validators.required)
     });
 
@@ -413,25 +421,22 @@ export class SessionComponent implements OnInit, OnDestroy {
       this.session_service.createSession(session).subscribe({
         next: (data) => {
           const newSession: SessionModel = Array.isArray(data) ? data[0] : data;
-// Cuando se crea la sesión
-        this.sessionCreated.emit(newSession);
+          // Cuando se crea la sesión
+          this.sessionCreated.emit(newSession);
           this.createBasicNotification();
           this.closeModal();
         },
         error: (err) => {
-          console.error('Error al crear la sesión:', err);
-          this.notification.create('error', 'Error', 'No se pudo crear la sesión');
-        }
+          this.notification.create(
+            'error',
+            'Error',
+            'Error al crear la sesión: ' + err.message
+          )}
       });
     } else {
-      this.notification.create('warning', 'Error', 'Por favor, complete todos los campos');
+      this.notification.create('warning', 'Advertencia', 'Por favor, complete todos los campos');
     }
   }
-
-
-
-
-
 
   createBasicNotification(): void {
     this.notification
@@ -453,11 +458,11 @@ export class SessionComponent implements OnInit, OnDestroy {
     } else {
       this.fieldInstructor.enable();
     }
-  this.isModalVisible = true;
+    this.isModalVisible = true;
   }
 
 
-defaultOpenValue = new Date(0, 0, 0, 0, 0);
+  defaultOpenValue = new Date(0, 0, 0, 0, 0);
 
 
 }

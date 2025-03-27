@@ -12,7 +12,7 @@ import { getQueryUrl } from '@shared/functions/url.functions';
 export class AreaService {
 
 private http = inject(HttpClient);
-url:string = 'environmentsArea';
+url:string = 'environmentss';
 constructor() { }
 
 get(data?:QueryUrl){
@@ -34,6 +34,8 @@ delete(id:number){
   return this.http.delete(`${this.url}/${id}`);
 
 }
+
+
 
 
 }

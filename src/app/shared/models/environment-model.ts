@@ -1,12 +1,14 @@
-import { AreaModel } from "./area-model";
-import { SedeModel } from "./sede.model";
+import { HeadquarterModel } from "./headquarter.model";
+import { KnowledgeNetworkModel } from "./knowledg-network.model";
+
 
 export interface EnvironmentModel{
     id:number;
     name:string;
     capacity:number
-    knowledge_network:string;
+    knowledge_network_id:number;
+    knowledge_network:KnowledgeNetworkModel;
     headquarters_id:number;
-    headquarters?: SedeModel;
-   
+    headquarters: HeadquarterModel;
+
 }

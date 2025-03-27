@@ -1,0 +1,56 @@
+@if (isVisible) {
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <form nz-form [formGroup]="formEnvironment">
+      <nz-form-item>
+        <nz-form-label nzRequired>Nombre</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="name" placeholder="Nombre del ambiente" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Capacidad</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="capacity" placeholder="Capacidad del ambiente" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-label>Area</nz-form-label>
+        <nz-form-control>
+          <nz-select nzPlaceHolder="Seleccione un centro de formación" formControlName="knowledge_network_id">
+            @for (knowledgeNetwork of knowlwdegeList; track knowledgeNetwork.id) {
+            <nz-option [nzValue]="knowledgeNetwork.id" [nzLabel]="knowledgeNetwork.name"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+     
+@if(!isEdit){
+
+  <nz-form-item>
+    <nz-form-label>Sede</nz-form-label>
+    <nz-form-control>
+      <nz-select nzPlaceHolder="Seleccione una sede" formControlName="headquarters_id">
+        @for (headquarter of headquarterList; track headquarter.id) {
+          <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
+        }
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+}
+
+      
+
+
+      <div class="modal-footer">
+        <button nz-button nzType="default" (click)="closeModal()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="saveData()">
+          {{ isEdit ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}
