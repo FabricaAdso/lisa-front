@@ -9,6 +9,8 @@ export class ApiRolesService{
 
   private http = inject(HttpClient);
 
+  
+
   // Obtener todos los usuarios
   getUsers(page:number =1, pageSize:number = 10): Observable<any> {
     return this.http.get(`users-by-training-center?elementos=${pageSize}&page=${page}`);

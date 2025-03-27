@@ -15,6 +15,7 @@ import { TrainingCentreService } from '@shared/services/training-center.service'
 import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-modal-headquarter',
@@ -50,6 +51,7 @@ export class ModalHeadquarterComponent {
   private headquarterService = inject(HeadquartersService);
   private trainingCenterService = inject(TrainingCentreService);
   private message = inject(NzMessageService);
+  private notification= inject(NzNotificationService);
 
 
 
@@ -150,7 +152,7 @@ export class ModalHeadquarterComponent {
           this.resetModal(); // Reiniciar el modal después de guardar
           this.updatedHeadquarter.emit();
           this.isVisibleHeadquarter = false;
-          this.message.success('Sede actualizada correctamente'); // Mensaje de éxito
+          this.notification.success('','Sede actualizada correctamente'); // Mensaje de éxito
 
         },
         error: (err) => {
@@ -164,7 +166,7 @@ export class ModalHeadquarterComponent {
           this.resetModal(); // Reiniciar el modal después de guardar
           this.updatedHeadquarter.emit();
           this.isVisibleHeadquarter = false;
-          this.message.success('Sede creada correctamente'); // Mensaje de éxito
+          this.notification.success('','Sede creada correctamente'); // Mensaje de éxito
         },
         error: (err) => {
           this.message.error('Error al crear sede', err);

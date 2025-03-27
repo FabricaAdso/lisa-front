@@ -8,10 +8,16 @@
 
 ::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
   color: #fff;
-  border-color:  #52c41a!important;
-  background:  #52c41a!important;
+  border-color:  #52c41a;
+  background:  #52c41a;
 }
 
+::ng-deep .ant-btn:hover, .ant-btn:focus {
+  color: #52c41a;
+  border-color: #52c41a;
+  background: #fff;
+
+}
 
 /* Contenedor de Fichas Activas */
 .fichas-container {
@@ -97,3 +103,16 @@ nz-collapse {
   border: 1px solid #e0e0e0;
   background-color: white;
 }
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+  color: #fff;
+  border-color: #52c41a;
+  background: #00af00;
+}
+
+::ng-deep .ant-btn-primary {
+  border-color: #52c41a;
+  color: white;
+  background-color: #52c41a;
+  outline: none;
+}
+

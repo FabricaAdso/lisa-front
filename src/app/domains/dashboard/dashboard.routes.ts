@@ -12,7 +12,7 @@ export const routes: Routes = [
         redirectTo: 'environtments',
       },
       {
-        path: 'fichas/:course_code/attendance',
+        path: 'session/:session_id/:course_code/attendance',
         title: 'Asistencia',
         canActivate: [authGuard],
         data: {breadcrumb: 'Tomar Asistencia'},
@@ -78,6 +78,7 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
       },
 
+
       {
         path: 'programs',
         title: 'Programas',
@@ -93,13 +94,23 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/calendar/calendar.component').then(c => c.CalendarComponent)
       },
-
       {
+        path: 'managesession',
+        title: 'Gestionar sesiones',
+        data: { breadcrumb: 'Gestion de sesiones'},
+        canActivate: [authGuard],
+        loadComponent: () => import('@domains/dashboard/pages/session/manage-session/manage-session.component').then(c =>c.ManageSessionComponent)
+
+      },
+
+    
+
+       {
         path: 'file',
         title: 'Fichas',
         data: { breadcrumb: 'Fichas' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/ficha-page/ficha-page.component').then(c => c.FichaPageComponent)
+        loadComponent: () => import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
       },
       {
         path: 'absences',
@@ -116,6 +127,7 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/dashboard-layout/nav-bar/notifications/notifications.component').then(c => c.NotificationsComponent)
 
       },
+
       {
         path: 'error_401',
         title: 'Autenticación Requerida',
@@ -133,6 +145,8 @@ export const routes: Routes = [
         title: 'Página no encontrada',
         loadComponent: () => import('@domains/dashboard/pages/errors/error-404/error-404.component').then(c => c.Error404Component)
       },
+
+
     ]
   }
 ];

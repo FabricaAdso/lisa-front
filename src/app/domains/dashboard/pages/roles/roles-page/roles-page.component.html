@@ -1,11 +1,29 @@
-<div class="buscador">
+
+<div class="buscador flex-row-reverse">
+  <div class="flex  items-center justify-between">
+    <div class="flex items-start"></div>
+    <button
+      (click)="showModalCargue()"
+      class="text-sm font-medium text-primary-600 dark:text-primary-500"
+    >
+      Cargue Masivo
+    </button>
+  </div>
   <!-- barra de busqueda -->
   <div class="barra-busqueda">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-      <input type="text" nz-input placeholder="Buscar usuario" [(ngModel)]="searchTerm" (input)="searchUsers()" />
+      <input
+        type="text"
+        nz-input
+        placeholder="Buscar usuario"
+        [(ngModel)]="searchTerm"
+        (input)="searchUsers()"
+      />
     </nz-input-group>
     <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+      <button nz-button nzType="primary" nzSearch>
+        <span nz-icon nzType="search"></span>
+      </button>
     </ng-template>
   </div>
   <!-- tabla de usuarios  -->
@@ -24,50 +42,73 @@
     <tbody>
       <tr *ngFor="let user of basicTable.data">
         <td>{{ user.identity_document }}</td>
-        <td>{{ user.name}} {{user.last_name}}</td>
+        <td>{{ user.name }}</td>
         <td>{{ user.last_name }}</td>
         <td>
           <span *ngFor="let roleId of user.roles; let i = index">
-            {{ this.getRoleName(roleId) }}<span *ngIf="i < user.roles.length - 1">, </span>
+            {{ this.getRoleName(roleId)
+            }}<span *ngIf="i < user.roles.length - 1">, </span>
           </span>
         </td>
         <td>
-          <button (click)="showModal(user)" class="btn btn-primary">Editar Roles</button>
+          <button (click)="showModal(user)" class="btn btn-primary">
+            Editar Roles
+          </button>
           <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
-            {{ user.deactivation_date ? 'Activar' : 'Desactivar' }}
+            {{ user.deactivation_date ? "Activar" : "Desactivar" }}
           </button>
         </td>
       </tr>
     </tbody>
   </nz-table>
   <div class="paginate">
-    <nz-pagination (nzPageIndexChange)="changePage($event)" [nzPageIndex]="pageIndex" [nzTotal]="totalItems"
-    [nzPageSize]="pageSize">
-  </nz-pagination>
-
+    <nz-pagination
+      (nzPageIndexChange)="changePage($event)"
+      [nzPageIndex]="pageIndex"
+      [nzTotal]="totalItems"
+      [nzPageSize]="pageSize"
+    >
+    </nz-pagination>
   </div>
-  
 </section>
 
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles y Estado" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Editar Roles y Estado"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
     <div class="modal-content">
       <div class="modal-body">
         <div>
           <div class="form-group">
-
-
             <label for="roles">Seleccionar Roles</label>
 
-            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-              nzPlaceHolder="Seleccione roles" [(ngModel)]="selectedRoles" name="roles"
-              (ngModelChange)="onRolesChange($event)">
-              <nz-option *ngFor="let role of roles" [nzLabel]="role.name" [nzValue]="role.id"></nz-option>
+            <nz-select
+              [nzMaxTagCount]="3"
+              [nzMaxTagPlaceholder]="tagPlaceHolder"
+              nzMode="multiple"
+              nzPlaceHolder="Seleccione roles"
+              [(ngModel)]="selectedRoles"
+              [nzOpen]="isDropdownOpen" 
+              name="roles"
+              (ngModelChange)="onRolesChange($event)"
+              (nzOnSearch)="onSearchChange($event)"
+            >
+              <nz-option
+                *ngFor="let role of roles"
+                [nzLabel]="role.name"
+                [nzValue]="role.id"
+              ></nz-option>
             </nz-select>
-            <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} más seleccionados</ng-template>
+            <ng-template #tagPlaceHolder let-selectedList
+              >y {{ selectedList.length }} más seleccionados</ng-template
+            >
           </div>
         </div>
       </div>
     </div>
   </ng-container>
 </nz-modal>
+
+<app-charge-button #chargeButton></app-charge-button>

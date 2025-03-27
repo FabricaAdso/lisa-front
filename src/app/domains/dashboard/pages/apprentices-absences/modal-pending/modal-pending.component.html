@@ -1,56 +1,79 @@
-<nz-modal
-  [(nzVisible)]="isVisible"
-  nzTitle="Justificación Aprobada"
-  [nzFooter]="modalFooter"
-  (nzOnCancel)="closeModal()"
->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Pendiente de respuesta" [nzFooter]="modalFooter"
+  (nzOnCancel)="closeModal()"  [nzMaskClosable]="false">
   <ng-container *nzModalContent>
     <div>
-      <p style="display: flex; align-items: center; margin-bottom: 16px">
-        <i
-          nz-icon
-          nzType="file-pdf"
-          nzTheme="outline"
-          style="color: red; margin-right: 8px"
-        ></i>
-        <strong>{{ justification.file_url || "Archivo no disponible" }}</strong>
-      </p>
-      <div>
-        <p style="margin: 0; color: #555">
-          {{ justification.description || "Motivo no especificado" }}
+      <!-- <strong>{{ justification.file_url || "Archivo no disponible" }}</strong> -->
+
+      <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->
+      <div *ngIf="justification.file_url" class="file-container">
+        <a [href]="justification.file_url" target="_blank" class="file-link">
+          <i nz-icon nzType="file-pdf" nzTheme="outline" ></i>
+          <span>Ver archivo adjunto</span>
+        </a>
+      </div>
+      <p *ngIf="!justification.file_url" style="text-align: center;">No hay un archivo cargado.</p>
+
+      <div class="motive-box">
+        <p>Descripción de la justificación</p>
+        <p >
+          {{ justification.description || "Descripcion no especificado" }}
         </p>
       </div>
-      <div *ngIf="isRejecting">
+
+      <div class="motive-instructor" *ngIf="isRejecting">
         <label for="motive">Motivo del Rechazo:</label>
-        <textarea
-          id="motive"
-          [(ngModel)]="motive"
-          placeholder="Escribe el motivo del rechazo..."
-          rows="4"
-          style="width: 100%"
-        ></textarea>
+
+        <textarea 
+          id="motive" 
+          nz-input rows="4" 
+          placeholder="Escribe el motivo del rechazo..." 
+          [(ngModel)]="motive" 
+          (input)="validateMotive()"
+          maxlength="255"
+          style="width: 100%; margin-top: 8px; max-height: 150px; overflow: auto; resize: vertical;">
+       
+        </textarea>
+
+        
+  <!-- 🚨 Mensaje si el campo está vacío -->
+  <p *ngIf="isMotiveRequired" style="color: red; font-size: 12px; margin-top: 4px;">
+    ⚠️ El motivo es obligatorio.
+  </p>
+
+  <!-- 🚨 Mensaje si una palabra es demasiado larga -->
+  <p *ngIf="wordTooLongMotive" style="color: orange; font-size: 12px; margin-top: 4px;">
+    ⚠️ Hay una palabra demasiado larga, agrega espacios.
+  </p>
+
+  <!-- 🚨 Mensaje si se superan los 255 caracteres -->
+  <p *ngIf="charLimitExceededMotive" style="color: red; font-size: 12px; margin-top: 4px;">
+    ⚠️ No puedes escribir más de 255 caracteres.
+  </p>
+
+  <!-- Contador de caracteres -->
+  <p style="font-size: 12px; color: gray;">{{ motive.length }} / 255 caracteres</p>
+
+
       </div>
     </div>
   </ng-container>
   <ng-template #modalFooter>
-    <button nz-button nzType="primary" (click)="handleApprove()">
+    <button 
+    nz-button 
+    nzType="primary" 
+    class="boton-enviar"
+    [disabled]="isRejecting"
+    (click)="handleApprove()" 
+    >
       Aprobar
     </button>
-    <button
-      *ngIf="!isRejecting"
-      nz-button
-      nzType="default"
-      (click)="handleReject()"
-    >
+    <button *ngIf="!isRejecting" nz-button nzType="default" (click)="handleReject()">
       Rechazar
     </button>
-    
-    <button
-      *ngIf="isRejecting"
-      nz-button
-      nzType="primary"
-      (click)="sendRejection()"
-    >
+
+    <button 
+    class="boton-enviar"
+    *ngIf="isRejecting" nz-button nzType="primary" (click)="sendRejection()">
       Enviar Motivo de Rechazo
     </button>
   </ng-template>

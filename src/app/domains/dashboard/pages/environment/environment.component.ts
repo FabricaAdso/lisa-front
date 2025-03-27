@@ -16,6 +16,8 @@ import { ModalHeadquarterComponent } from './modal-headquarter/modal-headquarter
 import { ModalEnvironmentComponent } from './modal-environment/modal-environment.component';
 import { HeadquarterModel } from '@shared/models/headquarter.model';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-environment',
@@ -36,6 +38,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzSelectModule,
     ModalHeadquarterComponent,
     ModalEnvironmentComponent,
+    NzPopconfirmModule
   ],
   templateUrl: './environment.component.html',
   styleUrl: './environment.component.css',
@@ -54,6 +57,8 @@ export class EnvironmentComponent {
   private environmentService = inject(EnvironmentService);
   private headquarterService = inject(HeadquartersService);
   private message = inject(NzMessageService);
+  private notification = inject(NzNotificationService)
+ 
 
   //Declaracion de varibales
 
@@ -106,23 +111,23 @@ export class EnvironmentComponent {
   //funcion para eliminar un ambiente seleccionado 
   deleteEnvironment(id:number):void{
     this.selectedEnvironment = id
-    console.log(id);
-    const confrimacion = window.confirm('Estas seguro que quieres eliminar el ambiente, esta acción no se puede deshacer');
-    if(confrimacion){
+    // console.log(id);
+    // const confrimacion = window.confirm('Estas seguro que quieres eliminar el ambiente, esta acción no se puede deshacer');
+    // if(confrimacion){
       this.environmentService.delete(id).subscribe({
         next: () => {
          
          this.handleEnvironmentUpdate();
           
-          this.message.success('Ambiente eliminado correctamente');
+         this.notification.success('ambiente eliminado','')
         },error:(error)=>{
           this.message.error('Error al eliminar el ambiente',error)
         }
       })
-    } else{
-      this.message.error('Se ha cancelado la eliminación del ambiente');
+    // } else{
+    //   this.message.error('Se ha cancelado la eliminación del ambiente');
 
-    }
+    // }
   }
 
 
@@ -141,8 +146,8 @@ export class EnvironmentComponent {
         this.modalHeadquarter.isVisibleHeadquarter = true; // Muestra el modal
       }
     } else {
-      this.message.warning(
-        'No se ha seleccionado una sede, por favor selecciona una  '
+      this.notification.warning(
+        '','No se ha seleccionado una sede, por favor selecciona una '
       );
     }
   }
@@ -176,24 +181,24 @@ export class EnvironmentComponent {
   //funcion para eliminar una sede desde el servicio  con mensaje de confirmacion
 
   deleteHeadquarter(id: number): void {
-    const confirmacion = window.confirm(
-      '¿Estás seguro de eliminar esta sede? Esta acción no se puede deshacer.'
-    );
-    if (confirmacion) {
+    // const confirmacion = window.confirm(
+    //   '¿Estás seguro de eliminar esta sede? Esta acción no se puede deshacer.'
+    // );
+    // if (confirmacion) {
       this.headquarterService.delete(id).subscribe({
         next: () => {
-          this.message.success('Sede eliminada correctamente'); // Mensaje de éxito
+          this.notification.success('Exito','Sede eliminada correctamente') // Mensaje de éxito
           this.selectedHeadquarter = null; //volver al valor determinado
           this.getHeadquarters(); // Actualizar la lista de sedes
           this.getEnvironments(); // Actualizar la lista de ambientes
         },
         error: () => {
-          this.message.error('Error al eliminar la sede'); // Mensaje de error
+          this.notification.error('Error al eliminar la sede',''); // Mensaje de error
         },
       });
-    } else {
-      this.message.error('Eliminación  de sede cancelada');
-    }
+    // } else {
+    //   this.message.error('Eliminación  de sede cancelada');
+    // }
   }
 
 
@@ -213,12 +218,18 @@ export class EnvironmentComponent {
 
   filterEnvironmentsByHeadquarter(): void {
     if (this.selectedHeadquarter) {
+      console.log('entro aca');
+      
       this.filteredEnvironments = this.EnvironmentsList.filter(
         (environment) =>
-          environment.headquarters?.id === this.selectedHeadquarter
+          environment.headquarters?.id === this.selectedHeadquarter,
+        console.log(this.filteredEnvironments)
       );
+      
     } else {
       this.filteredEnvironments = [];
+      console.log('no hay');
+      
     }
   }
 
@@ -237,13 +248,16 @@ export class EnvironmentComponent {
     };
     this.environmentService.getEnvironments(query).subscribe((environments) => {
       this.EnvironmentsList = environments;
-      this.filterEnvironmentsByHeadquarter();
+      console.log('ambientes todos',environments);
+      
+      // this.filterEnvironmentsByHeadquarter();
     });
   }
 
 
   //iniciar el componente
   ngOnInit(): void {
+    this.filterEnvironmentsByHeadquarter()
     this.getEnvironments();
     this.getHeadquarters();
   }

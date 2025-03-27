@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
@@ -68,20 +68,28 @@ export class FichaComponent {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData()
   }
 
-  loadData() {
-    // Llamar al servicio para obtener las fichas pendientes y sus sesiones
-    this.courseService.getCursesInstructorPending({ included: ['course.program'] }).subscribe({
-      next: (data) => {
- // Asigna las fichas al array
+  loadData(): void {
+    const data_sub = forkJoin([
+      this.courseService.getCursesInstructorNow({ included: ['course.program'] }),
+      this.courseService.getCouurseSessionsPast({ included: ['course.program'] }),
+    ]).subscribe({
+      next: ([courses,course_past]) => {
+        if (!Array.isArray(courses) || courses.length === 0) {
+          return;
+        }
+        this.pending_courses = courses;
+        this.record_courses = course_past
       },
-      error: (error) => {
-        console.error(error);
+      error: (err) => {
+        console.error('Error al cargar los cursos pendientes:', err);
       }
-    });
+    })
+    
   }
+  
   deleteSession(sessionId: number, courseId: number) {
     // Lógica para eliminar la sesión, usando el servicio correspondiente
     // this.courseService.deleteSession(sessionId, courseId).subscribe({

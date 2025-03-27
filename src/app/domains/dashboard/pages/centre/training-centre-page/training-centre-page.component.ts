@@ -4,19 +4,28 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 import { CreateCentreDTO } from '@shared/dto/create-centreDTO';
 import { UpdateCentreDTO } from '@shared/dto/update-centreDTO';
-import { TrainingCenterModel } from '@shared/models/training-center.model';
+import { TrainingCentreModel } from '@shared/models/training-centre-model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import {NzFormModule} from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { TrainingCentreService } from '@shared/services/training-center.service';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { TrainingCentreFormComponent } from '../components/training-centre-form/training-centre-form.component';
+import { log } from 'ng-zorro-antd/core/logger';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { tableComponteModel, tableDataComponteModel } from '@shared/models/table.model';
+import { ThisReceiver } from '@angular/compiler';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { RegionalService } from '@shared/services/regional.service';
+import { RegionalModel } from '@shared/models/regional.model';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-training-centre-page',
   standalone: true,
   imports: [
-   
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -24,121 +33,192 @@ import { TrainingCentreService } from '@shared/services/training-center.service'
     NzTableModule,
     NzButtonModule,
     NzFormModule,
-    NzInputModule
+    NzInputModule,
+    NzPopconfirmModule,
+    TrainingCentreFormComponent,
+    NzSelectModule,
+    NzPaginationModule
   ],
   templateUrl: './training-centre-page.component.html',
   styleUrl: './training-centre-page.component.css'
 })
 export class TrainingCentrePageComponent {
 
-  // Inyectamos las dependencias directamente
-  private formBuilder = inject(FormBuilder);
   private trainingCentreService = inject(TrainingCentreService);
+  private nzMessageService = inject(NzMessageService);
+  private regionalService = inject(RegionalService);
 
-  centres: TrainingCenterModel[] = [];
+  centres : TrainingCentreModel[] = [];
+  Datetable:tableComponteModel  = {} as tableComponteModel;
+  centreUpdate:TrainingCentreModel | undefined;
   isModalVisible = false;
 
-  formCentres: FormGroup | null = null;
-  indexCentre: number | null = null;
+  regions: RegionalModel[] = [];
 
-  
+
+   // Paginación
+   elements: number = 10;
+   page: number = 1;
+   last_page: number = 0;
+   total_elements: number = 0;
+   page_options: number[] = [];
  
 
-  // Método que se ejecuta al inicializar el componente
-  ngOnInit(): void {
-    this.getData();
-    this.initializeForm();
-  }
-
-  // Inicializamos el formulario reactivo
-  initializeForm(): void {
-    this.formCentres = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5)]]
-    });
-  }
-
-  // Obtenemos los datos de los centros de formación
-  getData(): void {
-    // Llamamos al servicio para obtener los centros de formación
-    this.trainingCentreService.getCentros().subscribe({
-      next: (data: TrainingCenterModel[]) => {
-        this.centres = data; // Asignamos los datos recibidos a la variable centres
-        console.log('Centros de formación cargados:', this.centres); // Log para verificar los datos
+   ngOnInit(): void {
+    this.regionalService.getAllRegional().subscribe({
+      next: (regions) => {
+        this.regions = regions;
+        this.loadCentres(); // Llamamos a la función con la paginación
       },
-      error: (err) => {
-        console.error('Error al cargar los centros de formación:', err); // Manejo de errores
+      error: (error) => {
+        this.nzMessageService.error("Error al cargar las regiones: " + error);
       }
     });
   }
 
-  // Abrimos el formulario para crear o editar
-  
-  openModal(centre?: TrainingCenterModel): void {
-    this.isModalVisible = true;
+  changePage(pageIndex: number) {
+    this.page = pageIndex;
+    this.loadCentres(); 
+  }
+
+  loadCentres() {
+    this.trainingCentreService.getCentros({ 
+      page: this.page, 
+      per_page: this.elements 
+    }).subscribe({
+      next: (response) => {
+       
+        // Asumiendo que la API devuelve un objeto con `data`, `total` y `last_page`
+        this.centres = response.data.map(centre => ({
+          ...centre,
+          regional: this.regions.find(r => r.id === centre.regional_id) || { id: 0, name: "Sin región" }
+        }));
     
-    // Si el formulario aún no está inicializado, lo inicializamos
-    if (!this.formCentres) {
-      this.initializeForm();
+        // Actualizar valores de paginación con la respuesta de la API
+        this.total_elements = response.total;
+        
+        this.last_page = response.last_page;
+      
+        this.page_options = Array.from({ length: this.last_page }, (_, i) => i + 1);
+    
+        this.updateTable();
+      },
+      error: error => this.nzMessageService.error(error)
+    });
+  }
+
+
+  updateTable() {
+    this.Datetable = this.mapToTable(this.centres);
+  }
+
+  nextPage() {
+    if (this.page < this.last_page) {
+      this.page++;
+      this.loadCentres();
     }
+  }
   
-    // Si estamos editando un centro, cargamos los datos en el formulario
-    if (centre) {
-      this.indexCentre = centre.id; // Guardamos el índice del centro que se está editando
-      this.formCentres?.patchValue({
-        name: centre.name
-      });
+  goToPage(pageNumber: number) {
+    if (pageNumber >= 1 && pageNumber <= this.last_page) {
+      this.page = pageNumber;
+      this.loadCentres();
+    }
+  }
+
+
+
+
+
+
+
+
+  mapToTable(centres:TrainingCentreModel[]):tableComponteModel{
+    return{
+      Titles:["Código","Nombre", "Región", "Acciones"],
+      Datos:centres.map((centre:TrainingCentreModel)=>this.mapToTableDatos(centre)) 
+    }
+  }
+  mapToTableDatos(centres:TrainingCentreModel):tableDataComponteModel{
+    return{
+      Datos:[
+        // centres.id.toString(),
+        centres.code || "N/A",
+        centres.name, 
+        
+        centres.regional?.name || "Sin región"
+      ],
+      idItem:centres.id,
+      
+      acciones:true,
+    };
+  }
+
+
+
+
+
+  actualizarTabla(centro: TrainingCentreModel) {
+    const index = this.centres.findIndex(c => c.id === centro.id);
+    
+    // Buscar la región correspondiente antes de actualizar la tabla
+    const regionEncontrada = this.regions.find(r => r.id === centro.regional_id);
+    
+    // Agregar la región al objeto antes de actualizarlo en la lista
+    centro.regional = regionEncontrada ? { ...regionEncontrada } : { id: 0, name: "Sin región" };
+
+    if (index !== -1) {
+        // Actualiza el elemento existente
+        this.centres[index] = centro;
+        this.Datetable.Datos[index] = this.mapToTableDatos(centro);
     } else {
-      this.indexCentre = null;
-      this.formCentres?.reset();
+        // Agrega un nuevo elemento si es una creación
+        this.centres = [...this.centres, centro];
+        this.Datetable.Datos = [...this.Datetable.Datos, this.mapToTableDatos(centro)];
     }
+    
+    // Cierra el modal y limpia la referencia de `centreUpdate`
+    this.closeModal();
+}
+
+  cancel(): void {
+    this.nzMessageService.info('click cancel');
   }
-
-  closeModal(): void {
-    this.isModalVisible = false;
-  }
-
-
-
-  // Guardamos los datos, ya sea creación o edición
-  saveData(): void {
-    if (this.formCentres?.valid) {
-      if (this.indexCentre !== null) {
-        // Editamos el centro existente
-        const updatedCentre: UpdateCentreDTO = {
-          id: this.indexCentre,
-          ...this.formCentres.value
-        };
-        this.trainingCentreService.update(updatedCentre).subscribe(() => {
-          this.getData(); // Actualizamos la lista
-          this.resetForm();
-        });
-      } else {
-        // Creamos un nuevo centro
-        const newCentre: CreateCentreDTO = this.formCentres?.value;
-        this.trainingCentreService.create(newCentre).subscribe(() => {
-          this.getData(); // Actualizamos la lista
-          this.resetForm();
-        });
-      }
-    }
-  }
-
-  // Método para eliminar un centro
-  deleteCentre(id: number): void {
-    if (confirm('¿Desea eliminar este centro? ')) {
-      this.trainingCentreService.delete(id).subscribe(() => {
-        this.getData(); // Actualizamos la lista
-      });
-    }
-  }
-
-  // Método para resetear el formulario y cerrar el modal
-  resetForm(): void {
-    this.formCentres?.reset();
-    this.indexCentre = null;
-    this.isModalVisible = false;
+  confirm(): void {
+    
+ 
     
   }
+  update(idItemTable?: number) {
+    const item = this.centres.find((centre: TrainingCentreModel) => centre.id === idItemTable);
+    if (item) {
+      this.centreUpdate = { ...item }; // Clonar para evitar modificar el original antes de guardar
+      this.isModalVisible = true;
+    }
+  }
+
+  deleteCentre(idCentre: number) {  
+    //console.log('Eliminar centro con ID:', idCentre); 
+
+    const deleteSub = this.trainingCentreService.delete(idCentre).subscribe(() => {
+      this.centres = this.centres.filter((centre: TrainingCentreModel) => centre.id !== idCentre)
+      this.Datetable.Datos = this.Datetable.Datos.filter((centre:tableDataComponteModel ) => centre.idItem !== idCentre)
+      this.nzMessageService.success('Registro Eliminado Correctamente');
+      deleteSub.unsubscribe();
+    });
+  }
+
+  openModal(item?:tableDataComponteModel){
+    this.centreUpdate = undefined
+    this.isModalVisible = true;
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
+    this.centreUpdate = undefined; // Limpia el objeto en edición al cerrar el modal
+  }
+
+
 
 
 }

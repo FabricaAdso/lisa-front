@@ -16,6 +16,8 @@ import { AprobationService } from '@shared/services/aprobation.service';
 import { JustificationService } from '@shared/services/justification.service';
 import { JustificationModel } from '@shared/models/justification-model';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+
 import { ThisReceiver } from '@angular/compiler';
 import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
 
@@ -36,7 +38,8 @@ import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion
     RejectedModalComponent,
     ApprovedModalComponent,
     ExpiredModalComponent,
-    ByEstadoJustificacionPipe
+    NzPaginationModule
+    
 
   ],
   templateUrl: './justification-apprentice.component.html',
@@ -47,27 +50,28 @@ export class JustificationApprenticeComponent {
 
 
   private justificationService = inject(JustificationService);
-
+  isInasistencias: boolean = true;
   justifications: JustificationModel[] = [];
   estadoJustificacion?: EstadoJustificacionEnum;
-  
-  isLoading: boolean = false; // Controla el estado de carga
+  estadoJustificacionEnum = EstadoJustificacionEnum;
+  isLoading: boolean = false; 
 
-  // Control de modal dinámico
   isModalVisible = false;
   isPendingModalVisible = false;
+  selectedJustification!: JustificationModel; 
+  filteredData: JustificationModel[] = []; 
 
-  selectedJustification!: JustificationModel; // datos de prueba
-  filteredData = this.justifications;
-  included: string[] = ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course'];
+  elements: number = 9;
+  page: number = 1;
+  last_page: number = 0;
+  total_elements: number = 0;
+  page_options: number[] = [];
 
   
-  estadoJustificacionEnum = EstadoJustificacionEnum;
+  included: string[] = ['assistance.session.instructor.user', 'aprobation', 'assistance.session.course'];
+  activeTabClass = 'inasistencias'; // Estado inicial
+  filter?: { [key: string]: string | EstadoJustificacionEnum };
 
-  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
-    this.estadoJustificacion = estado;
-   
-  }
 
 
   ngOnInit(): void {
@@ -83,22 +87,106 @@ export class JustificationApprenticeComponent {
 
   loadInasistencias(): void {
     const datasub = forkJoin([
-
       this.justificationService.getJustifications({
-        included: this.included
+        included: this.included,
+        page: this.page,
+        elements: this.elements,
       }),
 
     ]).subscribe({
       next: ([justifications]) => {
-        console.log('hola');
-
         console.log(justifications);
-        this.justifications = justifications;
-        this.filteredData = [...this.justifications]; // Inicializa los datos filtrados
-      }
+        const { data, per_page, current_page, last_page, total } = justifications;
+        this.setPage(current_page, per_page, last_page, total);
+        this.justifications = [...data];
+        console.log(data);
+        
+        
+      },
+      error: (err) => {
+        console.error('Error al cargar las justificaciones:', err);
+      },
 
     });
 
+  }
+  setPage(
+    current_page: number,
+    per_page: number,
+    last_page: number,
+    total: number
+  ): void {
+    this.page = current_page;
+    this.elements = per_page;
+    this.last_page = last_page; 
+    this.total_elements = total;
+
+    this.page_options = Array.from({ length: last_page }, (_, i) => i + 1);
+  }
+  changePage(page: number) {
+    console.log(page);
+    this.justificationService
+      .getJustifications({
+        included: this.included,
+        filter: this.filter,
+        page: page,
+        elements: this.elements,
+      })
+      .subscribe({
+        next: (justifications) => {
+          const {
+            data,
+            per_page,
+            current_page,
+            last_page,
+            total: to,
+          } = justifications;
+          console.log(data);
+          this.setPage(current_page, per_page, last_page, to);
+          this.justifications = [...data];
+        },
+      });
+  }
+
+  getFilterJustificacion(filter?: { [key: string]: string | EstadoJustificacionEnum }) {
+    this.filter = filter;
+    this.changePage(1);
+
+    // Si el filtro tiene 'aprobationState', ajusta el valor de isInasistencias.
+    if (filter && filter['aprobationState'] !== EstadoJustificacionEnum.VENCIDA) {
+        this.isInasistencias = false;
+    } else {
+        this.isInasistencias = true;
+    }
+}
+
+
+
+  setActiveTab(tab: string) {
+    this.activeTabClass = tab;
+  }
+
+  getEstadoClass(estado: string | null | undefined): string {
+    if (!estado) return 'estado-pendiente'; // Default a 'Pendiente'
+  
+    switch (estado) {
+      case this.estadoJustificacionEnum.PENDIENTE:
+        return 'estado-pendiente';
+      case this.estadoJustificacionEnum.RECHAZADO:
+        return 'estado-rechazado';
+      case this.estadoJustificacionEnum.APROBADO:
+        return 'estado-aprobado';
+      case this.estadoJustificacionEnum.VENCIDA:
+        return 'estado-vencida';
+      case this.estadoJustificacionEnum.EN_ESPERA:
+        return 'estado-en-espera';  
+      default:
+        return 'estado-inasistencia';
+    }
+  }
+
+  setEstadoJustificacion(estado?: EstadoJustificacionEnum) {
+    this.estadoJustificacion = estado;
   }
 
   

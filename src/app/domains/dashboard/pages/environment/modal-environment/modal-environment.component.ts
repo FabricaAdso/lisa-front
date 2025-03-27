@@ -17,6 +17,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
 @Component({
@@ -51,6 +52,7 @@ export class ModalEnvironmentComponent {
   private headquarterService = inject(HeadquartersService);
   private knowledgeService = inject(KnowledgeNetworkService);
   private message = inject(NzMessageService);
+  private notification =inject(NzNotificationService)
 
   ngOnInit() {
     this.formData();
@@ -87,7 +89,7 @@ export class ModalEnvironmentComponent {
       this.environmentService.update(data).subscribe({
         next: () => {
           this.updateEnvironment.emit();
-          this.message.success('Ambiente actualizado correctamente');
+          this.notification.success('','Ambiente actualizado correctamente');
           this.closeModal();
         },
         error: (error) => {
@@ -102,7 +104,7 @@ export class ModalEnvironmentComponent {
       this.environmentService.create(data).subscribe({
         next: () => {
           this.updateEnvironment.emit();
-          this.message.success('Ambiente creada correctamente');
+          this.notification.success('','Ambiente creada correctamente');
           this.closeModal();
         },
         error: (error) => {

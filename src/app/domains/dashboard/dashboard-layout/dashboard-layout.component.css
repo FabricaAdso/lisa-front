@@ -3,3 +3,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* El contenido general del nz-content */
+.content-con-scroll {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 100px); /* Ajusta 100px según el tamaño de tu header y márgenes */
+    overflow: hidden; /* Evita desbordamiento general */
+  }
+  
+  /* Este div es el que rodea la tabla o cualquier otro contenido largo */
+  .tabla-con-scroll {
+    flex: 1; /* Ocupa todo el espacio disponible */
+    overflow-y: auto; /* Activa el scroll vertical solo aquí */
+    overflow-x: hidden; /* Evita que haya scroll horizontal innecesario */
+  }
+  
+  /* Si la tabla tiene muchas columnas, puedes activarle scroll horizontal desde el componente */
+  nz-table {
+    min-width: 1200px; /* O el tamaño mínimo que necesites */
+  }
+  
+  /* Para pantallas pequeñas, asegura que el layout no explote */
+  @media (max-width: 768px) {
+    nz-sider {
+      display: none; /* Oculta el menú lateral en pantallas pequeñas */
+    }
+  
+    .content-con-scroll {
+      max-height: calc(100vh - 64px); /* Ajusta según el tamaño de tu header */
+    }
+  }

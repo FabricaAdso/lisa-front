@@ -1,114 +1,117 @@
-<nz-modal
-  (nzOnOk)="saveForm()"
-  (nzOnCancel)="closeModal()"
-  [(nzVisible)]="isModalVisible"
-  *ngIf="formSession"
->
+<nz-modal (nzOnOk)="saveForm()" (nzOnCancel)="closeModal()" [(nzVisible)]="isModalVisible" *ngIf="formSession">
   <ng-container *nzModalContent>
     <form [formGroup]="formSession">
+
+
+
       <div class="mb-4">
         <label for="" class="">Red de conocimiento</label>
-        <nz-select
-          (change)="changeKnowledgeNetwork()"
-          [formControl]="fieldKnowledgeNetwork"
-          name="knowledge_network"
-          placeholder="Seleccione un Area"
-          [nzShowSearch]="true"
-        >
+        <nz-select [formControl]="fieldKnowledgeNetwork" name="knowledge_network" placeholder="Seleccione un Area"
+          [nzShowSearch]="true">
           @for (item of knowledge_network; track $index) {
           <nz-option [nzLabel]="item.name" [nzValue]="item.id">{{
             item.name
-          }}</nz-option>
+            }}</nz-option>
           }
         </nz-select>
       </div>
       <div class="mb-4">
         <label for="" class="">Instructor</label>
-        <nz-select
-          [formControl]="fieldInstructor"
-          name="instructor_id"
-          placeholder="Seleccione una Sede"
-          [nzShowSearch]="true"
-        >
+        <nz-select [formControl]="fieldInstructor" name="instructor_id" placeholder="Seleccione una Sede"
+          [nzShowSearch]="true">
           @for (item of instructor; track $index) {
-          <nz-option
-            [nzLabel]="
+          <nz-option [nzLabel]="
               (item.user?.name || '') + ' ' + (item.user?.last_name || '')
-            "
-            [nzValue]="item.id"
-          ></nz-option>
-          }
-        </nz-select>
-      </div>
-      <div class="mb-4">
-        <label for="" class="">Curso</label>
-        <nz-select
-          [formControl]="fieldCourse"
-          name="course_id"
-          placeholder="Seleccione una Sede"
-          [nzShowSearch]="true"
-        >
-          @for (item of courses; track $index) {
-          <nz-option
-            [nzLabel]="item.code"
-            [nzValue]="item.id"
-          ></nz-option>
+            " [nzValue]="item.id"></nz-option>
           }
         </nz-select>
       </div>
 
       <div class="mb-4">
-        <label for="" class="">Fecha de asignacion</label>
-        <nz-range-picker
-          class="w-full"
-          [formControl]="fieldRangePicker"
-          name="range_picker"
-          (ngModelChange)="onDateChange($event)"
-        ></nz-range-picker>
+        <label for="" class="">Programa</label>
+        <nz-select [formControl]="fieldCourse" name="course_id" (ngModelChange)="changecourse()"
+          placeholder="Seleccione una Sede" [nzShowSearch]="true">
+          @for (item of courses; track $index) {
+          <nz-option [nzLabel]="item.code" [nzValue]="item.id"></nz-option>
+          }
+        </nz-select>
+      </div>
+
+
+
+
+      <div class="mb-4 flex gap-5">
+        <div class="flex flex-col w-5/6">
+
+          <label for="" class="mb-1">competencia</label>
+          <nz-select [formControl]="fieldSubject" name="subject" placeholder="Seleccione una Sede"
+            [nzShowSearch]="true">
+            @for (item of subjectList; track $index) {
+            <nz-option [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+            }
+          </nz-select>
+        </div>
+        <div class="flex flex-col w-1/6">
+          <label class="mb-1">Porcentaje</label>
+          <nz-input-number class="w-full" [nzMin]="30" [nzMax]="100" formControlName="percentage" type="number"
+            placeholder="Ingrese el porcentaje">
+
+          </nz-input-number>
+        </div>
+
+      </div>
+
+      <div class="mb-4">
+        <label for="" class="">rap</label>
+        <nz-select
+          [formControl]="fieldRap"
+          name="rap"
+          placeholder="Seleccione una Sede"
+          [nzShowSearch]="true"
+        >
+          @for (item of rapList; track $index) {
+          <nz-option
+            [nzLabel]="item.description"
+            [nzValue]="item.id"
+          ></nz-option>
+          }
+        </nz-select>
       </div>
 
       <div class="mb-4 flex gap-5">
         <div class="flex flex-col w-1/2">
-          <label class="mb-1 text-sm font-medium text-gray-700">Hora de inicio</label>
-          <nz-time-picker
-            (ngModelChange)="onTimeChangesStart($event)"
-            [formControl]="fieldStartTime"
-            name="start_time"
-            [nzFormat]="'HH:mm'"
-            [nzUse12Hours]="false">
+          <label for="" class="mb-1">Inicio de la asignación</label>
+          <nz-date-picker formControlName="start_date" nzFormat="yyyy/MM/dd"       [nzDisabledDate]="disabledDate">
+             </nz-date-picker>
+
+        </div>
+        
+      </div>
+
+
+      <div class="mb-4 flex gap-5">
+        <div class="flex flex-col w-1/2">
+          <label class="mb-1">Hora de inicio</label>
+          <nz-time-picker [nzMinuteStep]="30" [formControl]="fieldStartTime" name="start_time" [nzFormat]="'HH:mm'" [nzUse12Hours]="false"   [nzDefaultOpenValue]="defaultOpenValue"
+          >
           </nz-time-picker>
         </div>
         <div class="flex flex-col w-1/2">
-          <label class="mb-1 text-sm font-medium text-gray-700">Hora de fin</label>
-          <nz-time-picker
-            (ngModelChange)="onTimeChangesEnd($event)"
-            [formControl]="fieldEndTime"
-            name="end_time"
-            [nzFormat]="'HH:mm'"
-            [nzUse12Hours]="false">
+          <label class="mb-1">Hora de fin</label>
+          <nz-time-picker [formControl]="fieldEndTime" name="end_time" [nzFormat]="'HH:mm'" [nzMinuteStep]="30" [nzUse12Hours]="false"   [nzDefaultOpenValue]="defaultOpenValue">
           </nz-time-picker>
         </div>
       </div>
       <div class="mb-4">
-        <label class="mb-1 text-sm font-medium text-gray-700">Dia de la semana</label>
-        <nz-select
-          name="days_of_week"
-          [nzMaxTagCount]="3"
-          [nzMaxTagPlaceholder]="tagPlaceHolder"
-          nzMode="multiple"
-          nzPlaceHolder="Please select"
-          [formControl]="fieldDayOfWeek">
+        <label class="mb-1">Dia de la semana</label>
+        <nz-select name="days_of_week" [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+          nzPlaceHolder="Please select" [formControl]="fieldDayOfWeek">
           @for (item of day_of_week; track item) {
-            <nz-option [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+          <nz-option [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
           }
-    </nz-select>
-    <ng-template #tagPlaceHolder let-selectedList>and {{ selectedList.length }} more selected</ng-template>
+        </nz-select>
+        <ng-template #tagPlaceHolder let-selectedList>y {{ selectedList.length }} mas seleccionados</ng-template>
       </div>
     </form>
   </ng-container>
 </nz-modal>
-
-
-
-
-

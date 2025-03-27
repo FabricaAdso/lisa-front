@@ -1,0 +1,106 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::ng-deep .ant-tabs-nav-wrap {
+    @apply mr-auto ml-auto justify-items-center;
+    width: fit-content;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    margin-top: 20px; /* Ajusta margen superior según lo necesites */
+    
+}
+
+
+::ng-deep .inasistencias .ant-tabs-tab-active .ant-tabs-tab-btn{
+    color:#1890ff;
+}
+
+::ng-deep .En_espera .ant-tabs-ink-bar{
+  background: #b41969;
+  
+}
+::ng-deep .En_espera  .ant-tabs-tab-active .ant-tabs-tab-btn{
+  color:#b609ad ; 
+}
+
+
+
+::ng-deep .pendientes .ant-tabs-ink-bar{
+    background: #fdc900;
+    
+}
+::ng-deep .pendientes .ant-tabs-tab-active .ant-tabs-tab-btn{
+    color:#fdc900 ; 
+}
+::ng-deep .rechazadas .ant-tabs-ink-bar{
+    background: #db1f1f;   
+}
+::ng-deep .rechazadas .ant-tabs-tab-active .ant-tabs-tab-btn{
+    color:#db1f1f ; 
+}
+::ng-deep .aprobadas .ant-tabs-ink-bar{
+    background: #0f880b;   
+}
+::ng-deep .aprobadas .ant-tabs-tab-active .ant-tabs-tab-btn{
+    color:#0f880b ; 
+}
+::ng-deep .vencida .ant-tabs-ink-bar{
+    background: #8f0303;   
+}
+::ng-deep .vencida .ant-tabs-tab-active .ant-tabs-tab-btn{
+    color:#8f0303 ; 
+}
+
+.estado-indicador {
+    display: inline-block;
+    width: 10px;  /* Tamaño de la bolita */
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  
+
+  
+  
+  /* Colores para cada estado */
+
+  
+
+  .estado-en-espera {
+    background-color: #46066b; /* Amarillo */
+  }
+  
+
+
+  .estado-pendiente {
+    background-color: #fdc900; /* Amarillo */
+  }
+  
+  .estado-rechazado {
+    background-color: #db1f1f; /* Rojo */
+  }
+  
+  .estado-aprobado {
+    background-color: #0f880b; /* Verde */
+  }
+  
+  .estado-vencida {
+    background-color: #8f0303; /* Rojo oscuro */
+  }
+  
+  .estado-inasistencia {
+    background-color: gray; /* Color de fallback */
+  }
+  
+ 
+
+
+
+
+
+
+
+

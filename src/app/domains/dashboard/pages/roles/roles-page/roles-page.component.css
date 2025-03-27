@@ -14,7 +14,11 @@
 .barra-busqueda{
  width: 40%;
 }
-
+::ng-deep .content-con-scroll[_ngcontent-ng-c2281774802] {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
 #all[_ngcontent-ng-c4024495835] {
   display: flex
 ;

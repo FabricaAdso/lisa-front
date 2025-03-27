@@ -1,0 +1,17 @@
+::ng-deep .ant-modal-footer .ng-tns-c2116847144-1{
+    display: none;
+}
+
+::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+    color: #fff;
+    border-color: #52c41a;
+    background: #00af00;
+}
+
+::ng-deep .ant-btn-primary {
+    border-color: #52c41a;
+    color: white;
+    background-color: #52c41a;
+    outline: none;
+}
+

@@ -1,6 +1,8 @@
 import { AssistanceModel } from "./assistance.model";
 import { CourseModel } from "./course.model";
 import { InstructorModel } from "./instructor.model";
+import { RapModel } from "./rap-model";
+import { SubjectModel } from "./subject-model";
 
 export interface SessionModel {
   id: number;
@@ -12,9 +14,21 @@ export interface SessionModel {
   instructor2_id?: number | null;
   course_id?: number | null;
   course?: CourseModel;
-  assistances: AssistanceModel[]; 
+  assistances: AssistanceModel[];
+  subject:SubjectModel;
+  rap:RapModel;
+
+
 
   //relaciones
   assistance:AssistanceModel
 }
+
+export interface PaginatedResponse<T> {
+  current_page: number;
+  data: T[];
+  last_page: number;
+}
+
+
 

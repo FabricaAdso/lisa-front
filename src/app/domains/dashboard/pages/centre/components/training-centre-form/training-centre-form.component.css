@@ -1,0 +1,128 @@
+/* Estilos generales para el modal */
+nz-modal {
+    .ant-modal-content {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  
+    .ant-modal-header {
+      background-color: #f0f2f5;
+      border-bottom: 1px solid #e8e8e8;
+      border-radius: 8px 8px 0 0;
+      padding: 16px 24px;
+  
+      .ant-modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+  
+    .ant-modal-body {
+      padding: 24px;
+    }
+  
+    .ant-modal-footer {
+      border-top: 1px solid #e8e8e8;
+      padding: 16px 24px;
+      text-align: right;
+  
+      button {
+        margin-left: 8px;
+      }
+    }
+  }
+  
+  /* Estilos para el formulario */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  
+    label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 4px;
+      display: block;
+    }
+  
+    input[nz-input] {
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #d9d9d9;
+      padding: 8px 12px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+  
+      &:hover {
+        border-color: #40a9ff;
+      }
+  
+      &:focus {
+        border-color: #40a9ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        outline: none;
+      }
+    }
+  
+    .text-red-500 {
+      color: #ff4d4f;
+      font-size: 12px;
+      margin-top: 4px;
+      display: block;
+    }
+  }
+  
+  /* Estilos específicos para el nz-select */
+  nz-select {
+    width: 100%;
+  
+    .ant-select-selector {
+      border: 1px solid #d9d9d9 !important; /* Fuerza el borde */
+      border-radius: 4px !important; /* Fuerza el radio */
+      padding: 8px 12px !important; /* Ajusta el padding */
+      font-size: 14px;
+      transition: border-color 0.3s;
+      background-color: #fff; /* Fondo blanco */
+      box-shadow: none !important; /* Elimina sombras innecesarias */
+  
+      &:hover {
+        border-color: #40a9ff !important; /* Color al pasar el mouse */
+      }
+  
+      &:focus {
+        border-color: #40a9ff !important; /* Color al enfocar */
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important; /* Sombra al enfocar */
+        outline: none;
+      }
+    }
+  
+    .ant-select-arrow {
+      color: rgba(0, 0, 0, 0.25); /* Color de la flecha */
+    }
+  }
+  
+  /* Estilos para los mensajes de error */
+  small.text-red-500 {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+  }
+
+  ::ng-deep .ant-modal-footer .ant-btn-primary {
+    background-color: #38A901 !important;
+    border-color: #38A901 !important;
+  }
+  ::ng-deep .ant-modal-footer .ant-btn-primary:hover {
+    background-color: #2b7a04 !important;
+    border-color: #2b7a04 !important;
+  }
+
+  /* Estilos cuando el botón está deshabilitado */
+::ng-deep .ant-modal-footer .ant-btn-primary[disabled] {
+  background-color: rgb(179, 177, 177) !important; /* Color para botón deshabilitado */
+  border-color: rgb(162, 162, 162) !important;
+  opacity: 0.5; /* Opcional: hace que se vea más tenue */
+  cursor: not-allowed;
+}

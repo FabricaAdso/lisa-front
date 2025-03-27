@@ -1,0 +1,113 @@
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  .file-container {
+    background: #ffffff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #f8d6d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .file-link {
+    display: flex;
+    align-items: center;
+    color: #d32f2f;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  
+  .file-link i {
+    font-size: 22px;
+    margin-right: 8px;
+  }
+  .motive-box p:first-of-type {
+ 
+    color: rgb(61, 59, 59);
+    
+}
+  
+  .motive-box {
+    background: #fdfdfd;
+    padding: 18px 13px;
+    border-radius:10px;
+    
+    font-size: 14px;
+    color: #444;
+    text-align: left;
+    width: 100%;
+  }
+
+  .motive-instructor{
+    padding: 18px 13px;
+    border-radius:10px;
+
+  }
+  textarea {
+    padding: 10px; 
+    width: 100%;
+    margin-top: 8px;
+    max-height: 150px;
+    overflow: auto;
+    resize: vertical;
+    border: 1px solid #ccc; 
+    outline: none; 
+    transition: border 0.2s ease-in-out; 
+  }
+  
+  /* Cuando el textarea está enfocado (clic dentro) */
+  textarea:focus {
+    border: 1px solid #1a355250; /* Cambia el color del borde, pero mantiene el grosor */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Opcional: Efecto de sombra sutil */
+  }
+
+
+  /* Estilo cuando el botón está activo */
+.boton-enviar {
+  background: #38A901 !important;  /* Color normal */
+  border-color: #38A901 !important;
+  color: white !important;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto hover (cuando el cursor está encima) */
+.boton-enviar:hover {
+  background: #2b7a04 !important;  /* Color más oscuro al pasar el mouse */
+  border-color: #2e8c01 !important;
+}
+
+/* Estilo cuando el botón está deshabilitado */
+.boton-enviar:disabled, 
+.boton-enviar[disabled] {
+  background: #d9d9d9 !important; /* Color gris deshabilitado */
+  border-color: #d9d9d9 !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Evitar que el hover afecte el botón cuando está deshabilitado */
+.boton-enviar:disabled:hover, 
+.boton-enviar[disabled]:hover {
+  background: #d9d9d9 !important;
+  border-color: #d9d9d9 !important;
+}
+
+
+  
+  ::ng-deep .ant-modal-body{
+    padding: 10;
+    /* border: green solid 2px; */
+  }
+  /* .ng-star-inserted{
+    border: #d32f2f solid 2px;
+  } */

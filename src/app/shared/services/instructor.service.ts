@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { InstructorModel } from '@shared/models/instructor.model';
@@ -29,6 +29,16 @@ export class InstructorService {
         return of([]);
       })
     )
+
+
   }
 
+
+  gettInstructors(queryParams?: { included?: string }): Observable<InstructorModel[]> {
+    let params = new HttpParams();
+    if (queryParams && queryParams.included) {
+      params = params.set('included', queryParams.included);
+    }
+    return this.http.get<InstructorModel[]>(this.URL, { params });
+  }
 }

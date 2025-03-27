@@ -3,7 +3,7 @@
   <app-nav-bar class="h-16 bg-white shadow-md"></app-nav-bar>
 
   <!-- Layout con el sider y contenido -->
-  <nz-layout class="flex flex-1">
+  <nz-layout class="flex flex-1 overflow-hidden">
     <!-- Sider -->
     <nz-sider
       nzCollapsible
@@ -14,10 +14,14 @@
     </nz-sider>
 
     <!-- Contenido principal -->
-    <nz-layout class="flex-1">
-      <nz-content class="m-2 p-6 bg-white rounded-lg shadow-md">
+    <nz-layout class="flex-1 overflow-hidden">
+      <nz-content class="m-2 p-6 bg-white rounded-lg shadow-md content-con-scroll">
         <nz-breadcrumb [nzAutoGenerate]="true" class="mb-4"></nz-breadcrumb>
+
+         <!-- Contenedor interno con scroll vertical -->
+        <div class="tabla-con-scroll">
         <router-outlet></router-outlet>
+      </div>
       </nz-content>
     </nz-layout>
   </nz-layout>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NotificationModel } from '@shared/models/notification-model';
 import { UserModel } from '@shared/models/user.model';
@@ -23,12 +23,13 @@ export class NotificationsComponent implements OnInit {
   userId:number = 0
   userModel: UserModel | null = null
   notificationModel: NotificationModel[] | null = null
+  notifications = signal<NotificationModel[]>([]);
 
   ngOnInit(): void {
-    
+    this.notifications = this.dataSharedService.notifications;
   }
 
-  notifications = this.dataSharedService.notifications;
+
   
 
 }
