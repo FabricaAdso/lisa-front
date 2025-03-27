@@ -67,11 +67,12 @@ export class ManageSessionComponent implements OnInit {
   total: number = 0;
   page_options: number[] = [];
 
-  selecion: { name: string,  value: string, id: number } | null = null;
-  select_sessions: { name: string, value:string, id: number }[] = [
+  selecion: { name: string, value: string, id: number } | null = null;
+  select_sessions: { name: string, value: string, id: number }[] = [
     { name: "Realizadas", value: 'past', id: 1 },
-  { name: "Pendientes", value: 'pending', id: 2 },
-  { name: "Todas", value: 'all', id: 3 }
+    { name: "Pendientes", value: 'pending', id: 2 },
+    { name: "Todas", value: 'all', id: 3 },
+    { name: "Ultimas", value: 'end_date', id: 4 }
   ];
 
 
@@ -296,7 +297,7 @@ export class ManageSessionComponent implements OnInit {
     this.loadLeaderSessions();
   }
 
-  onSelectSessionChange(selection: { name: string,value:string, id: number }): void {
+  onSelectSessionChange(selection: { name: string, value: string, id: number }): void {
     this.selecion = selection;
     this.applySelectFilter();
     //console.log('Filtros actualizados (estado):', this.filters);
@@ -305,15 +306,22 @@ export class ManageSessionComponent implements OnInit {
 
   private applySelectFilter(): void {
     if (this.selecion) {
-      if (this.selecion.value  === 'pending') {
+      if (this.selecion.value === 'pending') {
         this.filters['pending'] = 'true';
         delete this.filters['past'];
+        delete this.filters['end_date'];
       } else if (this.selecion.value === 'past') {
         this.filters['past'] = 'true';
         delete this.filters['pending'];
+        delete this.filters['end_date'];
+      } else if(this.selecion.value === 'end_date'){
+        this.filters['end_date'] = 'true';
+        delete this.filters['pending'];
+        delete this.filters['past']
       } else { // "all"
         delete this.filters['pending'];
         delete this.filters['past'];
+        delete this.filters['end_date'];
       }
     }
   }
