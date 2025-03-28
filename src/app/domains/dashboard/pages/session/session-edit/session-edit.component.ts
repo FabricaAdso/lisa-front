@@ -32,9 +32,10 @@ export class SessionEditComponent implements OnInit, OnChanges {
   defaultOpenValue = new Date(1970, 0, 1, 0, 0);
 
 
-  disabledDate = (current: Date): boolean => {
+  todisabledDate = (current: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    console.log('Hoy es:', today);
     return current && current < today;
   };
 
@@ -97,8 +98,14 @@ export class SessionEditComponent implements OnInit, OnChanges {
   }
 
   populateForm(): void {
+
+    const [year, month, day] = this.sessionData.date.split('-').map(Number);
+
     // Convertir el string de fecha a un objeto Date
-    const sessionDate = new Date(this.sessionData.date);
+    // const sessionDate = new Date(this.sessionData.date);
+    const sessionDate = new Date(year, month - 1, day);
+
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     // Convertir start_time y end_time a objetos Date con fecha base fija (1970-01-01)
@@ -107,6 +114,8 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
     const [endHour, endMinute, endSecond] = this.sessionData.end_time.split(':');
     const endTimeDate = new Date(1970, 0, 1, Number(endHour), Number(endMinute), Number(endSecond));
+
+
 
     this.sessionForm.patchValue({
       date: sessionDate,
@@ -131,11 +140,7 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
 
 
-    if (sessionDate < today) {
-      this.sessionForm.disable();
-      // Opcional: mostrar un mensaje de aviso
-      console.warn('Esta sesión es pasada y no se puede editar.');
-    }
+    
   }
 
 
