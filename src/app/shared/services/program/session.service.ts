@@ -113,4 +113,13 @@ export class SessionService {
     const url: string = getQueryUrl(`sessions/mount`, data);
     return this.http.get<any>(url);
   }
+
+  getFilterOptionsWithCourse(filters: { [key: string]: string }): Observable<any> {
+    let params = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      params = params.set(`filter[${key}]`, filters[key]);
+    });
+    return this.http.get<any>(`${this.url}/leadersession`, { params });
+  }
+
 }
