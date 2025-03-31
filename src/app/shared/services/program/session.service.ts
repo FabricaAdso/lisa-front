@@ -25,10 +25,6 @@ export class SessionService {
     return this.http.get<SessionModel>(`${url}`);
   }
 
-  getSessionsByFicha(courseId: number) {
-    return this.http.get<SessionModel[]>(`/api/ficha/${courseId}/sessions`);
-  }
-
   // metodo para aceptar filtros e inclusiones
   getAll(filters?: { [key: string]: string }, included?: string | string[]): Observable<SessionModel[]> {
     let params = new HttpParams();
