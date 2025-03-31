@@ -4,15 +4,16 @@ import { AssistanceService } from '@shared/services/assistance.service';
 import { forkJoin } from 'rxjs';
 import { UpdateAssistanceDTO } from '@shared/dto/update-assistance.dto';
 import { CommonModule } from '@angular/common';
-import { NzTableComponent } from 'ng-zorro-antd/table';
+import { NzTableComponent, NzTableModule } from 'ng-zorro-antd/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
 import { SessionService } from '@shared/services/program/session.service';
+import { AttendanceComponent } from '../attendance.component';
 
 @Component({
   selector: 'app-attendance-table',
   standalone: true,
-  imports: [CommonModule,NzTableComponent,ReactiveFormsModule],
+  imports: [CommonModule,NzTableComponent,ReactiveFormsModule,NzTableModule],
   templateUrl: './attendance-table.component.html',
   styleUrl: './attendance-table.component.css'
 })
@@ -29,7 +30,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
 
   Math = Math; // Exponer Math para usarlo en la plantilla
   showDefaultTable = true; // Estado para alternar entre la tabla por defecto y la nueva tabla
-  rowsPerTable = 4; // Cantidad de filas por tabla
+  rowsPerTable = 6; // Cantidad de filas por tabla
   tablesPerPage = 3; // Cantidad de tablas por página
   currentPage = 1; // Pagina actual
 

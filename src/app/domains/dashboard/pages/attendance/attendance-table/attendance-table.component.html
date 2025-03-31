@@ -4,15 +4,15 @@ class="flex flex-wrap gap-4 justify-center w-full"
 >
 <ng-container *ngFor="let group of paginatedTables">
   <nz-table
-    class="w-[25.5rem] bg-white border border-gray-200 rounded-lg shadow-sm"
+    class="w-[26rem]"
     [nzData]="group"
     [nzBordered]="true"
     [nzScroll]="{ x: '100%' }"
     [nzSize]="'small'"
   >
-    <thead class="bg-gray-100 text-gray-800 font-medium">
+    <thead>
       <tr>
-        <th class="p-2">Asistió</th>
+        <th class="p-2">Asistio</th>
         <th class="p-2">Nombres y Apellidos</th>
         <th class="p-2">Documento</th>
       </tr>
@@ -20,7 +20,6 @@ class="flex flex-wrap gap-4 justify-center w-full"
     <tbody>
       <tr
         *ngFor="let data of group"
-        class="even:bg-gray-50 hover:bg-gray-100"
       >
         <td class="p-2">
           <input
