@@ -196,16 +196,7 @@ export class TrainingCentrePageComponent {
     }
   }
 
-  deleteCentre(idCentre: number) {  
-    //console.log('Eliminar centro con ID:', idCentre); 
 
-    const deleteSub = this.trainingCentreService.delete(idCentre).subscribe(() => {
-      this.centres = this.centres.filter((centre: TrainingCentreModel) => centre.id !== idCentre)
-      this.Datetable.Datos = this.Datetable.Datos.filter((centre:tableDataComponteModel ) => centre.idItem !== idCentre)
-      this.nzMessageService.success('Registro Eliminado Correctamente','');
-      deleteSub.unsubscribe();
-    });
-  }
 
   openModal(item?:tableDataComponteModel){
     this.centreUpdate = undefined
