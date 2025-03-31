@@ -9,6 +9,7 @@ import {
   inject,
   signal,
   CUSTOM_ELEMENTS_SCHEMA,
+  ViewChild,
 } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -18,6 +19,10 @@ import { AuthService } from '@shared/services/auth.service';
 import { UserModel } from '@shared/models/user.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedDataService } from '@shared/services/shared-data.service';
+import { ChangePasswordModalComponent } from '../change-password-modal/change-password-modal.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+
 
 @Component({
   selector: 'app-nav-bar',
@@ -29,7 +34,9 @@ import { SharedDataService } from '@shared/services/shared-data.service';
     DropDownMenuComponent,
     ReactiveFormsModule,
     NzBadgeModule,
-    
+    NzModalModule,
+    NzButtonModule,
+    ChangePasswordModalComponent
 ],
   templateUrl: './nav-bar.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -44,6 +51,8 @@ export class NavBarComponent implements OnInit {
 
   private breackpoint_observer = inject(BreakpointObserver);
 
+
+
   user = signal<UserModel | null>(null);  // Signal para almacenar el usuario logueado
   isLoggedIn: boolean = false;
 
@@ -52,6 +61,9 @@ export class NavBarComponent implements OnInit {
 
   Image_logo: string = 'assets/images/logosena.png';
   UserImage: string = 'assets/images/logouser.png';
+  isVisible = false;
+  isChangePasswordModalVisible = false;
+
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -62,6 +74,7 @@ export class NavBarComponent implements OnInit {
       .subscribe(() => {
         this.isDropdownOpen1 = false;
         this.isDropdownOpen2 = false;
+        this.isChangePasswordModalVisible = false;
         this.cdr.detectChanges();
       });
 
@@ -80,6 +93,21 @@ export class NavBarComponent implements OnInit {
         });
       }
   }
+
+
+
+
+  openChangePasswordModal() {
+    console.log('Modal abierto contraseña');
+    this.isChangePasswordModalVisible = true;
+    
+  }
+
+  closeChangePasswordModal() {
+    this.isVisible = false;
+  }
+ 
+  
 
   login() {
     console.log('Iniciar sesión...');
