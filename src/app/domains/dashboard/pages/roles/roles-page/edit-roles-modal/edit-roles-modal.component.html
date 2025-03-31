@@ -1,7 +1,53 @@
-@if(isVisible){
-    <nz-modal [(nzVisible)]="isVisible" nzTitle="The first Modal" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
-        <ng-container *nzModalContent>
-        
-        </ng-container>
-      </nz-modal>
-}
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles de Usuario" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()" [nzOkLoading]="loading" [nzOkDisabled]="form.invalid">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form">
+      <!-- Selección de roles -->
+      <nz-form-item>
+        <nz-form-label nzRequired>Roles</nz-form-label>
+        <nz-form-control [nzErrorTip]="'Seleccione al menos un rol'">
+          <nz-select nzMode="multiple" formControlName="role_ids" (ngModelChange)="onRolesChange($event)"
+            placeholder="Seleccione los roles" nzShowSearch nzAllowClear>
+            <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Campos para aprendiz -->
+      <div *ngIf="isApprenticeSelected">
+        <nz-form-item>
+          <nz-form-label nzRequired>Curso</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="course_id" placeholder="Seleccione el curso" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let course of courses" [nzValue]="course.id" [nzLabel]="course.code"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Estado</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="state" placeholder="Seleccione el estado" nzAllowClear>
+              <nz-option *ngFor="let state of apprenticeState" [nzValue]="state.value"
+                [nzLabel]="state.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Campos para instructor -->
+      <div *ngIf="isInstructorSelected">
+        <nz-form-item>
+          <nz-form-label nzRequired>Red de Conocimiento</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="knowledge_network_id" placeholder="Seleccione la red de conocimiento"
+              nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let network of knowledgeNetworks" [nzValue]="network.id"
+                [nzLabel]="network.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>

@@ -1,5 +1,4 @@
 import { DocumentTypeModel } from "./document-type.model";
-import { RoleModel } from "./rolemodel-model";
 import { TrainingCenterModel } from "./training-center.model";
 
 export interface UserModel{

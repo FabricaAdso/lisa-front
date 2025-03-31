@@ -13,11 +13,12 @@
   <div class="barra-busqueda">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
       <input
-        type="text"
-        nz-input
-        placeholder="Buscar usuario"
-        [(ngModel)]="searchTerm"
-        (input)="searchUsers()"
+      type="text"
+      nz-input
+      placeholder="Buscar usuario"
+      [(ngModel)]="searchTerm"
+      (input)="searchUsers()"
+      (blur)="onSearchBlur()"
       />
     </nz-input-group>
     <ng-template #suffixIconButton>
@@ -72,43 +73,6 @@
   </div>
 </section>
 
-<nz-modal
-  [(nzVisible)]="isVisible"
-  nzTitle="Editar Roles y Estado"
- >
-  <ng-container *nzModalContent>
-    <div class="modal-content">
-      <div class="modal-body">
-        <div>
-          <div class="form-group">
-            <label for="roles">Seleccionar Roles</label>
-
-            <nz-select
-              [nzMaxTagCount]="3"
-              [nzMaxTagPlaceholder]="tagPlaceHolder"
-              nzMode="multiple"
-              nzPlaceHolder="Seleccione roles"
-              [(ngModel)]="selectedRoles"
-              [nzOpen]="isDropdownOpen" 
-              name="roles"
-              (ngModelChange)="onRolesChange($event)"
-              (nzOnSearch)="onSearchChange($event)"
-            >
-              <nz-option
-                *ngFor="let role of roles"
-                [nzLabel]="role.name"
-                [nzValue]="role.id"
-              ></nz-option>
-            </nz-select>
-            <ng-template #tagPlaceHolder let-selectedList
-              >y {{ selectedList.length }} más seleccionados</ng-template
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-container>
-</nz-modal>
 
 <app-charge-button #chargeButton></app-charge-button>
 <app-edit-roles-modal #modalRoles></app-edit-roles-modal>

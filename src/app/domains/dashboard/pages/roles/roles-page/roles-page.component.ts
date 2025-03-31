@@ -6,21 +6,17 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzOptionComponent, NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-
-import { ChargeExcelService } from '@shared/services/charge-excel.service';
-
 import { ChargeButtonComponent } from './charge-button/charge-button.component';
 import { UserService } from '@shared/services/user.service';
 import { UserModel } from '@shared/models/user.model';
 import { RoleModel } from '@shared/models/rolemodel-model';
 import { EditRolesModalComponent } from './edit-roles-modal/edit-roles-modal.component';
-import { log } from 'ng-zorro-antd/core/logger';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
@@ -34,7 +30,6 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzModalModule,
     NzTableModule,
     NzDividerModule,
-    NzOptionComponent,
     NzSelectModule,
     NzIconModule,
     NzInputModule,
@@ -43,31 +38,27 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzUploadModule,
     NzTabsModule,
     ChargeButtonComponent,
-    EditRolesModalComponent
-],
+    EditRolesModalComponent,
+  ],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.css',
 })
 export class RolesComponent implements OnInit {
-
-
   //logica para abrir el boton de cargue masivo
   @ViewChild('chargeButton') chargeButton: any = ChargeButtonComponent;
   @ViewChild('modalRoles') modalRoles: any = EditRolesModalComponent;
-  
-  
+
   //injeccion de servicios
   private rolesService = inject(ApiRolesService);
   private userService = inject(UserService);
-  private notification = inject(NzNotificationService)
- 
-  
+  private notification = inject(NzNotificationService);
+
   //Declaracion de variables
   isVisibleCargue = true;
   isDropdownOpen = false;
   allUsers: UserModel[] = [];
   users: UserModel[] = [];
-  selectedUser: number |null = null;
+  selectedUser: number | null = null;
   selectedRoles: RoleModel[] = [];
   isActive: boolean = true;
   roles: RoleModel[] = [];
@@ -78,80 +69,45 @@ export class RolesComponent implements OnInit {
   totalItems: any;
   selectedFile: File | null = null;
   isVisible = false;
- 
- 
+  isSearching: boolean = false;
+  allUsersLoaded: boolean = false;
+  loading: boolean = false;
 
 
-  
   showModalCargue(): void {
     this.chargeButton.isVisibleCargue = true;
   }
 
-  changePage(newPage: number) {
-    this.pageIndex = newPage;
-    this.getUsers(this.pageIndex, this.pageSize);
-  }
-  // Modifica tu función onRolesChange
-onRolesChange(selectedRoles: any[]): void {
-  this.selectedRoles = selectedRoles;
-  console.log('Cerrando dropdown..  .', this.isDropdownOpen);
-  
-  // Cierra el dropdown después de seleccionar
-  this.isDropdownOpen = false;
-  
-} 
-openModalRoles(id:number):void{
-
-  this.selectedUser = id
-
-  console.log('abriendo modal');
-  if(this.selectedUser !== null){
-    const selected = this.allUsers.find(
-      (user) => user.id === this.selectedUser
-    );
-    if(selected){ 
-      this.modalRoles.setData(selected)
-      this.modalRoles.openModal()
-      console.log(selected);
-      
+  openModalRoles(user: UserModel): void {
+    if (!user?.id) {
+      this.notification.error('Error', 'Usuario inválido');
+      return;
     }
-  }else{
-    this.notification.error('Error al cargar un usario','')
+
+    this.selectedUser = user.id;
+
+    // Pasar el usuario completo al modal
+    this.modalRoles.setData(user);
+    this.modalRoles.openModal();
   }
-  
 
-}
-
-
-tabs = [
-  {
-    title: 'Pestaña 1',
-    description: 'Cargar archivo para la API 1',
-    apiRoute: '/api/upload1',
-  },
-  {
-    title: 'Pestaña 2',
-    description: 'Cargar archivo para la API 2',
-    apiRoute: '/api/upload2',
-  },
-  {
-    title: 'Pestaña 3',
-    description: 'Cargar archivo para la API 3',
-    apiRoute: '/api/upload3',
-  },
-];
-
-
-// Opcional: si quieres manejar la apertura/cierre manualmente
-toggleDropdown(): void {
-  this.isDropdownOpen = !this.isDropdownOpen;
-}  
-
-// Opcional: si usas búsqueda en el select
-onSearchChange(searchText: string): void {
-  // Puedes agregar lógica de búsqueda aquí si es necesario
-}  
-
+  tabs = [
+    {
+      title: 'Pestaña 1',
+      description: 'Cargar archivo para la API 1',
+      apiRoute: '/api/upload1',
+    },
+    {
+      title: 'Pestaña 2',
+      description: 'Cargar archivo para la API 2',
+      apiRoute: '/api/upload2',
+    },
+    {
+      title: 'Pestaña 3',
+      description: 'Cargar archivo para la API 3',
+      apiRoute: '/api/upload3',
+    },
+  ];
 
   onFileSelected(event: any, apiRoute: string) {
     this.selectedFile = event.target.files[0];
@@ -167,87 +123,135 @@ onSearchChange(searchText: string): void {
     }
   }
 
-  closeModal() {
-    console.log('Modal cerrado');
-    // Aquí puedes agregar la lógica para cerrar el modal
-  }
-
-
   ngOnInit(): void {
     this.getUsers();
     this.allRoles();
     this.getAllUsers();
   }
 
-  getAllUsers() {
-    this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.allUsers = data;
-      
-      },
-    });
-  }
   allRoles() {
     this.rolesService.getRoles().subscribe({
       next: (data) => {
         this.roles = data;
-      }
-    });
-  }
-
-  //mostrar todos los usuarios con su respectivo rol,traidos desde el servicio
-  getUsers(page: number = 1, pageSize: number = 8): void {
-    this.rolesService.getUsers(page, pageSize).subscribe({
-      next: (response) => {
-        // Extrae los datos de la respuesta
-        const { data, total, current_page, per_page } = response;
-
-        // Mapea los usuarios y extrae los roles
-        this.users = data.map((user: { training_centers?: any[] }) => ({
-          ...user,
-          roles:
-            user.training_centers?.map((tc: { role_id: any }) => tc.role_id) ||
-            [],
-        }));
-        console.log(this.users);
-
-        // Asigna los usuarios filtrados
-        this.filteredUsers = [...this.users];
-
-        // Actualiza las propiedades de paginación
-        this.totalItems = total;
-        this.pageIndex = current_page;
-        this.pageSize = per_page;
       },
-      error: (error) => console.error('Error al obtener usuarios', error),
     });
   }
 
-  resetSearch(){
-    
-  }
-  // Filtrar usuarios por nombre, apellido o documento
-  searchUsers(): void {
-    const term = this.searchTerm.toLowerCase().trim();
-    this.filteredUsers = this.allUsers.filter(
-      (user) =>
-        user.identity_document.toLowerCase().includes(term) ||
-        user.name.toLowerCase().includes(term) ||
-        user.last_name.toLowerCase().includes(term)
-    );
-    this.pageIndex = 1;
-    // Si el término de búsqueda está vacío, muestra todos los usuarios o los originales
-    if (!term) {
-      this.filteredUsers = [...this.allUsers]; // o this.resetSearch() si tienes un método para eso
-    }
+  getAllUsers() {
+    this.userService.getAllUsers().subscribe({
+      next: (data) => {
+        this.allUsers = data;
+
+      },
+    });
   }
 
-  showModal(user: any): void {
-    this.isVisible = true;
-    this.selectedUser = user;
-    this.selectedRoles = [...user.roles];
-    console.log(this.selectedRoles);
+// Modifica tu método getUsers así:
+getUsers(page: number = 1, pageSize: number = 8): void {
+  this.loading = true;
+
+  this.rolesService.getUsers(page, pageSize).subscribe({
+    next: (response) => {
+      const { data, total, current_page, per_page } = response;
+
+      this.users = data.map((user: any) => ({
+        ...user,
+        roles: user.training_centers?.map((tc: any) => tc.role_id) || [],
+      }));
+
+      // Solo actualizamos filteredUsers si no estamos en modo búsqueda
+      if (!this.isSearching) {
+        this.filteredUsers = [...this.users];
+      }
+
+      this.totalItems = total;
+      this.pageIndex = current_page;
+      this.pageSize = per_page;
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('Error al obtener usuarios', error);
+      this.loading = false;
+    }
+  });
+}
+
+
+// Modifica tu método loadAllUsersForSearch así:
+loadAllUsersForSearch(): void {
+  this.loading = true;
+  this.isSearching = true;
+
+  this.userService.getAllUsers().subscribe({ // Asumo que tienes un endpoint para todos los usuarios
+    next: (users) => {
+      this.allUsers = users.map((user: any) => ({
+        ...user,
+        roles: user.training_centers?.map((tc: any) => tc.role_id) || [],
+      }));
+      this.filterUsers();
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('Error al cargar todos los usuarios', error);
+      this.loading = false;
+    }
+  });
+}
+
+
+// Agrega este método para manejar el clic fuera del buscador
+onSearchBlur(): void {
+  if (!this.searchTerm.trim()) {
+    this.resetToPagination();
   }
+}
+
+// Reemplaza tu método searchUsers por este:
+searchUsers(): void {
+  const term = this.searchTerm.trim().toLowerCase();
+
+  if (!term) {
+    // Si el término está vacío, volver a la paginación normal
+    this.resetToPagination();
+    return;
+  }
+
+  // Si ya tenemos todos los usuarios, filtrarlos
+  if (this.allUsers.length > 0) {
+    this.filterUsers();
+  } else {
+    // Si no, cargar todos los usuarios primero
+    this.loadAllUsersForSearch();
+  }
+}
+// Nuevo método para resetear a la paginación normal
+resetToPagination(): void {
+  this.isSearching = false;
+  this.filteredUsers = [...this.users];
+  this.pageIndex = 1;
+  this.getUsers(this.pageIndex, this.pageSize);
+}
+// Método para filtrar usuarios
+filterUsers(): void {
+  const term = this.searchTerm.toLowerCase().trim();
+  this.filteredUsers = this.allUsers.filter(user =>
+    user.identity_document.toLowerCase().includes(term) ||
+    user.name.toLowerCase().includes(term) ||
+    user.last_name.toLowerCase().includes(term)
+  );
+  this.pageIndex = 1;
+  this.totalItems = this.filteredUsers.length;
+}
+
+
+// Cambio de página
+changePage(newPage: number) {
+  this.pageIndex = newPage;
+  this.getUsers(this.pageIndex, this.pageSize, );
+}
+
+
+
   toggleUserStatus(user: any): void {
     if (!user || !user.id) {
       console.error('Usuario inválido');
@@ -272,40 +276,10 @@ onSearchChange(searchText: string): void {
       },
     });
   }
-  // handleOk(id:number): void {
-  //   this.isVisibleCargue = false;
-  //   this.selectedUser = id
-    
-  //   if (this.selectedUser !== null) {
-  //     console.error('Usuario inválido');
-  //     return;
-  //   }
-
-  //   // Asegúrate de que los roles sean IDs numéricos
-  //   const roleIds = this.selectedRoles.map((role) => Number(role));
-
-  //   this.rolesService.assignRoles(this.selectedUser.id, roleIds).subscribe({
-  //     next: () => {
-  //       console.log('Roles asignados correctamente');
-  //       this.selectedUser.roles = [...roleIds]; // Actualiza la UI
-  //       this.isVisible = false;
-  //     },
-  //     error: (error) => console.error('Error al asignar roles', error),
-  //   });
-  // }
-  handleCancel(): void {
-    this.isVisible = false;
-    this.isVisibleCargue = false;
-  }
- 
 
   getRoleName(roleId: number): string {
     return (
       this.roles?.find((rol: any) => rol.id === roleId)?.name || 'Desconocido'
     );
-  }
-  pageIndexChange(item: any) {
-    this.pageIndex = item;
-    console.log(this.pageIndex);
   }
 }

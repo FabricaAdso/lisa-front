@@ -9,7 +9,24 @@ export class ApiRolesService{
 
   private http = inject(HttpClient);
 
-  
+
+  assignRoles(
+    userId: string,
+    roleIds: number[],
+    courseId?: number,
+    state?: string,
+    knowledgeNetworkId?: number
+  ): Observable<any> {
+    const body = {
+      user_id: userId,
+      role_ids: roleIds,
+      course_id: courseId,
+      state: state,
+      knowledge_network_id: knowledgeNetworkId
+    };
+
+    return this.http.post(`assign-role`, body);
+  }
 
   // Obtener todos los usuarios
   getUsers(page:number =1, pageSize:number = 10): Observable<any> {
@@ -19,15 +36,11 @@ export class ApiRolesService{
    toggleUserStatus(userId: string, isActive: boolean): Observable<any> {
     return this.http.post(`users/${userId}/deactivate`, { active: isActive });
   }
-  //obtner los roles 
+  //obtner los roles
   getRoles():Observable<any>{
     return this.http.get(`roles`,);
   }
 
-//asignar roles a un usuario
-  assignRoles(userId: string, roles: number[]): Observable<any> {
-    return this.http.post(`assign-role`, { user_id: userId, role_ids: roles });
-  }
 
 
 }
