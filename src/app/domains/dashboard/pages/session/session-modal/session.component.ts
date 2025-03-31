@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -30,6 +30,8 @@ import { RapService } from '@shared/services/program/rap.service';
 import { SubjectService } from '@shared/services/program/subject.service';
 import { SubjectModel } from '@shared/models/subject-model';
 import { RapModel } from '@shared/models/rap-model';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+
 
 @Component({
   selector: 'app-session',
@@ -45,15 +47,26 @@ import { RapModel } from '@shared/models/rap-model';
     NzModalComponent,
     NzTimePickerModule,
     FormsModule,
-    NzModalContentDirective
+    NzModalContentDirective,
+    NzInputNumberModule,
   ],
   templateUrl: './session.component.html',
   styleUrl: './session.component.css',
 })
 export class SessionComponent implements OnInit, OnDestroy {
 
+
+  disabledDate = (current: Date): boolean => {
+    // Deshabilita las fechas anteriores al inicio del día actual
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return current && current < today;
+  }
+
+
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;
+  @Output() sessionCreated = new EventEmitter<SessionModel>();
 
   time = new Date();
 
@@ -116,6 +129,37 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.getData();
     this.changeKnowledgeNetwork();
     this.changeSubject();
+    this.fieldCourse.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fieldSubject.enable();
+      } else {
+        this.fieldSubject.disable();
+        this.fieldSubject.reset();
+        this.fieldRap.disable();
+        this.fieldRap.reset();
+      }
+    });
+
+    this.fieldSubject.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fieldRap.enable();
+      } else {
+        this.fieldRap.disable();
+        this.fieldRap.reset();
+      }
+    });
+
+    this.fieldKnowledgeNetwork.valueChanges.subscribe((value) => {
+      if (value) {
+        this.fieldInstructor.enable();
+        this.changeKnowledgeNetwork();
+      } else {
+        this.fieldInstructor.disable();
+        this.fieldInstructor.reset();
+      }
+    });
+
+
 
   }
 
@@ -142,10 +186,10 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.knowledge_network = [...knowledgeNetwork];
         this.courses = [...courses];
 
-/*         this.courses = courses.filter(course =>course.state === 'En_ejecucion')
- */
+        /*         this.courses = courses.filter(course =>course.state === 'En_ejecucion')
+         */
 
-},
+      },
       error: (err) => {
         console.error('Error fetching data:', err);
       },
@@ -274,15 +318,14 @@ export class SessionComponent implements OnInit, OnDestroy {
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl('', Validators.required),
+      instructor_id: new FormControl({ value: '', disable: true }, Validators.required),
       course_id: new FormControl('', Validators.required),
       start_time: new FormControl(null, Validators.required),
       end_time: new FormControl(null, Validators.required),
-/*       end_time: new FormControl(new Date(0, 0, 0, 0, 0, 0), Validators.required),
- */      start_date: new FormControl(new Date(), Validators.required),
+      start_date: new FormControl(new Date(), Validators.required),
       days_of_week: new FormControl([], Validators.required,),
-      rap_id: new FormControl([], Validators.required,),
-      subject_id: new FormControl([], Validators.required,),
+      rap_id: new FormControl({ value: '', disabled: true }, Validators.required,),
+      subject_id: new FormControl({ value: '', disabled: true }, Validators.required,),
       percentage: new FormControl('', Validators.required)
     });
 
@@ -378,24 +421,30 @@ export class SessionComponent implements OnInit, OnDestroy {
       this.session_service.createSession(session).subscribe({
         next: (data) => {
           const newSession: SessionModel = Array.isArray(data) ? data[0] : data;
-          this.session = [...this.session, newSession];
+          // Cuando se crea la sesión
+          this.sessionCreated.emit(newSession);
           this.createBasicNotification();
           this.closeModal();
         },
         error: (err) => {
-          console.error('Error al crear la sesión:', err);
-          this.notification.create('error', 'Error', 'No se pudo crear la sesión');
+          // Mensaje de error base
+          let errorMessage = 'Error al crear la sesión.';
+          // Verificar si el backend devolvió un objeto de error con propiedades 'message' y 'conflict_session'
+          if (err.error) {
+            if (err.error.message) {
+              errorMessage = err.error.message;
+            }
+            if (err.error.conflict_session) {
+              // Puedes formatear o extraer información relevante del conflicto, por ejemplo:
+              // Convertir el conflicto a cadena o mostrar algunos datos clave
+              errorMessage += ' Detalle del conflicto: ' + JSON.stringify(err.error.conflict_session);
+            }
+          }
+          this.notification.create('error', 'Error', errorMessage);
         }
       });
-    } else {
-      this.notification.create('warning', 'Error', 'Por favor, complete todos los campos');
     }
   }
-
-
-
-
-
 
   createBasicNotification(): void {
     this.notification
@@ -411,7 +460,17 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   openModal() {
+    if (!this.fieldKnowledgeNetwork.value) {
+      this.fieldInstructor.disable();
+      this.fieldInstructor.reset();
+    } else {
+      this.fieldInstructor.enable();
+    }
     this.isModalVisible = true;
   }
+
+
+  defaultOpenValue = new Date(0, 0, 0, 0, 0);
+
 
 }

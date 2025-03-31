@@ -19,7 +19,7 @@ import { RegionalService } from '@shared/services/regional.service';
 import { RegionalModel } from '@shared/models/regional.model';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { TrainingCenterModel } from '@shared/models/training-center.model';
-import { TrainingCentreService } from '@shared/services/training-center.service';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 
 
 @Component({

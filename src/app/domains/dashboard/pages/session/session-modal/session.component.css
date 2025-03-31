@@ -2,16 +2,39 @@ nz-select{
     width: 100%;
 }
 
-::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
-    color: #fff;
-    border-color: #52c41a;
-    background: #00af00;
+::ng-deep .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: #70B22D !important;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
 }
 
-::ng-deep .ant-btn-primary {
-    border-color: #52c41a;
-    color: white;
-    background-color: #52c41a;
-    outline: none;
+
+.ant-picker:hover, .ant-picker-focused {
+  border-color:#70B22D !important;
+  border-right-width: 1px;
 }
 
+
+
+::ng-deep .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+
+  border-color:#70B22D !important;
+  border-right-width: 1px;
+}
+
+::ng-deep .ant-input-number:hover {
+  border-color: #70B22D !important;
+  border-right-width: 1px;
+}
+
+::ng-deep .ant-input:focus {
+  border-color: #52c41a !important;
+  border-right-width: 1px;
+}
+
+
+.ant-input-number:focus, .ant-input-number-focused {
+  border-color: #70B22D !important;
+  box-shadow: 0 0 0 2px rgba(114, 212, 68, 0.096);
+  border-right-width: 1px;
+  outline: 0;
+}

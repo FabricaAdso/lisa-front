@@ -1,9 +1,8 @@
-<nz-modal 
-  [(nzVisible)]="isVisible" 
-  nzTitle="Justificación Rechazada" 
-  (nzOnCancel)="handleCancel()" 
-  [nzFooter]="null"
->
+<nz-modal [(nzVisible)]="isVisible" 
+nzTitle="Justificación Rechazada" 
+(nzOnCancel)="handleCancel()" 
+[nzFooter]="null">
+
   <ng-container *nzModalContent>
     <div class="modal-container">
       <!-- Enlace al archivo cargado (solo se muestra si hay archivo cargado) -->
@@ -15,9 +14,16 @@
       </div>
 
       <!-- Motivo de rechazo -->
-      <div class="motive-box">
-        <p>{{ justification.aprobation?.motive }}</p>
+      <div class="rejection-wrapper">
+        <div class="rejection-section">
+
+          <label class="rejection-label">Motivo del rechazo</label>
+          <div class="motive-box" style="width: 100%;" > 
+            <p>{{ justification.aprobation?.motive }}</p>
+          </div>
+        </div>
       </div>
     </div>
+
   </ng-container>
 </nz-modal>

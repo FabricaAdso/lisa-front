@@ -8,7 +8,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, of, Subscription, switchMap } from 'rxjs';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { RegionalService } from '@shared/services/regional.service';
@@ -50,7 +50,8 @@ export class TrainingCentreFormComponent {
   regions: RegionalModel[] = [];
 
 
-  constructor(private notification: NzNotificationService){
+  constructor(
+    private notification: NzNotificationService){
     this.form = this.formBuilder.group({
       name:new FormControl(null,[Validators.required, Validators.minLength(5),noWhiteSpaceValidator()]),
       code: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
@@ -68,6 +69,46 @@ export class TrainingCentreFormComponent {
       this.form.get('name')!.setValue(this.centre.name);
     }
     this.loadRegions();
+
+
+      // Validación en tiempo real del campo 'code'
+      this.form.get('code')!.valueChanges.pipe(
+        debounceTime(300), // Espera 300ms después de cada cambio
+        distinctUntilChanged(), // Solo emite si el valor cambió
+        switchMap((code: string) => {
+          if (!code || code.trim() === '') {
+            // Si el campo está vacío, marca el campo como inválido con el error 'required'
+            this.form.get('code')!.setErrors({ required: true });
+            return of({ exists: false }); // Retorna un observable con un valor por defecto
+          }
+          return this.centreService.checkCodeExists(code);
+        })
+      ).subscribe({
+        next: (response) => {
+          if (response.exists) {
+            this.form.get('code')!.setErrors({ codeExists: true }); // Marca el campo como inválido
+          } else {
+            // Limpia los errores, excepto 'required' si el campo está vacío
+            const errors = this.form.get('code')!.errors;
+            if (errors && errors['required']) {
+              this.form.get('code')!.setErrors({ required: true });
+            } else {
+              this.form.get('code')!.setErrors(null);
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error al verificar el código:', err);
+          this.form.get('code')!.setErrors(null); // Limpia los errores en caso de error
+        }
+      });
+
+
+
+
+
+
+
 
   }
 

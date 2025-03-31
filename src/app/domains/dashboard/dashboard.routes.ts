@@ -62,13 +62,13 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c => c.TrainingCentrePageComponent)
       },
 
-      {
-        path: 'headquarters',
-        title: 'Administrar sedes',
-        data: { breadcrumb: 'Administrar Sedes ' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
-      },
+      // {
+      //   path: 'headquarters',
+      //   title: 'Administrar sedes',
+      //   data: { breadcrumb: 'Administrar Sedes ' },
+      //   canActivate: [authGuard],
+      //   loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
+      // },
 
       {
         path: 'environments',
@@ -77,7 +77,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/environment/environment.component').then(c => c.EnvironmentComponent)
       },
-     
+
 
       {
         path: 'programs',
@@ -102,6 +102,8 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/session/manage-session/manage-session.component').then(c =>c.ManageSessionComponent)
 
       },
+
+    
 
        {
         path: 'file',

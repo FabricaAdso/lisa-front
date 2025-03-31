@@ -28,9 +28,17 @@ export class CourseService {
     return this.http.get<CourseModel[]>(url);
   }
 
-  getCursesInstructorPending(data?: QueryUrl): Observable<SessionModel[]> {
+  getCouurseSessionsPast(data?: QueryUrl): Observable<SessionModel[]> {
 
-    let url: string = getQueryUrl(`${this.url}/Instructorsessions`, data)
+    let url: string = getQueryUrl(`${this.url}/sessions`, data)
+
+    return this.http.get<SessionModel[]>(url);
+  }
+
+
+  getCourseSessionsNow(data?: QueryUrl): Observable<SessionModel[]> {
+
+    let url: string = getQueryUrl(`${this.url}/sessionsNow`, data)
 
     return this.http.get<SessionModel[]>(url);
   }

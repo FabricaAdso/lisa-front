@@ -2,7 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { UpdateCourseDto } from '@shared/dto/program/update-course-dto';
+import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { getQueryUrl } from '@shared/functions/url.functions';
+import { PaginateModel } from '@shared/models/paginate.model';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { SessionModel } from '@shared/models/session.model';
 import { Observable } from 'rxjs';
@@ -18,8 +20,14 @@ export class SessionService {
 
   url:string = 'session';
 
+  getSession(data?:QueryUrl){
+    return this.http.get<SessionModel[]>(this.url);
+  }
+
   getSessionShow(id:number,data?:QueryUrl){
     let url:string = getQueryUrl(`${this.url}/${id}`,data);
+    console.log(url);
+    
     return this.http.get<SessionModel>(`${url}`);
   }
 
@@ -51,6 +59,13 @@ export class SessionService {
     return this.http.post<SessionModel[]>(this.url, data);
   }
 
+  updateSession(data: any): Observable<SessionModel> {
+    const { id } = data;
+    return this.http.put<SessionModel>(`session/update/${id}`, data);
+  }
+
+
+
   deleteSession(id: number) {
     return this.http.delete(`${this.url}/${id}`);
   }
@@ -59,5 +74,47 @@ export class SessionService {
     const { id } = data;
     return this.http.put<SessionModel>(`${this.url}/${id}`, data);
   }
+
+ // Método para obtener sesiones con paginación (getAlltwo)
+  getAlltwo(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
+    let params = new HttpParams();
+    if (included) {
+      const includeStr = Array.isArray(included) ? included.join(',') : included;
+      params = params.set('included', includeStr);
+      console.log('Included:', includeStr);
+    }
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        params = params.set(`filter[${key}]`, filters[key]);
+        console.log('Setting filter:', key, filters[key]);
+      });
+      console.log('Request URL:', this.url);
+    }
+    return this.http.get<PaginateModel<SessionModel>>(this.url, { params });
+  }
+
+  getLeaderSessions(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
+    let params = new HttpParams();
+
+    if (included) {
+      const includeStr = Array.isArray(included) ? included.join(',') : included;
+      params = params.set('included', includeStr);
+    }
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        params = params.set(`filter[${key}]`, filters[key]);
+      });
+    }
+
+    // Suponiendo que la URL base es 'session' y el endpoint para líder es 'session/leader'
+    return this.http.get<PaginateModel<SessionModel>>(`${this.url}/leader`, { params });
+  }
+
+  getFilterOptions(): Observable<any> {
+    // Suponiendo que la URL para obtener las opciones es 'session/leadersession'
+    return this.http.get<any>(`${this.url}/leadersession`);
+  }
+
+
 
 }

@@ -1,106 +1,66 @@
-<button nz-button nzType="primary" (click)="openModal()">Ingresa un Ambiente</button>
+<section class="Environments">
+  <div class="content-tittle">
+    <div class="search-box">
+      <nz-select class="border-2 border-solid"
+      nzPlaceHolder="Seleccione una sede"
+      [(ngModel)]="selectedHeadquarter"
+      (ngModelChange)="onSelectHeadquarter($event)" nzAllowClear>
 
-<nz-table #basicTable [nzData]="headquarters" [nzPageSize]="5">
+        @for (headquarter of headquartersList; track $index) {
+        <nz-option  [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
+      }
+      </nz-select>
+
+    </div>
+    <div class="botons">
+      <button class="add-environment-btn"
+       (click)="openModalHeadquarter()" >Editar sede </button>
+      <button class="add-environment-btn"
+       (click)="onDeleteHeadquarter()">Eliminar sede</button>
+      <button class="add-environment-btn"
+       (click)="openCreateModalHeadquarter()">Añadir sedes </button>
+      <button 
+      class="add-environment-btn"
+      (click)="openCreateModalEnvironment()"
+      [disabled]="!selectedHeadquarter">Añadir ambientes</button>
+    </div>
+
+  </div>
+
+  <nz-table #basicTable [nzData]="filteredEnvironments">
     <thead>
-        <tr>
-            <th  nzWidth="18%">
-                Nombre
-
-                <nz-input-group nzSuffixIcon="search" style="margin-top: 8px;">
-                    <input
-                      nz-input
-                      placeholder="Buscar nombre"
-                      [(ngModel)]="nameFilter"
-                      (input)="applyFilter()"
-                    />
-                  </nz-input-group>
-
-            </th>
-            <th nzWidth="15%">Capacity</th>
-            <th nzWidth="15%">Area</th>
-            <th nzWidth="15%">Sede</th>
-            <th nzWidth="15%">acciones</th>
-        </tr>
+      <tr>
+        <th>Nombre</th>
+        <th>Capacidad</th>
+        <th>Area</th>
+        <th>Acciones</th>
+      </tr>
     </thead>
     <tbody>
-        @for (item of environments; track $index) {
-        <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.capacity}}</td>
-            <td>{{ item.headquarters?.name}}</td>
-
-            <td>
-                <button nz-button nzType="primary" (click)="openModal(item)">Edit</button>
-                <button nz-button nzType="default" nzDanger (click)="deleteHeadquarters(item.id)">
-                    Delete
-                </button>
-            </td>
-        </tr>
-        }
+      @for (environment of basicTable.data; track environment.id) {
+      <tr>
+        <td>{{ environment.name }}</td>
+        <td>{{ environment.capacity }}</td>
+        <td>{{ environment.knowledge_network?environment.knowledge_network.name:'No tiene area asignada'}}</td>
+        <td>
+          <button class="btn-accion" (click)="openModalEnvironment(environment.id)">Editar</button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button (click)="deleteEnvironment(environment.id)" >Eliminar</button>
+        </td>
+      </tr>
+      }
     </tbody>
-</nz-table>
+  </nz-table>
+</section>
 
 
 
-<nz-modal *ngIf="formEnvironments" [(nzVisible)]="isModalVisible" nzTitle="Administración de Areas"
-    (nzOnCancel)="closeModal()" (nzOnOk)="saveData()" [nzOkDisabled]="formEnvironments.invalid">
+<!-- modales -->
 
-    <ng-container *nzModalContent>
-        <form [formGroup]="formEnvironments">
-            <div class="mb-4">
-                <label for="name" class="block text-sm font-medium">Nombre</label>
-                <input id="name" nz-input formControlName="name" placeholder="Ingrese el nombre de la sede" />
-                <div *ngIf="formEnvironments?.get('name')?.invalid && formEnvironments?.get('name')?.touched"
-                    class="text-red-500 text-sm">
-                    El nombre es requerido y debe tener al menos 3 caracteres. </div>
-            </div>
+<app-modal-headquarter #modalHeadquarter
+(updatedHeadquarter)="getHeadquarters()" ></app-modal-headquarter>
+<app-modal-environment #modalEnviroment 
+(updateEnvironment)="handleEnvironmentUpdate()"
+ ></app-modal-environment>
 
 
-            <div class="mb-4">
-                <label for="capacity" class="block text-sm font-medium">capacity</label>
-                <input id="capacity" nz-input formControlName="capacity" placeholder="Ingrese la capacity" />
-                <div *ngIf="formEnvironments?.get('adress')?.invalid && formEnvironments.get('adress')?.touched"
-                    class="text-red-500 text-sm">
-                    Capacidad es requerida.
-                </div>
-            </div>
-
-
-
-            <div class="mb-4">
-
-                <label for="environment_area_id" class=""> Area</label>
-                <nz-select formControlName="environment_area_id" placeholder="Seleccione un Area">
-                    <nz-option *ngFor="let area of areas " [nzValue]="area.id"
-                        [nzLabel]="area.name"></nz-option>
-
-                </nz-select>
-                @if (formEnvironments.get('environment_area_id')?.invalid &&
-                formEnvironments.get('environment_area_id')?.touched)
-                {
-                <div class="text-red-500 text-sm">
-                   Area es requerido.
-                </div>
-                }
-            </div>
-
-            <div class="mb-4">
-
-                <label for="headquarters_id" class=""> Sede de Formacion</label>
-                <nz-select formControlName="headquarters_id" placeholder="Seleccione una Sede">
-                    <nz-option *ngFor="let headquarter of headquarters " [nzValue]="headquarter.id"
-                        [nzLabel]="headquarter.name"></nz-option>
-
-                </nz-select>
-                @if (formEnvironments.get('headquarters_id')?.invalid &&
-                formEnvironments.get('headquarters_id')?.touched)
-                {
-                <div class="text-red-500 text-sm">
-                   Sede es requerido.
-                </div>
-                }
-            </div>
-
-        </form>
-    </ng-container>
-</nz-modal>

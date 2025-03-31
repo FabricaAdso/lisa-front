@@ -7,7 +7,7 @@ export interface SubjectModel{
     total_number_hours: number;
     program_id: number;
     program?:ProgramModel
-
+    percentage:number;
     //relacion con raps
     rap?:RapModel;
 }

@@ -1,0 +1,91 @@
+<nz-modal   [(nzVisible)]="isVisible"
+nzTitle="Editar Sesión"
+[nzFooter]="modalFooter"
+(nzOnCancel)="cancel()">
+  <ng-container *nzModalContent>
+    <form [formGroup]="sessionForm" (ngSubmit)="submitForm()" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Network</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nz-input formControlName="network" placeholder="Network" class="rectangular-input" readonly />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Instructor</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nzwidth="100%" nz-input formControlName="instructor" placeholder="Instructor" class="rectangular-input" readonly />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">RAP</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nzwidth="100%" nz-input formControlName="rap" placeholder="RAP" class="rectangular-input" readonly />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Competencia</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nzwidth="100%" nz-input formControlName="subject" placeholder="Subject" class="rectangular-input" readonly />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Ficha</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nzwidth="100%" nz-input formControlName="course" placeholder="Course" class="rectangular-input" readonly />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Hora de Inicio</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-time-picker [formControl]="fieldStartTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
+            [nzDefaultOpenValue]="defaultOpenValue" class="rectangular-input">
+          </nz-time-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Hora de Fin</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-time-picker [formControl]="fieldEndTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
+            [nzDefaultOpenValue]="defaultOpenValue" class="rectangular-input">
+          </nz-time-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Porcentaje</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input type="number" formControlName="percentage" placeholder="Percentage" class="rectangular-input"
+            readonly />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Fecha</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-date-picker formControlName="date" nzFormat="yyyy/MM/dd" [nzDisabledDate]="disabledDate"
+            placeholder="Seleccione la fecha" class="rectangular-input">
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+
+
+    </form>
+  </ng-container>
+</nz-modal>
+
+
+<ng-template #modalFooter>
+  <button nz-button nzType="primary" (click)="submitForm()" [disabled]="loading">
+    Guardar
+  </button>
+  <button nz-button nzType="default" (click)="cancel()" style="margin-left: 8px;">
+    Cancelar
+  </button>
+</ng-template>
