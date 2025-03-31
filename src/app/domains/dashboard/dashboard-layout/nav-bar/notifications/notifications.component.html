@@ -2,7 +2,7 @@
     [nzSize]="size"
     [nzVisible]="visible"
     nzPlacement="right"
-    [nzTitle]=""
+    nzTitle="Mensajes"
     [nzExtra]=""
     (nzOnClose)="close()"
   >
@@ -23,7 +23,7 @@
             nzType="text" 
             (click)="markAsRead(item.id, $index)">
             <span 
-              class="text-1xl"
+              class="text-[1.2rem]"
               nz-icon
               nzType="check-circle"
               nzTheme="twotone"

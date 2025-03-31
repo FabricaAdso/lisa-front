@@ -111,6 +111,7 @@ export class DashboardLayoutComponent implements OnInit,OnDestroy{
         this.currentChannel = channel;
         this.websocketService.listen(channel, '.notification.received', (data: any) => {
           this.dataSharedService.updateNotifications([...this.dataSharedService.notifications(), data]);
+          this.dataSharedService.updateMessages([...this.dataSharedService.messages(), data]);
         });
       }
     }
