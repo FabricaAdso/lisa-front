@@ -24,7 +24,7 @@
 
 /* auth-layout */
 .flex-container{
-  @apply desktop_xl:flex desktop:flex laptop:flex tablet:flex mobile:flex alex:flex desktop_xl:flex-row desktop:flex-row laptop:flex-row tablet:justify-around mobile:justify-around alex:justify-around items-center min-h-screen mx-auto 
+  @apply desktop_xl:flex desktop:flex laptop:flex tablet:flex mobile:flex alex:flex desktop_xl:flex-row desktop:flex-row laptop:flex-row tablet:justify-around mobile:justify-around alex:justify-around items-center min-h-screen mx-auto
 }
 
 .card{
@@ -47,5 +47,5 @@
 /* register */
 .ant-form-item-explain, .ant-form-item-extra {
 
-  line-height: 1.3 !important; 
+  line-height: 1.3 !important;
 }

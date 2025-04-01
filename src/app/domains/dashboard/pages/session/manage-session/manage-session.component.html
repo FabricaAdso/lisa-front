@@ -63,7 +63,7 @@
       <tr *ngFor="let session of sessions; trackBy: trackBySession" class="hover:bg-gray-100">
         <td nzWidth="10%">{{ session.date }}</td>
         <td>{{ session.course?.program?.name || 'N/D' }}</td>
-        <td>{{ session.instructor?.user?.name || 'N/D' }}</td>
+        <td>{{ session.instructor?.user?.name || 'N/D' }} {{ session.instructor?.user?.last_name }}</td>
         <td>{{ session.start_time }} - {{ session.end_time }}</td>
         <td>{{ session.rap.subject?.name || 'N/D' }}</td>
         <td>{{ session.rap.description || 'N/D' }} ({{ session.rap.number_hours || 'N/D' }})</td>
@@ -74,7 +74,7 @@
             Editar
           </button>
 
-            <button *ngIf="isSessionEditable(session)" nz-button nzSize="small" nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?"
+            <button *ngIf="isSessionEditable(session)" nz-button nzDanger nzSize="small" nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?"
             (nzOnConfirm)="onDeleteSession(session.id)">
             Eliminar
           </button>

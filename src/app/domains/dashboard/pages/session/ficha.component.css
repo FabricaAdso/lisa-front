@@ -1,21 +1,16 @@
 /* Contenedor Principal */
 .main-container {
-  
+
   background-color: #f8f5f5;
   display: flex;
   flex-direction: column;
 }
 
 ::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
-  color: #fff;
-  border-color:  #52c41a;
-  background:  #52c41a;
+
 }
 
 ::ng-deep .ant-btn:hover, .ant-btn:focus {
-  color: #52c41a;
-  border-color: #52c41a;
-  background: #fff;
 
 }
 
@@ -35,7 +30,7 @@
   max-height: 200px;
   overflow-y: auto;
   padding: 16px;
-  
+
   border-radius: 4px;
   margin-top: 0; /* Espaciado entre el historial y el contenedor */
 }
@@ -100,19 +95,13 @@ nz-card:hover {
 nz-collapse {
   margin-top: 16px;
   border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  background-color: white;
+  
 }
 ::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
-  color: #fff;
-  border-color: #52c41a;
-  background: #00af00;
+
 }
 
 ::ng-deep .ant-btn-primary {
-  border-color: #52c41a;
-  color: white;
-  background-color: #52c41a;
-  outline: none;
+
 }
 

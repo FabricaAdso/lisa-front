@@ -54,15 +54,11 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
   styleUrl: './session.component.css',
 })
 export class SessionComponent implements OnInit, OnDestroy {
-
-
   disabledDate = (current: Date): boolean => {
-    // Deshabilita las fechas anteriores al inicio del día actual
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return current && current < today;
   }
-
 
   @Input() isModalVisible = false;
   @Input() anotherModalOpen = false;
@@ -74,22 +70,18 @@ export class SessionComponent implements OnInit, OnDestroy {
   private instructor_service = inject(InstructorService);
   private formBuilder = inject(FormBuilder);
   private course_service = inject(CourseService);
-  private session_service = inject(SessionService)
-  private date_pipe = inject(DatePipe)
+  private session_service = inject(SessionService);
+  private date_pipe = inject(DatePipe);
   private notification = inject(NzNotificationService);
-  private rap_service = inject(RapService)
-  private subject = inject(SubjectService)
+  private rap_service = inject(RapService);
+  private subject = inject(SubjectService);
 
   disableDates = () => true; // Desactiva todas las fechas
 
   // Campos de la base de datos
   start_date: string | null = null;
-
   start_time: string | null = null;
   end_time: string | null = null;
-
-
-
 
   selectedDate: Date | null = new Date();
 
@@ -116,19 +108,22 @@ export class SessionComponent implements OnInit, OnDestroy {
     { id: 6, name: 'Sábado' },
     { id: 7, name: 'Domingo' }
   ];
-  constructor() {
 
-  }
+
+  constructor() { }
 
   openAnotherModal() {
     this.anotherModalOpen = true;
   }
 
   ngOnInit(): void {
-    this.createForm()
+    this.createForm();
     this.getData();
-    this.changeKnowledgeNetwork();
-    this.changeSubject();
+    this.setupFormSubscriptions();
+  }
+
+  setupFormSubscriptions(): void {
+    // Cuando cambia el course, habilita el subject o lo deshabilita
     this.fieldCourse.valueChanges.subscribe((value) => {
       if (value) {
         this.fieldSubject.enable();
@@ -140,34 +135,30 @@ export class SessionComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Cuando cambia el subject, habilita el rap y asigna el porcentaje
     this.fieldSubject.valueChanges.subscribe((value) => {
       if (value) {
         this.fieldRap.enable();
-        // Obtener el porcentaje del subject seleccionado
         const selectedSubject = this.subjectList.find(subj => subj.id === value);
         if (selectedSubject) {
-          this.formSession!.get('percentage')?.setValue(selectedSubject.percentage,{ emitEvent: false });
+          this.formSession!.get('percentage')?.setValue(selectedSubject.percentage, { emitEvent: false });
         }
       } else {
         this.fieldRap.disable();
         this.fieldRap.reset();
-        this.formSession!.get('percentage')?.reset(); // Limpiar si no hay subject
-
+        this.formSession!.get('percentage')?.reset();
       }
     });
 
+    // Solo controlar el estado del control de instructor (habilitar/deshabilitar) sin invocar la llamada HTTP
     this.fieldKnowledgeNetwork.valueChanges.subscribe((value) => {
       if (value) {
         this.fieldInstructor.enable();
-        this.changeKnowledgeNetwork();
       } else {
         this.fieldInstructor.disable();
         this.fieldInstructor.reset();
       }
     });
-
-
-
   }
 
   ngOnDestroy(): void {
@@ -179,7 +170,6 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.courseSelection.complete();
   }
 
-
   getData() {
     forkJoin([
       this.knowledge_network_service
@@ -189,56 +179,46 @@ export class SessionComponent implements OnInit, OnDestroy {
         .getCourseLeader()
         .pipe(takeUntil(this.destroy)),
     ]).subscribe({
-      next: ([knowledgeNetwork, courses,]) => {
+      next: ([knowledgeNetwork, courses]) => {
         this.knowledge_network = [...knowledgeNetwork];
         this.courses = [...courses];
-
-        /*         this.courses = courses.filter(course =>course.state === 'En_ejecucion')
-         */
-
       },
       error: (err) => {
         console.error('Error fetching data:', err);
       },
     });
-  };
+  }
 
-
-
-
+  // Configura la suscripción para obtener los instructores según la red de conocimiento
   changeKnowledgeNetwork() {
     this.fieldKnowledgeNetwork.valueChanges
       .pipe(
-        debounceTime(300), // sspera 300 ms despues de cada cambio
+        debounceTime(300),
         distinctUntilChanged(),
         tap((value) => {
           console.log('Valor de knowledge_network:', value);
-
-          this.knowledgeNetworkSelection.next();
-          console.log(this.knowledgeNetworkSelection);
-
+          // Reinicia la lista de instructores
           this.instructor = [];
+          // Se utiliza knowledgeNetworkSelection para cancelar suscripciones anteriores
+          this.knowledgeNetworkSelection.next();
         }),
-
-        filter((value): value is number => value !== null && value !== ''), // que no sea nulo ni vacío
+        filter((value): value is number => value !== null && value !== ''),
         switchMap((knowledgeNetwork: number) => {
           this.fieldInstructor.reset();
-          console.log(knowledgeNetwork);
           return this.instructor_service
             .getInstructorByKnowledgeNetwork(knowledgeNetwork)
             .pipe(
               takeUntil(this.knowledgeNetworkSelection),
-              tap((instructor) => {
-                if (instructor.length === 0) {
+              tap((instructors) => {
+                if (instructors.length === 0) {
                   this.notification.create(
                     'warning',
                     'Error',
-                    'No hay ningun instructor asociado a la red de conocimiento'
+                    'No hay ningún instructor asociado a la red de conocimiento'
                   );
                 }
-                this.instructor = [
-                  ...new Set([...this.instructor, ...instructor]),
-                ];
+                // Actualiza la lista de instructores
+                this.instructor = [...instructors];
               })
             );
         }),
@@ -246,14 +226,15 @@ export class SessionComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         error: (err) =>
-          console.error('Error al obtener los centros de formación:', err),
+          console.error('Error al obtener los instructores:', err),
       });
   }
 
+  // Configura la suscripción para obtener los rap según el subject seleccionado
   changeSubject() {
     this.fieldSubject.valueChanges
       .pipe(
-        debounceTime(300), // sspera 300 ms despues de cada cambio
+        debounceTime(300),
         distinctUntilChanged(),
         tap(() => {
           this.rapList = [];
@@ -275,35 +256,31 @@ export class SessionComponent implements OnInit, OnDestroy {
             })
           );
         }),
-        takeUntil(this.subjectList)
+        takeUntil(this.destroy)
       )
       .subscribe({
         error: (err) => console.error('Error en changeSubject:', err)
       });
   }
 
+  // Configura la suscripción para obtener los subjects según el curso seleccionado
   changecourse() {
     this.fieldCourse.valueChanges
       .pipe(
-        debounceTime(300), // sspera 300 ms despues de cada cambio
+        debounceTime(300),
         distinctUntilChanged(),
         startWith(this.fieldCourse.value),
         tap(() => {
           this.courseSelection.next();
-          // reinicia la lista de subjects
           this.subjectList = [];
         }),
         filter((value): value is number => value !== null && value !== ''),
         switchMap((courseId: number) => {
-          // reinicia el campo de subject
           this.fieldSubject.reset();
-          //el objeto del curso seleccionado a partir del id
           const selectedCourse = this.courses.find(c => c.id === courseId);
           if (!selectedCourse || !selectedCourse.code) {
-            // si no  encuentra, retonra un observable vacio
             return of([]);
           }
-          // llama al servici enviando el codigo del curso
           return this.subject.getSubjectByCourse(selectedCourse.code.toString()).pipe(
             takeUntil(this.courseSelection),
             tap((subjects: SubjectModel[]) => {
@@ -314,7 +291,6 @@ export class SessionComponent implements OnInit, OnDestroy {
                   'No se encontraron subjects para este curso'
                 );
               }
-              // asigna directamente el array de subjects
               this.subjectList = subjects;
             })
           );
@@ -326,23 +302,21 @@ export class SessionComponent implements OnInit, OnDestroy {
       });
   }
 
-
-
   createForm() {
     this.formSession = this.formBuilder.group({
       knowledge_network: new FormControl('', Validators.required),
-      instructor_id: new FormControl({ value: '', disable: true }, Validators.required),
+      instructor_id: new FormControl({ value: '', disabled: true }, Validators.required),
       course_id: new FormControl('', Validators.required),
       start_time: new FormControl(null, Validators.required),
       end_time: new FormControl(null, Validators.required),
       start_date: new FormControl(new Date(), Validators.required),
-      days_of_week: new FormControl([], Validators.required,),
-      rap_id: new FormControl({ value: '', disabled: true }, Validators.required,),
-      subject_id: new FormControl({ value: '', disabled: true }, Validators.required,),
+      days_of_week: new FormControl([], Validators.required),
+      rap_id: new FormControl({ value: '', disabled: true }, Validators.required),
+      subject_id: new FormControl({ value: '', disabled: true }, Validators.required),
       percentage: new FormControl('', Validators.required)
     });
-
   }
+
   get fieldKnowledgeNetwork() {
     return this.formSession?.get('knowledge_network') as FormControl;
   }
@@ -368,89 +342,88 @@ export class SessionComponent implements OnInit, OnDestroy {
     return this.formSession?.get('subject_id') as FormControl;
   }
 
-
   onTimeChangesStart(timeStart: Date): void {
     if (timeStart) {
-      // Formatear la hora en formato HH:mm
       const formattedTime = timeStart.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      console.log('Hora seleccionada:', formattedTime); // Ejemplo: '21:02'
-
+      this.fieldStartTime.setValue(timeStart);
+      console.log('Hora seleccionada:', formattedTime);
     }
   }
 
   onTimeChangesEnd(timeEnd: Date): void {
     if (timeEnd) {
-      // Formatear la hora en formato HH:mm
       const formattedTime = timeEnd.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      console.log('Hora seleccionada:', formattedTime); // Ejemplo: '21:02'
-
+      this.fieldEndTime.setValue(timeEnd);
+      console.log('Hora seleccionada:', formattedTime);
     }
   }
 
   onDateChange(selectedDate: Date | Date[] | null): void {
     let date: Date | null = null;
     if (selectedDate) {
-      if (Array.isArray(selectedDate)) {
-        date = selectedDate[0];
-      } else {
-        date = selectedDate;
-      }
+      date = Array.isArray(selectedDate) ? selectedDate[0] : selectedDate;
     }
     const start_date = date ? this.date_pipe.transform(date, 'yyyy/MM/dd') : null;
     this.formSession?.get('start_date')?.setValue(start_date);
   }
 
-
   saveForm() {
     if (this.formSession?.valid) {
-      const session: CreateSessionDTO = this.formSession.value as CreateSessionDTO;
+      const formValues = { ...this.formSession.value };
 
-      // convertir days_of_week a cadena si es un array
-      if (session.days_of_week && Array.isArray(session.days_of_week)) {
-        session.days_of_week = session.days_of_week.join(',');
-      }
-
-      // convertir start_time a "HH:mm"
-      if (session.start_time) {
-        const startTime = new Date(session.start_time);
-        const formattedStartTime = this.date_pipe.transform(startTime, 'HH:mm')?.trim();
+      // Procesa el campo start_time sin afectar el control original
+      if (formValues.start_time) {
+        const startTime = new Date(formValues.start_time);
+        if (isNaN(startTime.getTime())) {
+          this.notification.create('error', 'Error', 'Hora de inicio inválida');
+          return;
+        }
+        const formattedStartTime = this.date_pipe.transform(startTime, 'HH:mm');
         if (!formattedStartTime) {
           this.notification.create('error', 'Error', 'Hora de inicio inválida');
           return;
         }
-        session.start_time = formattedStartTime;
+        formValues.start_time = formattedStartTime.trim();
       }
-      if (session.end_time) {
-        const endTime = new Date(session.end_time);
-        const formattedEndTime = this.date_pipe.transform(endTime, 'HH:mm')?.trim();
+
+      // Procesa el campo end_time de manera similar
+      if (formValues.end_time) {
+        const endTime = new Date(formValues.end_time);
+        if (isNaN(endTime.getTime())) {
+          this.notification.create('error', 'Error', 'Hora de fin inválida');
+          return;
+        }
+        const formattedEndTime = this.date_pipe.transform(endTime, 'HH:mm');
         if (!formattedEndTime) {
           this.notification.create('error', 'Error', 'Hora de fin inválida');
           return;
         }
-        session.end_time = formattedEndTime;
+        formValues.end_time = formattedEndTime.trim();
       }
 
-      console.log('Payload de sesión:', session);
 
-      this.session_service.createSession(session).subscribe({
+          // Convierto el array days_of_week a string
+    if (formValues.days_of_week && Array.isArray(formValues.days_of_week)) {
+      formValues.days_of_week = formValues.days_of_week.join(',');
+    }
+
+
+      console.log('Payload de sesión:', formValues);
+
+      this.session_service.createSession(formValues).subscribe({
         next: (data) => {
           const newSession: SessionModel = Array.isArray(data) ? data[0] : data;
-          // Cuando se crea la sesión
           this.sessionCreated.emit(newSession);
           this.createBasicNotification();
           this.closeModal();
         },
         error: (err) => {
-          // Mensaje de error base
           let errorMessage = 'Error al crear la sesión.';
-          // Verificar si el backend devolvió un objeto de error con propiedades 'message' y 'conflict_session'
           if (err.error) {
             if (err.error.message) {
               errorMessage = err.error.message;
             }
             if (err.error.conflict_session) {
-              // Puedes formatear o extraer información relevante del conflicto, por ejemplo:
-              // Convertir el conflicto a cadena o mostrar algunos datos clave
               errorMessage += ' Detalle del conflicto: ' + JSON.stringify(err.error.conflict_session);
             }
           }
@@ -461,11 +434,10 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   createBasicNotification(): void {
-    this.notification
-      .blank(
-        'Se ha creado la sesion correctamente',
-        'Ahora puede tomar asistencia de su sesion'
-      )
+    this.notification.blank(
+      'Se ha creado la sesión correctamente',
+      'Ahora puede tomar asistencia de su sesión'
+    );
   }
 
   closeModal(): void {
@@ -474,6 +446,19 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   openModal() {
+    // Recrea el formulario y sus suscripciones
+    this.createForm();
+    this.setupFormSubscriptions();
+
+    // Carga nuevamente datos maestros
+    this.getData();
+
+    // Configura las suscripciones para llamadas HTTP
+    this.changeKnowledgeNetwork();
+    this.changeSubject();
+    this.changecourse();
+
+    // Habilita o deshabilita el campo instructor según el valor actual
     if (!this.fieldKnowledgeNetwork.value) {
       this.fieldInstructor.disable();
       this.fieldInstructor.reset();
@@ -483,8 +468,5 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.isModalVisible = true;
   }
 
-
   defaultOpenValue = new Date(0, 0, 0, 0, 0);
-
-
 }

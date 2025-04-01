@@ -395,6 +395,7 @@ export class ManageSessionComponent implements OnInit {
 
   closeAnotherModal(): void {
     this.anotherModalOpen = false;
+    
   }
 
   handleAnotherModalOk(): void {
