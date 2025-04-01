@@ -1,4 +1,4 @@
-<nz-modal (nzOnOk)="saveForm()"  nzTitle="Crear Sesión" (nzOnCancel)="closeModal()" [(nzVisible)]="isModalVisible" *ngIf="formSession">
+<nz-modal (nzOnOk)="debounceSaveForm()"  nzTitle="Crear Sesión" (nzOnCancel)="closeModal()" [(nzVisible)]="isModalVisible" *ngIf="formSession">
   <ng-container *nzModalContent>
     <form [formGroup]="formSession">
 
