@@ -3,48 +3,37 @@ nz-select{
 }
 
 ::ng-deep .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  border-color: #52c41a !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+
 }
 
 
 .ant-picker:hover, .ant-picker-focused {
-  border-color:#52c41a !important;
-  border-right-width: 1px;
+
 }
 
 
 
 ::ng-deep .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
 
-  border-color:#52c41a !important;
-  border-right-width: 1px;
+
 }
 
 ::ng-deep .ant-input-number:hover {
-  border-color: #52c41a !important;
-  border-right-width: 1px;
+
 }
 
 ::ng-deep .ant-input:focus {
-  border-color: #52c41a !important;
-  border-right-width: 1px;
+
 }
 
 
 .ant-input-number:focus, .ant-input-number-focused {
-  border-color: #52c41a !important;
-  box-shadow: 0 0 0 2px rgba(114, 212, 68, 0.096);
-  border-right-width: 1px;
-  outline: 0;
+
 }
 
 
 
 ::ng-deep .ant-btn:hover,
 ::ng-deep .ant-btn:focus {
-  color: #52c41a !important;
-  border-color: #52c41a !important;
-  background: #fff !important;
 }
 
