@@ -1,5 +1,12 @@
 .rectangular-input {
-  border-radius: 0 !important;
+  width: 100%;
   border: 1px solid #d9d9d9; /* Puedes ajustar el color y grosor según necesites */
   padding: 4px 8px;
 }
+
+
+nz-form-label {
+  display: block;
+}
+
+
