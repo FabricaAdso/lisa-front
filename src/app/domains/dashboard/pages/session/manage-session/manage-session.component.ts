@@ -67,11 +67,12 @@ export class ManageSessionComponent implements OnInit {
   total: number = 0;
   page_options: number[] = [];
 
-  selecion: { name: string,  value: string, id: number } | null = null;
-  select_sessions: { name: string, value:string, id: number }[] = [
+  selecion: { name: string, value: string, id: number } | null = null;
+  select_sessions: { name: string, value: string, id: number }[] = [
     { name: "Realizadas", value: 'past', id: 1 },
-  { name: "Pendientes", value: 'pending', id: 2 },
-  { name: "Todas", value: 'all', id: 3 }
+    { name: "Pendientes", value: 'pending', id: 2 },
+    { name: "Todas", value: 'all', id: 3 },
+    { name: "Ultimas", value: 'end_date', id: 4 }
   ];
 
 
@@ -112,9 +113,14 @@ export class ManageSessionComponent implements OnInit {
   }
 
   loadLeaderSessions(page: number = 1): void {
-    const filters: { [key: string]: string } = this.buildFilters();
+  // Convertir los valores de filters a string
+  const filtersString: { [key: string]: string } = Object.keys(this.filters).reduce((acc, key) => {
+    acc[key] = this.filters[key].toString();
+    return acc;
+  }, {} as { [key: string]: string });
+
     const queryParams = {
-      ...filters,
+      ...filtersString,
       page: page.toString(),
       elements: this.elements.toString()
     };
@@ -196,41 +202,97 @@ export class ManageSessionComponent implements OnInit {
 
   }
 
+  rapsByCourse: { [courseCode: string]: Array<{ value: string, label: string }> } = {};
+  instructorsByCourse: { [courseCode: string]: Array<{ value: string, label: string }> } = {};
+
+  // ... otros métodos
+
   loadFilterOptions(): void {
     this.sessionse.getFilterOptions().subscribe({
       next: (res: any) => {
-        //console.log('Opciones de filtros:', res);
+        // Asigna y mapea las opciones de curso usando el code
         this.allCourseOptions = res.courses.map((course: any) => ({
           value: course.code.toString(),
           label: course.code ? course.code.toString() : 'N/D'
         }));
-        this.allInstructorOptions = res.instructors.map((instr: any) => ({
-          value: instr.id.toString(),
-          label: `${instr.user.name} ${instr.user.last_name}`
-        }));
-        this.allRapOptions = res.raps.map((rap: any) => ({
-          value: rap.id.toString(),
-          label: rap.description ? rap.description : 'N/D'
-        }));
-
+        // Asegúrate de que courseOptions también reciba esos datos
         this.courseOptions = [...this.allCourseOptions];
-        this.instructorOptions = [...this.allInstructorOptions];
-        this.rapOptions = [...this.allRapOptions];
+
+        // Mapear RAPs por curso (haciendo type assertion para TypeScript)
+        this.rapsByCourse = {};
+        Object.entries(res.rapsByCourse as Record<string, any[]>).forEach(([courseCode, raps]) => {
+          this.rapsByCourse[courseCode] = raps.map(rap => ({
+            value: rap.id.toString(),
+            label: rap.description || 'N/D'
+          }));
+        });
+
+        // Mapear Instructores por curso
+        this.instructorsByCourse = {};
+        Object.entries(res.instructorsByCourse as Record<string, any[]>).forEach(([courseCode, instructors]) => {
+          this.instructorsByCourse[courseCode] = instructors.map(instructor => ({
+            value: instructor.id.toString(),
+            label: `${instructor.user.name} ${instructor.user.last_name}`
+          }));
+        });
+
+        // Opciones iniciales vacías para RAP e Instructor
+        this.rapOptions = [];
+        this.instructorOptions = [];
       },
       error: (err) => console.error('Error al cargar opciones de filtros:', err)
     });
   }
 
+  getFiltersString(): { [key: string]: string } {
+    return Object.keys(this.filters).reduce((acc, key) => {
+      acc[key] = this.filters[key].toString();
+      return acc;
+    }, {} as { [key: string]: string });
+  }
+
+
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
-    if (value && value.trim().length > 0) {
+    if (value) {
       this.filters['course_'] = value.trim();
+      // Actualiza las opciones según el código de curso seleccionado
+      this.rapOptions = this.rapsByCourse[value] || [];
+      this.instructorOptions = this.instructorsByCourse[value] || [];
     } else {
       delete this.filters['course_'];
+      this.rapOptions = [];
+      this.instructorOptions = [];
     }
-    //console.log('Filtros actualizados:', this.filters);
+
+    // Reiniciar filtros dependientes
+    this.rapFilter = '';
+    this.instructorFilter = '';
+    delete this.filters['rap_'];
+    delete this.filters['instructor_'];
+
+    // Al llamar al método que requiere solo strings, convierte los filtros
+    this.sessionse.getFilterOptionsWithCourse(this.getFiltersString()).subscribe({
+      next: (res: any) => {
+        // Actualiza las opciones de RAP e Instructor según la respuesta
+        this.rapOptions = res.rapsByCourse[value] ? res.rapsByCourse[value].map((rap: any) => ({
+          value: rap.id.toString(),
+          label: rap.description || 'N/D'
+        })) : [];
+        this.instructorOptions = res.instructorsByCourse[value] ? res.instructorsByCourse[value].map((inst: any) => ({
+          value: inst.id.toString(),
+          label: `${inst.user.name} ${inst.user.last_name}`
+        })) : [];
+      },
+      error: (err) => console.error(err)
+    });
+
     this.loadLeaderSessions();
   }
+
+
+
+
 
   onRapFilterChange(value: string): void {
     this.rapFilter = value;
@@ -265,7 +327,7 @@ export class ManageSessionComponent implements OnInit {
     this.loadLeaderSessions();
   }
 
-  onSelectSessionChange(selection: { name: string,value:string, id: number }): void {
+  onSelectSessionChange(selection: { name: string, value: string, id: number }): void {
     this.selecion = selection;
     this.applySelectFilter();
     //console.log('Filtros actualizados (estado):', this.filters);
@@ -274,15 +336,22 @@ export class ManageSessionComponent implements OnInit {
 
   private applySelectFilter(): void {
     if (this.selecion) {
-      if (this.selecion.value  === 'pending') {
+      if (this.selecion.value === 'pending') {
         this.filters['pending'] = 'true';
         delete this.filters['past'];
+        delete this.filters['end_date'];
       } else if (this.selecion.value === 'past') {
         this.filters['past'] = 'true';
         delete this.filters['pending'];
+        delete this.filters['end_date'];
+      } else if (this.selecion.value === 'end_date') {
+        this.filters['end_date'] = 'true';
+        delete this.filters['pending'];
+        delete this.filters['past']
       } else { // "all"
         delete this.filters['pending'];
         delete this.filters['past'];
+        delete this.filters['end_date'];
       }
     }
   }
@@ -333,30 +402,27 @@ export class ManageSessionComponent implements OnInit {
   }
 
 
-  private modalService = inject(NzModalService);
+  @ViewChild('sessionEdit') sessionEditComponent!: SessionEditComponent;
+
 
   openEditModal(sessionId: number): void {
-    const modalRef = this.modalService.create({
-      nzTitle: 'Editar Sesión',
-      nzContent: SessionEditComponent,
-      nzFooter: null
-    });
-
-    modalRef.afterOpen.subscribe(() => {
-      const contentComponent = modalRef.getContentComponent() as SessionEditComponent;
-      if (contentComponent) {
-        contentComponent.sessionId = sessionId;
-        contentComponent.ngOnChanges({
-          sessionId: {
-            currentValue: sessionId,
-            previousValue: undefined,
-            firstChange: true,
-            isFirstChange: () => true
-          }
-        });
-      }
-    });
+    if (this.sessionEditComponent) {
+      this.sessionEditComponent.sessionId = sessionId;
+      this.sessionEditComponent.ngOnChanges({
+        sessionId: {
+          currentValue: sessionId,
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true
+        }
+      });
+      this.sessionEditComponent.openModal();
+    } else {
+      console.error('No se encontró la instancia de SessionEditComponent');
+    }
   }
+
+
 
   isSessionEditable(session: SessionModel): boolean {
     const sessionDate = new Date(session.date);
@@ -370,6 +436,14 @@ export class ManageSessionComponent implements OnInit {
     const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     return sessionDateOnly >= todayOnly;
+  }
+
+  onSessionCreated(response: SessionModel): void {
+    // Actualiza la tabla
+    this.loadLeaderSessions(this.page);
+    // Actualiza las opciones de filtros
+    this.loadFilterOptions();
+
   }
 
 

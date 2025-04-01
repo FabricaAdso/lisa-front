@@ -27,7 +27,7 @@ export class InstructorService {
   }
 
   getInstructorByKnowledgeNetwork(knowledge_network_id:number): Observable<InstructorModel[]>{
-    return this.http.get<InstructorModel[]>(`${this.URL}/?included=knowledgeNetwork,user&filter[knowledge_network_id]=${knowledge_network_id}`)
+    return this.http.get<InstructorModel[]>(`${this.URL}/?included=knowledgeNetwork,user&filter[knowledge_network_id]=${knowledge_network_id}&filter[state]=activo`)
     .pipe(
       catchError((error) => {
         console.error('Error al obtener los centros de formación:', error);

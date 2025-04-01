@@ -28,7 +28,7 @@
       </div>
 
       <div class="mb-4">
-        <label for="" class="">Programa</label>
+        <label for="" class="">Ficha</label>
         <nz-select [formControl]="fieldCourse" name="course_id" (ngModelChange)="changecourse()"
           placeholder="Seleccione una Sede" [nzShowSearch]="true">
           @for (item of courses; track $index) {
@@ -53,7 +53,7 @@
         </div>
         <div class="flex flex-col w-1/6">
           <label class="mb-1">Porcentaje</label>
-          <nz-input-number class="w-full" [nzMin]="30" [nzMax]="100" formControlName="percentage" type="number"
+          <nz-input-number class="w-full" [nzMin]="40" [nzMax]="100" formControlName="percentage" type="number"
             placeholder="Ingrese el porcentaje">
 
           </nz-input-number>
@@ -85,7 +85,11 @@
              </nz-date-picker>
 
         </div>
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> e97b4d17a3f5d85d317c3887c5e6e876267926eb
       </div>
 
 

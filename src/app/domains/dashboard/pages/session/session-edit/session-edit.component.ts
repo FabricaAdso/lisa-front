@@ -2,17 +2,23 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
+import { InstructorModel } from '@shared/models/instructor.model';
 import { SessionModel } from '@shared/models/session.model';
+import { InstructorService } from '@shared/services/instructor.service';
 import { SessionService } from '@shared/services/program/session.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 @Component({
   selector: 'app-session-edit',
   standalone: true,
-  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule],
+  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule],
   templateUrl: './session-edit.component.html',
   styleUrl: './session-edit.component.css'
 })
@@ -21,19 +27,22 @@ export class SessionEditComponent implements OnInit, OnChanges {
   sessionForm!: FormGroup;
   loading = false;
   sessionData!: SessionModel;
+  isVisible = false;
 
   defaultOpenValue = new Date(1970, 0, 1, 0, 0);
 
-  disabledDate = (current: Date): boolean => {
+
+  todisabledDate = (current: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    console.log('Hoy es:', today);
     return current && current < today;
   };
 
   constructor(
-    private modal: NzModalRef,
     private fb: FormBuilder,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private instructorService: InstructorService
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +51,6 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sessionId'] && changes['sessionId'].currentValue) {
-      console.log('ngOnChanges - sessionId actualizado:', changes['sessionId'].currentValue);
       this.loadSessionData();
     }
   }
@@ -51,7 +59,7 @@ export class SessionEditComponent implements OnInit, OnChanges {
     this.sessionForm = this.fb.group({
       date: [null, Validators.required],
       network: [{ value: null, disabled: true }, Validators.required],
-      instructor: [{ value: null, disabled: true }, Validators.required],
+      instructor: [null, Validators.required],
       rap: [{ value: null, disabled: true }, Validators.required],
       subject: [{ value: null, disabled: true }, Validators.required],
       course: [{ value: null, disabled: true }, Validators.required],
@@ -90,8 +98,14 @@ export class SessionEditComponent implements OnInit, OnChanges {
   }
 
   populateForm(): void {
+
+    const [year, month, day] = this.sessionData.date.split('-').map(Number);
+
     // Convertir el string de fecha a un objeto Date
-    const sessionDate = new Date(this.sessionData.date);
+    // const sessionDate = new Date(this.sessionData.date);
+    const sessionDate = new Date(year, month - 1, day);
+
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     // Convertir start_time y end_time a objetos Date con fecha base fija (1970-01-01)
@@ -101,10 +115,13 @@ export class SessionEditComponent implements OnInit, OnChanges {
     const [endHour, endMinute, endSecond] = this.sessionData.end_time.split(':');
     const endTimeDate = new Date(1970, 0, 1, Number(endHour), Number(endMinute), Number(endSecond));
 
+
+
     this.sessionForm.patchValue({
       date: sessionDate,
       network: this.sessionData.instructor?.knowledge_network?.name,
-      instructor: `${this.sessionData.instructor?.user?.name} ${this.sessionData.instructor?.user?.last_name}`,
+      instructor:this.sessionData.instructor?.id,
+      // instructor: `${this.sessionData.instructor?.user?.name} ${this.sessionData.instructor?.user?.last_name}`,
       rap: this.sessionData.rap?.description,
       subject: this.sessionData.rap?.subject?.name,
       course: this.sessionData.course?.code,
@@ -113,16 +130,45 @@ export class SessionEditComponent implements OnInit, OnChanges {
       percentage: this.sessionData.rap?.subject?.percentage
     });
 
-    if (sessionDate < today) {
-      this.sessionForm.disable();
-      // Opcional: mostrar un mensaje de aviso
-      console.warn('Esta sesión es pasada y no se puede editar.');
+
+    const networkId = this.sessionData.instructor?.knowledge_network?.id;
+    if (networkId){
+      this.loadInstructors(networkId);
     }
+
+
+
+
+
+    
+  }
+
+
+  instructors: any[] = [];
+
+
+  loadInstructors(networkId:number):void{
+    this.instructorService.getInstructorByKnowledgeNetwork(networkId).subscribe({
+      next: (instructors: InstructorModel[]) =>{
+        this.instructors = instructors;
+      },
+      error:(err) =>{
+        console.error('error  de carga de instructores por network', err);
+      }
+    })
+  }
+
+
+  openModal(): void {
+    this.isVisible = true;
   }
 
   cancel(): void {
-    this.modal.destroy();
+    this.isVisible = false;
   }
+
+
+
 
   // Método simplificado para enviar solo los campos editables usando PUT
   submitForm(): void {
@@ -141,7 +187,8 @@ export class SessionEditComponent implements OnInit, OnChanges {
       start_date: this.convertDateToString(formValues.date),
       start_time: this.convertTimeToString(formValues.start_time),
       end_time: this.convertTimeToString(formValues.end_time),
-      instructor_id: this.sessionData.instructor?.id
+      // instructor_id: this.sessionData.instructor?.id
+      instructor_id: formValues.instructor
     };
 
     this.sessionService.updateSession(updatedSession).subscribe({
@@ -149,8 +196,8 @@ export class SessionEditComponent implements OnInit, OnChanges {
         console.log('Sesión actualizada:', response);
               this.sessionCreated.emit(response);
 
-        this.modal.destroy(response);
-      },
+              this.isVisible = false;
+            },
       error: (err) => {
         console.error('Error al actualizar la sesión:', err);
       }

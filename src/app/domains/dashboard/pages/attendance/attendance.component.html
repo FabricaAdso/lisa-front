@@ -9,13 +9,14 @@
     </div>
     <nz-page-header-content>
       <nz-descriptions nzSize="middle" [nzColumn]="2" class="flex flex-col sm:flex-row">
+        <nz-descriptions-item nzTitle="Instructor">{{listOfData2?.course?.course_leader?.user?.name}} {{listOfData2?.course?.course_leader?.user?.last_name}}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name}} {{listOfData2?.instructor?.user?.last_name}}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Numero de ficha">{{listOfData2?.course?.code}}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start}} - {{listOfData2?.course?.date_end}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Vocero de ficha">{{listOfData2?.course?.representative}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Vocero suplente">Antonio Rodríguez</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters?.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment?.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero de ficha">{{listOfData2?.course?.representative?.user?.name}} {{listOfData2?.course?.representative?.user?.last_name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Vocero suplente">{{listOfData2?.course?.co_representative?.user?.name }} {{listOfData2?.course?.co_representative?.user?.name}}</nz-descriptions-item>
       </nz-descriptions>
     </nz-page-header-content>
   </header>

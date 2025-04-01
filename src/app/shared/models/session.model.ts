@@ -17,7 +17,7 @@ export interface SessionModel {
   assistances: AssistanceModel[];
   subject:SubjectModel;
   rap:RapModel;
-
+  end_date:string;
 
 
   //relaciones
@@ -32,3 +32,12 @@ export interface PaginatedResponse<T> {
 
 
 
+export interface CalendarEvent {
+  title: string;
+  start: string;
+  description: string;
+  extendedProps: {
+    sessions: SessionModel[];
+  };
+  display: string;
+}

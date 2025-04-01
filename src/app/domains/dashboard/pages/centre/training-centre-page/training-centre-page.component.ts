@@ -12,15 +12,13 @@ import {NzFormModule} from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
 import { TrainingCentreFormComponent } from '../components/training-centre-form/training-centre-form.component';
-import { log } from 'ng-zorro-antd/core/logger';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { tableComponteModel, tableDataComponteModel } from '@shared/models/table.model';
-import { ThisReceiver } from '@angular/compiler';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { RegionalService } from '@shared/services/regional.service';
 import { RegionalModel } from '@shared/models/regional.model';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzNotificationService } from 'ng-zorro-antd/notification'
 
 @Component({
   selector: 'app-training-centre-page',
@@ -37,7 +35,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzPopconfirmModule,
     TrainingCentreFormComponent,
     NzSelectModule,
-    NzPaginationModule
+    NzPaginationModule,
+    
   ],
   templateUrl: './training-centre-page.component.html',
   styleUrl: './training-centre-page.component.css'
@@ -45,7 +44,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 export class TrainingCentrePageComponent {
 
   private trainingCentreService = inject(TrainingCentreService);
-  private nzMessageService = inject(NzMessageService);
+  private nzMessageService = inject(NzNotificationService);
   private regionalService = inject(RegionalService);
 
   centres : TrainingCentreModel[] = [];
@@ -71,7 +70,7 @@ export class TrainingCentrePageComponent {
         this.loadCentres(); // Llamamos a la función con la paginación
       },
       error: (error) => {
-        this.nzMessageService.error("Error al cargar las regiones: " + error);
+        this.nzMessageService.error("Error al cargar las regiones: " ,error);
       }
     });
   }
@@ -82,7 +81,7 @@ export class TrainingCentrePageComponent {
   }
 
   loadCentres() {
-    this.trainingCentreService.getCentros({ 
+    this.trainingCentreService.getCentrosPag({ 
       page: this.page, 
       per_page: this.elements 
     }).subscribe({
@@ -103,7 +102,7 @@ export class TrainingCentrePageComponent {
     
         this.updateTable();
       },
-      error: error => this.nzMessageService.error(error)
+      error: error => this.nzMessageService.error(error,'')
     });
   }
 
@@ -182,7 +181,7 @@ export class TrainingCentrePageComponent {
 }
 
   cancel(): void {
-    this.nzMessageService.info('click cancel');
+    // this.nzMessageService.info('click cancel','');
   }
   confirm(): void {
     
@@ -197,16 +196,7 @@ export class TrainingCentrePageComponent {
     }
   }
 
-  deleteCentre(idCentre: number) {  
-    //console.log('Eliminar centro con ID:', idCentre); 
 
-    const deleteSub = this.trainingCentreService.delete(idCentre).subscribe(() => {
-      this.centres = this.centres.filter((centre: TrainingCentreModel) => centre.id !== idCentre)
-      this.Datetable.Datos = this.Datetable.Datos.filter((centre:tableDataComponteModel ) => centre.idItem !== idCentre)
-      this.nzMessageService.success('Registro Eliminado Correctamente');
-      deleteSub.unsubscribe();
-    });
-  }
 
   openModal(item?:tableDataComponteModel){
     this.centreUpdate = undefined

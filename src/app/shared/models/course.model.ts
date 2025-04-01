@@ -3,6 +3,8 @@ import { ApprenticeModel } from "./apprentice.model";
 import { EnvironmentModel } from "./environment-model";
 import { ProgramModel } from "./program.model";
 import { SubjectModel } from "./subject-model";
+import { UserModel } from "./user.model";
+import { InstructorModel } from "./instructor.model";
 
 export interface CourseModel {
     id:number;
@@ -14,6 +16,8 @@ export interface CourseModel {
     stage?: 'PRACTICA' | 'LECTIVA';
     representative_id:number
     representative:ApprenticeModel
+    co_representative_id:number
+    co_representative:ApprenticeModel
 
     //relacion con aprendices
     apprentices?:ApprenticeModel
@@ -23,6 +27,7 @@ export interface CourseModel {
     program_id?:number;
     program?:ProgramModel;
     course_leader_id:number
+    course_leader:InstructorModel
 
 }
 

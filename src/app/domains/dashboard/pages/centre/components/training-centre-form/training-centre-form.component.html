@@ -1,9 +1,9 @@
 <!-- training-centre-form.component.html -->
 <!-- Modal para crear o editar un centro de formación -->
 <nz-modal 
-nzMaskClosable="false" 
+nzMaskClosable="true" 
 [nzVisible]="isVisible" 
-nzTitle="{{centre ?  'Editar':'Crear'}} Centro"
+nzTitle="{{centre ?  'Editar':'Crear'}} Centro de Formación"
   (nzOnCancel)="closeModal.emit()" 
   (nzOnOk)="saveData()" 
   [nzOkLoading]="loading" 
@@ -30,17 +30,20 @@ nzTitle="{{centre ?  'Editar':'Crear'}} Centro"
       }
       }
 
-      <!-- Código del centro -->
-      <label for="code">Código del Centro</label>
-      <input nz-input formControlName="code" id="code" placeholder="Código del centro" />
-      @if (form.controls['code'].invalid && form.controls['code'].dirty) {
-        @if (form.controls['code'].errors?.['maxlength']) {
-          <small class="text-red-500">El código no puede tener más de 100 caracteres.</small>
-        }
-        @if (form.controls['code'].errors?.['required']) {
-          <small class="text-red-500">El código es obligatorio.</small>
-        }
+    <!-- Código del centro -->
+    <label for="code">Código del Centro</label>
+    <input nz-input formControlName="code" id="code" placeholder="Código del centro" />
+    @if (form.controls['code'].invalid && form.controls['code'].dirty) {
+      @if (form.controls['code'].errors?.['required']) {
+        <small class="text-red-500">El código es obligatorio.</small>
       }
+      @if (form.controls['code'].errors?.['maxlength']) {
+        <small class="text-red-500">El código no puede tener más de 100 caracteres.</small>
+      }
+      @if (form.controls['code'].errors?.['codeExists']) {
+        <small class="text-red-500">El código ya existe.</small>
+      }
+    }
 
      <!-- Selección de región -->
 <label for="regional_id">Región</label>

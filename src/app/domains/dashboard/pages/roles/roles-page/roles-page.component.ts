@@ -26,6 +26,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
+    ReactiveFormsModule,
     NzButtonModule,
     NzModalModule,
     NzTableModule,
@@ -128,7 +129,6 @@ export class RolesComponent implements OnInit {
     this.allRoles();
     this.getAllUsers();
   }
-
   allRoles() {
     this.rolesService.getRoles().subscribe({
       next: (data) => {
@@ -283,3 +283,6 @@ changePage(newPage: number) {
     );
   }
 }
+
+
+

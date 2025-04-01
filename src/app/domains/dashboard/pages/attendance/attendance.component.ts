@@ -105,9 +105,15 @@ export class AttendanceComponent {
     this.showDefaultTable = !this.showDefaultTable; // Cambia el estado
   }
 
+  formatDate(date: any): string {
+    return date ? new Date(date).toLocaleDateString('es-ES') : 'Fecha no disponible';
+  }
+
   getData() {
+    
+
     const data_sub = forkJoin([
-      this.session_service.getSessionShow(this.session_id!,{ included: ['assistances.apprentice.user', 'instructor.user', 'course.environment.headquarters'] }),
+      this.session_service.getSessionShow(this.session_id!,{ included: ['course.course_leader.user','course.representative.user','course.co_representative.user','course.apprentices.user','assistances.apprentice.user', 'instructor.user', 'course.environment.headquarters'] }),
     ]).subscribe({
       next: ([assistance]) => {
 

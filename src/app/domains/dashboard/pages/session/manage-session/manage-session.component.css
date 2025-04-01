@@ -5,7 +5,6 @@ nz-tag {
 }
 
 nz-table {
-  margin: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -24,19 +23,61 @@ nz-table {
  border-color: #52c41a;
 }
 
-
-
-/* Espaciado entre el Collapse y el Footer */
-nz-collapse {
-  margin-top: 16px;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  background-color: white;
+ .ant-btn:hover, .ant-btn:focus {
+  color: #2b5c13 !important;
+  border-color: #2b5c13;
+  background: #fff;
 }
 
 
-.tabla-con-scroll {
-  flex: 1; /* Ocupa todo el espacio disponible */
-  overflow-y: auto; /* Activa el scroll vertical solo aquí */
-  overflow-x: hidden; /* Evita que haya scroll horizontal innecesario */
+
+
+
+
+
+::ng-deep nz-table[_ngcontent-ng-c3885107666]{
+margin:0
 }
+
+
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+::ng-deep .ant-pagination-item-active {
+  font-weight: 500;
+  background: #fff;
+  border-color: #52c41a;
+}
+
+
+
+
+::ng-deep .ant-pagination-item-active a {
+  color: #52c41a ;
+}
+
+/* elemento resaltado dentro de un select */
+::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+  background-color: #bdecb6;
+}
+
+
+::ng-deep .ant-pagination-item:hover {
+  border-color: #52c41a;
+  transition: all 0.3s;
+
+}
+
+::ng-deep .ant-pagination-item:hover a,
+::ng-deep .ant-pagination-item:focus a {
+  color: rgba(0, 0, 0, 0.85);
+  border-color: #52c41a !important;
+}
+
+
+

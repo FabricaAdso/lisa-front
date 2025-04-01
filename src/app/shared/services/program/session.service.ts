@@ -20,13 +20,15 @@ export class SessionService {
 
   url:string = 'session';
 
-  getSessionShow(id:number,data?:QueryUrl){
-    let url:string = getQueryUrl(`${this.url}/${id}`,data);
-    return this.http.get<SessionModel>(`${url}`);
+  getSession(data?:QueryUrl){
+    return this.http.get<SessionModel[]>(this.url);
   }
 
-  getSessionsByFicha(courseId: number) {
-    return this.http.get<SessionModel[]>(`/api/ficha/${courseId}/sessions`);
+  getSessionShow(id:number,data?:QueryUrl){
+    let url:string = getQueryUrl(`${this.url}/${id}`,data);
+    console.log(url);
+    
+    return this.http.get<SessionModel>(`${url}`);
   }
 
   // metodo para aceptar filtros e inclusiones
@@ -109,6 +111,17 @@ export class SessionService {
     return this.http.get<any>(`${this.url}/leadersession`);
   }
 
+  getSessionByMount(data?: QueryUrl): Observable<any> {
+    const url: string = getQueryUrl(`sessions/mount`, data);
+    return this.http.get<any>(url);
+  }
 
+  getFilterOptionsWithCourse(filters: { [key: string]: string }): Observable<any> {
+    let params = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      params = params.set(`filter[${key}]`, filters[key]);
+    });
+    return this.http.get<any>(`${this.url}/leadersession`, { params });
+  }
 
 }

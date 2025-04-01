@@ -28,8 +28,6 @@ export class NotificationsComponent implements OnInit {
   ngOnInit(): void {
     this.notifications = this.dataSharedService.notifications;
   }
-
-
   
 
 }
