@@ -154,10 +154,8 @@ getUsers(page: number = 1, pageSize: number = 8): void {
     next: (response) => {
       const { data, total, current_page, per_page } = response;
 
-      this.users = data.map((user: any) => ({
-        ...user,
-        roles: user.training_centers?.map((tc: any) => tc.role_id) || [],
-      }));
+      // Como los roles ya vienen en la respuesta, simplemente asignamos los usuarios
+      this.users = data;
 
       // Solo actualizamos filteredUsers si no estamos en modo búsqueda
       if (!this.isSearching) {
@@ -182,7 +180,7 @@ loadAllUsersForSearch(): void {
   this.loading = true;
   this.isSearching = true;
 
-  this.userService.getAllUsers().subscribe({ // Asumo que tienes un endpoint para todos los usuarios
+  this.rolesService.getUsersByTrainingCenterSearch().subscribe({ // Asumo que tienes un endpoint para todos los usuarios
     next: (users) => {
       this.allUsers = users.map((user: any) => ({
         ...user,
@@ -211,18 +209,30 @@ searchUsers(): void {
   const term = this.searchTerm.trim().toLowerCase();
 
   if (!term) {
-    // Si el término está vacío, volver a la paginación normal
     this.resetToPagination();
     return;
+
+    
   }
 
-  // Si ya tenemos todos los usuarios, filtrarlos
-  if (this.allUsers.length > 0) {
-    this.filterUsers();
-  } else {
-    // Si no, cargar todos los usuarios primero
-    this.loadAllUsersForSearch();
-  }
+  this.loading = true;
+  this.isSearching = true;
+
+  this.rolesService.getUsersByTrainingCenterSearch(term).subscribe({
+    next: (users) => {
+      this.filteredUsers = users.map((user: any) => ({
+        ...user,
+        // Los roles ya vienen del backend en el formato correcto
+        roles: user.roles || []
+      }));
+      this.totalItems = this.filteredUsers.length;
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('Error al buscar usuarios', error);
+      this.loading = false;
+    }
+  });
 }
 // Nuevo método para resetear a la paginación normal
 resetToPagination(): void {

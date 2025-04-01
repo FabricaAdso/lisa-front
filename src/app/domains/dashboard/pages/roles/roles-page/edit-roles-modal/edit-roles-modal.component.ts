@@ -34,7 +34,7 @@ import { finalize } from 'rxjs';
   styleUrl: './edit-roles-modal.component.css'
 })
 export class EditRolesModalComponent implements OnInit {
-  
+
   @Output() updatedUsers: EventEmitter<void> = new EventEmitter();
   @Input() userData?: UserModel | null;
 
@@ -111,49 +111,52 @@ export class EditRolesModalComponent implements OnInit {
     this.userData = user;
     this.loadingData = true;
 
-    // Obtener roles actuales del usuario
-    const currentRoles = user.training_centers?.map(tc => tc.pivot.role_id) || [];
-    this.selectedRoles = currentRoles;
+    // Obtener roles actuales del usuario (ahora vienen directamente en user.roles como strings)
+    const roleNames = user.roles || [];
+    
+    // Mapear nombres de roles a IDs (si es necesario)
+    const currentRoleIds = this.roles
+      .filter(role => roleNames.includes(role.name))
+      .map(role => role.id);
+
+    this.selectedRoles = currentRoleIds;
 
     // Inicializar formulario con valores base
-    const formData: any = { role_ids: currentRoles };
+    const formData: any = { 
+      role_ids: currentRoleIds,
+      course_id: null,
+      state: null,
+      knowledge_network_id: null 
+    };
 
-    // Verificar roles y cargar datos adicionales
-    const requests = [];
-
+    // Cargar datos adicionales si el usuario es aprendiz o instructor
     if (this.isApprenticeSelected) {
-      requests.push(this.apprenticeService.getApprenticeByUserId(user.id));
+      this.apprenticeService.getApprenticeByUserId(user.id).subscribe({
+        next: (response) => {
+          formData.course_id = response?.apprentice_data?.course_id;
+          formData.state = response?.apprentice_data?.state;
+          this.initializeForm(formData);
+        },
+        error: (error) => console.error('Error loading apprentice data', error)
+      });
     }
 
     if (this.isInstructorSelected) {
-      requests.push(this.instructorService.getInstructorByUserId(user.id));
+      this.instructorService.getInstructorByUserId(user.id).subscribe({
+        next: (response) => {
+          formData.knowledge_network_id = response?.instructor_data?.knowledge_network_id;
+          this.initializeForm(formData);
+        },
+        error: (error) => console.error('Error loading instructor data', error)
+      });
     }
 
-    if (requests.length > 0) {
-      Promise.all(requests.map(req => req.toPromise()))
-        .then((responses) => {
-          responses.forEach(response => {
-            if (response?.apprentice_data) {
-              formData.course_id = response.apprentice_data.course_id;
-              formData.state = response.apprentice_data.state;
-            }
-            if (response?.instructor_data) {
-              formData.knowledge_network_id = response.instructor_data.knowledge_network_id;
-            }
-          });
-          this.initializeForm(formData);
-        })
-        .catch(error => {
-          console.error('Error loading role data:', error);
-          this.initializeForm(formData);
-        })
-        .finally(() => {
-          this.loadingData = false;
-        });
-    } else {
+    // Si no hay roles adicionales, inicializar el formulario directamente
+    if (!this.isApprenticeSelected && !this.isInstructorSelected) {
       this.initializeForm(formData);
-      this.loadingData = false;
     }
+
+    this.loadingData = false;
   }
 
   // Getters mejorados para verificar roles

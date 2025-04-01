@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -32,6 +32,12 @@ export class ApiRolesService{
   getUsers(page:number =1, pageSize:number = 10): Observable<any> {
     return this.http.get(`users-by-training-center?elementos=${pageSize}&page=${page}`);
   }
+  getUsersByTrainingCenterSearch(searchTerm?: string): Observable<any> {
+    const params = searchTerm ? { params: new HttpParams().set('search', searchTerm) } : {};
+    return this.http.get('users-by-training-center-search', params);
+  }
+
+
    // Activar o desactivar un usuario
    toggleUserStatus(userId: string, isActive: boolean): Observable<any> {
     return this.http.post(`users/${userId}/deactivate`, { active: isActive });
