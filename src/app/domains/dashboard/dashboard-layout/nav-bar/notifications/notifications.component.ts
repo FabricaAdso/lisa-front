@@ -3,31 +3,60 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NotificationModel } from '@shared/models/notification-model';
 import { UserModel } from '@shared/models/user.model';
-import { AuthService } from '@shared/services/auth.service';
 import { NotificationService } from '@shared/services/notification.service';
 import { SharedDataService } from '@shared/services/shared-data.service';
-import { WebSocketService } from '@shared/services/websocket.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
-  imports: [ReactiveFormsModule,CommonModule,NzAlertModule],
+  imports: [ReactiveFormsModule,CommonModule,NzAlertModule, NzIconModule, NzSpaceModule, NzDrawerModule],
   standalone: true
 })
 export class NotificationsComponent implements OnInit {
 
+  size: 'large' | 'default' = 'default';
+  visible = false;
+
   private dataSharedService = inject(SharedDataService);
+  private notification_service = inject(NotificationService);
   message = { message: '' };
   userId:number = 0
   userModel: UserModel | null = null
   notificationModel: NotificationModel[] | null = null
-  notifications = signal<NotificationModel[]>([]);
+  messages = signal<NotificationModel[]>([]);
 
-  ngOnInit(): void {
-    this.notifications = this.dataSharedService.notifications;
+  ngOnInit(){
+    this.messages = this.dataSharedService.messages;
   }
-  
 
+  showLarge(){
+    this.size = 'large';
+    this.open();
+  }
+
+  open(){
+    this.visible = true;
+  }
+
+  close(){
+    this.visible = false;
+  }
+
+  markAsRead(id: number, index: number){
+    this.notification_service.markAsRead(id).subscribe({
+      next: () =>{
+        this.messages.update(notifications => {
+          const updatedNotifications = [...notifications];
+          updatedNotifications[index] = { ...updatedNotifications[index], read_at: new Date().toISOString() }; 
+          this.dataSharedService.updateNotifications(updatedNotifications)   
+          return updatedNotifications;
+        });
+      }
+    })
+  }
 }

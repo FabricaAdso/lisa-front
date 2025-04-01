@@ -115,8 +115,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
       error: (err) => console.error('Error al obtener los centros de formación:', err),
     });
   }
-    
-
 
   goRegister() {
     this.router.navigate(['/auth/register']);

@@ -5,7 +5,7 @@ import { JustificationModel } from "./justification-model";
 export interface AssistanceModel {
 
     id: number;
-    assistance: AssistanceModel[];
+    assistance:boolean;
     session_id?:number;
     session?:SessionModel;
     apprentice?:ApprenticeModel;

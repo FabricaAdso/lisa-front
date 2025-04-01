@@ -10,7 +10,13 @@ export class NotificationService {
   constructor() { }
 
   private http = inject(HttpClient);
+
   url:string = 'message'
+
+    markAsRead(id:number){
+      return this.http.put(`${this.url}/${id}`,null);
+    }
+
     getNotifications(){
       return this.http.get<NotificationModel[]>(`${this.url}`);
     }

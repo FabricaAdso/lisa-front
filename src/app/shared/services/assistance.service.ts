@@ -23,8 +23,7 @@ export class AssistanceService {
   }
   
 
-  saveAssistances(data: UpdateAssistanceDTO){
-    const {id} = data;
-    return this.http.put<AssistanceModel>(`${this.URL}/${id}`,data);
+  saveAssistances(data: UpdateAssistanceDTO[]){
+    return this.http.put<AssistanceModel>(`${this.URL}/allAsistence`,data);
   } 
 }

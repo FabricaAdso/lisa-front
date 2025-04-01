@@ -17,6 +17,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           this.router.navigate(['/error_401']);
         } else if (error.status === 404) {
           this.router.navigate(['/error_404']);
+        } else if (error.status === 403) {
+          this.router.navigate(['auth/login']);
         }
         return throwError(error);
       })

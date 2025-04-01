@@ -1,32 +1,32 @@
+
 <section class="flex flex-col items-center">
-  <!-- Header -->
-  <header class="page-header w-full mt-10 border border-solid border-gray-200 p-4 rounded-lg">
-    <div class="title-icon flex items-center justify-center w-full">
-      <nz-page-header nzBackIcon [nzGhost]="false" nzSize="large"></nz-page-header>
-      <nz-page-header-title class="page-header-title text-center text-sm sm:text-base lg:text-lg">
-        Análisis y Desarrollo de Software 2774315
-      </nz-page-header-title>
-    </div>
-    <nz-page-header-content>
-      <nz-descriptions nzSize="middle" [nzColumn]="2" class="flex flex-col sm:flex-row">
-        <nz-descriptions-item nzTitle="Instructor">{{listOfData2?.course?.course_leader?.user?.name}} {{listOfData2?.course?.course_leader?.user?.last_name}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name}} {{listOfData2?.instructor?.user?.last_name}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Numero de ficha">{{listOfData2?.course?.code}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start}} - {{listOfData2?.course?.date_end}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters?.name}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment?.name}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Vocero de ficha">{{listOfData2?.course?.representative?.user?.name}} {{listOfData2?.course?.representative?.user?.last_name}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Vocero suplente">{{listOfData2?.course?.co_representative?.user?.name }} {{listOfData2?.course?.co_representative?.user?.name}}</nz-descriptions-item>
-      </nz-descriptions>
-    </nz-page-header-content>
-  </header>
+      <!-- Header -->
+      <header class="w-5/6 mt-10 border border-solid border-gray-200 px-4 rounded-lg">
+        <div class="title-icon flex items-center justify-center w-full">
+          <nz-page-header nzBackIcon [nzGhost]="false" nzSize="large"></nz-page-header>
+          <nz-page-header-title class="page-header-title text-center text-sm sm:text-base lg:text-lg">
+            Análisis y Desarrollo de Software 2774315
+          </nz-page-header-title>
+        </div>
+  
+        <nz-page-header-content>
+          <nz-descriptions nzSize="default" [nzColumn]="2"  nzSize="default">
+            <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name}} {{listOfData2?.instructor?.user?.last_name}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ficha">{{listOfData2?.course?.code}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start}} - {{listOfData2?.course?.date_end}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters?.name}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment?.name}}</nz-descriptions-item>
+            <!-- <nz-descriptions-item nzTitle="Vocero de ficha">{{listOfData2?.course?.representative?.user?.name}} {{listOfData2?.course?.representative?.user?.last_name}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Vocero suplente">{{listOfData2?.course?.co_representative?.user?.name }} {{listOfData2?.course?.co_representative?.user?.name}}</nz-descriptions-item> -->
+          </nz-descriptions>
+        </nz-page-header-content>
+      </header>
 
   <!-- Buttons -->
-  <div class="buttons w-4/5 p-4 mt-8 flex justify-end gap-4">
+  <div class="w-4/5 p-4 mt-8 flex justify-center gap-4">
     <button
       nz-button
-      nzType="default"
-      class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
+      nzType="primary"
       (click)="toggleTable()"
     >
       {{ showDefaultTable ? 'Tomar asistencia' : 'Volver a tabla original' }}
@@ -39,8 +39,7 @@
     >
       <button
         nz-button
-        nzType="default"
-        class="px-3 py-2 border border-gray-300 rounded text-gray-700 hover:bg-[#38A901]"
+        nzType="primary"
         (click)="callPrevPage()"
         [disabled]="currentPage === 0"
       >
@@ -48,119 +47,52 @@
       </button>
       <button
         nz-button
-        nzType="default"
-        class="px-3 py-2 border border-gray-300 rounded text-gray-700  hover:bg-[#38A901]"
+        nzType="primary"
         (click)="callNextPage()"
         [disabled]="currentPage === Math.ceil(listDAtos.length / tablesPerPage)"
       >
-        Siguiente
-      </button>
-    </div>
+      Siguiente
+    </button>
   </div>
+</div>
 
-  <!-- Content -->
-  <div class="flex flex-wrap items-center justify-center w-full">
-    <!-- Default Table -->
-    <ng-container
-      *ngIf="showDefaultTable"
-      class="flex w-full overflow-x-auto"
-    >
-      <nz-table
+<!-- Content -->
+<div class="flex flex-wrap items-center justify-center w-full">
+  <!-- Default Table -->
+  <!-- Alternate Table -->
+   <app-attendance-table [session_id]="session_id!" #attendanceTable *ngIf="!showDefaultTable">
+   </app-attendance-table>
+  <ng-container
+  *ngIf="showDefaultTable"
+  class="flex w-full overflow-x-auto"
+  >
+  <nz-table
         #basicTable
         [nzData]="listOfData"
         [nzBordered]="true"
         [nzPageSize]="5"
         [nzScroll]="{ y: '300px' }"
-        class="table-auto w-[60rem] bg-white border border-gray-200 rounded-lg shadow-sm"
       >
-        <thead class="bg-gray-100 text-gray-800 font-medium">
+        <thead>
           <tr>
             <th class="p-2">Nombres y Apellidos</th>
             <th class="p-2">Documento</th>
-            <th class="p-2">Acciones</th>
+            <th class="p-2">Correo</th>
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="let data of basicTable.data; trackBy: trackByKey"
-            class="even:bg-gray-50 hover:bg-gray-100"
           >
             <td class="p-2">{{ data.nombre }} {{ data.apellido }}</td>
             <td class="p-2">{{ data.documento }}</td>
             <td class="p-2">{{data.correo}}
-              <!-- <button
-                nz-button
-                nzType="primary"
-                class="px-3 py-2 border border-gray-300 rounded text-gray-700  hover:bg-[#38A901]"
-                (click)="showModal()"
-              >
-                Justificación
-              </button> -->
             </td>
           </tr>
         </tbody>
       </nz-table>
     </ng-container>
 
-    <!-- Alternate Table -->
-     <app-attendance-table [session_id]="session_id!" #attendanceTable *ngIf="!showDefaultTable">
-     </app-attendance-table>
     
   </div>
-
-  <!-- Modal -->
-  <nz-modal
-    [(nzVisible)]="isVisible"
-    nzTitle="Inasistencias"
-    class="bg-white rounded-lg shadow-md"
-    (nzOnCancel)="handleCancel()"
-    (nzOnOk)="handleOk()"
-  >
-    <ng-container *nzModalContent>
-      <div class="modal-content p-6">
-        <div class="filter-section flex items-center gap-4 mb-5">
-          <button
-            nz-button
-            nzType="default"
-            class="filter-btn flex items-center gap-2 px-3 py-2 border border-gray-300 rounded hover:bg-gray-200"
-          >
-            <i nz-icon nzType="filter"></i> Filtrar
-          </button>
-          <div class="filter-date flex items-center gap-2">
-            <label for="filter-date" class="text-gray-600">Fecha:</label>
-            <input
-              nz-input
-              type="date"
-              id="filter-date"
-              class="p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <button
-            nz-button
-            nzType="primary"
-            class="all-btn px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            Todas
-          </button>
-        </div>
-        <div class="attendance-list flex flex-col gap-4">
-          <div
-            class="attendance-item flex items-center gap-4 p-4 border border-gray-200 rounded-lg bg-gray-100"
-          >
-            <div
-              class="status-indicator w-4 h-4 rounded-full bg-green-500"
-            ></div>
-            <span class="text-gray-700">
-              Fecha: 10/07/2024 Hora: 7:00 - 13:00
-            </span>
-            <a
-              href="#"
-              class="action-link text-green-700 hover:underline"
-              >👁️ Examinar</a
-            >
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </nz-modal>
 </section>
