@@ -35,6 +35,8 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
   currentPage = 1; // Pagina actual
 
   isVisible = false;
+
+  timeoutId:any;
   
 
   ngOnInit(): void {
@@ -93,34 +95,72 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
     }
   }
 
-  toggleAssistance(assistanceId: number, event: Event) {
-    const isChecked = (event!.target as HTMLInputElement).checked;
+  // toggleAssistance(assistanceId: number, event: Event) {
+  //   const isChecked = (event!.target as HTMLInputElement).checked;
 
-    const data: UpdateAssistanceDTO = {
-      id: assistanceId,
-      assistance: isChecked,
-    };
+  //   const data: UpdateAssistanceDTO = {
+  //     id: assistanceId,
+  //     assistance: isChecked,
+  //   };
 
-    this.assistance_service.saveAssistances(data).subscribe({
-      next: (updated:any) => {
-        let indexasistencia = this.listOfData.findIndex(asistencia => asistencia.key == updated.assistance.id.toString());
-        if (indexasistencia != -1) {
-          this.listOfData[indexasistencia].assistance = updated.assistance.assistance
+  //   this.assistance_service.saveAssistances(data).subscribe({
+  //     next: (updated:any) => {
+  //       let indexasistencia = this.listOfData.findIndex(asistencia => asistencia.key == updated.assistance.id.toString());
+  //       if (indexasistencia != -1) {
+  //         this.listOfData[indexasistencia].assistance = updated.assistance.assistance
 
-          this.listDAtos = [...this.listDAtos]
+  //         this.listDAtos = [...this.listDAtos]
 
-          this.evaluarCantidadTablas();
-        }
+  //         this.evaluarCantidadTablas();
+  //       }
         
   
-      },
-      error: (err:any) => {
-        console.error('Error al actualizar asistencia:', err);
-      },
+  //     },
+  //     error: (err:any) => {
+  //       console.error('Error al actualizar asistencia:', err);
+  //     },
+  //   });
+  // }
+
+  toggleAssistance(assistanceId: number, event: Event) {
+    // Cancelar cualquier temporizador previo
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+  
+    // Alternar la asistencia sin afectar las demás
+  this.listOfData = this.listOfData.map(item => {
+    if (item.key === assistanceId.toString()) {
+      // Invertir el estado de asistencia del seleccionado
+      return { ...item, assistance: !item.assistance };
+    }
+    return item; // Mantener los demás sin cambios
+  });
+  
+    // Actualizar la tabla
+    this.listDAtos = [...this.listDAtos];
+    this.evaluarCantidadTablas();
+  
+    // Reiniciar el contador de 5 segundos
+    this.timeoutId = setTimeout(() => {
+      this.sendAssistanceUpdate(); // Enviar actualización al backend después de 5 segundos
+    }, 5000);
+  }
+  
+  sendAssistanceUpdate() {
+    // Crear el array de asistencias a actualizar
+    const data: UpdateAssistanceDTO []= this.listOfData.map(item => ({
+      id: parseInt(item.key!),
+      assistance: item.assistance || false, // Asegurarse de que no sea null
+    }));
+  
+    // Enviar las asistencias al backend
+    this.assistance_service.saveAssistances(data).subscribe({
+      next: (updated: any) => {
+        console.log('Asistencias actualizadas', updated);
+      }
     });
   }
-
-
   evaluarCantidadTablas() {
     this.listDAtos = [];
     for (let i = 0; i < this.listOfData.length; i += this.rowsPerTable) {
