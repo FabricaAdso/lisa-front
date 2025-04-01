@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserModel } from '@shared/models/user.model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -34,6 +34,8 @@ import { finalize } from 'rxjs';
   styleUrl: './edit-roles-modal.component.css'
 })
 export class EditRolesModalComponent implements OnInit {
+  
+  @Output() updatedUsers: EventEmitter<void> = new EventEmitter();
   @Input() userData?: UserModel | null;
 
   // Variables
@@ -209,6 +211,7 @@ export class EditRolesModalComponent implements OnInit {
       formValue.knowledge_network_id
     ).subscribe({
       next: () => {
+        this.updatedUsers.emit();
         this.notification.success('Éxito', 'Roles actualizados correctamente');
         this.isVisible = false;
       },

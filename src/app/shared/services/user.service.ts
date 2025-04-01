@@ -22,7 +22,8 @@ export class UserService {
      console.log(url);
      
      return this.http.get<UserModel[]>(url)
-    
+  }
+  getUsersByTrainingCenter(){
     
   }
 

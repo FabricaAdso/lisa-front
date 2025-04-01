@@ -3,6 +3,8 @@
   <div class="flex  items-center justify-between">
     <div class="flex items-start"></div>
     <button
+    nz-button
+    nzType="primary"
       (click)="showModalCargue()"
       class="text-sm font-medium text-primary-600 dark:text-primary-500"
     >
@@ -52,10 +54,15 @@
           </span>
         </td>
         <td>
-          <button (click)="openModalRoles(user)" class="btn btn-primary">
+          <button 
+          nz-button
+          nzType="default"
+          (click)="openModalRoles(user)" >
             Editar Roles
           </button>
-          <button (click)="toggleUserStatus(user)" class="btn btn-secondary">
+          <button
+          nz-button
+           (click)="toggleUserStatus(user)" >
             {{ user.deactivation_date ? "Activar" : "Desactivar" }}
           </button>
         </td>
@@ -75,4 +82,4 @@
 
 
 <app-charge-button #chargeButton></app-charge-button>
-<app-edit-roles-modal #modalRoles></app-edit-roles-modal>
+<app-edit-roles-modal #modalRoles (updatedUsers)="getUsers()"></app-edit-roles-modal>
