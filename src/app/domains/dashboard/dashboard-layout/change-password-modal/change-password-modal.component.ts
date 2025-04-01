@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ChangePasswordService } from '@shared/services/change-password.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -39,11 +39,21 @@ export class ChangePasswordModalComponent {
 
   constructor(private fb: FormBuilder) {
     this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^\S.*\S$/)]],
+      currentPassword: ['', Validators.required],  
+      newPassword: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?!\s)(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).*(?!\s)$/)
+      ]],
       confirmPassword: ['', Validators.required]
-    });
+    }, { validator: this.passwordsMatch });
   }
+    // 📌 Método para validar que las contraseñas coincidan
+    passwordsMatch(formGroup: AbstractControl) {
+      const newPassword = formGroup.get('newPassword')?.value;
+      const confirmPassword = formGroup.get('confirmPassword')?.value;
+      return newPassword === confirmPassword ? null : { notMatching: true };
+    }
 
  
   togglePasswordVisibility(field: string): void {
@@ -75,23 +85,18 @@ export class ChangePasswordModalComponent {
   }
 
   handleOk(): void {
-    if (this.passwordForm.valid) {
-      const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
-
-      // Verificación de que las contraseñas coinciden
-      if (newPassword !== confirmPassword) {
-        alert('Las contraseñas no coinciden');
-        return;
-      }
-
-      this.passwordChanged.emit({
-        currentPassword,
-        newPassword,
-        newPasswordConfirmation: confirmPassword
-      });
-    } else {
-      alert('Por favor, complete todos los campos correctamente.');
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched(); // 📌 Esto muestra los errores en la UI
+      return;
     }
+
+    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
+
+    this.passwordChanged.emit({
+      currentPassword,
+      newPassword,
+      newPasswordConfirmation: confirmPassword
+    });
   }
 
   
