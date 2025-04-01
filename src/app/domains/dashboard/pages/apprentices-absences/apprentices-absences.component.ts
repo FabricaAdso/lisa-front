@@ -1,20 +1,19 @@
 import { Component, inject } from '@angular/core';
-import { JustificationService } from '@shared/services/justification.service';
 import { forkJoin } from 'rxjs';
-import { ModalApprovedComponent } from './modal-approved/modal-approved.component';
-import { ByEstadoJustificacionPipe } from '@shared/pipes/by-estado-justificacion.pipe';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { ModalRejectedComponent } from './modal-rejected/modal-rejected.component';
 import { JustificationModel } from '@shared/models/justification-model';
 import { JustificationsInstructorService } from '@shared/services/justifications-instructor.service';
 import { EstadoJustificacionEnum } from '@shared/enums/estado-justificacion.enum';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { ModalPendingComponent } from "./modal-pending/modal-pending.component";
-import { ModalExpiredComponent } from "./modal-expired/modal-expired.component";
+import { ExpiredModalComponent } from "../../../../domains/dashboard/pages/justification-apprentice/expired-modal/expired-modal.component";
+import { ApprovedModalComponent } from "../../../../domains/dashboard/pages/justification-apprentice/approved-modal/approved-modal.component";
+import { RejectedModalComponent } from '../../../../domains/dashboard/pages/justification-apprentice/rejected-modal/rejected-modal.component';
+
 import { UnjustifiedComponent } from './unjustified/unjustified.component';
 
 @Component({
@@ -26,12 +25,12 @@ import { UnjustifiedComponent } from './unjustified/unjustified.component';
     NzButtonModule,
     NzTabsModule,
     NzTagModule,
-    ModalApprovedComponent,
-    ModalRejectedComponent,
-   
+    ApprovedModalComponent,
+    RejectedModalComponent,
+    ExpiredModalComponent,
     NzPaginationModule,
     ModalPendingComponent,
-    ModalExpiredComponent,
+    
     UnjustifiedComponent
 ],
   templateUrl: './apprentices-absences.component.html',

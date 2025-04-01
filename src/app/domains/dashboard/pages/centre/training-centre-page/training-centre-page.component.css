@@ -14,15 +14,19 @@
     vertical-align: middle; /* Alinea mejor con el texto */
   }
   .crear-btn {
-    background-color: #38A901; /* Color de fondo del botón */
-    border: none;
+    background-color: #5EB319;
+    /* font-weight: 500; */
+    border-radius: 5px;
+    border-color: #5EB319;
     margin-bottom: 20px;
     margin-right: 20px; /* Agrega margen a la derecha */
-    border-radius: 2px;
+  
     cursor: pointer;
 }
 
 .btn-container {
+  color: white;
+  
   display: flex;
   justify-content: flex-end;
   padding-right: 20px; /* Espaciado de la derecha */
@@ -30,14 +34,15 @@
 
 
   .crear-btn:hover {
-    background-color: #3e8e41;
+    background: #2b7a04 !important;  
+    border-color: #2e8c01 !important;
     }
   .edit-btn {
     color: white !important;
 
    
-    background: #38A901 !important;
-    border-color: #38A901 !important;
+    background: #5EB319 !important;
+    border-color: #5EB319 !important;
     padding: 5px 10px;
     border-radius: 5px;
     display: flex;
@@ -49,7 +54,7 @@
   
 
   .edit-btn:hover {
-    background: #2b7a04 !important;  /* Color más oscuro al pasar el mouse */
+    background: #2b7a04 !important;  
     border-color: #2e8c01 !important;
   
   }

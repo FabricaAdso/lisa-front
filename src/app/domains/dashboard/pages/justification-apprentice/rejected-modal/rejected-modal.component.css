@@ -8,7 +8,7 @@
 
   .rejection-wrapper {
     display: flex;
-    justify-content: flex-start; /* Asegura que el contenido comience a la izquierda */
+    justify-content: center; 
     width: 100%;
 }
   .file-container {
@@ -38,8 +38,11 @@
   
   .motive-box {
     background: #fdfdfd;
-    border: 1px solid #eeeeee; 
+    align-items: center;
     border-radius:4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
    
     margin-bottom: 20px;
   
