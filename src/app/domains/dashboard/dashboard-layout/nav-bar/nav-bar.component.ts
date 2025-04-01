@@ -74,7 +74,6 @@ export class NavBarComponent implements OnInit {
       .subscribe(() => {
         this.isDropdownOpen1 = false;
         this.isDropdownOpen2 = false;
-        this.isChangePasswordModalVisible = false;
         this.cdr.detectChanges();
       });
 

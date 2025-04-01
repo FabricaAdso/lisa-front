@@ -20,7 +20,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
   styleUrl: './change-password-modal.component.css'
 })
 export class ChangePasswordModalComponent {
-  @Input() isVisible:boolean = true;
+  @Input() isVisible!:boolean;
   @Output() closeModal = new EventEmitter<void>();
 
   

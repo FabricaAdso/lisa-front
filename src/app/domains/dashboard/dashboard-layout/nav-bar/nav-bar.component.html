@@ -70,5 +70,6 @@
 
 <app-change-password-modal 
   *ngIf="isChangePasswordModalVisible" 
+  [isVisible]="isChangePasswordModalVisible"
   (closeModal)="isChangePasswordModalVisible = false">
 </app-change-password-modal>
