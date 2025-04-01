@@ -11,11 +11,12 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { HeadquarterModel } from '@shared/models/headquarter.model';
 import { HeadquartersService } from '@shared/services/headquarters.service';
-import { TrainingCentreService } from '@shared/services/training-center.service';
+
 import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { TrainingCentreService } from '@shared/services/training-centre.service';
 
 @Component({
   selector: 'app-modal-headquarter',

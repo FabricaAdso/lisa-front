@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Component, inject, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { EnvironmentService } from '@shared/services/environment.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -10,9 +8,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { HeadquartersService } from '@shared/services/headquarters.service';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { HeadquartersService } from '@shared/services/headquarters.service';
@@ -51,7 +46,6 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzPopconfirmModule
   ],
   templateUrl: './environment.component.html',
-  styleUrl: './environment.component.css',
   styleUrl: './environment.component.css',
 })
 export class EnvironmentComponent {
