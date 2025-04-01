@@ -32,3 +32,12 @@ export interface PaginatedResponse<T> {
 
 
 
+export interface CalendarEvent {
+  title: string;
+  start: string;
+  description: string;
+  extendedProps: {
+    sessions: SessionModel[];
+  };
+  display: string;
+}

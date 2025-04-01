@@ -15,3 +15,13 @@
     outline: none;
 }
 
+ /* boton del tab */
+::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #52c41a !important;
+}
+
+/* linea debajo del tab */
+::ng-deep .ant-tabs-ink-bar {
+  background: #52c41a !important;
+}
+

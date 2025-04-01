@@ -17,7 +17,7 @@ import { KnowledgeNetworkService } from '@shared/services/knowledge-network.serv
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalComponent, NzModalContentDirective } from 'ng-zorro-antd/modal';
 import { NzOptionComponent, NzSelectComponent } from 'ng-zorro-antd/select';
-import { debounceTime, filter, forkJoin, of, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, forkJoin, of, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { CourseModel } from '@shared/models/course.model';
@@ -143,9 +143,16 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.fieldSubject.valueChanges.subscribe((value) => {
       if (value) {
         this.fieldRap.enable();
+        // Obtener el porcentaje del subject seleccionado
+        const selectedSubject = this.subjectList.find(subj => subj.id === value);
+        if (selectedSubject) {
+          this.formSession!.get('percentage')?.setValue(selectedSubject.percentage,{ emitEvent: false });
+        }
       } else {
         this.fieldRap.disable();
         this.fieldRap.reset();
+        this.formSession!.get('percentage')?.reset(); // Limpiar si no hay subject
+
       }
     });
 
@@ -202,6 +209,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   changeKnowledgeNetwork() {
     this.fieldKnowledgeNetwork.valueChanges
       .pipe(
+        debounceTime(300), // sspera 300 ms despues de cada cambio
+        distinctUntilChanged(),
         tap((value) => {
           console.log('Valor de knowledge_network:', value);
 
@@ -244,6 +253,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   changeSubject() {
     this.fieldSubject.valueChanges
       .pipe(
+        debounceTime(300), // sspera 300 ms despues de cada cambio
+        distinctUntilChanged(),
         tap(() => {
           this.rapList = [];
         }),
@@ -274,6 +285,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   changecourse() {
     this.fieldCourse.valueChanges
       .pipe(
+        debounceTime(300), // sspera 300 ms despues de cada cambio
+        distinctUntilChanged(),
         startWith(this.fieldCourse.value),
         tap(() => {
           this.courseSelection.next();
@@ -354,6 +367,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   get fieldSubject() {
     return this.formSession?.get('subject_id') as FormControl;
   }
+
 
   onTimeChangesStart(timeStart: Date): void {
     if (timeStart) {

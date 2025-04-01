@@ -39,7 +39,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
     NzUploadModule,
     NzTabsModule,
     NzProgressModule,
-    NzCardModule
+    NzCardModule,
+    
 
   ],
   templateUrl: './charge-button.component.html',
@@ -139,7 +140,7 @@ export class ChargeButtonComponent implements OnInit {
             'Exito',
             'Archivo subido correctamente, porfavor recarga la pagina'
           )
-        } 
+        }
       }
     });
 
