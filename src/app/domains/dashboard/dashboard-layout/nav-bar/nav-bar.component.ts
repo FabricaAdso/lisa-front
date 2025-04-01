@@ -57,7 +57,7 @@ export class NavBarComponent implements OnInit {
   Image_logo: string = 'assets/images/logosena.png';
   UserImage: string = 'assets/images/logouser.png';
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  private cdr = inject(ChangeDetectorRef)  
 
   private auth_service = inject(AuthService);
 
@@ -114,6 +114,7 @@ export class NavBarComponent implements OnInit {
     // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
     console.log('Detectando Cambios');
+
   }
 
   toggleDropdown2() {
@@ -133,7 +134,7 @@ export class NavBarComponent implements OnInit {
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    const dropdownButton1 = document.querySelector('.dropdown-button1'); // Selector para el primer botón
+    const dropdownButton1 = document.querySelector('span[class*="dropdown-button1"]'); // Selector para el primer botón
     const dropdownMenu1 = document.querySelector('.dropdown-menu1'); // Selector para el menú del primer botón
     const dropdownButton2 = document.querySelector('.dropdown-button2'); // Selector para el segundo botón
     const dropdownMenu2 = document.querySelector('.app-drop-down-menu'); // Selector para el segundo menú

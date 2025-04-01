@@ -15,7 +15,7 @@
     <ng-container *ngIf="isLoggedIn">
       <!-- Nombre completo del usuario, al hacer clic se despliega el menú -->
       <span
-        class="hidden desktop:inline text-black font-normal text-xl mr-2 cursor-pointer"
+        class="hidden desktop:inline text-black font-normal text-xl mr-2 cursor-pointer dropdown-button1"
         (click)="toggleDropdown1()"
       >
         {{ user()?.name }} {{ user()?.last_name }}
@@ -23,7 +23,7 @@
 
       <!-- Menú desplegable al hacer clic en el nombre -->
       <div
-        *ngIf="isDropdownOpen1"
+        *ngIf="isDropdownOpen1"z
         class="absolute right-0 mt-[7.5rem] w-48 bg-transparent rounded bg-black dropdown-menu1 z-50"
       >
         <button
