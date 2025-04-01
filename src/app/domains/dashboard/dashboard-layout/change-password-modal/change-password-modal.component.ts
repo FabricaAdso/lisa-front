@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ChangePasswordService } from '@shared/services/change-password.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -22,12 +23,8 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 export class ChangePasswordModalComponent {
   @Input() isVisible!:boolean;
   @Output() closeModal = new EventEmitter<void>();
-
-  
-  @Output() passwordChanged = new EventEmitter<void>(); // Emitirá evento cuando se cambie la contraseña
-  
+  @Output() passwordChanged = new EventEmitter<{ currentPassword: string, newPassword: string, newPasswordConfirmation: string }>();
   passwordForm: FormGroup;
-
 
   constructor(private fb: FormBuilder) {
     this.passwordForm = this.fb.group({
@@ -38,16 +35,30 @@ export class ChangePasswordModalComponent {
   }
 
 
+
   handleCancel(): void {
     this.isVisible = false;
   }
 
   handleOk(): void {
     if (this.passwordForm.valid) {
-      console.log('Contraseña actualizada:', this.passwordForm.value);
-      this.passwordChanged.emit(); // Notificar al padre
-      this.isVisible = false;
+      const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
+
+      // Verificación de que las contraseñas coinciden
+      if (newPassword !== confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+
+      this.passwordChanged.emit({
+        currentPassword,
+        newPassword,
+        newPasswordConfirmation: confirmPassword
+      });
+    } else {
+      alert('Por favor, complete todos los campos correctamente.');
     }
   }
+  
 
 }

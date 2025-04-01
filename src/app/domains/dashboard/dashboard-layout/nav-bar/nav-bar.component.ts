@@ -22,6 +22,8 @@ import { SharedDataService } from '@shared/services/shared-data.service';
 import { ChangePasswordModalComponent } from '../change-password-modal/change-password-modal.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { ChangePasswordService } from '@shared/services/change-password.service';
+
 
 
 @Component({
@@ -50,9 +52,6 @@ export class NavBarComponent implements OnInit {
   notificationCount = this.dataSharedService.notificationCount;
 
   private breackpoint_observer = inject(BreakpointObserver);
-
-
-
   user = signal<UserModel | null>(null);  // Signal para almacenar el usuario logueado
   isLoggedIn: boolean = false;
 
@@ -64,10 +63,11 @@ export class NavBarComponent implements OnInit {
   isVisible = false;
   isChangePasswordModalVisible = false;
 
-
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private changePasswordService: ChangePasswordService) {}
 
   private auth_service = inject(AuthService);
+
+
   ngOnInit(): void {
     this.breackpoint_observer
       .observe([Breakpoints.Handset, Breakpoints.Tablet, Breakpoints.Web])
@@ -97,16 +97,30 @@ export class NavBarComponent implements OnInit {
 
 
   openChangePasswordModal() {
-    console.log('Modal abierto contraseña');
+    console.log('Modal abierto para cambiar contraseña');
     this.isChangePasswordModalVisible = true;
     
   }
 
   closeChangePasswordModal() {
-    this.isVisible = false;
+    this.isChangePasswordModalVisible = false;
   }
- 
-  
+
+   // Método para manejar el evento cuando la contraseña se haya cambiado
+
+
+   onPasswordChanged(formData: { currentPassword: string, newPassword: string, newPasswordConfirmation: string }) {
+    this.changePasswordService.changePassword({
+      current_password: formData.currentPassword,
+      new_password: formData.newPassword,
+      new_password_confirmation: formData.newPasswordConfirmation
+    }).subscribe(response => {
+      console.log('Contraseña cambiada exitosamente', response);
+      this.logout();
+    }, error => {
+      console.error('Error al cambiar la contraseña', error);
+    });
+  }
 
   login() {
     console.log('Iniciar sesión...');

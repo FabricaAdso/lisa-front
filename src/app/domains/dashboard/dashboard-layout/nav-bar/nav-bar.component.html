@@ -68,8 +68,9 @@
 </nav>
 
 
-<app-change-password-modal 
-  *ngIf="isChangePasswordModalVisible" 
+<app-change-password-modal
+  *ngIf="isChangePasswordModalVisible"
   [isVisible]="isChangePasswordModalVisible"
-  (closeModal)="isChangePasswordModalVisible = false">
+  (closeModal)="closeChangePasswordModal()"
+  (passwordChanged)="onPasswordChanged($event)">
 </app-change-password-modal>
