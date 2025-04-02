@@ -5,17 +5,17 @@
         <div class="title-icon flex items-center justify-center w-full">
           <nz-page-header nzBackIcon [nzGhost]="false" nzSize="large"></nz-page-header>
           <nz-page-header-title class="page-header-title text-center text-sm sm:text-base lg:text-lg">
-            Análisis y Desarrollo de Software 2774315
+            {{listOfData2?.course?.program?.name || 'N/A'}}
           </nz-page-header-title>
         </div>
   
         <nz-page-header-content>
           <nz-descriptions nzSize="default" [nzColumn]="2"  nzSize="default">
-            <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name}} {{listOfData2?.instructor?.user?.last_name}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Ficha">{{listOfData2?.course?.code}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start}} - {{listOfData2?.course?.date_end}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters?.name}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment?.name}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name || 'N/A '}} {{listOfData2?.instructor?.user?.last_name || 'N/A'}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ficha">{{listOfData2?.course?.code || 'N/A'}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start || 'N/A '}} - {{listOfData2?.course?.date_end || 'N/A'}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters?.name || 'N/A'}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ambiente">{{listOfData2?.course?.environment?.name || 'N/A'}}</nz-descriptions-item>
             <!-- <nz-descriptions-item nzTitle="Vocero de ficha">{{listOfData2?.course?.representative?.user?.name}} {{listOfData2?.course?.representative?.user?.last_name}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Vocero suplente">{{listOfData2?.course?.co_representative?.user?.name }} {{listOfData2?.course?.co_representative?.user?.name}}</nz-descriptions-item> -->
           </nz-descriptions>
