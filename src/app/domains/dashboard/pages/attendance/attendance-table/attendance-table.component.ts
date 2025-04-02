@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
 import { SessionService } from '@shared/services/program/session.service';
 import { AttendanceComponent } from '../attendance.component';
+import { DataAssistanceDTO } from '@shared/dto/data-assistanceDTO';
 
 @Component({
   selector: 'app-attendance-table',
@@ -25,6 +26,7 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
   private session_service = inject(SessionService)
 
   listOfData: RegisterAssistanceModel[] = [];
+  data_assitance: DataAssistanceDTO[] = [];  
   
   listDAtos: any[][] = []; // Almacena los grupos de datos para multiples tablas
 
@@ -148,16 +150,24 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
   }
   
   sendAssistanceUpdate() {
+    
     // Crear el array de asistencias a actualizar
-    const data: UpdateAssistanceDTO []= this.listOfData.map(item => ({
+    const data_assitance: UpdateAssistanceDTO[] = this.listOfData.map(item => ({
       id: parseInt(item.key!),
-      assistance: item.assistance || false, // Asegurarse de que no sea null
+      assistance: item.assistance || false, 
     }));
-  
+
+    const data = {
+      data: data_assitance
+    }
+    
     // Enviar las asistencias al backend
     this.assistance_service.saveAssistances(data).subscribe({
       next: (updated: any) => {
         console.log('Asistencias actualizadas', updated);
+      },
+      error: (err: any) => {
+        console.error('Error al actualizar asistencias:', err);
       }
     });
   }
