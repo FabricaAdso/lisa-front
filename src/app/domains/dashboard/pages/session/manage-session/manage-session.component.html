@@ -23,7 +23,7 @@
       gap: 1rem;
     ">
       <nz-select style="width: 100%;" [(ngModel)]="courseFilter" (ngModelChange)="onCourseFilterChange($event)"
-        nzPlaceHolder="Código de curso" [nzShowSearch]="true" nzAllowClear>
+        nzPlaceHolder="Código de Ficha" [nzShowSearch]="true" nzAllowClear>
         <nz-option *ngFor="let option of courseOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
       </nz-select>
 

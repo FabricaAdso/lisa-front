@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { InstructorModel } from '@shared/models/instructor.model';
@@ -12,8 +12,10 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-session-edit',
@@ -29,8 +31,12 @@ export class SessionEditComponent implements OnInit, OnChanges {
   sessionData!: SessionModel;
   isVisible = false;
 
+  private notification = inject(NzNotificationService);
+  
+
   defaultOpenValue = new Date(1970, 0, 1, 0, 0);
 
+  private submitSubject = new Subject<void>();
 
   todisabledDate = (current: Date): boolean => {
     const today = new Date();
@@ -47,6 +53,9 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.buildForm();
+    this.submitSubject.pipe(debounceTime(1000)).subscribe(() => {
+      this.submitForm();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,6 +63,11 @@ export class SessionEditComponent implements OnInit, OnChanges {
       this.loadSessionData();
     }
   }
+
+  debounceSubmit(): void {
+    this.submitSubject.next();
+  }
+
 
   buildForm(): void {
     this.sessionForm = this.fb.group({
@@ -140,7 +154,7 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
 
 
-    
+
   }
 
 
@@ -172,6 +186,7 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
   // Método simplificado para enviar solo los campos editables usando PUT
   submitForm(): void {
+
     if (this.sessionForm.invalid) {
       Object.keys(this.sessionForm.controls).forEach(control => {
         this.sessionForm.controls[control].markAsDirty();
@@ -195,12 +210,25 @@ export class SessionEditComponent implements OnInit, OnChanges {
       next: (response) => {
         console.log('Sesión actualizada:', response);
               this.sessionCreated.emit(response);
+              this.createBasicNotification();
+              this.loading = false;
 
               this.isVisible = false;
             },
-      error: (err) => {
-        console.error('Error al actualizar la sesión:', err);
-      }
+            error: (err) => {
+              let errorMessage = 'Error al crear la sesión.';
+              if (err.error) {
+                if (err.error.message) {
+                  errorMessage = err.error.message;
+                }
+                if (err.error.conflict_session) {
+                  // errorMessage += ' Detalle del conflicto: ' + JSON.stringify(err.error.conflict_session);
+                }
+              }
+              this.notification.create('error', 'Error', errorMessage);
+              this.loading = false;
+
+            }
     });
   }
 
@@ -231,6 +259,11 @@ export class SessionEditComponent implements OnInit, OnChanges {
 
   @Output() sessionCreated = new EventEmitter<SessionModel>();
 
-
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Se ha creado la sesión correctamente',
+      'Ahora puede tomar asistencia de su sesión'
+    );
+  }
 
 }

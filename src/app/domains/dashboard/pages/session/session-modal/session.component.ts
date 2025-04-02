@@ -64,6 +64,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   @Input() anotherModalOpen = false;
   @Output() sessionCreated = new EventEmitter<SessionModel>();
 
+  private createSubject = new Subject<void>();
+
   time = new Date();
 
   private knowledge_network_service = inject(KnowledgeNetworkService);
@@ -120,6 +122,14 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.createForm();
     this.getData();
     this.setupFormSubscriptions();
+    this.createSubject.pipe(debounceTime(1000)).subscribe(() => {
+      this.saveForm();
+    });
+    //
+  }
+
+  debounceSaveForm(): void {
+    this.createSubject.next();
   }
 
   setupFormSubscriptions(): void {
@@ -469,4 +479,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   defaultOpenValue = new Date(0, 0, 0, 0, 0);
+
+
 }

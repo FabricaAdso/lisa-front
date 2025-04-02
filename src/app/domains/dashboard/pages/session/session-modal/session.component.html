@@ -1,4 +1,4 @@
-<nz-modal (nzOnOk)="saveForm()" (nzOnCancel)="closeModal()" [(nzVisible)]="isModalVisible" *ngIf="formSession">
+<nz-modal (nzOnOk)="debounceSaveForm()"  nzTitle="Crear Sesión" (nzOnCancel)="closeModal()" [(nzVisible)]="isModalVisible" *ngIf="formSession">
   <ng-container *nzModalContent>
     <form [formGroup]="formSession">
 
@@ -43,7 +43,7 @@
       <div class="mb-4 flex gap-5">
         <div class="flex flex-col w-5/6">
 
-          <label for="" class="mb-1">competencia</label>
+          <label for="" class="mb-1">Competencia</label>
           <nz-select [formControl]="fieldSubject" name="subject" placeholder="Seleccione una Sede"
             [nzShowSearch]="true">
             @for (item of subjectList; track $index) {
@@ -62,7 +62,7 @@
       </div>
 
       <div class="mb-4">
-        <label for="" class="">rap</label>
+        <label for="" class="">Rap</label>
         <nz-select
           [formControl]="fieldRap"
           name="rap"
