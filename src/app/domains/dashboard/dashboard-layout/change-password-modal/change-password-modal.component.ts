@@ -30,6 +30,7 @@ export class ChangePasswordModalComponent {
   @Output() closeModal = new EventEmitter<void>();
   @Output() passwordChanged = new EventEmitter<{ currentPassword: string, newPassword: string, newPasswordConfirmation: string }>();
   passwordForm: FormGroup;
+  submitted = false;
 
   // Estado inicial para cada campo de contraseña
   isCurrentPasswordVisible = false;
@@ -37,7 +38,7 @@ export class ChangePasswordModalComponent {
   isConfirmPasswordVisible = false;
  
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private changePasswordService: ChangePasswordService) {
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],  
       newPassword: ['', [
@@ -84,18 +85,34 @@ export class ChangePasswordModalComponent {
     this.isVisible = false;
   }
 
+ 
   handleOk(): void {
+    this.submitted = true;
+
+    
     if (this.passwordForm.invalid) {
       this.passwordForm.markAllAsTouched(); // 📌 Esto muestra los errores en la UI
       return;
     }
-
+  
     const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
-
-    this.passwordChanged.emit({
-      currentPassword,
-      newPassword,
-      newPasswordConfirmation: confirmPassword
+  
+    const requestData: { current_password: string; new_password: string; new_password_confirmation: string } = {
+      current_password: currentPassword,
+      new_password: newPassword,
+      new_password_confirmation: confirmPassword
+    };
+  
+    this.changePasswordService.changePassword(requestData).subscribe({
+      next: (response) => {
+        console.log('Contraseña cambiada exitosamente:', response);
+        
+      },
+      error: (error) => {
+        if (error.status === 400 && error.error?.error === 'Contraseña actual incorrecta') {
+          this.passwordForm.get('currentPassword')?.setErrors({ incorrect: true });
+        }
+      }
     });
   }
 

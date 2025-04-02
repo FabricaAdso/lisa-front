@@ -121,6 +121,12 @@ export class NavBarComponent implements OnInit {
       console.error('Error al cambiar la contraseña', error);
     });
   }
+  logout(){
+    console.log('Cerrar sesión...');
+    this.auth_service.logout();
+    // Re dirigir a login
+    this.router.navigate(['auth/login']);
+  }
 
   login() {
     console.log('Iniciar sesión...');
@@ -131,12 +137,7 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['dashboard/notification']);
   }
 
-  logout(){
-    console.log('Cerrar sesión...');
-    this.auth_service.logout();
-    // Re dirigir a login
-    this.router.navigate(['auth/login']);
-  }
+ 
 
   toggleDropdown1() {
     this.isDropdownOpen1 = !this.isDropdownOpen1;
