@@ -71,9 +71,9 @@ export class RolesComponent implements OnInit, OnDestroy {
   roles: RoleModel[] = [];
   filteredUsers:UserModel[] = [];
   searchTerm: string = '';
-  pageIndex: any;
-  pageSize: any;
-  totalItems: any;
+  pageIndex: number = 1;
+  pageSize: number = 8;
+  totalItems: number = 0;
   selectedFile: File | null = null;
   isVisible = false;
   isSearching: boolean = false;
@@ -133,31 +133,29 @@ export class RolesComponent implements OnInit, OnDestroy {
       },
     });
   }
-
   getUsers(page: number = 1, pageSize: number = 8): void {
     this.loading = true;
-  
+
     // Si estamos buscando, no usar paginación del backend
     if (this.isSearching ) {
       this.loadAllUsersForSearch();
       return;
     }
-  
+
     this.rolesService.getUsers(page, pageSize).subscribe({
-      next: (response) => {
-        const { data, total, current_page, per_page } = response;
-        this.users = data;
-        this.filteredUsers = [...this.users]; // Siempre mantener sincronizados
-        this.totalItems = total;
-        this.pageIndex = current_page;
-        this.pageSize = per_page;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error al obtener usuarios', error);
-        this.loading = false;
-      }
-    });
+          next: (response) => {
+            this.users = response.data;
+            this.filteredUsers = [...this.users];
+            this.totalItems = response.total_items; // Asegúrate de usar el campo correcto
+            this.pageIndex = response.current_page;
+            this.pageSize = pageSize;
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Error al obtener usuarios', error);
+            this.loading = false;
+          }
+        });
   }
 
   loadAllUsersForSearch(): void {
@@ -185,6 +183,7 @@ export class RolesComponent implements OnInit, OnDestroy {
       this.resetToPagination();
     }
   }
+
 
   searchUsers(): void {
     const term = this.searchTerm.trim().toLowerCase();
@@ -225,24 +224,26 @@ export class RolesComponent implements OnInit, OnDestroy {
   resetToPagination(): void {
     this.isSearching = false;
     this.searchTerm = '';
-    this.pageIndex = 1;
     this.getUsers(this.pageIndex, this.pageSize);
   }
-
   filterUsers(): void {
+    if (!this.searchTerm.trim()) {
+      this.resetToPagination();
+      return;
+    }
+
     const term = this.searchTerm.toLowerCase().trim();
     this.filteredUsers = this.allUsers.filter(user =>
       user.identity_document?.toLowerCase().includes(term) ||
       user.name?.toLowerCase().includes(term) ||
       user.last_name?.toLowerCase().includes(term) ||
-      (user.roles && user.roles.some(role => 
-        typeof role === 'string' ? 
-          role.toLowerCase().includes(term) : 
-          (role as RoleModel).name?.toLowerCase().includes(term) // Cast explícito
-      ))
-    );
-    this.pageIndex = 1;
-    this.totalItems = this.filteredUsers.length;
+      (user.roles && user.roles.some(role =>
+        typeof role === 'string' ?
+          role.toLowerCase().includes(term) :
+          (role as RoleModel).name?.toLowerCase().includes(term)
+      )
+    ));
+    this.totalItems = this.filteredUsers.length; // Actualiza el total
   }
 
   changePage(newPage: number) {

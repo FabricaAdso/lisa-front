@@ -53,7 +53,7 @@
           </span>
         </td>
         <td>
-          <button 
+          <button
           nz-button
           nzType="default"
           (click)="openModalRoles(user)" >
@@ -68,17 +68,17 @@
       </tr>
     </tbody>
   </nz-table>
-  <div class="paginate">
-    <nz-pagination
-  [nzPageIndex]="pageIndex"
-  [nzTotal]="totalItems"
-  [nzPageSize]="pageSize"
-  (nzPageIndexChange)="changePage($event)"
-  [nzShowSizeChanger]="true"
-  [nzPageSizeOptions]="[8, 16, 24, 32]"
-  (nzPageSizeChange)="pageSizeChange($event)">
-</nz-pagination>
-  </div>
+ <div class="paginate" *ngIf="!isSearching && totalItems > 0">
+  <nz-pagination
+    [nzPageIndex]="pageIndex"
+    [nzTotal]="totalItems"
+    [nzPageSize]="pageSize"
+    (nzPageIndexChange)="changePage($event)"
+    [nzShowSizeChanger]="true"
+    [nzPageSizeOptions]="[8, 16, 24, 32]"
+    (nzPageSizeChange)="pageSizeChange($event)">
+  </nz-pagination>
+</div>
 </section>
 
 
