@@ -13,6 +13,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { FiterToRoleService } from '@shared/services/fiter-to-role.service';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { menuItems } from '../itemsNav';
+import { SharedDataService } from '@shared/services/shared-data.service';
 @Component({
   selector: 'app-drop-down-menu',
   standalone: true,
@@ -44,6 +45,7 @@ export class DropDownMenuComponent {
   position: NzPlacementType = this.listOfPosition[0]; // Puedes cambiar la posición predeterminada aquí
   constructor(private cdr: ChangeDetectorRef, private filterItems: FiterToRoleService) {}
   private auth_service = inject(AuthService)
+  private share_date = inject(SharedDataService)
   private router = inject(Router);
   menuItems = menuItems;
   isLoggedIn: boolean = false;
@@ -67,6 +69,7 @@ export class DropDownMenuComponent {
   isMenuOpen = false;
   toggleMenu2() {
     this.isMenuOpen = !this.isMenuOpen; 
+    this.share_date.updateCloseDropdownMenu(this.isMenuOpen);
   }
 
   logout(){
