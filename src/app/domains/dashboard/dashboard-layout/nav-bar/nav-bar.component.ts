@@ -158,11 +158,12 @@ export class NavBarComponent implements OnInit {
       dropdownButton2 &&
       !dropdownButton2.contains(target) &&
       dropdownMenu2 &&
-      !dropdownMenu2.contains(target)
+      !dropdownMenu2.contains(target) || this.dataSharedService.closeDropdownMenu()
     ) {
       console.log('Cerrando Togglemenu 2'),
       this.isDropdownOpen2 = false;
       this.cdr.detectChanges();
+      this.dataSharedService.updateCloseDropdownMenu(false)
     }
   }
 

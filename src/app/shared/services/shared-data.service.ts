@@ -11,6 +11,7 @@ export class SharedDataService {
   //iniciamos un array vacio de notificaciones y mensajes
   private notificationsSignal = signal<NotificationModel[]>([]);
   private messagesSignal = signal<NotificationModel[]>([]);
+  private closeDropdownMenuSignal = signal<boolean>(false);
   
   //meteremos las notificaciones en el array
   updateNotifications(notifications: NotificationModel[]) {
@@ -21,6 +22,11 @@ export class SharedDataService {
     this.messagesSignal.set(messages);
   }
 
+  updateCloseDropdownMenu(closeDropdownMenu: boolean) {
+    this.closeDropdownMenuSignal.set(closeDropdownMenu);
+  }
+
+
   //desde aqui podemos obtener las notificaciones en tiempo real
   get notifications() {
     return this.notificationsSignal;
@@ -28,6 +34,10 @@ export class SharedDataService {
 
   get messages() {
     return this.messagesSignal;
+  }
+
+  get closeDropdownMenu() {
+    return this.closeDropdownMenuSignal;
   }
 
   // Computed para contar las notificaciones en tiempo real

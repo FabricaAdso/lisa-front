@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { DataAssistanceDTO } from '@shared/dto/data-assistanceDTO';
 import { UpdateAssistanceDTO } from '@shared/dto/update-assistance.dto';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { AssistanceModel } from '@shared/models/assistance.model';
@@ -23,7 +24,7 @@ export class AssistanceService {
   }
   
 
-  saveAssistances(data: UpdateAssistanceDTO[]){
-    return this.http.put<AssistanceModel>(`${this.URL}/allAsistence`,data);
+  saveAssistances(data: DataAssistanceDTO){
+    return this.http.put<DataAssistanceDTO[]>(`${this.URL}/allAsistence`,data);
   } 
 }

@@ -11,7 +11,7 @@
       <ng-container *ngFor="let subItem of subMenuItems">
         <!-- Elemento de menú simple -->
         <li *ngIf="!subItem.subMenu" nz-menu-item>
-          <a [routerLink]="subItem.route" routerLinkActive="active">
+          <a (click)="toggleMenu2()" [routerLink]="subItem.route" routerLinkActive="active">
             <!-- Enlace con routerLink -->
             <span
               nz-icon
