@@ -11,4 +11,5 @@ export interface UserModel{
      document_type?:DocumentTypeModel;
      training_centers: TrainingCenterModel[];
      roles: string[];
+     deactivation_date?: string | null;
 }

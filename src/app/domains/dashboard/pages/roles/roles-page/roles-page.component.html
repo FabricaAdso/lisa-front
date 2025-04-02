@@ -70,12 +70,14 @@
   </nz-table>
   <div class="paginate">
     <nz-pagination
-      (nzPageIndexChange)="changePage($event)"
-      [nzPageIndex]="pageIndex"
-      [nzTotal]="totalItems"
-      [nzPageSize]="pageSize"
-    >
-    </nz-pagination>
+  [nzPageIndex]="pageIndex"
+  [nzTotal]="totalItems"
+  [nzPageSize]="pageSize"
+  (nzPageIndexChange)="changePage($event)"
+  [nzShowSizeChanger]="true"
+  [nzPageSizeOptions]="[8, 16, 24, 32]"
+  (nzPageSizeChange)="pageSizeChange($event)">
+</nz-pagination>
   </div>
 </section>
 
