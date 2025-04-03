@@ -121,6 +121,8 @@ export class NavBarComponent implements OnInit {
       console.error('Error al cambiar la contraseña', error);
     });
   }
+
+  
   logout(){
     console.log('Cerrar sesión...');
     this.auth_service.logout();

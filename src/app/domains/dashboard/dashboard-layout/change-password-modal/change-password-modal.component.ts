@@ -6,6 +6,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { EMPTY } from 'rxjs/internal/observable/empty';
+import { catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap, tap } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -32,13 +35,19 @@ export class ChangePasswordModalComponent {
   passwordForm: FormGroup;
   submitted = false;
 
+  isPasswordValid: boolean | null = null; 
+
   // Estado inicial para cada campo de contraseña
   isCurrentPasswordVisible = false;
   isNewPasswordVisible = false;
   isConfirmPasswordVisible = false;
  
 
-  constructor(private fb: FormBuilder, private changePasswordService: ChangePasswordService) {
+  constructor(
+    private fb: FormBuilder, 
+    private changePasswordService: ChangePasswordService, 
+    private changeDetector: ChangeDetectorRef
+  ) {
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],  
       newPassword: ['', [
@@ -50,34 +59,63 @@ export class ChangePasswordModalComponent {
     }, { validator: this.passwordsMatch });
   }
     // 📌 Método para validar que las contraseñas coincidan
+ 
+
+   
+    
+    ngOnInit(): void {
+      this.passwordForm.get('currentPassword')?.valueChanges
+        .pipe(
+          debounceTime(500), // Espera 500ms antes de hacer la petición
+          distinctUntilChanged(), // Evita peticiones si el valor no cambió
+          switchMap((password) => {
+            if (!password) {
+              this.isPasswordValid = null; // Resetea si está vacío
+              return of({ valid: false });
+            }
+            return this.validateCurrentPassword(password);
+          })
+        )
+        .subscribe((response) => {
+          this.isPasswordValid = response.valid; // Actualiza el estado
+          this.changeDetector.detectChanges(); // Forza la actualización de la UI
+        });
+    }
+
+ 
+
+   
+    validateCurrentPassword(currentPassword: string): Observable<{ valid: boolean }> {
+      return this.changePasswordService.checkCurrentPassword(currentPassword).pipe(
+        catchError(() => of({ valid: false })) // Maneja errores de la API
+      );
+    }
+  
     passwordsMatch(formGroup: AbstractControl) {
       const newPassword = formGroup.get('newPassword')?.value;
       const confirmPassword = formGroup.get('confirmPassword')?.value;
       return newPassword === confirmPassword ? null : { notMatching: true };
     }
+    
+  
+
+   
+    
 
  
-  togglePasswordVisibility(field: string): void {
-    if (field === 'currentPassword') {
-      this.isCurrentPasswordVisible = !this.isCurrentPasswordVisible;
-      // Después de 1 segundo, ocultar la contraseña nuevamente
-      setTimeout(() => {
-        this.isCurrentPasswordVisible = false;
-      }, 1000);
-    } else if (field === 'newPassword') {
-      this.isNewPasswordVisible = !this.isNewPasswordVisible;
-      // Después de 3 segundos, ocultar la contraseña nuevamente
-      setTimeout(() => {
-        this.isNewPasswordVisible = false;
-      }, 1000);
-    } else if (field === 'confirmPassword') {
-      this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
-      // Después de 3 segundos, ocultar la contraseña nuevamente
-      setTimeout(() => {
-        this.isConfirmPasswordVisible = false;
-      }, 1000);
+    togglePasswordVisibility(field: string): void {
+      if (field === 'currentPassword') {
+        this.isCurrentPasswordVisible = !this.isCurrentPasswordVisible;
+        setTimeout(() => this.isCurrentPasswordVisible = false, 1000);
+      } else if (field === 'newPassword') {
+        this.isNewPasswordVisible = !this.isNewPasswordVisible;
+        setTimeout(() => this.isNewPasswordVisible = false, 1000);
+      } else if (field === 'confirmPassword') {
+        this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+        setTimeout(() => this.isConfirmPasswordVisible = false, 1000);
+      }
     }
-  }
+  
 
 
 
@@ -110,7 +148,9 @@ export class ChangePasswordModalComponent {
       },
       error: (error) => {
         if (error.status === 400 && error.error?.error === 'Contraseña actual incorrecta') {
-          this.passwordForm.get('currentPassword')?.setErrors({ incorrect: true });
+          const currentPasswordControl = this.passwordForm.get('currentPassword');
+          currentPasswordControl?.setErrors({ incorrect: true });
+          currentPasswordControl?.updateValueAndValidity(); // 🔥 Esto fuerza la actualización de la UI
         }
       }
     });

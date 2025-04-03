@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+
+import { catchError, Observable, of } from 'rxjs';
 
 interface ChangePasswordRequest {
   current_password: string;
@@ -22,7 +22,19 @@ export class ChangePasswordService {
   private http = inject(HttpClient);
   private apiUrl = `change-password`;
 
+  checkCurrentPassword(currentPassword: string): Observable<{ valid: boolean }> {
+    return this.http.post<{ valid: boolean }>(
+      'check-password',
+      { current_password: currentPassword },
+      { withCredentials: true } // 🔥 Necesario si usas Sanctum
+    );
+  }
+
+
+
   changePassword(data: ChangePasswordRequest): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(this.apiUrl, data);
   }
+
+
 }
