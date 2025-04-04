@@ -6,8 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { EMPTY } from 'rxjs/internal/observable/empty';
-import { catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 
 
@@ -36,7 +35,6 @@ export class ChangePasswordModalComponent {
   submitted = false;
 
   isPasswordValid: boolean | null = null;
-  formInteracted = false; //  bandera para detectar interacción
 
 
   // Estado inicial para cada campo de contraseña
@@ -76,7 +74,6 @@ export class ChangePasswordModalComponent {
             this.isPasswordValid = null;
             return of({ valid: false });
           }
-          this.formInteracted = true; // Marcar interacción cuando escribe aquí
           return this.validateCurrentPassword(password);
         })
       )
@@ -100,7 +97,7 @@ export class ChangePasswordModalComponent {
         distinctUntilChanged()
       )
       .subscribe((newPassword) => {
-        this.formInteracted = true; // Marcar interacción cuando escribe aquí
+        
         const currentPassword = this.passwordForm.get('currentPassword')?.value;
         if (newPassword && currentPassword && newPassword === currentPassword) {
           this.passwordForm.get('newPassword')?.setErrors({ sameAsCurrent: true });
@@ -114,7 +111,7 @@ export class ChangePasswordModalComponent {
     // Opcional: también para confirmPassword si quieres consistencia
     this.passwordForm.get('confirmPassword')?.valueChanges
       .subscribe(() => {
-        this.formInteracted = true; // Marcar interacción
+        this.passwordForm.updateValueAndValidity(); //  Forzar actualización de validaciones
         this.changeDetector.detectChanges();
       });
   }
@@ -131,12 +128,18 @@ export class ChangePasswordModalComponent {
   passwordsMatch(formGroup: AbstractControl) {
     const newPassword = formGroup.get('newPassword')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
-    return newPassword === confirmPassword ? null : { notMatching: true };
+
+    if (!confirmPassword) return null; // No mostrar error si no ha escrito nada
+
+    if (newPassword !== confirmPassword) {
+      formGroup.get('confirmPassword')?.setErrors({ notMatching: true });
+      return { notMatching: true };
+    } else {
+      formGroup.get('confirmPassword')?.setErrors(null);
+      return null;
+    }
+
   }
-
-
-
-
 
 
 
@@ -152,15 +155,6 @@ export class ChangePasswordModalComponent {
       setTimeout(() => this.isConfirmPasswordVisible = false, 1000);
     }
   }
-
-
-
-
-  handleCancel(): void {
-    this.isVisible = false;
-  }
-
-
   handleOk(): void {
     this.submitted = true;
 
@@ -177,6 +171,16 @@ export class ChangePasswordModalComponent {
       newPasswordConfirmation: confirmPassword
     });
   }
+
+
+
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
+
+
 
 
 

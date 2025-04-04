@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { catchError, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 interface ChangePasswordRequest {
   current_password: string;
