@@ -9,8 +9,9 @@ import {
   inject,
   signal,
   CUSTOM_ELEMENTS_SCHEMA,
+  ViewChild,
 } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.component';
@@ -23,7 +24,6 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ChangePasswordService } from '@shared/services/change-password.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { finalize } from 'rxjs';
 
 
 
@@ -46,6 +46,8 @@ import { finalize } from 'rxjs';
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit {
+  @ViewChild(ChangePasswordModalComponent) changePasswordModal!: ChangePasswordModalComponent;
+
 
   private router = inject(Router);
 
@@ -116,16 +118,25 @@ export class NavBarComponent implements OnInit {
       current_password: formData.currentPassword,
       new_password: formData.newPassword,
       new_password_confirmation: formData.newPasswordConfirmation
-    }).subscribe(response => {
-      this.closeChangePasswordModal();
-      this.logout();
-      // this.notification.success('Contraseña actualizada exitosamente', 'Inicie sesión nuevamente');
-     
+    }).subscribe({
+      next:()=>{
+        this.logout(); 
+        this.notification.success(
+          'Contraseña actualizada exitosamente', 
+          'Inicie sesión nuevamente',
+          { nzDuration: 5000 } 
+      );    
       
-    }, error => {
-      this.notification.error('Error al cambiar la contraseña', 'Por favor, verifique los datos ingresados');
-      console.error('Error al cambiar la contraseña', error);
+    }, 
+    error:(error)=>{
+        this.notification.error('Error al cambiar la contraseña', 'Por favor, verifique los datos ingresados');
+        console.error('Error al cambiar la contraseña', error);
+        if (this.changePasswordModal) {
+          this.changePasswordModal.loading = false;
+        }
+    }
     });
+    
   }
 
   

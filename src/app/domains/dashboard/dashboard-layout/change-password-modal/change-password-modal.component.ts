@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, AbstractContro
 import { ChangePasswordService } from '@shared/services/change-password.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
@@ -35,6 +35,7 @@ export class ChangePasswordModalComponent {
   submitted = false;
 
   isPasswordValid: boolean | null = null;
+  loading:boolean = false;
 
 
   // Estado inicial para cada campo de contraseña
@@ -158,10 +159,8 @@ export class ChangePasswordModalComponent {
   handleOk(): void {
     this.submitted = true;
 
-    if (this.passwordForm.invalid) {
-      this.passwordForm.markAllAsTouched();
-      return;
-    }
+   
+    this.loading = true
 
     // Emitir los datos al padre en lugar de hacer la llamada al servicio aquí
     const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
