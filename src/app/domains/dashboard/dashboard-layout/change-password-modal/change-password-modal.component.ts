@@ -69,7 +69,7 @@ export class ChangePasswordModalComponent {
     // Validación en tiempo real para currentPassword
     this.passwordForm.get('currentPassword')?.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(300),
         distinctUntilChanged(),
         switchMap((password) => {
           if (!password) {
@@ -96,7 +96,7 @@ export class ChangePasswordModalComponent {
     // Validación en tiempo real para newPassword
     this.passwordForm.get('newPassword')?.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(300),
         distinctUntilChanged()
       )
       .subscribe((newPassword) => {

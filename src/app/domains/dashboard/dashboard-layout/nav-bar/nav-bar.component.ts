@@ -23,6 +23,7 @@ import { ChangePasswordModalComponent } from '../change-password-modal/change-pa
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ChangePasswordService } from '@shared/services/change-password.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 
 
@@ -66,6 +67,7 @@ export class NavBarComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef, private changePasswordService: ChangePasswordService) {}
 
   private auth_service = inject(AuthService);
+  private notification = inject(NzNotificationService);
 
 
   ngOnInit(): void {
@@ -115,9 +117,11 @@ export class NavBarComponent implements OnInit {
       new_password: formData.newPassword,
       new_password_confirmation: formData.newPasswordConfirmation
     }).subscribe(response => {
-      console.log('Contraseña cambiada exitosamente', response);
+      
+      this.notification.success('Contraseña cambiada exitosamente', 'Inicie sesión nuevamente');
       this.logout();
     }, error => {
+      this.notification.error('Error al cambiar la contraseña', 'Por favor, verifique los datos ingresados');
       console.error('Error al cambiar la contraseña', error);
     });
   }
