@@ -10,30 +10,35 @@
 
 
 
+
     <ng-container *ngIf="isLoggedIn">
-      <!-- Nombre completo del usuario, al hacer clic se despliega el menú -->
-      <span class="hidden desktop:inline text-black font-normal text-xl mr-2 cursor-pointer"
-        (click)="toggleDropdown1()">
-        {{ user()?.name }} {{ user()?.last_name }}
-      </span>
+      <!-- Nombre completo del usuario, solo con clic -->
+      <div class="relative">
+        <span class="hidden desktop:inline text-black font-normal text-xl mr-2 cursor-pointer dropdown-button1"
+          (click)="toggleDropdown1()">
+          {{ user()?.name }} {{ user()?.last_name }}
+        </span>
 
-      <!-- Menú desplegable al hacer clic en el nombre -->
-      <div *ngIf="isDropdownOpen1"
-        class="absolute right-0 mt-[7.5rem] w-48 bg-transparent rounded bg-black dropdown-menu1 z-50">
-
-        <button   (click)="openChangePasswordModal()"
-          class="flex items-center justify-center w-[10rem] text-lg text-black hover:bg-gray-100 bg-white py-2 rounded-lg border desktop:block">
-          <span nz-icon nzType="key" nzTheme="outline" class="mr-2"></span>
-          Actualizar contraseña
-        </button>
-
-        <button (click)="logout()"
-          class="flex items-center justify-center w-[10rem] text-lg text-black hover:bg-gray-100 bg-white py-2 rounded-lg border desktop:block">
-          <span nz-icon nzType="logout" nzTheme="outline" class="mr-2"></span>
-          Cerrar sesión
-        </button>
+        <!-- Menú desplegable -->
+        <div *ngIf="isDropdownOpen1"
+          class="absolute right-[-28px] top-full mt-6 w-60 rounded bg-transparent dropdown-menu1 z-50"  >
+          <button (click)="openChangePasswordModal()"
+            class="flex items-center justify-start w-full text-lg text-black hover:bg-gray-100 bg-white py-3 px-4 rounded-lg border desktop:block whitespace-nowrap text-left">
+            <span nz-icon nzType="key" nzTheme="outline" class="mr-2 text-lg leading-none flex-shrink-0"></span>
+            Actualizar contraseña
+          </button>
+          <button (click)="logout()"
+            class="flex items-center justify-start w-full text-lg text-black hover:bg-gray-100 bg-white py-3 px-4 rounded-lg border desktop:block whitespace-nowrap text-left">
+            <span nz-icon nzType="logout" nzTheme="outline" class="mr-2 text-lg leading-none flex-shrink-0"></span>
+            Cerrar sesión
+          </button>
+        </div>
       </div>
     </ng-container>
+
+
+
+
 
 
     <div class="flex">
@@ -68,9 +73,6 @@
 </nav>
 
 
-<app-change-password-modal
-  *ngIf="isChangePasswordModalVisible"
-  [isVisible]="isChangePasswordModalVisible"
-  (closeModal)="closeChangePasswordModal()"
-  (passwordChanged)="onPasswordChanged($event)">
+<app-change-password-modal *ngIf="isChangePasswordModalVisible" [isVisible]="isChangePasswordModalVisible"
+  (closeModal)="closeChangePasswordModal()" (passwordChanged)="onPasswordChanged($event)">
 </app-change-password-modal>

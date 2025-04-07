@@ -124,7 +124,7 @@ export class NavBarComponent implements OnInit {
         this.notification.success(
           'Contraseña actualizada exitosamente', 
           'Inicie sesión nuevamente',
-          { nzDuration: 5000 } 
+          { nzDuration: 8000 } 
       );    
       
     }, 
@@ -157,22 +157,27 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['dashboard/notification']);
   }
 
- 
-
+  openDropdown1() {
+    this.isDropdownOpen1 = true;
+    this.isDropdownOpen2 = false; // Cierra el otro menú si está abierto
+    this.cdr.detectChanges();
+  }
+  closeDropdown1() {
+    setTimeout(() => {
+      this.isDropdownOpen1 = false;
+      this.cdr.detectChanges();
+    }, 300);
+  }
   toggleDropdown1() {
     this.isDropdownOpen1 = !this.isDropdownOpen1;
-    console.log('Abriendo Togglemenu');
-// Cierra el segundo menú si está abierto
     if (this.isDropdownOpen2) {
-      this.isDropdownOpen2 = false;
+      this.isDropdownOpen2 = false; // Cierra el otro menú si está abierto
     }
-    // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
-    console.log('Detectando Cambios');
   }
 
   toggleDropdown2() {
-    console.log( this.isDropdownOpen2);
+    console.log(this.isDropdownOpen2);
     this.isDropdownOpen2 = !this.isDropdownOpen2;
     // Cierra el primer menú si está abierto
     if (this.isDropdownOpen1) {
@@ -187,13 +192,9 @@ export class NavBarComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
+    const dropdownButton1 = document.querySelector('.dropdown-button1');
+    const dropdownMenu1 = document.querySelector('.dropdown-menu1');
 
-    const dropdownButton1 = document.querySelector('.dropdown-button1'); // Selector para el primer botón
-    const dropdownMenu1 = document.querySelector('.dropdown-menu1'); // Selector para el menú del primer botón
-    const dropdownButton2 = document.querySelector('.dropdown-button2'); // Selector para el segundo botón
-    const dropdownMenu2 = document.querySelector('.app-drop-down-menu'); // Selector para el segundo menú
-
-    // Cierre del menú 1
     if (
       this.isDropdownOpen1 &&
       dropdownButton1 &&
@@ -201,25 +202,10 @@ export class NavBarComponent implements OnInit {
       dropdownMenu1 &&
       !dropdownMenu1.contains(target)
     ) {
-      console.log('Cerrando Togglemenu'),
       this.isDropdownOpen1 = false;
       this.cdr.detectChanges();
     }
-
-    // Cierre del menú 2
-    if (
-      this.isDropdownOpen2 &&
-      dropdownButton2 &&
-      !dropdownButton2.contains(target) &&
-      dropdownMenu2 &&
-      !dropdownMenu2.contains(target)
-    ) {
-      console.log('Cerrando Togglemenu 2'),
-      this.isDropdownOpen2 = false;
-      this.cdr.detectChanges();
-    }
   }
-
   
  
 }
