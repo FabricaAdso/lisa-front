@@ -67,11 +67,12 @@ export class ManageSessionComponent implements OnInit {
   total: number = 0;
   page_options: number[] = [];
 
-  selecion: { name: string,  value: string, id: number } | null = null;
-  select_sessions: { name: string, value:string, id: number }[] = [
+  selecion: { name: string, value: string, id: number } | null = null;
+  select_sessions: { name: string, value: string, id: number }[] = [
     { name: "Realizadas", value: 'past', id: 1 },
-  { name: "Pendientes", value: 'pending', id: 2 },
-  { name: "Todas", value: 'all', id: 3 }
+    { name: "Pendientes", value: 'pending', id: 2 },
+    { name: "Todas", value: 'all', id: 3 },
+    { name: "Ultimas", value: 'end_date', id: 4 }
   ];
 
 
@@ -112,9 +113,14 @@ export class ManageSessionComponent implements OnInit {
   }
 
   loadLeaderSessions(page: number = 1): void {
-    const filters: { [key: string]: string } = this.buildFilters();
+  // Convertir los valores de filters a string
+  const filtersString: { [key: string]: string } = Object.keys(this.filters).reduce((acc, key) => {
+    acc[key] = this.filters[key].toString();
+    return acc;
+  }, {} as { [key: string]: string });
+
     const queryParams = {
-      ...filters,
+      ...filtersString,
       page: page.toString(),
       elements: this.elements.toString()
     };
@@ -238,6 +244,13 @@ export class ManageSessionComponent implements OnInit {
     });
   }
 
+  getFiltersString(): { [key: string]: string } {
+    return Object.keys(this.filters).reduce((acc, key) => {
+      acc[key] = this.filters[key].toString();
+      return acc;
+    }, {} as { [key: string]: string });
+  }
+
 
   onCourseFilterChange(value: string): void {
     this.courseFilter = value;
@@ -258,8 +271,26 @@ export class ManageSessionComponent implements OnInit {
     delete this.filters['rap_'];
     delete this.filters['instructor_'];
 
+    // Al llamar al método que requiere solo strings, convierte los filtros
+    this.sessionse.getFilterOptionsWithCourse(this.getFiltersString()).subscribe({
+      next: (res: any) => {
+        // Actualiza las opciones de RAP e Instructor según la respuesta
+        this.rapOptions = res.rapsByCourse[value] ? res.rapsByCourse[value].map((rap: any) => ({
+          value: rap.id.toString(),
+          label: rap.description || 'N/D'
+        })) : [];
+        this.instructorOptions = res.instructorsByCourse[value] ? res.instructorsByCourse[value].map((inst: any) => ({
+          value: inst.id.toString(),
+          label: `${inst.user.name} ${inst.user.last_name}`
+        })) : [];
+      },
+      error: (err) => console.error(err)
+    });
+
     this.loadLeaderSessions();
   }
+
+
 
 
 
@@ -296,7 +327,7 @@ export class ManageSessionComponent implements OnInit {
     this.loadLeaderSessions();
   }
 
-  onSelectSessionChange(selection: { name: string,value:string, id: number }): void {
+  onSelectSessionChange(selection: { name: string, value: string, id: number }): void {
     this.selecion = selection;
     this.applySelectFilter();
     //console.log('Filtros actualizados (estado):', this.filters);
@@ -305,15 +336,22 @@ export class ManageSessionComponent implements OnInit {
 
   private applySelectFilter(): void {
     if (this.selecion) {
-      if (this.selecion.value  === 'pending') {
+      if (this.selecion.value === 'pending') {
         this.filters['pending'] = 'true';
         delete this.filters['past'];
+        delete this.filters['end_date'];
       } else if (this.selecion.value === 'past') {
         this.filters['past'] = 'true';
         delete this.filters['pending'];
+        delete this.filters['end_date'];
+      } else if (this.selecion.value === 'end_date') {
+        this.filters['end_date'] = 'true';
+        delete this.filters['pending'];
+        delete this.filters['past']
       } else { // "all"
         delete this.filters['pending'];
         delete this.filters['past'];
+        delete this.filters['end_date'];
       }
     }
   }

@@ -67,4 +67,5 @@
 
 <!-- Modal para Vencidas -->
 <app-expired-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.VENCIDA"
-  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()"></app-expired-modal>
+  [isVisible]="isModalVisible" [justification]="selectedJustification" (close)="closeModal()">
+</app-expired-modal>

@@ -1,28 +1,28 @@
 <section class="Environments">
   <div class="content-tittle">
     <div class="search-box">
-      <nz-select class="border-2 border-solid"
-      nzPlaceHolder="Seleccione una sede"
-      [(ngModel)]="selectedHeadquarter"
-      (ngModelChange)="onSelectHeadquarter($event)" nzAllowClear>
+      <nz-select class="border-2 border-solid" nzPlaceHolder="Seleccione una sede" [(ngModel)]="selectedHeadquarter"
+        (ngModelChange)="onSelectHeadquarter($event)" nzAllowClear>
 
         @for (headquarter of headquartersList; track $index) {
-        <nz-option  [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
-      }
+        <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
+        }
       </nz-select>
 
     </div>
     <div class="botons">
-      <button class="add-environment-btn"
-       (click)="openModalHeadquarter()" >Editar sede </button>
-      <button class="add-environment-btn"
-       (click)="onDeleteHeadquarter()">Eliminar sede</button>
-      <button class="add-environment-btn"
-       (click)="openCreateModalHeadquarter()">Añadir sedes </button>
-      <button 
-      class="add-environment-btn"
-      (click)="openCreateModalEnvironment()"
-      [disabled]="!selectedHeadquarter">Añadir ambientes</button>
+      <button class="add-environment-btn" (click)="openCreateModalHeadquarter()">Añadir sedes
+      </button>
+      <button class="add-environment-btn" (click)="openModalHeadquarter()" 
+      [disabled]="!selectedHeadquarter">Editar sede
+      </button>
+      <button nz-popconfirm nzPopconfirmTitle="Seguro que quieres eliminar esta sede, esta acción no se puede deshacer."
+        class="add-environment-btn" (nzOnConfirm)="onDeleteHeadquarter()" 
+        [disabled]="!selectedHeadquarter"> Eliminar
+        sede</button>
+      <button class="add-environment-btn" (click)="openCreateModalEnvironment()"
+      [disabled]="!selectedHeadquarter">Añadir ambientes
+      </button>
     </div>
 
   </div>
@@ -45,7 +45,8 @@
         <td>
           <button class="btn-accion" (click)="openModalEnvironment(environment.id)">Editar</button>
           <nz-divider nzType="vertical"></nz-divider>
-          <button (click)="deleteEnvironment(environment.id)" >Eliminar</button>
+          <button nz-popconfirm nzPopconfirmTitle="Seguro que quieres eliminar este ambiente, esta acción no se puede deshacer."
+           (nzOnConfirm)="deleteEnvironment(environment.id)">Eliminar</button>
         </td>
       </tr>
       }
@@ -57,10 +58,5 @@
 
 <!-- modales -->
 
-<app-modal-headquarter #modalHeadquarter
-(updatedHeadquarter)="getHeadquarters()" ></app-modal-headquarter>
-<app-modal-environment #modalEnviroment 
-(updateEnvironment)="handleEnvironmentUpdate()"
- ></app-modal-environment>
-
-
+<app-modal-headquarter #modalHeadquarter (updatedHeadquarter)="getHeadquarters()"></app-modal-headquarter>
+<app-modal-environment #modalEnviroment (updateEnvironment)="handleEnvironmentUpdate()"></app-modal-environment>

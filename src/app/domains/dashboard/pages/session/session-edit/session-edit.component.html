@@ -11,10 +11,16 @@ nzTitle="Editar Sesión"
         </nz-form-control>
       </nz-form-item>
 
+      <!-- Nuevo select para Instructor -->
       <nz-form-item>
         <nz-form-label [nzSpan]="6">Instructor</nz-form-label>
         <nz-form-control [nzSpan]="18">
-          <input nzwidth="100%" nz-input formControlName="instructor" placeholder="Instructor" class="rectangular-input" readonly />
+          <nz-select formControlName="instructor" nzPlaceHolder="Selecciona un instructor">
+            <nz-option *ngFor="let inst of instructors"
+                       [nzValue]="inst.id"
+                       [nzLabel]="inst.user.name + ' ' + inst.user.last_name">
+            </nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
 
@@ -68,12 +74,11 @@ nzTitle="Editar Sesión"
       <nz-form-item>
         <nz-form-label [nzSpan]="6">Fecha</nz-form-label>
         <nz-form-control [nzSpan]="14">
-          <nz-date-picker formControlName="date" nzFormat="yyyy/MM/dd" [nzDisabledDate]="disabledDate"
+          <nz-date-picker formControlName="date" nzFormat="yyyy/MM/dd" [nzDisabledDate]="todisabledDate"
             placeholder="Seleccione la fecha" class="rectangular-input">
           </nz-date-picker>
         </nz-form-control>
       </nz-form-item>
-
 
 
     </form>

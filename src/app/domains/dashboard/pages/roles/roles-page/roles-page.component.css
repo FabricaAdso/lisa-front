@@ -14,7 +14,11 @@
 .barra-busqueda{
  width: 40%;
 }
-
+::ng-deep .content-con-scroll[_ngcontent-ng-c2281774802] {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
 #all[_ngcontent-ng-c4024495835] {
   display: flex
 ;
@@ -26,17 +30,12 @@
   clear: both;
   width: 98%;
 }
-[nz-button][_ngcontent-ng-c4024495835] {
-  background-color: #00af00;
-  /* height: 40px; */
-}
+
 button, html [type=button], [type=reset], [type=submit] {
-  background: #00af00;
-  color: white;
+
   cursor: pointer;
   padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
+ 
   margin-right: 15px;
 }
 .table {
@@ -98,15 +97,7 @@ button, html [type=button], [type=reset], [type=submit] {
   border-radius: 5px;
 }
 
-.btn-primary[_ngcontent-ng-c641476699] {
-  background-color: #00af00;
-  border: none;
-  padding: 8px;
-  border-radius: 5px;
-  margin-right: 15px;
-  cursor: pointer;
-  color: white;
-}
+
 
  .btn-secondary[_ngcontent-ng-c641476699] {
   background-color: #6c757d;
@@ -129,9 +120,7 @@ button, html [type=button], [type=reset], [type=submit] {
   margin-bottom: 20px;
 }
 
-[nz-button]:hover{
-  background-color: #026802;
-}
+
 nz-select {
   width: 100%;
 }

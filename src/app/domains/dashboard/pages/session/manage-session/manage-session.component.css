@@ -16,8 +16,14 @@ nz-table {
 }
 
 ::ng-deep .ant-btn-primary{
- background-color: #70B22D;
+ background-color: #52c41a;
  border-color: #52c41a;
+}
+
+ .ant-btn:hover, .ant-btn:focus {
+  color: #2b5c13 !important;
+  border-color: #2b5c13;
+  background: #fff;
 }
 
 
@@ -47,5 +53,28 @@ margin:0
 
 
 ::ng-deep .ant-pagination-item-active a {
-  color: #70B22D ;
+  color: #52c41a ;
 }
+
+/* elemento resaltado dentro de un select */
+::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+  background-color: #bdecb6;
+}
+
+
+::ng-deep .ant-pagination-item:hover {
+  border-color: #52c41a;
+  transition: all 0.3s;
+
+}
+
+::ng-deep .ant-pagination-item:hover a,
+::ng-deep .ant-pagination-item:focus a {
+  color: rgba(0, 0, 0, 0.85);
+  border-color: #52c41a !important;
+}
+
+
+

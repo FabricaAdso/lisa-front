@@ -6,7 +6,13 @@ export function getQueryUrl(url: string, data?: QueryUrl): string {
   if (data) {
     // almacena un array pra cada paremetro
     let params: string[] = [];
-    const { included, filter, page, elements } = data;
+    const { included, filter, page, elements,  ...rest  } = data;
+
+     // Procesamos las propiedades adicionales (ejemplo: month)
+     Object.keys(rest).forEach(key => {
+      params.push(`${key}=${rest[key]}`);
+    });
+
     // si inclided se unen en una cadena separa por coma
     if (included) {
       params.push(`included=${included.join(',')}`);
