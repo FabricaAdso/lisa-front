@@ -10,17 +10,17 @@
       </nz-select>
 
     </div>
-    <div class="botons">
-      <button class="add-environment-btn" (click)="openCreateModalHeadquarter()">Añadir sedes
+    <div>
+      <button class="mx-1" nz-button nzType="primary" (click)="openCreateModalHeadquarter()">Añadir sedes
       </button>
-      <button class="add-environment-btn" (click)="openModalHeadquarter()" 
+      <button class="mx-1" nz-button nzType="primary" (click)="openModalHeadquarter()" 
       [disabled]="!selectedHeadquarter">Editar sede
       </button>
-      <button nz-popconfirm nzPopconfirmTitle="Seguro que quieres eliminar esta sede, esta acción no se puede deshacer."
-        class="add-environment-btn" (nzOnConfirm)="onDeleteHeadquarter()" 
+      <button class="mx-1" nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="Seguro que quieres eliminar esta sede, esta acción no se puede deshacer."
+        (nzOnConfirm)="onDeleteHeadquarter()" 
         [disabled]="!selectedHeadquarter"> Eliminar
         sede</button>
-      <button class="add-environment-btn" (click)="openCreateModalEnvironment()"
+      <button class="mx-1" nz-button nzType="primary" (click)="openCreateModalEnvironment()"
       [disabled]="!selectedHeadquarter">Añadir ambientes
       </button>
     </div>

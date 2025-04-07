@@ -12,11 +12,11 @@ import { KnowledgeNetworkByInstructorModel } from '@shared/models/knowledg-netwo
 import { EnvironmentService } from '@shared/services/environment.service';
 import { HeadquartersService } from '@shared/services/headquarters.service';
 import { KnowledgeNetworkService } from '@shared/services/knowledge-network.service';
-import { he } from 'date-fns/locale';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
@@ -29,7 +29,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     NzInputModule,
     ReactiveFormsModule,
     NzButtonModule,
-    NzSelectModule
+    NzSelectModule,
+    NzModalModule
   ],
   templateUrl: './modal-environment.component.html',
   styleUrl: './modal-environment.component.css',

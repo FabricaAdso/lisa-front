@@ -47,7 +47,6 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     NzModalComponent,
     NzTimePickerModule,
     FormsModule,
-    NzModalContentDirective,
     NzInputNumberModule,
   ],
   templateUrl: './session.component.html',
