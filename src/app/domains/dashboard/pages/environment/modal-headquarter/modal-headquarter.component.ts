@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -17,6 +18,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { NzModalContentDirective, NzModalModule } from 'ng-zorro-antd/modal';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 @Component({
   selector: 'app-modal-headquarter',
@@ -28,6 +31,10 @@ import { TrainingCentreService } from '@shared/services/training-centre.service'
     ReactiveFormsModule,
     NzButtonModule,
     NzSelectModule,
+    NzModalModule,
+    NzModalContentDirective,
+    FormsModule,
+    NzTimePickerModule
   ],
   templateUrl: './modal-headquarter.component.html',
   styleUrl: './modal-headquarter.component.css',
@@ -40,8 +47,8 @@ export class ModalHeadquarterComponent {
   formHeadquarter!: FormGroup;
   isVisibleHeadquarter = false;
   isEdit: boolean = false;
-
-
+  defaultOpenValue = new Date(0, 0, 0, 0, 0);
+  private date_pipe = inject(DatePipe)
 
   @Output() updatedHeadquarter: EventEmitter<void> = new EventEmitter();
   @Input() headquarterData?: HeadquarterModel | null;
@@ -132,10 +139,25 @@ export class ModalHeadquarterComponent {
 
     const data = this.formHeadquarter.value;
 
-    // Limpiar los segundos de la hora
-    data.opening_time = this.removeSeconds(data.opening_time);
-    data.closing_time = this.removeSeconds(data.closing_time);
-
+    // convertir start_time a "HH:mm"
+    if (data.opening_time) {
+      const startTime = new Date(data.opening_time);
+      const formattedStartTime = this.date_pipe.transform(startTime, 'HH:mm')?.trim();
+      if (!formattedStartTime) {
+        this.notification.create('error', 'Error', 'Hora de inicio inválida');
+        return;
+      }
+      data.opening_time = formattedStartTime;
+    }
+    if (data.closing_time) {
+      const endTime = new Date(data.closing_time);
+      const formattedEndTime = this.date_pipe.transform(endTime, 'HH:mm')?.trim();
+      if (!formattedEndTime) {
+        this.notification.create('error', 'Error', 'Hora de fin inválida');
+        return;
+      }
+      data.closing_time = formattedEndTime;
+    }
     if (this.isEdit) {
       // Habilitar temporalmente el campo training_center_id para incluirlo en la solicitud
       
