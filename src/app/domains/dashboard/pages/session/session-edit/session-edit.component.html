@@ -72,37 +72,6 @@
       </nz-form-item>
 
 
-      <div style="gap: 1.25rem; display:flex;">
-
-        <nz-form-item style="display: block;
-    margin-bottom: 1rem; width:50%">
-          <nz-form-label style="text-align: left">Hora de Inicio</nz-form-label>
-          <nz-form-control>
-            <nz-time-picker [formControl]="fieldStartTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
-              [nzDefaultOpenValue]="defaultOpenValue" class="rectangular-input">
-            </nz-time-picker>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item style="display: block;
-    margin-bottom: 1rem; width:50%">
-          <nz-form-label style="text-align: left">Hora de Fin</nz-form-label>
-          <nz-form-control>
-            <nz-time-picker [formControl]="fieldEndTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
-              [nzDefaultOpenValue]="defaultOpenValue" class="rectangular-input">
-            </nz-time-picker>
-          </nz-form-control>
-        </nz-form-item>
-
-
-      </div>
-
-
-
-
-
-
-
     </form>
   </ng-container>
 </nz-modal>
