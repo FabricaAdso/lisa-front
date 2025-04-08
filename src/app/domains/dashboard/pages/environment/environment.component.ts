@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnvironmentModel } from '@shared/models/environment-model';
 import { EnvironmentService } from '@shared/services/environment.service';
@@ -48,7 +48,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   templateUrl: './environment.component.html',
   styleUrl: './environment.component.css',
 })
-export class EnvironmentComponent {
+export class EnvironmentComponent implements OnInit{
 
   //metodos para comunicar eventos entere el padre y los hijos 
   @ViewChild('modalEnviroment') modalEnviroment: any =
@@ -76,7 +76,6 @@ export class EnvironmentComponent {
   openModalEnvironment(id: number): void {
 
     this.selectedEnvironment = id
-    console.log('Selected Environment:', this.selectedEnvironment); // Depuración
     if (this.selectedEnvironment !== null) {
       const selected = this.EnvironmentsList.find(
         (e) => e.id === this.selectedEnvironment
@@ -92,18 +91,26 @@ export class EnvironmentComponent {
     }
   }
 
+
+
   //funcion para abrir el modal de crear ambiente
   openCreateModalEnvironment() {
-    if (this.selectedHeadquarter) {
-      this.modalEnviroment.setSelectedHeadquarter(this.selectedHeadquarter);
+    if (this.selectedHeadquarter !== null) {
+      const select = this.headquartersList.find(
+        (h) => h.id === this.selectedHeadquarter
+      )
       this.modalEnviroment.openModal()
+      if (select) {
+        this.modalEnviroment.setSelectedHeadquarter(select);
     } else {
       this.message.info('Debes seleccionar una sede para crear un ambiente',)
     }
   }
+}
 
   handleEnvironmentUpdate() {
     this.getEnvironments(); // Actualiza la lista de ambientes
+    this.getHeadquarters(); // Actualiza la lista de sedes
     this.filterEnvironmentsByHeadquarter();
   }
 
@@ -158,9 +165,10 @@ export class EnvironmentComponent {
 
   openCreateModalHeadquarter() {
     this.getEnvironments();
+    this.filterEnvironmentsByHeadquarter();
     this.modalHeadquarter.formHeadquarter.reset();
     this.selectedHeadquarter = null; // Limpia los datos
-    this.modalHeadquarter.isVisibleHeadquarter = true;
+    this.modalHeadquarter.openModal(); // Abre el modal
   }
 
   //funcion para mostrar las sedes desde el servicio
@@ -250,7 +258,7 @@ export class EnvironmentComponent {
       this.EnvironmentsList = environments;
       console.log('ambientes todos', environments);
 
-      // this.filterEnvironmentsByHeadquarter();
+      this.filterEnvironmentsByHeadquarter();
     });
   }
 

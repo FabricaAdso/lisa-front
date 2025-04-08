@@ -1,47 +1,70 @@
 @if (isVisible) {
-  <nz-modal (nzOnCancel)="closeModal()"
-  (nzOnOk)="saveData()" [(nzVisible)]="isVisible">
-    <ng-container *nzModalContent>
+<nz-modal
+  (nzOnCancel)="closeModal()"
+  [nzTitle]="titleEnviroment"
+  (nzOnOk)="saveData()"
+  [(nzVisible)]="isVisible"
+>
+  <ng-container *nzModalContent>
     <form nz-form [formGroup]="formEnvironment">
-        <div class="mb-4">
-          <label>Nombre</label>
+      <div class="mb-4">
+        <label>Nombre</label>
         <nz-form-control>
-          <input nz-input formControlName="name" placeholder="Nombre del ambiente" />
+          <input
+            nz-input
+            formControlName="name"
+            placeholder="Nombre del ambiente"
+          />
         </nz-form-control>
-        </div>
-        <div class="mb-4">
-          <label>Capacidad</label>
+      </div>
+      <div class="mb-4">
+        <label>Capacidad</label>
         <nz-form-control>
-          <input nz-input formControlName="capacity" placeholder="Capacidad del ambiente" />
+          <input
+            nz-input
+            formControlName="capacity"
+            placeholder="Capacidad del ambiente"
+          />
         </nz-form-control>
-        </div>
+      </div>
 
-        <div class="mb-4">
-          <label>Area</label>
+      <div class="mb-4">
+        <label>Area</label>
         <nz-form-control>
-          <nz-select nzPlaceHolder="Seleccione un centro de formación" formControlName="knowledge_network_id">
-            @for (knowledgeNetwork of knowlwdegeList; track knowledgeNetwork.id) {
-            <nz-option [nzValue]="knowledgeNetwork.id" [nzLabel]="knowledgeNetwork.name"></nz-option>
+          <nz-select
+            nzPlaceHolder="Seleccione un centro de formación"
+            formControlName="knowledge_network_id"
+          >
+            @for (knowledgeNetwork of knowlwdegeList; track knowledgeNetwork.id)
+            {
+            <nz-option
+              [nzValue]="knowledgeNetwork.id"
+              [nzLabel]="knowledgeNetwork.name"
+            ></nz-option>
             }
           </nz-select>
         </nz-form-control>
-        </div>
-      
+      </div>
 
       @if(!isEdit){
 
-      
-        <nz-form-label>Sede</nz-form-label>
-        <nz-form-control>
-          <nz-select nzPlaceHolder="Seleccione una sede" formControlName="headquarters_id">
-            @for (headquarter of headquarterList; track headquarter.id) {
-            <nz-option [nzValue]="headquarter.id" [nzLabel]="headquarter.name"></nz-option>
-            }
-          </nz-select>
-        </nz-form-control>
-      
+      <nz-form-label>Sede</nz-form-label>
+      <nz-form-control>
+        <nz-select
+          nzPlaceHolder="Seleccione una sede"
+          formControlName="headquarters_id"
+        >
+          @for (headquarter of headquarterList; track headquarter.id) {
+          <nz-option
+            [nzValue]="headquarter.id"
+            [nzLabel]="headquarter.name"
+          ></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+
       }
     </form>
   </ng-container>
-  </nz-modal>
+</nz-modal>
 }
