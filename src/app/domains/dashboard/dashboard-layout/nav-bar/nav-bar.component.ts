@@ -186,15 +186,22 @@ export class NavBarComponent implements OnInit {
     }
     // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
-    console.log('Detectando cambios x2');
+    
   }
 
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
+
+    // Elementos del primer menú (toggleDropdown1)
     const dropdownButton1 = document.querySelector('.dropdown-button1');
     const dropdownMenu1 = document.querySelector('.dropdown-menu1');
 
+    // Elementos del segundo menú (toggleDropdown2)
+    const dropdownButton2 = document.querySelector('.dropdown-button2');
+    const dropdownMenu2 = document.querySelector('.app-drop-down-menu');
+
+    // Cierre del menú 1
     if (
       this.isDropdownOpen1 &&
       dropdownButton1 &&
@@ -202,10 +209,23 @@ export class NavBarComponent implements OnInit {
       dropdownMenu1 &&
       !dropdownMenu1.contains(target)
     ) {
+      console.log('Cerrando Togglemenu');
       this.isDropdownOpen1 = false;
       this.cdr.detectChanges();
     }
+
+    // Cierre del menú 2 (toggleDropdown2)
+    if (
+      this.isDropdownOpen2 &&
+      dropdownButton2 &&
+      !dropdownButton2.contains(target) &&
+      dropdownMenu2 &&
+      !dropdownMenu2.contains(target)
+    ) {
+      console.log('Cerrando Togglemenu 2');
+      this.isDropdownOpen2 = false;
+      this.cdr.detectChanges();
+    }
   }
-  
  
 }

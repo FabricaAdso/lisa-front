@@ -13,6 +13,9 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { FiterToRoleService } from '@shared/services/fiter-to-role.service';
 import { MenuItemComponent } from '../menu-item/menu-item.component';
 import { menuItems } from '../itemsNav';
+import { ChangePasswordModalComponent } from '../change-password-modal/change-password-modal.component';
+import { ChangePasswordService } from '@shared/services/change-password.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 @Component({
   selector: 'app-drop-down-menu',
   standalone: true,
@@ -25,6 +28,7 @@ import { menuItems } from '../itemsNav';
     NzMenuModule,
     CommonModule,
     RouterModule,
+    ChangePasswordModalComponent,
 ],
   templateUrl: './drop-down-menu.component.html',
   styleUrl: './drop-down-menu.component.css',
@@ -45,8 +49,13 @@ export class DropDownMenuComponent {
   constructor(private cdr: ChangeDetectorRef, private filterItems: FiterToRoleService) {}
   private auth_service = inject(AuthService)
   private router = inject(Router);
+  private changePasswordService = inject(ChangePasswordService); // Servicio para cambiar contraseña
+  private notification = inject(NzNotificationService);
+
+
   menuItems = menuItems;
   isLoggedIn: boolean = false;
+  isChangePasswordModalVisible = false;
 
   ngOnInit(): void {
       this.isLoggedIn = this.auth_service.isAuth();
@@ -77,5 +86,46 @@ export class DropDownMenuComponent {
   Items(){
     return this.menuItems.filter(item => this.filterItems.filterItems(item.Role!));
   }
+
+
+  // Método para abrir el modal de cambio de contraseña
+  openChangePasswordModal() {
+    this.isChangePasswordModalVisible = true;
+  }
+
+  // Método para cerrar el modal
+  closeChangePasswordModal() {
+    this.isChangePasswordModalVisible = false;
+  }
+
+  // Método para manejar el cambio de contraseña
+  onPasswordChanged(formData: { currentPassword: string; newPassword: string; newPasswordConfirmation: string }) {
+    this.changePasswordService
+      .changePassword({
+        current_password: formData.currentPassword,
+        new_password: formData.newPassword,
+        new_password_confirmation: formData.newPasswordConfirmation,
+      })
+      .subscribe({
+        next: () => {
+          this.logout();
+          this.notification.success(
+            'Contraseña actualizada exitosamente',
+            'Inicie sesión nuevamente',
+            { nzDuration: 5000 }
+          );
+        },
+        error: (error) => {
+          this.notification.error('Error al cambiar la contraseña', 'Por favor, verifique los datos ingresados');
+          console.error('Error al cambiar la contraseña', error);
+        },
+      });
+  }
+
+
+
+
+
+
   }
 
