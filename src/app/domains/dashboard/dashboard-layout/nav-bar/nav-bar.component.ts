@@ -40,7 +40,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzModalModule,
     NzButtonModule,
     ChangePasswordModalComponent
-],
+  ],
   templateUrl: './nav-bar.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./nav-bar.component.css'],
@@ -66,7 +66,7 @@ export class NavBarComponent implements OnInit {
   isVisible = false;
   isChangePasswordModalVisible = false;
 
-  constructor(private cdr: ChangeDetectorRef, private changePasswordService: ChangePasswordService) {}
+  constructor(private cdr: ChangeDetectorRef, private changePasswordService: ChangePasswordService) { }
 
   private auth_service = inject(AuthService);
   private notification = inject(NzNotificationService);
@@ -81,20 +81,20 @@ export class NavBarComponent implements OnInit {
         this.cdr.detectChanges();
       });
 
-      this.isLoggedIn = this.auth_service.isAuth();
+    this.isLoggedIn = this.auth_service.isAuth();
 
-      if (this.isLoggedIn) {
-        this.auth_service.me().subscribe({
-          next: (user: UserModel) => {
-            this.user.set(user);
-            console.log('Hola', user.name, user.last_name);
-            this.isLoggedIn = true
-          },
-          error: (err) => {
-            console.error('Error al obtener el usuario:', err);
-          }
-        });
-      }
+    if (this.isLoggedIn) {
+      this.auth_service.me().subscribe({
+        next: (user: UserModel) => {
+          this.user.set(user);
+          console.log('Hola', user.name, user.last_name);
+          this.isLoggedIn = true
+        },
+        error: (err) => {
+          console.error('Error al obtener el usuario:', err);
+        }
+      });
+    }
   }
 
 
@@ -103,49 +103,49 @@ export class NavBarComponent implements OnInit {
   openChangePasswordModal() {
     console.log('Modal abierto para cambiar contraseña');
     this.isChangePasswordModalVisible = true;
-    
+
   }
 
   closeChangePasswordModal() {
     this.isChangePasswordModalVisible = false;
   }
 
-   // Método para manejar el evento cuando la contraseña se haya cambiado
+  // Método para manejar el evento cuando la contraseña se haya cambiado
 
 
-   onPasswordChanged(formData: { currentPassword: string, newPassword: string, newPasswordConfirmation: string }) {
+  onPasswordChanged(formData: { currentPassword: string, newPassword: string, newPasswordConfirmation: string }) {
     this.changePasswordService.changePassword({
       current_password: formData.currentPassword,
       new_password: formData.newPassword,
       new_password_confirmation: formData.newPasswordConfirmation
     }).subscribe({
-      next:()=>{
-        this.logout(); 
+      next: () => {
+        this.logout();
         this.notification.success(
-          'Contraseña actualizada exitosamente', 
+          'Contraseña actualizada exitosamente',
           'Inicie sesión nuevamente',
-          { nzDuration: 8000 } 
-      );    
-      
-    }, 
-    error:(error)=>{
+          { nzDuration: 8000 }
+        );
+
+      },
+      error: (error) => {
         this.notification.error('Error al cambiar la contraseña', 'Por favor, verifique los datos ingresados');
         console.error('Error al cambiar la contraseña', error);
         if (this.changePasswordModal) {
           this.changePasswordModal.loading = false;
         }
-    }
+      }
     });
-    
+
   }
 
-  
-  logout(){
+
+  logout() {
     console.log('Cerrar sesión...');
     this.auth_service.logout();
     // Re dirigir a login
     this.router.navigate(['auth/login']);
-   
+
   }
 
   login() {
@@ -153,7 +153,7 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['auth/login']);
   }
 
-  goNotifications(){
+  goNotifications() {
     this.router.navigate(['dashboard/notification']);
   }
 
@@ -179,14 +179,12 @@ export class NavBarComponent implements OnInit {
   toggleDropdown2() {
     console.log(this.isDropdownOpen2);
     this.isDropdownOpen2 = !this.isDropdownOpen2;
-    // Cierra el primer menú si está abierto
     if (this.isDropdownOpen1) {
       console.log('Abriendo Togglemenu 2');
       this.isDropdownOpen1 = false;
     }
-    // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
-    
+    console.log('Detectando cambios x2');
   }
 
   @HostListener('document:click', ['$event'])
@@ -201,6 +199,10 @@ export class NavBarComponent implements OnInit {
     const dropdownButton2 = document.querySelector('.dropdown-button2');
     const dropdownMenu2 = document.querySelector('.app-drop-down-menu');
 
+    // Contenedor del modal generado por nz-modal
+    const modalContainer = document.querySelector('.ant-modal-content');
+
+
     // Cierre del menú 1
     if (
       this.isDropdownOpen1 &&
@@ -214,18 +216,19 @@ export class NavBarComponent implements OnInit {
       this.cdr.detectChanges();
     }
 
-    // Cierre del menú 2 (toggleDropdown2)
+    // Cierre del menú 2 (toggleDropdown2), pero no si el clic está en el modal
     if (
       this.isDropdownOpen2 &&
       dropdownButton2 &&
       !dropdownButton2.contains(target) &&
       dropdownMenu2 &&
-      !dropdownMenu2.contains(target)
+      !dropdownMenu2.contains(target) &&
+      (!modalContainer || !modalContainer.contains(target)) // No cerrar si el clic está en el modal
     ) {
       console.log('Cerrando Togglemenu 2');
       this.isDropdownOpen2 = false;
       this.cdr.detectChanges();
     }
   }
- 
+
 }
