@@ -11,7 +11,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ViewChild,
 } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { DropDownMenuComponent } from '../drop-down-menu/drop-down-menu.component';
@@ -19,7 +19,14 @@ import { AuthService } from '@shared/services/auth.service';
 import { UserModel } from '@shared/models/user.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedDataService } from '@shared/services/shared-data.service';
+import { ChangePasswordModalComponent } from '../change-password-modal/change-password-modal.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { ChangePasswordService } from '@shared/services/change-password.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NotificationsComponent } from './notifications/notifications.component';
+
+
 
 @Component({
   selector: 'app-nav-bar',
@@ -31,13 +38,18 @@ import { NotificationsComponent } from './notifications/notifications.component'
     DropDownMenuComponent,
     ReactiveFormsModule,
     NzBadgeModule,
-    NotificationsComponent
-],
+    NotificationsComponent,
+    NzModalModule,
+    NzButtonModule,
+    ChangePasswordModalComponent
+  ],
   templateUrl: './nav-bar.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit {
+  @ViewChild(ChangePasswordModalComponent) changePasswordModal!: ChangePasswordModalComponent;
+
 
   private router = inject(Router);
 
@@ -47,7 +59,6 @@ export class NavBarComponent implements OnInit {
   notificationCount = this.dataSharedService.notificationCount;
 
   private breackpoint_observer = inject(BreakpointObserver);
-
   user = signal<UserModel | null>(null);  // Signal para almacenar el usuario logueado
   isLoggedIn: boolean = false;
 
@@ -56,14 +67,22 @@ export class NavBarComponent implements OnInit {
 
   Image_logo: string = 'assets/images/logosena.png';
   UserImage: string = 'assets/images/logouser.png';
+  isVisible = false;
+  isChangePasswordModalVisible = false;
 
-  private cdr = inject(ChangeDetectorRef)  
+  constructor(private cdr: ChangeDetectorRef, private changePasswordService: ChangePasswordService) { }
 
   private auth_service = inject(AuthService);
+
+  private notification = inject(NzNotificationService);
+
 
   openNotifications(){
     this.messages.visible = true;
   }
+  // constructor(private cdr: ChangeDetectorRef, private changePasswordService: ChangePasswordService) {}
+
+
 
   ngOnInit(): void {
     this.breackpoint_observer
@@ -74,20 +93,71 @@ export class NavBarComponent implements OnInit {
         this.cdr.detectChanges();
       });
 
-      this.isLoggedIn = this.auth_service.isAuth();
+    this.isLoggedIn = this.auth_service.isAuth();
 
-      if (this.isLoggedIn) {
-        this.auth_service.me().subscribe({
-          next: (user: UserModel) => {
-            this.user.set(user);
-            console.log('Hola', user.name, user.last_name);
-            this.isLoggedIn = true
-          },
-          error: (err) => {
-            console.error('Error al obtener el usuario:', err);
-          }
-        });
+    if (this.isLoggedIn) {
+      this.auth_service.me().subscribe({
+        next: (user: UserModel) => {
+          this.user.set(user);
+          console.log('Hola', user.name, user.last_name);
+          this.isLoggedIn = true
+        },
+        error: (err) => {
+          console.error('Error al obtener el usuario:', err);
+        }
+      });
+    }
+  }
+
+
+
+
+  openChangePasswordModal() {
+    console.log('Modal abierto para cambiar contraseña');
+    this.isChangePasswordModalVisible = true;
+
+  }
+
+  closeChangePasswordModal() {
+    this.isChangePasswordModalVisible = false;
+  }
+
+  // Método para manejar el evento cuando la contraseña se haya cambiado
+
+
+  onPasswordChanged(formData: { currentPassword: string, newPassword: string, newPasswordConfirmation: string }) {
+    this.changePasswordService.changePassword({
+      current_password: formData.currentPassword,
+      new_password: formData.newPassword,
+      new_password_confirmation: formData.newPasswordConfirmation
+    }).subscribe({
+      next: () => {
+        this.logout();
+        this.notification.success(
+          'Contraseña actualizada exitosamente',
+          'Inicie sesión nuevamente',
+          { nzDuration: 8000 }
+        );
+
+      },
+      error: (error) => {
+        this.notification.error('Error al cambiar la contraseña', 'Por favor, verifique los datos ingresados');
+        console.error('Error al cambiar la contraseña', error);
+        if (this.changePasswordModal) {
+          this.changePasswordModal.loading = false;
+        }
       }
+    });
+
+  }
+
+
+  logout() {
+    console.log('Cerrar sesión...');
+    this.auth_service.logout();
+    // Re dirigir a login
+    this.router.navigate(['auth/login']);
+
   }
 
   login() {
@@ -95,37 +165,36 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['auth/login']);
   }
 
-  
-
-  logout(){
-    console.log('Cerrar sesión...');
-    this.auth_service.logout();
-    // Re dirigir a login
-    this.router.navigate(['auth/login']);
+  goNotifications() {
+    this.router.navigate(['dashboard/notification']);
   }
 
+  openDropdown1() {
+    this.isDropdownOpen1 = true;
+    this.isDropdownOpen2 = false; // Cierra el otro menú si está abierto
+    this.cdr.detectChanges();
+  }
+  closeDropdown1() {
+    setTimeout(() => {
+      this.isDropdownOpen1 = false;
+      this.cdr.detectChanges();
+    }, 300);
+  }
   toggleDropdown1() {
     this.isDropdownOpen1 = !this.isDropdownOpen1;
-    console.log('Abriendo Togglemenu');
-// Cierra el segundo menú si está abierto
     if (this.isDropdownOpen2) {
-      this.isDropdownOpen2 = false;
+      this.isDropdownOpen2 = false; // Cierra el otro menú si está abierto
     }
-    // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
-    console.log('Detectando Cambios');
-
   }
 
   toggleDropdown2() {
-    console.log( this.isDropdownOpen2);
+    console.log(this.isDropdownOpen2);
     this.isDropdownOpen2 = !this.isDropdownOpen2;
-    // Cierra el primer menú si está abierto
     if (this.isDropdownOpen1) {
       console.log('Abriendo Togglemenu 2');
       this.isDropdownOpen1 = false;
     }
-    // Forzar detección de cambios si es necesario
     this.cdr.detectChanges();
     console.log('Detectando cambios x2');
   }
@@ -134,10 +203,17 @@ export class NavBarComponent implements OnInit {
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    const dropdownButton1 = document.querySelector('span[class*="dropdown-button1"]'); // Selector para el primer botón
-    const dropdownMenu1 = document.querySelector('.dropdown-menu1'); // Selector para el menú del primer botón
-    const dropdownButton2 = document.querySelector('.dropdown-button2'); // Selector para el segundo botón
-    const dropdownMenu2 = document.querySelector('.app-drop-down-menu'); // Selector para el segundo menú
+    // Elementos del primer menú (toggleDropdown1)
+    const dropdownButton1 = document.querySelector('.dropdown-button1');
+    const dropdownMenu1 = document.querySelector('.dropdown-menu1');
+
+    // Elementos del segundo menú (toggleDropdown2)
+    const dropdownButton2 = document.querySelector('.dropdown-button2');
+    const dropdownMenu2 = document.querySelector('.app-drop-down-menu');
+
+    // Contenedor del modal generado por nz-modal
+    const modalContainer = document.querySelector('.ant-modal-content');
+
 
     // Cierre del menú 1
     if (
@@ -147,26 +223,24 @@ export class NavBarComponent implements OnInit {
       dropdownMenu1 &&
       !dropdownMenu1.contains(target)
     ) {
-      console.log('Cerrando Togglemenu'),
+      console.log('Cerrando Togglemenu');
       this.isDropdownOpen1 = false;
       this.cdr.detectChanges();
     }
 
-    // Cierre del menú 2
+    // Cierre del menú 2 (toggleDropdown2), pero no si el clic está en el modal
     if (
       this.isDropdownOpen2 &&
       dropdownButton2 &&
       !dropdownButton2.contains(target) &&
       dropdownMenu2 &&
-      !dropdownMenu2.contains(target) || this.dataSharedService.closeDropdownMenu()
+      !dropdownMenu2.contains(target) &&
+      (!modalContainer || !modalContainer.contains(target)) // No cerrar si el clic está en el modal
     ) {
-      console.log('Cerrando Togglemenu 2'),
+      console.log('Cerrando Togglemenu 2');
       this.isDropdownOpen2 = false;
       this.cdr.detectChanges();
-      this.dataSharedService.updateCloseDropdownMenu(false)
     }
   }
 
-  
- 
 }
