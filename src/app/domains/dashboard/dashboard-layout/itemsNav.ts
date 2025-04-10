@@ -28,7 +28,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: 'Sesiones',
-    icon: 'profile',
+    icon: 'solution',
     route: 'session',
     theme: 'outline',
     state: false,
