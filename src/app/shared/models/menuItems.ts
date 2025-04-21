@@ -6,5 +6,5 @@ export interface MenuItem {
   subMenu?: MenuItem[];
   theme: string;
   state?: boolean;
-  Role?: string;
+  Role?: string[];
 }

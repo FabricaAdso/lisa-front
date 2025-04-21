@@ -13,6 +13,7 @@ import esLocale from '@fullcalendar/core/locales/es';
 import { CalendarEvent, SessionModel } from '@shared/models/session.model';
 import { SessionService } from '@shared/services/program/session.service';
 import { QueryUrl } from '@shared/models/query-url.model';
+import { log } from 'ng-zorro-antd/core/logger';
 
 @Component({
   selector: 'app-calendar',
@@ -74,10 +75,14 @@ export class CalendarComponent {
     // petición a la API para obtener las sesiones del mes seleccionado
     this.sessionService.getSessionByMount(queryParams).subscribe({
       next: (resp: any) => {
-        console.log("respuesta", resp);
 
         // resp.data es un objeto agrupado por mes,
         // Usamos Object.values() para obtener un array con los arrays de sesiones y flat() para aplanarlo.
+        if(!resp?.data){
+          console.log
+          ("No hay datos para mostrar", resp);
+          return;
+        }
         const sessions: SessionModel[] = Object.values(resp.data).flat() as SessionModel[];
 
         // Agrupar las sesiones por día:

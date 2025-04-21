@@ -45,8 +45,10 @@ export class MenuItemComponent {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  Items(){
-    return this.menuItems.filter(item => this.filterItems.filterItems(item.Role!));
+  Items() {
+    return this.menuItems.filter(item => 
+      item.Role?.some(role => this.filterItems.filterItems(role))
+    );
   }
 
 }
