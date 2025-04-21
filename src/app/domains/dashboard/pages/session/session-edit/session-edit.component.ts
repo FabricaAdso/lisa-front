@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { InstructorModel } from '@shared/models/instructor.model';
@@ -16,11 +16,15 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { debounceTime, Subject } from 'rxjs';
+import { DeleteSessionsRangeModalComponent } from '../delete-sessions-range-modal/delete-sessions-range-modal.component';
+import { NzDropdownMenuComponent, NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 
 @Component({
   selector: 'app-session-edit',
   standalone: true,
-  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule],
+  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule, DeleteSessionsRangeModalComponent, NzDropDownModule, NzIconModule, NzMenuModule, NzDropdownMenuComponent],
   templateUrl: './session-edit.component.html',
   styleUrl: './session-edit.component.css'
 })
@@ -266,4 +270,19 @@ export class SessionEditComponent implements OnInit, OnChanges {
     );
   }
 
+
+
+@ViewChild(DeleteSessionsRangeModalComponent)
+deleteRangeModal!: DeleteSessionsRangeModalComponent;
+
+
+
+openDeleteModal(): void {
+  this.deleteRangeModal.open();
+}
+
+handleSessionsDeleted(): void {
+  // recargar datos
+  this.loadSessionData();
+}
 }

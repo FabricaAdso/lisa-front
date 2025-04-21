@@ -1,0 +1,31 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Eliminar sesiones por rango" [nzFooter]="modalFooter"
+    (nzOnCancel)="handleCancel()">
+    <ng-container *nzModalContent>
+        <form [formGroup]="rangeForm" nzLayout="vertical">
+            <div style="gap: 1.25rem; display:flex;">
+            <nz-form-item class="mid-input">
+                <nz-form-label class="text-label">Fecha inicial</nz-form-label>
+                <nz-form-control>
+                    <nz-date-picker formControlName="startDate" nzFormat="yyyy/MM/dd"
+                        [nzDisabledDate]="disabledStartDate" class="rectangular-input"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item class="mid-input">
+                <nz-form-label class="text-label">Fecha final</nz-form-label>
+                <nz-form-control>
+                    <nz-date-picker formControlName="endDate" nzFormat="yyyy/MM/dd"
+                        [nzDisabledDate]="disabledEndDate" class="rectangular-input"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+            </div>
+        </form>
+    </ng-container>
+</nz-modal>
+
+<ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+    <button nz-button nzType="primary" nzDanger (click)="handleSubmit()" [disabled]="!rangeForm.valid">
+        Eliminar
+    </button>
+</ng-template>

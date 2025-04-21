@@ -1,0 +1,14 @@
+.mid-input{
+    display: block;
+    margin-bottom: 1rem; width:100%
+}
+
+.text-label{
+    text-align: left
+}
+
+.rectangular-input {
+    width: 100%;
+    border: 1px solid #d9d9d9; /* Puedes ajustar el color y grosor según necesites */
+    padding: 4px 8px;
+  }

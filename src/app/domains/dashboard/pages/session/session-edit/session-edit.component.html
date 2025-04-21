@@ -1,5 +1,12 @@
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Sesión" [nzFooter]="modalFooter" (nzOnCancel)="cancel()">
   <ng-container *nzModalContent>
+    <!-- En algún lugar de tu template donde quieras el botón -->
+    <button nz-button nzType="default" (click)="openDeleteModal()">
+      Ver más opciones
+    </button>
+
+
+    
     <form [formGroup]="sessionForm" (ngSubmit)="submitForm()" nzLayout="vertical">
       <nz-form-item nzlayout="vertical" style="display: block;
     margin-bottom: 1rem;">
@@ -116,3 +123,7 @@
     Guardar
   </button>
 </ng-template>
+
+
+<app-delete-sessions-range-modal *ngIf="sessionData?.rap?.id && sessionData?.course?.id" [rapId]="sessionData!.rap!.id"
+  [courseId]="sessionData!.course!.id" (deleteConfirmed)="handleSessionsDeleted()"></app-delete-sessions-range-modal>

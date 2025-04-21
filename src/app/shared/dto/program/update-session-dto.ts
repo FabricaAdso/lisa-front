@@ -12,3 +12,11 @@ export interface sessionupdatepartialDto {
   end_time: string;    // La hora de fin en formato "HH:mm:ss"
   instructor?: number;
 }
+
+
+export interface DeleteRangeParams {
+  start_date: string;
+  end_date: string;
+  rap_id: number;
+  course_id: number;
+}

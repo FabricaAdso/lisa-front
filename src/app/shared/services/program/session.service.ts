@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { UpdateCourseDto } from '@shared/dto/program/update-course-dto';
-import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
+import { DeleteRangeParams, sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { PaginateModel } from '@shared/models/paginate.model';
 import { QueryUrl } from '@shared/models/query-url.model';
@@ -118,4 +118,10 @@ export class SessionService {
     return this.http.get<any>(`${this.url}/leadersession`, { params });
   }
 
+
+  deleteSessionsByDateRange(params: DeleteRangeParams): Observable<any> {
+    return this.http.delete('sessions/delete-by-date', {
+      body: params
+    });
+  }
 }
