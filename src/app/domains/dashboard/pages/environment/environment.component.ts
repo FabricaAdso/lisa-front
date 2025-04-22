@@ -248,9 +248,7 @@ export class EnvironmentComponent {
     };
     this.environmentService.getEnvironments(query).subscribe((environments) => {
       this.EnvironmentsList = environments;
-      console.log('ambientes todos', environments);
-
-      // this.filterEnvironmentsByHeadquarter();
+      this.filterEnvironmentsByHeadquarter();
     });
   }
 
