@@ -8,7 +8,7 @@ export const menuItems: MenuItem[] = [
     route: 'roles',
     theme: 'outline',
     state: false,
-    Role: ['Aprendiz',]
+    Role: ['Usuario',]
   },
   {
     title: 'Centro Formativo',

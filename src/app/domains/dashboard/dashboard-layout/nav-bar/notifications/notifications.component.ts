@@ -9,12 +9,13 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
-  imports: [ReactiveFormsModule,CommonModule,NzAlertModule, NzIconModule, NzSpaceModule, NzDrawerModule],
+  imports: [ReactiveFormsModule,CommonModule,NzAlertModule, NzIconModule, NzSpaceModule, NzDrawerModule, NzEmptyModule],
   standalone: true
 })
 export class NotificationsComponent implements OnInit {
