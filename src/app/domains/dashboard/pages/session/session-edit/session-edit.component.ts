@@ -20,11 +20,14 @@ import { DeleteSessionsRangeModalComponent } from '../delete-sessions-range-moda
 import { NzDropdownMenuComponent, NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { UpdateSessionsRangeModalComponent } from "../update-sessions-range-modal/update-sessions-range-modal.component";
 
 @Component({
   selector: 'app-session-edit',
   standalone: true,
-  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule, NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule, DeleteSessionsRangeModalComponent, NzDropDownModule, NzIconModule, NzMenuModule, NzDropdownMenuComponent],
+  imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule,
+    NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule, DeleteSessionsRangeModalComponent,
+    NzDropDownModule, NzIconModule, NzMenuModule, NzDropdownMenuComponent, UpdateSessionsRangeModalComponent],
   templateUrl: './session-edit.component.html',
   styleUrl: './session-edit.component.css'
 })
@@ -270,19 +273,4 @@ export class SessionEditComponent implements OnInit, OnChanges {
     );
   }
 
-
-
-@ViewChild(DeleteSessionsRangeModalComponent)
-deleteRangeModal!: DeleteSessionsRangeModalComponent;
-
-
-
-openDeleteModal(): void {
-  this.deleteRangeModal.open();
-}
-
-handleSessionsDeleted(): void {
-  // recargar datos
-  this.loadSessionData();
-}
 }

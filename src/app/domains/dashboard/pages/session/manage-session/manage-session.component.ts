@@ -30,6 +30,10 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SessionEditComponent } from '../session-edit/session-edit.component';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { DeleteSessionsRangeModalComponent } from "../delete-sessions-range-modal/delete-sessions-range-modal.component";
+import { UpdateSessionsRangeModalComponent } from "../update-sessions-range-modal/update-sessions-range-modal.component";
 
 @Component({
   selector: 'app-manage-session',
@@ -52,8 +56,10 @@ import { SessionEditComponent } from '../session-edit/session-edit.component';
     NzButtonModule, NzFormModule,
     NzInputModule,
     NzSelectModule,
-    NzPaginationModule, NzPopconfirmModule, NzIconModule, SessionEditComponent
-  ],
+    NzPaginationModule, NzPopconfirmModule, NzIconModule, SessionEditComponent, NzDropDownModule, NzMenuModule,
+    DeleteSessionsRangeModalComponent,
+    UpdateSessionsRangeModalComponent
+],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
 })
@@ -447,6 +453,43 @@ export class ManageSessionComponent implements OnInit {
 
   }
 
+
+
+  @ViewChild('deleteRangeModal') deleteRangeModal!: DeleteSessionsRangeModalComponent;
+
+  // Método para abrir el modal desde la fila
+  openDeleteByRangeModal(session: SessionModel): void {
+    if (session.rap?.id && session.course?.code) {
+      this.deleteRangeModal.rapId = session.rap.id;
+      this.deleteRangeModal.courseId = Number(session.course.id); // <-- Aquí el fix
+      this.deleteRangeModal.open();
+    } else {
+      this.notification.error('Error', 'La sesión no tiene los datos necesarios');
+    }
+  }
+
+  // Manejar confirmación de eliminación
+  handleDeleteRangeConfirmed(): void {
+    this.loadLeaderSessions(this.page);
+    this.notification.success('Éxito', 'Sesiones eliminadas correctamente');
+  }
+
+  @ViewChild('updateRangeModal') updateRangeModal!: UpdateSessionsRangeModalComponent;
+
+  openUpdateByRangeModal(session: SessionModel): void {
+    if (session.rap?.id && session.course?.id) {
+      this.updateRangeModal.sessionId = session.id;      // ← asignamos el ID
+      this.updateRangeModal.rapId = session.rap.id;
+      this.updateRangeModal.courseId = session.course.id;
+      this.updateRangeModal.loadSessionData(); // 👈 Nuevo método
+      this.updateRangeModal.openModal();
+    }
+  }
+  
+  handleUpdateRangeConfirmed(): void {
+    this.loadLeaderSessions(this.page);
+    this.notification.success('Éxito', 'Sesiones actualizadas correctamente');
+  }
 
 
 

@@ -124,4 +124,20 @@ export class SessionService {
       body: params
     });
   }
+
+  
+    updateSessionsByDateRAnge(updatedSession: {
+      start_date: string;
+      end_date: string;
+      rap_id: number;
+      course_id: number;
+      start_time: string;
+      end_time: string;
+      instructor_id: number;
+      new_day_of_week: number;
+      confirmed: boolean;
+    }): Observable<any> {
+      return this.http.put('sessions/update-by-date-range', updatedSession);
+    }
+  
 }

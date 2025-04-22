@@ -41,3 +41,4 @@ export interface CalendarEvent {
   };
   display: string;
 }
+

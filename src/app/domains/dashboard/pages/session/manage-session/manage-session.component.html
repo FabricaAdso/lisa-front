@@ -69,15 +69,26 @@
         <td>{{ session.rap.description || 'N/D' }} ({{ session.rap.number_hours || 'N/D' }})</td>
         <td nzWidth="10%">
           <!-- Si solo quieres que aparezca cuando sea editable -->
-          <button *ngIf="isSessionEditable(session)" nz-button nzSize="small" nzType="default" (click)="openEditModal(session.id)">
+          <button *ngIf="isSessionEditable(session)" nz-button nzSize="small" nzType="default"
+            (click)="openEditModal(session.id)">
             <!-- <i nz-icon nzType="edit" nzTheme="outline"></i> -->
             Editar
           </button>
 
-            <button *ngIf="isSessionEditable(session)" nz-button nzDanger nzSize="small" nz-popconfirm nzPopconfirmTitle="¿Seguro que quieres eliminar?"
-            (nzOnConfirm)="onDeleteSession(session.id)">
+          <button *ngIf="isSessionEditable(session)" nz-button nzDanger nzSize="small" nz-popconfirm
+            nzPopconfirmTitle="¿Seguro que quieres eliminar?" (nzOnConfirm)="onDeleteSession(session.id)">
             Eliminar
           </button>
+          <!-- Nuevo dropdown corregido -->
+          <button nz-button nzSize="small" nzType="default" nz-dropdown [nzDropdownMenu]="moreMenu">Mas
+            <i nz-icon nzType="ellipsis"></i>
+          </button>
+          <nz-dropdown-menu #moreMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="openDeleteByRangeModal(session)">Eliminar por rango</li>
+              <li nz-menu-item (click)="openUpdateByRangeModal(session)">Actualizar por rango</li>
+            </ul>
+          </nz-dropdown-menu>
         </td>
       </tr>
     </tbody>
@@ -89,3 +100,14 @@
 
 </div>
 <app-session-edit #sessionEdit (sessionCreated)="loadLeaderSessions()"></app-session-edit>
+
+
+<app-delete-sessions-range-modal 
+  #deleteRangeModal
+  (deleteConfirmed)="handleDeleteRangeConfirmed()">
+</app-delete-sessions-range-modal>
+
+<app-update-sessions-range-modal
+  #updateRangeModal
+  (updateConfirmed)="handleUpdateRangeConfirmed()">
+</app-update-sessions-range-modal>

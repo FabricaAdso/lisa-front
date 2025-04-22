@@ -119,4 +119,6 @@ export class DeleteSessionsRangeModalComponent implements OnDestroy{
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  
 }
