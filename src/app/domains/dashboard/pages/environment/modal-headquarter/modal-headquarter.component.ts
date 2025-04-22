@@ -158,7 +158,7 @@ export class ModalHeadquarterComponent {
 
   //funcion pra guardar los datos, dependeindo si esta editando o creando una sede
 
-  saveHeadquarter(): void {
+    saveHeadquarter(): void {
 
     const data = this.formHeadquarter.value;
 

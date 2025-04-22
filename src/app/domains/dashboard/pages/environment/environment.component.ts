@@ -256,8 +256,6 @@ export class EnvironmentComponent implements OnInit{
     };
     this.environmentService.getEnvironments(query).subscribe((environments) => {
       this.EnvironmentsList = environments;
-      console.log('ambientes todos', environments);
-
       this.filterEnvironmentsByHeadquarter();
     });
   }
