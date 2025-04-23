@@ -85,7 +85,7 @@ export class UpdateSessionsRangeModalComponent {
         start_time: [null, Validators.required],
         end_time: [null, Validators.required],
         percentage: [{ value: null, disabled: true }, Validators.required],
-        new_day_of_week: [null, [Validators.required, Validators.min(0), Validators.max(6)]],
+        new_day_of_week: [[], [Validators.required, Validators.min(0), Validators.max(6)]],
         // confirmed: [false, Validators.requiredTrue]  
 
       });

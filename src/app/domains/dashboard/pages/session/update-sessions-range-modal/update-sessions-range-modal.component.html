@@ -1,4 +1,4 @@
-<nz-modal [(nzVisible)]="isVisible" nzTitle="editar Sesión por rango" [nzFooter]="modalFooter" (nzOnCancel)="cancel()">
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Editar sesión por rango" [nzFooter]="modalFooter" (nzOnCancel)="cancel()">
     <ng-container *nzModalContent>
         <!-- En algún lugar de tu template donde quieras el botón -->
 
@@ -64,9 +64,10 @@
 
 
 
-
-            <nz-form-item style="display: block">
-                <nz-form-label style="text-align: left;width:50%">Fecha inicio</nz-form-label>
+            <div style="gap: 1.25rem; display:flex;">
+            <nz-form-item style="display: block;
+    margin-bottom: 1rem; width:50%">
+                <nz-form-label style="text-align: left">Fecha inicio</nz-form-label>
                 <nz-form-control>
                     <nz-date-picker formControlName="start_date" nzFormat="yyyy/MM/dd" [nzDisabledDate]="todisabledDate"
                         placeholder="Seleccione la fecha" class="rectangular-input">
@@ -74,15 +75,16 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item style="display: block">
-                <nz-form-label style="text-align: left;width:50%">Fecha fin</nz-form-label>
+            <nz-form-item style="display: block;
+    margin-bottom: 1rem; width:50%">
+                <nz-form-label style="text-align: left">Fecha fin</nz-form-label>
                 <nz-form-control>
                     <nz-date-picker formControlName="end_date" nzFormat="yyyy/MM/dd" [nzDisabledDate]="todisabledDate"
                         placeholder="Seleccione la fecha" class="rectangular-input">
                     </nz-date-picker>
                 </nz-form-control>
             </nz-form-item>
-
+            </div>
 
             <div style="gap: 1.25rem; display:flex;">
 
@@ -110,10 +112,10 @@
             </div>
 
             <!-- Nuevo: día de la semana -->
-            <nz-form-item>
+            <nz-form-item style="display: block;">
                 <nz-form-label>Nuevo día de la semana</nz-form-label>
                 <nz-form-control>
-                    <nz-select formControlName="new_day_of_week" nzPlaceHolder="Selecciona día">
+                    <nz-select nzMode="multiple" formControlName="new_day_of_week" nzPlaceHolder="Selecciona día">
                         <nz-option *ngFor="let d of [0,1,2,3,4,5,6]" [nzValue]="d"
                             [nzLabel]="['Dom','Lun','Mar','Mie','Jue','Vie','Sab'][d]">
                         </nz-option>

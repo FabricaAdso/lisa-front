@@ -105,7 +105,7 @@
       <div class="mb-4">
         <label class="mb-1">Dia de la semana</label>
         <nz-select name="days_of_week" [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-          nzPlaceHolder="Please select" [formControl]="fieldDayOfWeek">
+          nzPlaceHolder="Seleccione un día" [formControl]="fieldDayOfWeek">
           @for (item of day_of_week; track item) {
           <nz-option [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
           }
