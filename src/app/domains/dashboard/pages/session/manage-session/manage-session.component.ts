@@ -51,7 +51,7 @@ import { UpdateSessionsRangeModalComponent } from "../update-sessions-range-moda
     NzSelectModule,
     NzPaginationModule, NzPopconfirmModule, NzIconModule, SessionEditComponent, NzDropDownModule, NzMenuModule,
     DeleteSessionsRangeModalComponent,
-    UpdateSessionsRangeModalComponent
+    UpdateSessionsRangeModalComponent, NzSpaceModule
   ],
   templateUrl: './manage-session.component.html',
   styleUrl: './manage-session.component.css'
@@ -74,7 +74,7 @@ export class ManageSessionComponent implements OnInit {
     { name: "Realizadas", value: 'past', id: 1 },
     { name: "Pendientes", value: 'pending', id: 2 },
     { name: "Todas", value: 'all', id: 3 },
-    { name: "Ultimas", value: 'end_date', id: 4 }
+    { name: "Ultima", value: 'end_date', id: 4 }
   ];
 
   // Filtros por campos
