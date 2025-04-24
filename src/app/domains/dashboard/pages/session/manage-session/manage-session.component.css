@@ -1,63 +1,26 @@
-
-
-nz-tag {
-  margin: 2px;
+nz-select{
+  border: 1px solid #d9d9d9;
 }
 
-nz-table {
+.vertical-cell {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: start;
 }
 
-
-::ng-deep .ant-btn-primary:hover, .ant-btn-primary:focus {
+.manage{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding:1rem
 }
 
-::ng-deep .ant-btn-primary{
+.head-manage{
+  position: sticky; top: 0; background: #fff; z-index: 2; 
 }
 
- .ant-btn:hover, .ant-btn:focus {
+.selectnz{
+  width: 100%;
 }
-
-
-
-
-
-
-
-::ng-deep nz-table[_ngcontent-ng-c3885107666]{
-margin:0
-}
-
-
-
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-::ng-deep .ant-pagination-item-active {
-  font-weight: 500;
-}
-
-
-
-
-::ng-deep .ant-pagination-item-active a {
-}
-
-/* elemento resaltado dentro de un select */
-::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-  font-weight: 600;
-}
-
-
-::ng-deep .ant-pagination-item:hover {
-  transition: all 0.3s;
-
-}
-
-::ng-deep .ant-pagination-item:hover a,
-::ng-deep .ant-pagination-item:focus a {
-}
-
-
-

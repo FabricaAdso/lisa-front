@@ -17,7 +17,6 @@ export class LocationService {
     return this.http.get<despartamentosModel[]>(`${this.url}`);
   }
 
-  
   getMunicipalities(departmentId: number) {
     return this.http.get<municipiosModel[]>(`municipalities/departament/${departmentId}`);
   }

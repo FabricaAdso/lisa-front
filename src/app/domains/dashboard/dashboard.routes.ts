@@ -19,12 +19,6 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/attendance/attendance.component').then(c => c.AttendanceComponent)
       },
       {
-        path: 'environmentsArea',
-        title: 'Administrar Areas',
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/area/area.component').then(c => c.AreaComponent)
-      },
-      {
         path: 'roles',
         title: 'Administrar roles',
         data: { breadcrumb: 'Roles ' },
@@ -47,28 +41,12 @@ export const routes: Routes = [
       },
 
       {
-        path: 'environments-area',
-        title: 'Administrar Areas',
-        data: { breadcrumb: 'Administrar Areas' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/area/area.component').then(c => c.AreaComponent)
-      },
-
-      {
         path: 'training-centers',
         title: 'Administrar Centros de Formación',
         data: { breadcrumb: 'Administrar Centros de Formación' },
         canActivate: [authGuard],
         loadComponent: () => import('@domains/dashboard/pages/centre/training-centre-page/training-centre-page.component').then(c => c.TrainingCentrePageComponent)
       },
-
-      // {
-      //   path: 'headquarters',
-      //   title: 'Administrar sedes',
-      //   data: { breadcrumb: 'Administrar Sedes ' },
-      //   canActivate: [authGuard],
-      //   loadComponent: () => import('@domains/dashboard/pages/headquarter/headquarter/headquarter.component').then(c => c.HeadquarterComponent)
-      // },
 
       {
         path: 'environments',
@@ -79,14 +57,7 @@ export const routes: Routes = [
       },
 
 
-      {
-        path: 'programs',
-        title: 'Programas',
-        data: { breadcrumb: 'Programas' },
-        canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/programs/progam-page/progam-page.component').then(c => c.ProgamPageComponent)
-      },
-
+   
       {
         path: 'session-calendar',
         title: 'Calendario',

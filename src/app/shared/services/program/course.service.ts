@@ -18,21 +18,12 @@ export class CourseService {
   urlSessionNOw: string = 'course/sessionsNow'
 
   constructor() { }
-
-
   getCourses(data?: QueryUrl): Observable<CourseModel[]> {
 
     let url: string = getQueryUrl(this.url, data)
 
 
     return this.http.get<CourseModel[]>(url);
-  }
-
-  getCouurseSessionsPast(data?: QueryUrl): Observable<SessionModel[]> {
-
-    let url: string = getQueryUrl(`${this.url}/sessions`, data)
-
-    return this.http.get<SessionModel[]>(url);
   }
 
 
@@ -42,8 +33,9 @@ export class CourseService {
 
     return this.http.get<SessionModel[]>(url);
   }
+  
+  getCouurseSessionsPast(data?: QueryUrl): Observable<SessionModel[]> {
 
-  getCursesInstructorRecord(data?: QueryUrl): Observable<SessionModel[]> {
     let url: string = getQueryUrl(`${this.url}/sessions`, data)
 
     return this.http.get<SessionModel[]>(url);
@@ -54,10 +46,6 @@ export class CourseService {
     let urlSessionNOw: string = getQueryUrl(this.urlSessionNOw, data)
 
     return this.http.get<SessionModel>(urlSessionNOw);
-  }
-
-  getSubjectByCourseModel(id: number) {
-    return this.http.get<SubjectModel[]>(`${this.url}/${id}`)
   }
 
   getCourseLeader(): Observable<CourseModel[]> {

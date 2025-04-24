@@ -14,10 +14,6 @@ export class SubjectService {
 
   URL:string = 'subject'
 
-  getRapbysubjectModel(id:number){
-    return this.http.get<SubjectModel[]>(`${this.URL}/${id}`)
-  }
-
   getSubject(){
     return this.http.get<SubjectModel[]>(`${this.URL}`)
   }
@@ -31,7 +27,5 @@ export class SubjectService {
         })
       );
   }
-
-
 
 }

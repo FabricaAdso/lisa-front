@@ -16,7 +16,6 @@ import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { CourseService } from '@shared/services/program/course.service';
 import { CourseModel } from '@shared/models/course.model';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { SessionShowComponent } from "./session-show/session-show.component";
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
 import { SessionService } from '@shared/services/program/session.service';
 import { GeneralAssistanceData } from '@shared/models/generalDataAssistance-model';
@@ -41,7 +40,6 @@ import { SessionModel } from '@shared/models/session.model';
     NzTabsModule,
     NzPageHeaderModule,
     NzStatisticModule,
-    SessionShowComponent
 ],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
@@ -49,7 +47,6 @@ import { SessionModel } from '@shared/models/session.model';
 export class AttendanceComponent {
 
   @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
-  @ViewChild('sessionShowModal') sessionShowModal:any = SessionShowComponent;
 
   private course_service = inject(CourseService);
   private session_service = inject(SessionService);
@@ -70,13 +67,6 @@ export class AttendanceComponent {
   currentPage = 1; 
 
   isVisible = false;
-
-  openModalSession(){
-    if(this.sessionShowModal){
-      this.sessionShowModal.openModal();
-      console.log('modal abierto');
-    }
-  }
 
   // Método para llamar la función prevPage() del hijo
   callPrevPage() {

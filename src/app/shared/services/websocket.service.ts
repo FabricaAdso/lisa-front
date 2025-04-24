@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { TokenService } from './token.service';
-import { environment } from '@env/environment';
+import { environment } from '@env/environment.development';
 
 @Injectable({
   providedIn: 'root',

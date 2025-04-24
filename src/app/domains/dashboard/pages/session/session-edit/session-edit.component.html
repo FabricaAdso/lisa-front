@@ -1,5 +1,6 @@
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Sesión" [nzFooter]="modalFooter" (nzOnCancel)="cancel()">
   <ng-container *nzModalContent>
+
     <form [formGroup]="sessionForm" (ngSubmit)="submitForm()" nzLayout="vertical">
       <nz-form-item nzlayout="vertical" style="display: block;
     margin-bottom: 1rem;">
@@ -9,7 +10,6 @@
         </nz-form-control>
       </nz-form-item>
 
-      <!-- Nuevo select para Instructor -->
       <nz-form-item style="display: block;
     margin-bottom: 1rem;">
         <nz-form-label style="text-align: left">Instructor</nz-form-label>
@@ -59,9 +59,6 @@
         </nz-form-control>
       </nz-form-item>
 
-
-
-
       <nz-form-item style="display: block">
         <nz-form-label style="text-align: left;width:50%">Fecha</nz-form-label>
         <nz-form-control>
@@ -72,6 +69,26 @@
       </nz-form-item>
 
 
+      <div style="gap: 1.25rem; display:flex;">
+
+        <nz-form-item class="middle-item">
+          <nz-form-label class="text-left">Hora de Inicio</nz-form-label>
+          <nz-form-control>
+            <nz-time-picker [formControl]="fieldStartTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
+               class="rectangular-input">
+            </nz-time-picker>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="middle-item">
+          <nz-form-label class="text-left">Hora de Fin</nz-form-label>
+          <nz-form-control>
+            <nz-time-picker [formControl]="fieldEndTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
+              class="rectangular-input">
+            </nz-time-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
     </form>
   </ng-container>
 </nz-modal>

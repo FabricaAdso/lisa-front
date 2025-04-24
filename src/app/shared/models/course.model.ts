@@ -31,8 +31,4 @@ export interface CourseModel {
 
 }
 
-export interface getSubjectByCourseModel{
-    id:number;
-    code:number;
-    subject?:SubjectModel
-}
+
