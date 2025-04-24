@@ -6,7 +6,7 @@ import { SessionService } from '@shared/services/program/session.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -33,7 +33,8 @@ export class DeleteSessionsRangeModalComponent implements OnDestroy {
     private fb: FormBuilder,
     private sessionService: SessionService,
     private datePipe: DatePipe,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private modal: NzModalService
   ) {
     // Configuración inicial del formulario
     this.rangeForm = this.fb.group({
@@ -85,23 +86,23 @@ export class DeleteSessionsRangeModalComponent implements OnDestroy {
 
   // ENVÍO DEL FORMULARIO
   handleSubmit(): void {
-    if (this.rangeForm.valid) {
-      const formValue = this.rangeForm.value;
-
-      const params: DeleteRangeParams = {
-        start_date: this.formatDate(formValue.startDate),
-        end_date: this.formatDate(formValue.endDate),
-        rap_id: this.rapId,
-        course_id: this.courseId
-      };
-
-      this.sessionService.deleteSessionsByDateRange(params)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => this.handleSuccess(),
-          error: (err) => this.handleError(err)
-        });
-    }
+    if (!this.rangeForm.valid) return;
+    const { startDate, endDate } = this.rangeForm.value;
+    const params: DeleteRangeParams = {
+      start_date: this.formatDate(startDate),
+      end_date: this.formatDate(endDate),
+      rap_id: this.rapId,
+      course_id: this.courseId
+    };
+    // Abrir confirm dialog
+    this.modal.confirm({
+      nzTitle: '¿Estás seguro que quieres eliminar estas sesiones?',
+      nzContent: `Se eliminarán las sesiones entre <strong>${params.start_date}</strong> y <strong>${params.end_date}</strong>. Esta acción no se puede deshacer.`,
+      nzOkText: 'Sí, eliminar',
+      nzOkDanger: true,
+      nzCancelText: 'Cancelar',
+      nzOnOk: () => this.confirmDeleteRange(params)
+    });
   }
 
   // MANEJO DE RESULTADOS
@@ -131,4 +132,15 @@ export class DeleteSessionsRangeModalComponent implements OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // manejar la llamada real de borrado
+  private confirmDeleteRange(params: DeleteRangeParams): void {
+    this.sessionService.deleteSessionsByDateRange(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => this.handleSuccess(),
+        error: err => this.handleError(err)
+      });
+  }
+
 }

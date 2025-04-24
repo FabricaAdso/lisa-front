@@ -71,9 +71,8 @@
 
       <div style="gap: 1.25rem; display:flex;">
 
-        <nz-form-item style="display: block;
-    margin-bottom: 1rem; width:50%">
-          <nz-form-label style="text-align: left">Hora de Inicio</nz-form-label>
+        <nz-form-item class="middle-item">
+          <nz-form-label class="text-left">Hora de Inicio</nz-form-label>
           <nz-form-control>
             <nz-time-picker [formControl]="fieldStartTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
                class="rectangular-input">
@@ -81,9 +80,8 @@
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item style="display: block;
-    margin-bottom: 1rem; width:50%">
-          <nz-form-label style="text-align: left">Hora de Fin</nz-form-label>
+        <nz-form-item class="middle-item">
+          <nz-form-label class="text-left">Hora de Fin</nz-form-label>
           <nz-form-control>
             <nz-time-picker [formControl]="fieldEndTime" nzFormat="HH:mm" [nzMinuteStep]="30" [nzUse12Hours]="false"
               class="rectangular-input">

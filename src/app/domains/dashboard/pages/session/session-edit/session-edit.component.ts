@@ -25,8 +25,8 @@ import { UpdateSessionsRangeModalComponent } from "../update-sessions-range-moda
   selector: 'app-session-edit',
   standalone: true,
   imports: [NzModalModule, NzFormModule, ReactiveFormsModule, CommonModule, NzDatePickerModule,
-    NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule, DeleteSessionsRangeModalComponent,
-    NzDropDownModule, NzIconModule, NzMenuModule, NzDropdownMenuComponent, UpdateSessionsRangeModalComponent],
+    NzTimePickerModule, NzButtonModule, NzInputModule, NzLayoutModule, NzSelectModule,
+    NzDropDownModule, NzIconModule, NzMenuModule, ],
   templateUrl: './session-edit.component.html',
   styleUrl: './session-edit.component.css'
 })
