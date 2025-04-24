@@ -12,16 +12,9 @@ export class RapService {
 
   constructor() { }
 
-
-
     private http = inject(HttpClient);
 
     URL:string = 'rap'
-
-    getRaps(data?:QueryUrl){
-      let URL:string = getQueryUrl(this.URL,data);
-      return this.http.get<RapModel[]>(URL)
-    }
 
     getRapBySubject(rap_id:number): Observable<RapModel[]>{
       return this.http.get<RapModel[]>(`${this.URL}/?included=rap,user&filter[subject_id]=${rap_id}`)

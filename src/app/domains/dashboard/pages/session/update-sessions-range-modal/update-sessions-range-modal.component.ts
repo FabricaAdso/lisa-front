@@ -26,25 +26,39 @@ import { debounceTime, Subject } from 'rxjs';
 export class UpdateSessionsRangeModalComponent {
 
     @Input() sessionId!: number;
+
+    @Input() rapId!: number;
+    @Input() courseId!: number;
+    @Output() updateConfirmed = new EventEmitter<void>();
+    @Output() sessionCreated = new EventEmitter<SessionModel>();
+
+    get fieldStartTime(): FormControl {
+      return this.sessionForm.get('start_time') as FormControl;
+    }
+    get fieldEndTime(): FormControl {
+      return this.sessionForm.get('end_time') as FormControl;
+    }
+    get fieldStartDate(): FormControl {
+      return this.sessionForm.get('start_date') as FormControl;
+    }
+    get fieldEndDate(): FormControl {
+      return this.sessionForm.get('end_date') as FormControl;
+    }
+    get fieldDayOfWeek(): FormControl {
+      return this.sessionForm.get('new_day_of_week') as FormControl;
+    }
+
+
     sessionForm!: FormGroup;
     loading = false;
     sessionData!: SessionModel;
     isVisible = false;
+    defaultOpenValue = new Date(1970, 0, 1, 0, 0);
+    instructors: any[] = [];
   
     private notification = inject(NzNotificationService);
-    
-  
-    defaultOpenValue = new Date(1970, 0, 1, 0, 0);
-  
     private submitSubject = new Subject<void>();
-  
-    todisabledDate = (current: Date): boolean => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      console.log('Hoy es:', today);
-      return current && current < today;
-    };
-  
+
     constructor(
       private cd: ChangeDetectorRef,
 
@@ -52,7 +66,7 @@ export class UpdateSessionsRangeModalComponent {
       private sessionService: SessionService,
       private instructorService: InstructorService
     ) {}
-  
+
     ngOnInit(): void {
       this.buildForm();
       this.submitSubject.pipe(debounceTime(1000)).subscribe(() => {
@@ -68,29 +82,13 @@ export class UpdateSessionsRangeModalComponent {
       }
     }
   
-    debounceSubmit(): void {
-      this.submitSubject.next();
-    }
-  
-  
-    buildForm(): void {
-      this.sessionForm = this.fb.group({
-        start_date: [null, Validators.required],
-        end_date: [null, Validators.required],
-        network: [{ value: null, disabled: true }, Validators.required],
-        instructor: [null, Validators.required],
-        rap: [{ value: null, disabled: true }, Validators.required],
-        subject: [{ value: null, disabled: true }, Validators.required],
-        course: [{ value: null, disabled: true }, Validators.required],
-        start_time: [null, Validators.required],
-        end_time: [null, Validators.required],
-        percentage: [{ value: null, disabled: true }, Validators.required],
-        new_day_of_week: [[], [Validators.required, Validators.min(0), Validators.max(6)]],
-        // confirmed: [false, Validators.requiredTrue]  
+    todisabledDate = (current: Date): boolean => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      console.log('Hoy es:', today);
+      return current && current < today;
+    };
 
-      });
-    }
-  
     loadSessionData(): void {
       console.log('Llamando a loadSessionData con sessionId:', this.sessionId);
       this.loading = true;
@@ -119,7 +117,7 @@ export class UpdateSessionsRangeModalComponent {
         }
       });
     }
-  
+
     populateForm(): void {
   
       const [year, month, day] = this.sessionData.date.split('-').map(Number);
@@ -127,7 +125,6 @@ export class UpdateSessionsRangeModalComponent {
       // Convertir el string de fecha a un objeto Date
       // const sessionDate = new Date(this.sessionData.date);
       const sessionDate = new Date(year, month - 1, day);
-  
   
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -137,8 +134,6 @@ export class UpdateSessionsRangeModalComponent {
   
       const [endHour, endMinute, endSecond] = this.sessionData.end_time.split(':');
       const endTimeDate = new Date(1970, 0, 1, Number(endHour), Number(endMinute), Number(endSecond));
-  
-  
   
       this.sessionForm.patchValue({
         network: this.sessionData.instructor?.knowledge_network?.name,
@@ -151,23 +146,35 @@ export class UpdateSessionsRangeModalComponent {
       });
 
       this.cd.markForCheck();
-
   
       const networkId = this.sessionData.instructor?.knowledge_network?.id;
       if (networkId){
         this.loadInstructors(networkId);
-      }
-  
-  
-  
-  
-  
+      }  
   
     }
   
+    debounceSubmit(): void {
+      this.submitSubject.next();
+    }
   
-    instructors: any[] = [];
-  
+    buildForm(): void {
+      this.sessionForm = this.fb.group({
+        start_date: [null, Validators.required],
+        end_date: [null, Validators.required],
+        network: [{ value: null, disabled: true }, Validators.required],
+        instructor: [null, Validators.required],
+        rap: [{ value: null, disabled: true }, Validators.required],
+        subject: [{ value: null, disabled: true }, Validators.required],
+        course: [{ value: null, disabled: true }, Validators.required],
+        start_time: [null, Validators.required],
+        end_time: [null, Validators.required],
+        percentage: [{ value: null, disabled: true }, Validators.required],
+        new_day_of_week: [[], [Validators.required, Validators.min(0), Validators.max(6)]],
+        // confirmed: [false, Validators.requiredTrue]  
+
+      });
+    }
   
     loadInstructors(networkId:number):void{
       this.instructorService.getInstructorByKnowledgeNetwork(networkId).subscribe({
@@ -180,7 +187,6 @@ export class UpdateSessionsRangeModalComponent {
       })
     }
   
-  
     openModal(): void {
       this.isVisible = true;
     }
@@ -188,9 +194,6 @@ export class UpdateSessionsRangeModalComponent {
     cancel(): void {
       this.isVisible = false;
     }
-  
-  
-  
   
     submitForm(): void {
   console.log('submitForm invoked')
@@ -258,26 +261,7 @@ export class UpdateSessionsRangeModalComponent {
       const day = date.getDate().toString().padStart(2, '0');
       return `${year}-${month}-${day}`;
     }
-  
-    // Getters opcionales para facilitar el acceso a controles (opcional)
-    get fieldStartTime(): FormControl {
-      return this.sessionForm.get('start_time') as FormControl;
-    }
-    get fieldEndTime(): FormControl {
-      return this.sessionForm.get('end_time') as FormControl;
-    }
-    get fieldStartDate(): FormControl {
-      return this.sessionForm.get('start_date') as FormControl;
-    }
-    get fieldEndDate(): FormControl {
-      return this.sessionForm.get('end_date') as FormControl;
-    }
-    get fieldDayOfWeek(): FormControl {
-      return this.sessionForm.get('new_day_of_week') as FormControl;
-    }
-    
-    @Output() sessionCreated = new EventEmitter<SessionModel>();
-  
+ 
     createBasicNotification(): void {
       this.notification.blank(
         'Se ha creado la sesión correctamente',
@@ -285,17 +269,9 @@ export class UpdateSessionsRangeModalComponent {
       );
     }
   
-  
-  
-    @Input() rapId!: number;
-  @Input() courseId!: number;
-  @Output() updateConfirmed = new EventEmitter<void>();
-  
-
   public loadSessionDataFromParent(sessionId: number): void {
     this.sessionId = sessionId;
     this.loadSessionData();
   }
-
   
 }

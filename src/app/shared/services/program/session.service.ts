@@ -25,26 +25,6 @@ export class SessionService {
     return this.http.get<SessionModel>(`${url}`);
   }
 
-  // metodo para aceptar filtros e inclusiones
-  getAll(filters?: { [key: string]: string }, included?: string | string[]): Observable<SessionModel[]> {
-    let params = new HttpParams();
-
-    // si se especifican relaciones incluir, se añaden
-    if (included) {
-      const includeStr = Array.isArray(included) ? included.join(',') : included;
-      params = params.set('included', includeStr);
-    }
-
-    // si se especifican filtros, se añaden a los parametros
-    if (filters) {
-      Object.keys(filters).forEach(key => {
-        params = params.set(`filter[${key}]`, filters[key]);
-      });
-    }
-
-    return this.http.get<SessionModel[]>(this.url, { params });
-  }
-
   createSession(data: CreateSessionDTO): Observable<SessionModel[]> {
     return this.http.post<SessionModel[]>(this.url, data);
   }
@@ -54,33 +34,8 @@ export class SessionService {
     return this.http.put<SessionModel>(`session/update/${id}`, data);
   }
 
-
-
   deleteSession(id: number) {
     return this.http.delete(`${this.url}/${id}`);
-  }
-
-  update(data: UpdateCourseDto): Observable<SessionModel> {
-    const { id } = data;
-    return this.http.put<SessionModel>(`${this.url}/${id}`, data);
-  }
-
- // Método para obtener sesiones con paginación (getAlltwo)
-  getAlltwo(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
-    let params = new HttpParams();
-    if (included) {
-      const includeStr = Array.isArray(included) ? included.join(',') : included;
-      params = params.set('included', includeStr);
-      console.log('Included:', includeStr);
-    }
-    if (filters) {
-      Object.keys(filters).forEach(key => {
-        params = params.set(`filter[${key}]`, filters[key]);
-        console.log('Setting filter:', key, filters[key]);
-      });
-      console.log('Request URL:', this.url);
-    }
-    return this.http.get<PaginateModel<SessionModel>>(this.url, { params });
   }
 
   getLeaderSessions(filters?: { [key: string]: string }, included?: string | string[]): Observable<PaginateModel<SessionModel>> {
@@ -118,14 +73,12 @@ export class SessionService {
     return this.http.get<any>(`${this.url}/leadersession`, { params });
   }
 
-
   deleteSessionsByDateRange(params: DeleteRangeParams): Observable<any> {
     return this.http.delete('sessions/delete-by-date', {
       body: params
     });
   }
 
-  
     updateSessionsByDateRAnge(updatedSession: {
       start_date: string;
       end_date: string;

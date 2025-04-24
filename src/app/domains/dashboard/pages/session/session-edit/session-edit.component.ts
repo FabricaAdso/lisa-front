@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { sessionupdatepartialDto, UpdateSessionDto } from '@shared/dto/program/update-session-dto';
 import { InstructorModel } from '@shared/models/instructor.model';
 import { SessionModel } from '@shared/models/session.model';
 import { InstructorService } from '@shared/services/instructor.service';
@@ -11,7 +10,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
@@ -32,51 +31,52 @@ import { UpdateSessionsRangeModalComponent } from "../update-sessions-range-moda
   styleUrl: './session-edit.component.css'
 })
 export class SessionEditComponent implements OnInit, OnChanges {
-  @Input() sessionId!: number;
+  // DECORADORES Y EVENTOS
+  @Input() sessionId!: number;           // ID de sesión recibido del componente padre
+  @Output() sessionCreated = new EventEmitter<SessionModel>(); // Evento al actualizar sesión
+
+  // FORMULARIO Y CONTROLES
   sessionForm!: FormGroup;
+  get fieldDate(): FormControl {
+    return this.sessionForm.get('date') as FormControl;
+  }
+  get fieldStartTime(): FormControl {
+    return this.sessionForm.get('start_time') as FormControl;
+  }
+  get fieldEndTime(): FormControl {
+    return this.sessionForm.get('end_time') as FormControl;
+  }
+
+  // ESTADO DEL COMPONENTE
   loading = false;
-  sessionData!: SessionModel;
   isVisible = false;
+  sessionData!: SessionModel;
+  instructors: any[] = [];
 
+  // SERVICIOS Y UTILIDADES
   private notification = inject(NzNotificationService);
-  
-
-  defaultOpenValue = new Date(1970, 0, 1, 0, 0);
-
-  private submitSubject = new Subject<void>();
-
-  todisabledDate = (current: Date): boolean => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    console.log('Hoy es:', today);
-    return current && current < today;
-  };
+  private readonly submitSubject = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private sessionService: SessionService,
     private instructorService: InstructorService
-  ) {}
+  ) { }
 
+  // CICLO DE VIDA
   ngOnInit(): void {
     this.buildForm();
-    this.submitSubject.pipe(debounceTime(1000)).subscribe(() => {
-      this.submitForm();
-    });
+    this.setupDebounceSubmit();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sessionId'] && changes['sessionId'].currentValue) {
+    if (changes['sessionId']?.currentValue) {
       this.loadSessionData();
     }
   }
 
-  debounceSubmit(): void {
-    this.submitSubject.next();
-  }
-
-
-  buildForm(): void {
+  // INICIALIZACIÓN DE FORMULARIO
+  private buildForm(): void {
     this.sessionForm = this.fb.group({
       date: [null, Validators.required],
       network: [{ value: null, disabled: true }, Validators.required],
@@ -90,11 +90,13 @@ export class SessionEditComponent implements OnInit, OnChanges {
     });
   }
 
-  loadSessionData(): void {
-    console.log('Llamando a loadSessionData con sessionId:', this.sessionId);
+  // CARGA DE DATOS
+  private loadSessionData(): void {
+    console.log('Cargando datos para sesión ID:', this.sessionId);
     this.loading = true;
+
     this.sessionService.getSessionShow(this.sessionId, {
-      included: [
+      included: [ // Relaciones necesarias para mostrar datos completos
         'instructor',
         'instructor.user',
         'instructor.knowledgeNetwork',
@@ -105,44 +107,33 @@ export class SessionEditComponent implements OnInit, OnChanges {
         'date'
       ]
     }).subscribe({
-      next: (res: SessionModel) => {
-        console.log('Datos de sesión recibidos:', res);
-        this.sessionData = res;
-        this.populateForm();
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error en loadSessionData:', err);
-        this.loading = false;
-      }
+      next: (res: SessionModel) => this.handleSessionData(res),
+      error: (err) => this.handleDataError(err)
     });
   }
 
-  populateForm(): void {
+  private handleSessionData(res: SessionModel): void {
+    this.sessionData = res;             // Almacena sesión
+    this.populateForm();                // Rellena el formulario con los datos
+    this.loadNetworkInstructors();      // Carga instructores de la misma red
+    this.loading = false;
+  }
 
-    const [year, month, day] = this.sessionData.date.split('-').map(Number);
+  private handleDataError(err: any): void {
+    console.error('Error cargando datos:', err);
+    this.loading = false;
+    this.notification.error('Error', 'No se pudieron cargar los datos de la sesión');
+  }
 
-    // Convertir el string de fecha a un objeto Date
-    // const sessionDate = new Date(this.sessionData.date);
-    const sessionDate = new Date(year, month - 1, day);
-
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    // Convertir start_time y end_time a objetos Date con fecha base fija (1970-01-01)
-    const [startHour, startMinute, startSecond] = this.sessionData.start_time.split(':');
-    const startTimeDate = new Date(1970, 0, 1, Number(startHour), Number(startMinute), Number(startSecond));
-
-    const [endHour, endMinute, endSecond] = this.sessionData.end_time.split(':');
-    const endTimeDate = new Date(1970, 0, 1, Number(endHour), Number(endMinute), Number(endSecond));
-
-
+  // RELLENAR FORMULARIO
+  private populateForm(): void {
+    const sessionDate = this.parseSessionDate(); // Parsea fecha de la sesión
+    const [startTimeDate, endTimeDate] = this.parseSessionTimes(); // Parsea horas
 
     this.sessionForm.patchValue({
       date: sessionDate,
       network: this.sessionData.instructor?.knowledge_network?.name,
-      instructor:this.sessionData.instructor?.id,
-      // instructor: `${this.sessionData.instructor?.user?.name} ${this.sessionData.instructor?.user?.last_name}`,
+      instructor: this.sessionData.instructor?.id,
       rap: this.sessionData.rap?.description,
       subject: this.sessionData.rap?.subject?.name,
       course: this.sessionData.course?.code,
@@ -150,127 +141,127 @@ export class SessionEditComponent implements OnInit, OnChanges {
       end_time: endTimeDate,
       percentage: this.sessionData.rap?.subject?.percentage
     });
+  }
 
+  // MANEJO DE FECHAS Y HORAS
+  private parseSessionDate(): Date {
+    const [year, month, day] = this.sessionData.date.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
 
+  private parseSessionTimes(): [Date, Date] {
+    return [
+      this.parseTimeString(this.sessionData.start_time),
+      this.parseTimeString(this.sessionData.end_time)
+    ];
+  }
+
+  private parseTimeString(time: string): Date {
+    const [hours, minutes, seconds] = time.split(':');
+    return new Date(1970, 0, 1, +hours, +minutes, +seconds);
+  }
+
+  // CARGA DE INSTRUCTORES
+  private loadNetworkInstructors(): void {
     const networkId = this.sessionData.instructor?.knowledge_network?.id;
-    if (networkId){
-      this.loadInstructors(networkId);
+    if (!networkId) return;
+
+    this.instructorService.getInstructorByKnowledgeNetwork(networkId).subscribe({
+      next: (instructors: InstructorModel[]) => this.instructors = instructors,
+      error: (err) => console.error('Error cargando instructores:', err)
+    });
+  }
+
+  // ENVÍO DEL FORMULARIO
+  debounceSubmit(): void {
+    this.submitSubject.next();          // Dispara el subject para debounce
+  }
+
+  private setupDebounceSubmit(): void {
+    this.submitSubject.pipe(
+      debounceTime(1000)                // Espera 1 segundo entre envíos
+    ).subscribe(() => this.submitForm());
+  }
+
+  submitForm(): void {
+    if (this.sessionForm.invalid) {
+      this.markFormAsDirty();           // Marca controles como dirty si es inválido
+      return;
     }
 
+    this.loading = true;
+    const updatedSession = this.prepareUpdatePayload(); // Prepara datos para actualizar
 
-
-
-
-
+    this.sessionService.updateSession(updatedSession).subscribe({
+      next: (response) => this.handleUpdateSuccess(response),
+      error: (err) => this.handleUpdateError(err)
+    });
   }
 
-
-  instructors: any[] = [];
-
-
-  loadInstructors(networkId:number):void{
-    this.instructorService.getInstructorByKnowledgeNetwork(networkId).subscribe({
-      next: (instructors: InstructorModel[]) =>{
-        this.instructors = instructors;
-      },
-      error:(err) =>{
-        console.error('error  de carga de instructores por network', err);
-      }
-    })
+  private prepareUpdatePayload(): any {
+    const formValues = this.sessionForm.getRawValue();
+    return {
+      id: this.sessionData.id,
+      start_date: this.convertDateToString(formValues.date),
+      start_time: this.convertTimeToString(formValues.start_time),
+      end_time: this.convertTimeToString(formValues.end_time),
+      instructor_id: formValues.instructor
+    };
   }
 
+  private markFormAsDirty(): void {
+    Object.values(this.sessionForm.controls).forEach(control => {
+      control.markAsDirty();            // Marca todos los controles como modificados
+      control.updateValueAndValidity(); // Forza validación
+    });
+  }
 
+  // HELPERS DE CONVERSIÓN
+  private convertTimeToString(time: Date): string {
+    return time.toTimeString().slice(0, 5); // Formato HH:mm
+  }
+
+  private convertDateToString(date: Date): string {
+    return date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  }
+
+  // MANEJO DE UI
   openModal(): void {
     this.isVisible = true;
   }
 
   cancel(): void {
     this.isVisible = false;
+    this.sessionForm.reset();
   }
 
+  // VALIDACIÓN DE FECHAS
+  todisabledDate = (current: Date): boolean => {
+    return current && current < new Date(new Date().setHours(0, 0, 0, 0)); // Fechas pasadas
+  };
 
-
-
-  // Método simplificado para enviar solo los campos editables usando PUT
-  submitForm(): void {
-
-    if (this.sessionForm.invalid) {
-      Object.keys(this.sessionForm.controls).forEach(control => {
-        this.sessionForm.controls[control].markAsDirty();
-        this.sessionForm.controls[control].updateValueAndValidity();
-      });
-      return;
-    }
-
-    const formValues = this.sessionForm.getRawValue();
-
-    const updatedSession = {
-      id: this.sessionData.id,
-      start_date: this.convertDateToString(formValues.date),
-      start_time: this.convertTimeToString(formValues.start_time),
-      end_time: this.convertTimeToString(formValues.end_time),
-      // instructor_id: this.sessionData.instructor?.id
-      instructor_id: formValues.instructor
-    };
-
-    this.sessionService.updateSession(updatedSession).subscribe({
-      next: (response) => {
-        console.log('Sesión actualizada:', response);
-              this.sessionCreated.emit(response);
-              this.createBasicNotification();
-              this.loading = false;
-
-              this.isVisible = false;
-            },
-            error: (err) => {
-              let errorMessage = 'Error al crear la sesión.';
-              if (err.error) {
-                if (err.error.message) {
-                  errorMessage = err.error.message;
-                }
-                if (err.error.conflict_session) {
-                  // errorMessage += ' Detalle del conflicto: ' + JSON.stringify(err.error.conflict_session);
-                }
-              }
-              this.notification.create('error', 'Error', errorMessage);
-              this.loading = false;
-
-            }
-    });
-  }
-
-  private convertTimeToString(time: Date): string {
-    const hours = time.getHours().toString().padStart(2, '0');
-    const minutes = time.getMinutes().toString().padStart(2, '0');
-   // const seconds = time.getSeconds().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
-  private convertDateToString(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  // Getters opcionales para facilitar el acceso a controles (opcional)
-  get fieldStartTime(): FormControl {
-    return this.sessionForm.get('start_time') as FormControl;
-  }
-  get fieldEndTime(): FormControl {
-    return this.sessionForm.get('end_time') as FormControl;
-  }
-  get fieldDate(): FormControl {
-    return this.sessionForm.get('date') as FormControl;
-  }
-
-  @Output() sessionCreated = new EventEmitter<SessionModel>();
-
-  createBasicNotification(): void {
+  // NOTIFICACIONES
+  private createBasicNotification(): void {
     this.notification.blank(
-      'Se ha creado la sesión correctamente',
-      'Ahora puede tomar asistencia de su sesión'
+      'Actualización exitosa',
+      'La sesión se actualizó correctamente'
     );
   }
 
+  private handleUpdateSuccess(response: SessionModel): void {
+    console.log('Sesión actualizada:', response);
+    this.sessionCreated.emit(response); // Notifica al componente padre
+    this.createBasicNotification();     // Muestra notificación
+    this.isVisible = false;             // Cierra el modal
+    this.loading = false;
+  }
+
+  private handleUpdateError(err: any): void {
+    let errorMessage = 'Error al actualizar la sesión';
+    if (err.error?.message) errorMessage = err.error.message;
+
+    this.notification.error('Error', errorMessage);
+    this.loading = false;
+  }
 }
+

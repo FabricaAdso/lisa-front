@@ -1,17 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import { InstructorModel } from '@shared/models/instructor.model';
-import {
-  KnowledgeNetworkModel,
-} from '@shared/models/knowledg-network.model';
+import { KnowledgeNetworkModel } from '@shared/models/knowledg-network.model';
 import { InstructorService } from '@shared/services/instructor.service';
 import { KnowledgeNetworkService } from '@shared/services/knowledge-network.service';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -24,7 +15,6 @@ import { CourseModel } from '@shared/models/course.model';
 import { SessionModel } from '@shared/models/session.model';
 import { CourseService } from '@shared/services/program/course.service';
 import { SessionService } from '@shared/services/program/session.service';
-import { CreateSessionDTO } from '@shared/dto/create-session.dto';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { RapService } from '@shared/services/program/rap.service';
 import { SubjectService } from '@shared/services/program/subject.service';
@@ -87,7 +77,6 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   selectedDate: Date | null = new Date();
 
-  private subjectSelection = new Subject<void>();
   private knowledgeNetworkSelection = new Subject<void>();
   private destroy = new Subject<void>();
   private courseSelection = new Subject<void>();
@@ -412,11 +401,10 @@ export class SessionComponent implements OnInit, OnDestroy {
       }
 
 
-          // Convierto el array days_of_week a string
-    if (formValues.days_of_week && Array.isArray(formValues.days_of_week)) {
-      formValues.days_of_week = formValues.days_of_week.join(',');
-    }
-
+      // Convierto el array days_of_week a string
+      if (formValues.days_of_week && Array.isArray(formValues.days_of_week)) {
+        formValues.days_of_week = formValues.days_of_week.join(',');
+      }
 
       console.log('Payload de sesión:', formValues);
 

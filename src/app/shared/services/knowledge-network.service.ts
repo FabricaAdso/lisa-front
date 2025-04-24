@@ -16,10 +16,6 @@ export class KnowledgeNetworkService {
 
   url:string = 'knowledgeNetwork'
 
-  // getInstructorByKnowledgeNetwork(id:number){
-  //   return this.http.get<KnowledgeNetworkByInstructorModel[]>(`${this.url}/${id}`)
-  // }
-
   getknowledgeNetwork(data?:QueryUrl):Observable<KnowledgeNetworkModel[]>{
     let url:string = getQueryUrl(this.url,data)
     return this.http.get<KnowledgeNetworkModel[]>(url)
