@@ -12,6 +12,13 @@
     
 }
 
+.pagination {
+  margin-top: 15px;
+  display: flex;
+  justify-content: end;
+  margin-right: 20px;
+}
+
 
 ::ng-deep .inasistencias .ant-tabs-tab-active .ant-tabs-tab-btn{
     color:#1890ff;
