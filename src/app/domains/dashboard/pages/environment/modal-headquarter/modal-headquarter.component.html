@@ -1,9 +1,8 @@
 <!-- modal-headquarter.component.html -->
 @if (isVisibleHeadquarter) {
-<!-- <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-container" (click)="$event.stopPropagation()"> -->
 <nz-modal
   (nzOnCancel)="closeModal()"
+  [nzTitle]="titleHeadquarter"
   (nzOnOk)="saveHeadquarter()"
   [(nzVisible)]="isVisibleHeadquarter"
 >
@@ -47,11 +46,8 @@
       </div>
 
 
-      <!-- Mostrar el campo training_center_id solo en modo creación -->
+    
       @if (!isEdit) {
-      
-
-
         <div>
           <label>Municipio</label>
         <nz-form-control>

@@ -1,38 +1,43 @@
 <nz-drawer
-    [nzSize]="size"
-    [nzVisible]="visible"
-    nzPlacement="right"
-    nzTitle="Mensajes"
-    [nzExtra]=""
-    (nzOnClose)="close()"
-  >
-    <ng-container *nzDrawerContent>
-      @for (item of messages(); track $index) {
-        <nz-alert 
-          nzBanner 
-          [nzMessage]="item.message" 
-          [nzType]="item.read_at ? 'info' : item.type" 
-          [nzShowIcon]="true" 
-          [nzAction]="item.type === 'warning' && !item.read_at ? actionTemplate1 : null">
-        </nz-alert>
-      
-        <ng-template #actionTemplate1>
-          <button 
-            nz-button 
-            nzSize="small" 
-            nzType="text" 
-            (click)="markAsRead(item.id, $index)">
-            <span 
-              class="text-[1.2rem]"
-              nz-icon
-              nzType="check-circle"
-              nzTheme="twotone"
-              nzTwotoneColor="#52c41a">
-            </span>
-          </button>
-        </ng-template>
-      }
-    
-    </ng-container>
+  [nzSize]="size"
+  [nzVisible]="visible"
+  nzPlacement="right"
+  nzTitle="Mensajes"
+  [nzExtra]=""
+  (nzOnClose)="close()"
+>
+  <ng-container *nzDrawerContent>
+    @if(!messages() || messages().length === 0) {
+      <nz-empty nzNotFoundContent="No tienes notificaciones"></nz-empty>
+    }@else { @for (item of messages(); track $index) {
+    <nz-alert
+      nzBanner
+      [nzMessage]="item.message"
+      [nzType]="item.read_at ? 'success' : item.type"
+      [nzShowIcon]="true"
+      [nzAction]="
+        item.type === 'warning' && !item.read_at ? actionTemplate1 : null
+      "
+    >
+    </nz-alert>
+
+    <ng-template #actionTemplate1>
+      <button
+        nz-button
+        nzSize="small"
+        nzType="text"
+        (click)="markAsRead(item.id, $index)"
+      >
+        <span
+          class="text-[1.2rem]"
+          nz-icon
+          nzType="check-circle"
+          nzTheme="twotone"
+          nzTwotoneColor="#52c41a"
+        >
+        </span>
+      </button>
+    </ng-template>
+    } }
+  </ng-container>
 </nz-drawer>
-  

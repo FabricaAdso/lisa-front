@@ -8,11 +8,9 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { forkJoin } from 'rxjs';
-import { SessionComponent } from './session-modal/session.component';
+import { SessionModalComponent } from './session-modal/session-modal.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-
-
 
 @Component({
   selector: 'app-ficha',
@@ -24,20 +22,17 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
     NzButtonModule,
     NzGridModule,
     RouterModule,
-    SessionComponent,
+    SessionModalComponent,
     NzModalModule,
     NzTabsModule,
-
-
-
 ],
 
-  templateUrl: './ficha.component.html',
-  styleUrl:  './ficha.component.css'
+  templateUrl: './session.component.html',
+  styleUrl:  './session.component.css'
 })
 export class FichaComponent {
 
-  @ViewChild('sessionModal') sessionModal:any = SessionComponent;
+  @ViewChild('sessionModal') sessionModal:any = SessionModalComponent;
   private courseService = inject(CourseService);
 
   pending_courses:SessionModel[] = [];
@@ -89,19 +84,4 @@ export class FichaComponent {
     })
     
   }
-  
-  deleteSession(sessionId: number, courseId: number) {
-    // Lógica para eliminar la sesión, usando el servicio correspondiente
-    // this.courseService.deleteSession(sessionId, courseId).subscribe({
-    //   next: () => {
-    //     // Después de eliminar, recargar las fichas y sus sesiones
-    //     this.loadData();
-    //     console.log('Sesión eliminada');
-    //   },
-    //   error: (error) => {
-    //     console.error('Error al eliminar la sesión', error);
-    //   }
-    // });
-  }
-
 }
