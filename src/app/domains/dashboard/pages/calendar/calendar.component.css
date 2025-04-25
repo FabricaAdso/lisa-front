@@ -160,6 +160,3 @@
   @apply h-[4rem]
 }
 
-::ng-deep .ant-btn {
-  @apply bg-green-500 
-}

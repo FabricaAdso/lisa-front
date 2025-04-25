@@ -19,7 +19,10 @@ export interface SessionModel {
   rap:RapModel;
   end_date:string;
 
-
+  course_code: string;
+  program_name: string;
+  environment: string;
+  headquarters: string;
   //relaciones
   assistance:AssistanceModel
 }
