@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { getQueryUrl } from '@shared/functions/url.functions';
 import { CourseModel } from '@shared/models/course.model';
 import { QueryUrl } from '@shared/models/query-url.model';
-import { SessionModel } from '@shared/models/session.model';
+import { PaginatedResponse, SessionModel } from '@shared/models/session.model';
 import { SubjectModel } from '@shared/models/subject-model';
 import { Observable } from 'rxjs';
 
@@ -19,13 +19,14 @@ export class CourseService {
 
   constructor() { }
   getCourses(data?: QueryUrl): Observable<CourseModel[]> {
-
     let url: string = getQueryUrl(this.url, data)
-
-
     return this.http.get<CourseModel[]>(url);
-  }
+  } 
 
+  getCoursesPage(data?: QueryUrl): Observable<PaginatedResponse<CourseModel>> {
+    const url = getQueryUrl(this.url, data);
+    return this.http.get<PaginatedResponse<CourseModel>>(url);
+  }
 
   getCourseSessionsNow(data?: QueryUrl): Observable<SessionModel[]> {
 

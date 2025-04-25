@@ -30,7 +30,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
   templateUrl: './session.component.html',
   styleUrl:  './session.component.css'
 })
-export class FichaComponent {
+export class SessionComponent {
 
   @ViewChild('sessionModal') sessionModal:any = SessionModalComponent;
   private courseService = inject(CourseService);

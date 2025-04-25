@@ -1,0 +1,32 @@
+
+<div class="flex my-4">
+    <nz-select class="w-1/5" [(ngModel)]="programFilter" (ngModelChange)="onProgramFilterChange($event)" nzShowSearch="true" nzPlaceHolder="Filtrar por programa">
+      @for (item of uniquePrograms; track $index) {
+      <nz-option
+        [nzValue]="item.id"
+        [nzLabel]="item.name"
+      ></nz-option>
+      }
+    </nz-select>
+</div>
+
+<nz-table #basicTable [nzData]="courses_model" [nzBordered]="false" [nzFrontPagination]="false" >
+    <thead>
+      <tr>
+        <th class="p-2">Codigo</th>
+        <th class="p-2">Nombre del programa</th>
+        <th class="p-2">Intructor lider</th>
+        <th class="p-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of courses_model; track $index) {
+      <tr>
+        <td class="p-2">{{ data.code }}</td>
+        <td class="p-2">{{ data.program?.name }}</td>
+        <td class="p-2"></td>
+
+      </tr>
+      }
+    </tbody>
+  </nz-table>
