@@ -1,6 +1,8 @@
 .pagination {
+  margin-top: 15px;
   display: flex;
   justify-content: end;
+  margin-right: 20px;
 }
 
 .action-buttons {
@@ -14,10 +16,9 @@
     vertical-align: middle; /* Alinea mejor con el texto */
   }
   .crear-btn {
-    background-color: #5EB319;
-    /* font-weight: 500; */
-    border-radius: 5px;
-    border-color: #5EB319;
+  
+    font-weight: 500;
+
     margin-bottom: 20px;
     margin-right: 20px; /* Agrega margen a la derecha */
   
@@ -33,48 +34,6 @@
 }
 
 
-  .crear-btn:hover {
-    background: #2b7a04 !important;  
-    border-color: #2e8c01 !important;
-    }
-  .edit-btn {
-    color: white !important;
-
-   
-    background: #5EB319 !important;
-    border-color: #5EB319 !important;
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background 0.3s ease, border-color 0.3s ease;
-
-  }
-  
-
-  .edit-btn:hover {
-    background: #2b7a04 !important;  
-    border-color: #2e8c01 !important;
-  
-  }
-
 
   
-/* Botón de Eliminar */
-.delete-btn {
-    color: #F44336;
-    border: 2px solid #f4433622;
-    background: transparent;
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .delete-btn:hover {
-    background: #f44336ae;
-    color: white;
-  }
 
