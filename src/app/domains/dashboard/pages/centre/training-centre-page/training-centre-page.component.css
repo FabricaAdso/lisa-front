@@ -1,6 +1,8 @@
 .pagination {
+  margin-top: 15px;
   display: flex;
   justify-content: end;
+  margin-right: 20px;
 }
 
 .action-buttons {
