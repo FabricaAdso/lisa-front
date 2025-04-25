@@ -49,10 +49,10 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     FormsModule,
     NzInputNumberModule,
   ],
-  templateUrl: './session.component.html',
-  styleUrl: './session.component.css',
+  templateUrl: './session-modal.component.html',
+  styleUrl: './session-modal.component.css',
 })
-export class SessionComponent implements OnInit, OnDestroy {
+export class SessionModalComponent implements OnInit, OnDestroy {
   disabledDate = (current: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);

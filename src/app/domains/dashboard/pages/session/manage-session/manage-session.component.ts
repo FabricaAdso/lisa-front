@@ -13,7 +13,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { SessionComponent } from '../session-modal/session.component';
+import { SessionModalComponent } from '../session-modal/session-modal.component';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
@@ -48,7 +48,7 @@ import { SessionEditComponent } from '../session-edit/session-edit.component';
     NzModalModule,
     NzGridModule,
     NzTabsModule,
-    SessionComponent,
+    SessionModalComponent,
     NzButtonModule, NzFormModule,
     NzInputModule,
     NzSelectModule,
@@ -375,7 +375,7 @@ export class ManageSessionComponent implements OnInit {
 
 
 
-  @ViewChild('sessionModal') sessionModal!: SessionComponent;
+  @ViewChild('sessionModal') sessionModal!: SessionModalComponent;
   pending_courses: SessionModel[] = [];
   record_courses: SessionModel[] = [];
   createSessionOpen = false;
