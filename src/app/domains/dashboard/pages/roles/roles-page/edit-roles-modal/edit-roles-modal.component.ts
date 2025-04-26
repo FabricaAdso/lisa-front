@@ -5,7 +5,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { RolesModel } from '@shared/models/roles-model';
 import { ApiRolesService } from '@shared/services/api-roles.service';
-import { CourseService } from '@shared/services/program/course.service';
+import { CourseService } from '@shared/services/course.service';
 import { KnowledgeNetworkService } from '@shared/services/knowledge-network.service';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzFormModule } from 'ng-zorro-antd/form';

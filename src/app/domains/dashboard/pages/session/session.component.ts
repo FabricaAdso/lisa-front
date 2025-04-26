@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
-import { CourseService } from '@shared/services/program/course.service';
+import { CourseService } from '@shared/services/course.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';

@@ -13,11 +13,11 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
 import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
-import { CourseService } from '@shared/services/program/course.service';
+import { CourseService } from '@shared/services/course.service';
 import { CourseModel } from '@shared/models/course.model';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
-import { SessionService } from '@shared/services/program/session.service';
+import { SessionService } from '@shared/services/session.service';
 import { GeneralAssistanceData } from '@shared/models/generalDataAssistance-model';
 import { SessionModel } from '@shared/models/session.model';
 

@@ -14,6 +14,7 @@ export class CourseService {
 
   private http = inject(HttpClient);
   url: string = 'course'
+  urlCourses: string = 'courses'
   //
   urlSessionNOw: string = 'course/sessionsNow'
 
@@ -21,16 +22,20 @@ export class CourseService {
   getCourses(data?: QueryUrl): Observable<CourseModel[]> {
     let url: string = getQueryUrl(this.url, data)
     return this.http.get<CourseModel[]>(url);
-  } 
+  }
+  
+  getCourseSearch(data:string){
+    return this.http.get<CourseModel[]>(`${this.urlCourses}/search?code=${data}`)
+  }
 
   getCoursesPage(data?: QueryUrl): Observable<PaginatedResponse<CourseModel>> {
-    const url = getQueryUrl(this.url, data);
+    const url = getQueryUrl(this.urlCourses, data);
     return this.http.get<PaginatedResponse<CourseModel>>(url);
   }
 
   getCourseSessionsNow(data?: QueryUrl): Observable<SessionModel[]> {
 
-    let url: string = getQueryUrl(`${this.url}/sessionsNow`, data)
+     let url: string = getQueryUrl(`${this.url}/sessionsNow`, data)
 
     return this.http.get<SessionModel[]>(url);
   }

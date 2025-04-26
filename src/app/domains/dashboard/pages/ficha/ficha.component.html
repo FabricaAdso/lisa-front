@@ -1,15 +1,25 @@
-
-<div class="flex my-4">
-    <nz-select class="w-1/5" [(ngModel)]="programFilter" (ngModelChange)="onProgramFilterChange($event)" nzShowSearch="true" nzPlaceHolder="Filtrar por programa">
-      @for (item of uniquePrograms; track $index) {
-      <nz-option
-        [nzValue]="item.id"
-        [nzLabel]="item.name"
-      ></nz-option>
-      }
-    </nz-select>
+<div class="flex flex-row justify-end gap-2 w-full">
+<div class="flex my-4 w-64">
+  <nz-select class="w-full" [(ngModel)]="selectedProgramId" (ngModelChange)="onProgramFilterChange($event)" nzShowSearch="true" nzPlaceHolder="Buqueda por ficha">
+    @for (item of programs; track $index) {
+    <nz-option
+      [nzValue]="item.id"
+      [nzLabel]="item.name"
+    ></nz-option>
+    }
+  </nz-select>
 </div>
-
+<div class="flex my-4 w-64">
+      <nz-select class="w-full" [(ngModel)]="selectedProgramId" (ngModelChange)="onProgramFilterChange($event)"  nzShowSearch="true" nzPlaceHolder="Filtrar por programa">
+        @for (item of programs; track $index) {
+        <nz-option
+          [nzValue]="item.id"
+          [nzLabel]="item.name"
+        ></nz-option>
+        }
+      </nz-select>
+</div>
+</div>
 <nz-table #basicTable [nzData]="courses_model" [nzBordered]="false" [nzFrontPagination]="false" >
     <thead>
       <tr>
@@ -30,3 +40,9 @@
       }
     </tbody>
   </nz-table>
+  <div class="flex justify-end">
+    <nz-pagination
+    [nzTotal]="totalItems"
+    (nzPageIndexChange)="changePage($event)">
+  </nz-pagination>
+  </div>

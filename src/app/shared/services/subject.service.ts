@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { getQueryUrl } from '@shared/functions/url.functions';
-import { QueryUrl } from '@shared/models/query-url.model';
 import { SubjectModel } from '@shared/models/subject-model';
+import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +10,22 @@ export class SubjectService {
 
   constructor() { }
 
-  private http = inject(HttpClient);
+  private http = inject(HttpClient)
 
-  url = 'subject'
+  URL:string = 'subject'
 
-  getSubject(data?:QueryUrl){
-    let url:string = getQueryUrl(this.url,data)
-    return this.http.get<SubjectModel[]>(url);
+  getSubject(){
+    return this.http.get<SubjectModel[]>(`${this.URL}`)
   }
 
-  postSubject(data:SubjectModel){
-    return this.http.post<SubjectModel[]>(this.url,data);
+  getSubjectByCourse(courseCode: string): Observable<SubjectModel[]> {
+    return this.http.get<SubjectModel[]>(`${this.URL}/?included=program,user&filter[subjectForCourse]=${courseCode}`)
+      .pipe(
+        catchError((error) => {
+          console.error('Error al obtener los subjects:', error);
+          return of([]);
+        })
+      );
   }
 
 }

@@ -3,7 +3,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SessionModel } from '@shared/models/session.model';
-import { SessionService } from '@shared/services/program/session.service';
+import { SessionService } from '@shared/services/session.service';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzInputModule } from 'ng-zorro-antd/input';

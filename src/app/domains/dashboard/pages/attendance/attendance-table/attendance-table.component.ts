@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { NzTableComponent, NzTableModule } from 'ng-zorro-antd/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
-import { SessionService } from '@shared/services/program/session.service';
+import { SessionService } from '@shared/services/session.service';
 import { AttendanceComponent } from '../attendance.component';
 import { DataAssistanceDTO } from '@shared/dto/data-assistanceDTO';
 
@@ -96,33 +96,6 @@ export class AttendanceTableComponent implements OnInit,OnDestroy {
       correo: item.apprentice?.user?.email,
     }
   }
-
-  // toggleAssistance(assistanceId: number, event: Event) {
-  //   const isChecked = (event!.target as HTMLInputElement).checked;
-
-  //   const data: UpdateAssistanceDTO = {
-  //     id: assistanceId,
-  //     assistance: isChecked,
-  //   };
-
-  //   this.assistance_service.saveAssistances(data).subscribe({
-  //     next: (updated:any) => {
-  //       let indexasistencia = this.listOfData.findIndex(asistencia => asistencia.key == updated.assistance.id.toString());
-  //       if (indexasistencia != -1) {
-  //         this.listOfData[indexasistencia].assistance = updated.assistance.assistance
-
-  //         this.listDAtos = [...this.listDAtos]
-
-  //         this.evaluarCantidadTablas();
-  //       }
-        
-  
-  //     },
-  //     error: (err:any) => {
-  //       console.error('Error al actualizar asistencia:', err);
-  //     },
-  //   });
-  // }
 
   toggleAssistance(assistanceId: number, event: Event) {
     // Cancelar cualquier temporizador previo

@@ -1,8 +1,7 @@
 .paginate{
-  margin-top: 15px;
+  margin-top: 16px;
   display: flex;
   justify-content: end;
-  margin-right: 20px;
 }
 .buscador{
 

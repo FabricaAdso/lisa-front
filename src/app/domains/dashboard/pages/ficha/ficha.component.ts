@@ -3,7 +3,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CourseModel } from '@shared/models/course.model';
 import { ProgramModel } from '@shared/models/program.model';
-import { CourseService } from '@shared/services/program/course.service';
+import { CourseService } from '@shared/services/course.service';
+import { ProgramService } from '@shared/services/program.service';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin } from 'rxjs';
@@ -11,20 +14,23 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-ficha',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule,NzTableModule,NzSelectModule],
+  imports: [CommonModule,ReactiveFormsModule,FormsModule,NzTableModule,NzSelectModule,NzPaginationModule,NzInputModule],
   templateUrl: './ficha.component.html',
   styleUrl: './ficha.component.css'
 })
 export class FichaComponent implements OnInit {
 
   private courseService = inject(CourseService);
+  private programService = inject(ProgramService);
+
   courses_model: CourseModel[] = [];
-  uniquePrograms: ProgramModel[] = [];
-  programFilter: string | null = null;
-  filteredCourses: CourseModel[] = [];
+  programs: ProgramModel[] = [];
   page:number = 1;
-  per_page:number = 10;
   totalItems:number = 0;
+  selectedProgramId: number | null = null;
+  selectedProgram = '';
+  courseSearch = '';
+
 
   ngOnInit(): void {
     this.getData();
@@ -32,47 +38,49 @@ export class FichaComponent implements OnInit {
 
   getData(){
     const data_sub = forkJoin([
-      this.courseService.getCoursesPage({included: ['program'], page: this.page, per_page: this.per_page},
+      this.programService.getPrograms(),
+      this.courseService.getCoursesPage({included: ['program'], filterNormal:{'program_q': this.selectedProgram }, page: this.page},
       )]).subscribe({
-        next: ([response]) => {
+        next: ([programs,response]) => {
           this.courses_model = response.data;
-          this.filteredCourses = [...this.courses_model];
-          this.uniquePrograms = this.extractUniquePrograms(response.data);
+          this.programs = programs
           this.totalItems = response.total
-          console.log(this.courses_model);
-          console.log(this.uniquePrograms);
-          console.log(this.filteredCourses);
-          console.log(this.totalItems);
-          
         },
         error: (err) => {
           console.error(err);
+        },complete(){
+          data_sub.unsubscribe();
         }
       })
   }
 
-  extractUniquePrograms(courses: CourseModel[]): ProgramModel[] {
-    const programsMap = new Map<number, ProgramModel>();
-    
-    courses.forEach(course => {
-      if (course.program && !programsMap.has(course.program.id)) {
-        programsMap.set(course.program.id, course.program);
-      }
-    });
-    
-    return Array.from(programsMap.values());
+  onProgramFilterChange(programId: number | null): void {
+    this.selectedProgramId = programId;
+    this.page = 1;
+    this.selectedProgram  = this.programs.find(item => item.id === this.selectedProgramId)!.name
+    this.getData()
   }
 
-  onProgramFilterChange(programId: string): void {
-    this.programFilter = programId;
-    this.filteredCourses = programId 
-      ? this.courses_model.filter(c => c.program?.id.toString() === programId)
-      : [...this.courses_model];
+  loadForSearch(){
+    const data_sub = forkJoin([
+      this.courseService.getCourseSearch(this.courseSearch)
+    ]).subscribe({
+      next: ([courseSearch]) =>{
+        this.courses_model = courseSearch;
+      }
+    })
   }
 
   onPageChange(page: number): void {
     this.page = page;
     this.getData();
+  }
+
+  changePage(event: Number){
+    this.page = event as number;
+    console.log(this.page);
+    this.getData()
+    
   }
 
 }

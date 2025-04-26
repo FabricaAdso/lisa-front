@@ -11,7 +11,7 @@ import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
 
 import { CalendarEvent, SessionModel } from '@shared/models/session.model';
-import { SessionService } from '@shared/services/program/session.service';
+import { SessionService } from '@shared/services/session.service';
 import { QueryUrl } from '@shared/models/query-url.model';
 import { log } from 'ng-zorro-antd/core/logger';
 
