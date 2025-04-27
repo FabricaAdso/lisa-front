@@ -62,4 +62,8 @@ export class CourseService {
     return this.http.put<CourseModel[]>(`${this.urlCourses}/asignar-lider/${idCourse}/${idInstructor}`, {});
   }
 
+  deleteCourse(idCourse: number){
+    return this.http.delete<CourseModel[]>(`${this.urlCourses}/delete-all-relations/${idCourse}`);
+  }
+
 }

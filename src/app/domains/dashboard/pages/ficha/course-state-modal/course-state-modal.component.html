@@ -1,0 +1,19 @@
+<nz-modal
+    nzTitle="Estado del curso"
+    [(nzVisible)]="isVisible"
+    (nzOnCancel)="closeModal()"
+    (nzOnOk)="saveData()"
+    >
+    <ng-container *nzModalContent>
+        <form nz-form [formGroup]="form">
+            <nz-select formControlName="course_name" [(ngModel)]="state" class="w-full">
+                @for (item of state; track $index) {
+               <nz-option
+                   [nzValue]="item"
+                   [nzLabel]="item"
+               ></nz-option>
+                }
+           </nz-select>
+        </form>
+    </ng-container>
+</nz-modal>

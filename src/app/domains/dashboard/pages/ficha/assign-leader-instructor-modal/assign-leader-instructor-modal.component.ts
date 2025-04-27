@@ -97,8 +97,13 @@ export class AssignLeaderInstructorModalComponent implements OnInit{
 
   closeModal(){
     this.isVisible = false;
-    if(!this.isVisible){
-      this.modalClosed.emit(true);
+
+    if (this.form && this.form.get('instructor')) {
+      const hasInstructor = !!this.form.get('instructor')?.touched;
+      this.modalClosed.emit(hasInstructor);
+      console.log(hasInstructor); //devuelve true
+    } else {
+      this.modalClosed.emit(false);
     }
   }
 

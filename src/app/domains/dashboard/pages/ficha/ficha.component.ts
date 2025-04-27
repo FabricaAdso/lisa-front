@@ -17,17 +17,19 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { forkJoin } from 'rxjs';
 import { AssignLeaderInstructorModalComponent } from './assign-leader-instructor-modal/assign-leader-instructor-modal.component';
+import { CourseStateModalComponent } from './course-state-modal/course-state-modal.component';
 
 @Component({
   selector: 'app-ficha',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzTableModule, NzSelectModule, NzPaginationModule, NzInputModule, NzIconModule, NzButtonModule, NzModalModule, NzFormModule, AssignLeaderInstructorModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NzTableModule, NzSelectModule, NzPaginationModule, NzInputModule, NzIconModule, NzButtonModule, NzModalModule, NzFormModule, AssignLeaderInstructorModalComponent, CourseStateModalComponent],
   templateUrl: './ficha.component.html',
   styleUrl: './ficha.component.css'
 })
 export class FichaComponent implements OnInit, OnDestroy {
 
   @ViewChild('assignLeaderInstructorModal', {static:false}) assignLeaderInstructorModal:any = AssignLeaderInstructorModalComponent
+  @ViewChild('courseStateModal', {static:false}) courseStateModal:any = CourseStateModalComponent
 
   private courseService = inject(CourseService);
   private programService = inject(ProgramService);
@@ -44,8 +46,8 @@ export class FichaComponent implements OnInit, OnDestroy {
   isSearching = false;
   timeOut: any;
   courseSelected:any
-  isVisible = false
-
+  isVisibleAssignLeaderModal = false
+  isVisibleCourseStateModal = false
 
 
   ngOnInit(): void {
@@ -71,6 +73,9 @@ export class FichaComponent implements OnInit, OnDestroy {
           this.courses_model = response.data;
           this.programs = programs
           this.totalItems = response.total
+
+          this.isVisibleAssignLeaderModal = false
+          this.isVisibleCourseStateModal = false
         },
         error: (err) => {
           console.error(err);
@@ -138,15 +143,30 @@ export class FichaComponent implements OnInit, OnDestroy {
   }
 
   openModal(){
-    this.isVisible = true;
-    setTimeout(() => {
-      if (this.assignLeaderInstructorModal) {
-        this.assignLeaderInstructorModal.openModal();
-      }
-    });
+    if(this.isVisibleAssignLeaderModal){
+      setTimeout(() => {
+        if (this.assignLeaderInstructorModal) {
+          this.assignLeaderInstructorModal.openModal();
+        }
+      });
+    }if(this.isVisibleCourseStateModal){
+      setTimeout(() => {
+        if (this.courseStateModal) {
+          this.courseStateModal.openModal();
+        }
+      });
+    }
+
   }
 
   assignLeaderInstructor(event: number){  
+    this.isVisibleAssignLeaderModal = true;
+    this.openModal()
+    this.courseSelected = this.courses_model.find(item => item.id == event)
+  }
+
+  courseState(event: number){
+    this.isVisibleCourseStateModal = true;
     this.openModal()
     this.courseSelected = this.courses_model.find(item => item.id == event)
   }
@@ -169,10 +189,14 @@ export class FichaComponent implements OnInit, OnDestroy {
   }
 
   handleModalClose(shouldReset: boolean) {
-    console.log(shouldReset);
+
+    this.isVisibleAssignLeaderModal = false;
+    this.isVisibleCourseStateModal = false;
+    
     
     if (shouldReset) {
       this.getData();
+      return;
     }
   }
 

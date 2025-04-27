@@ -59,8 +59,8 @@
       </td>
       <td class="p-2">
         <button (click)="assignLeaderInstructor(data.id)" class="mr-4" nz-button nzType="default">Asignar instructor</button>
-        <button class="mr-4" nz-button nzType="default">Estado</button>
-        <button nz-button nzType="default">Actualizar fecha</button>
+        <button  (click)="courseState(data.id)" class="mr-4" nz-button nzType="default">Estado</button>
+        <!-- <button nz-button nzType="default">Actualizar fecha</button> -->
       </td>
     </tr>
     }
@@ -74,6 +74,8 @@
   </nz-pagination>
 </div>
 
-@if(isVisible){
+@if(isVisibleAssignLeaderModal){
   <app-assign-leader-instructor-model #assignLeaderInstructorModal [courses]="courseSelected" (modalClosed)="handleModalClose($event)" ></app-assign-leader-instructor-model>
+}@if(isVisibleCourseStateModal){
+  <app-course-state-modal #courseStateModal [courses]="courseSelected" (modalClosed)="handleModalClose($event)"></app-course-state-modal>
 }
