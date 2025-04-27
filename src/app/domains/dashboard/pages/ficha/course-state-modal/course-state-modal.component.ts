@@ -3,29 +3,36 @@ import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CourseModel } from '@shared/models/course.model';
 import { CourseService } from '@shared/services/course.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-course-state-modal',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule,NzModalModule,NzSelectModule],
+  imports: [CommonModule,ReactiveFormsModule,NzModalModule,NzSelectModule,NzButtonModule,NzPopconfirmModule, NzFormModule],
   templateUrl: './course-state-modal.component.html',
   styleUrl: './course-state-modal.component.css'
 })
 export class CourseStateModalComponent implements OnInit{
 
+  constructor(){
+    this.formCourseState()
+  }
+
   @Input() courses:CourseModel | null = null;
   @Output() modalClosed = new EventEmitter<boolean>();
 
   private courseService = inject(CourseService)
-  private notification = inject(NzNotificationService)
+  private notification = inject(NzNotificationService)  
   private fb = inject(FormBuilder)
 
   state = ['Terminada', 'Terminar por unificacion', 'Terminar por fecha']
-  
+
   selectedState: string = ''; 
   form!: FormGroup;
 
@@ -37,12 +44,16 @@ export class CourseStateModalComponent implements OnInit{
 
   formCourseState(){
     this.form = this.fb.group({
-      course_name: new FormControl('', Validators.required)
+      course_name: new FormControl (null, Validators.required)
     });
   }
 
-  saveData(){ 
-    if(this.form.get('course_name')?.value){
+  get fieldCourseCode(){
+    return this.form.get('course_name') as FormControl;
+  }
+
+  saveData(){
+    if(this.fieldCourseCode.value){
       const data_sub = forkJoin([
         this.courseService.deleteCourse(this.courses?.id!)
       ]).subscribe({
@@ -53,6 +64,7 @@ export class CourseStateModalComponent implements OnInit{
             'Curso eliminado',
             `El curso ${this.courses?.code} ha sido eliminado correctamente`
           )
+          this.closeModal();
         },complete(){
           data_sub.unsubscribe()
         },
@@ -60,8 +72,15 @@ export class CourseStateModalComponent implements OnInit{
           console.log(error);
         }
       })
+    }else{
+      this.notification.create(
+        'error',
+        'Error',
+        `El curso ${this.courses?.code} no ha sido eliminado`
+      )
+      this.fieldCourseCode.setErrors({ required: true });
     }
-    this.closeModal();
+    
   }
 
   openModal(){

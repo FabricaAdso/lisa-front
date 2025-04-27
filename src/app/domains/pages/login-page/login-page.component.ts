@@ -247,7 +247,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     }
 
     const data_sub = this.password_email_service.postEmail(emailData).subscribe({
-      next: (response) => {
+      next: () => {
         this.loadOne();
       },complete(){
         data_sub.unsubscribe();
