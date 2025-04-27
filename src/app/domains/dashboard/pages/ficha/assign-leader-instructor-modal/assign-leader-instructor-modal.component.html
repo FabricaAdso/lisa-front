@@ -1,0 +1,25 @@
+<nz-modal
+  nzTitle="Asignar instructor lider"
+  [(nzVisible)]="isVisible"
+  (nzOnCancel)="closeModal()"
+  (nzOnOk)="saveData()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form">
+        <nz-form-control>
+          <h1>Curso el cual se la va asignar un instructor lider: {{courses?.code}}</h1>
+        </nz-form-control>
+      <nz-form-label>Instructor</nz-form-label>
+      <nz-form-control nzErrorTip="Seleccione un instructor">
+        <nz-select formControlName="instructor">
+          @for (item of instructor_model; track $index) {
+          <nz-option
+            [nzValue]="item.id"
+            [nzLabel]="item.user?.name! + ' ' + item.user?.last_name!"
+          ></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </form>
+  </ng-container>
+</nz-modal>

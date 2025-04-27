@@ -58,5 +58,8 @@ export class CourseService {
     return this.http.get<CourseModel[]>(`${this.url}/leader`);
   }
 
+  postCourseLeaderInstructor(idCourse: number, idInstructor: number){
+    return this.http.put<CourseModel[]>(`${this.urlCourses}/asignar-lider/${idCourse}/${idInstructor}`, {});
+  }
 
 }

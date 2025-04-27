@@ -1,48 +1,79 @@
 <div class="flex flex-row justify-end gap-2 w-full">
-<div class="flex my-4 w-64">
-  <nz-select class="w-full" [(ngModel)]="selectedProgramId" (ngModelChange)="onProgramFilterChange($event)" nzShowSearch="true" nzPlaceHolder="Buqueda por ficha">
-    @for (item of programs; track $index) {
-    <nz-option
-      [nzValue]="item.id"
-      [nzLabel]="item.name"
-    ></nz-option>
-    }
-  </nz-select>
-</div>
-<div class="flex my-4 w-64">
-      <nz-select class="w-full" [(ngModel)]="selectedProgramId" (ngModelChange)="onProgramFilterChange($event)"  nzShowSearch="true" nzPlaceHolder="Filtrar por programa">
-        @for (item of programs; track $index) {
-        <nz-option
-          [nzValue]="item.id"
-          [nzLabel]="item.name"
-        ></nz-option>
-        }
-      </nz-select>
-</div>
-</div>
-<nz-table #basicTable [nzData]="courses_model" [nzBordered]="false" [nzFrontPagination]="false" >
-    <thead>
-      <tr>
-        <th class="p-2">Codigo</th>
-        <th class="p-2">Nombre del programa</th>
-        <th class="p-2">Intructor lider</th>
-        <th class="p-2">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (data of courses_model; track $index) {
-      <tr>
-        <td class="p-2">{{ data.code }}</td>
-        <td class="p-2">{{ data.program?.name }}</td>
-        <td class="p-2"></td>
-
-      </tr>
-      }
-    </tbody>
-  </nz-table>
-  <div class="flex justify-end">
-    <nz-pagination
-    [nzTotal]="totalItems"
-    (nzPageIndexChange)="changePage($event)">
-  </nz-pagination>
+  <div class="flex my-4 w-64">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input
+        nzPlaceholder="Buscar curso"
+        [(ngModel)]="courseSearch"
+        nz-input
+        type="text"
+        placeholder="Busca por ficha"
+        (input)="searchCourse()"
+        (blur)="onSearchBlur()"
+      />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch>
+        <span nz-icon nzType="search"></span>
+      </button>
+    </ng-template>
   </div>
+  <div class="flex my-4 w-64">
+    <nz-select
+      class="w-full"
+      [(ngModel)]="selectedProgramId"
+      (ngModelChange)="onProgramFilterChange($event)"
+      nzAllowClear
+      nzShowSearch="true"
+      nzPlaceHolder="Filtrar por programa"
+    >
+      @for (item of programs; track $index) {
+      <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+      }
+    </nz-select>
+  </div>
+</div>
+<nz-table
+  #basicTable
+  [nzData]="courses_model"
+  [nzBordered]="false"
+  [nzFrontPagination]="false"
+>
+  <thead>
+    <tr>
+      <th class="p-2">Codigo</th>
+      <th class="p-2">Nombre del programa</th>
+      <th class="p-2">Intructor lider</th>
+      <th class="p-2">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (data of courses_model; track $index) {
+    <tr>
+      <td class="p-2">{{ data.code }}</td>
+      <td class="p-2">{{ data.program?.name }}</td>
+      <td class="p-2">
+        {{ data.course_leader?.user?.name || "No hay"
+        }}{{
+          data.course_leader?.user?.last_name || " instructor lider asociado"
+        }}
+      </td>
+      <td class="p-2">
+        <button (click)="assignLeaderInstructor(data.id)" class="mr-4" nz-button nzType="default">Asignar instructor</button>
+        <button class="mr-4" nz-button nzType="default">Estado</button>
+        <button nz-button nzType="default">Actualizar fecha</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</nz-table>
+<div class="flex justify-end">
+  <nz-pagination
+    [nzTotal]="totalItems"
+    (nzPageIndexChange)="changePage($event)"
+  >
+  </nz-pagination>
+</div>
+
+@if(isVisible){
+  <app-assign-leader-instructor-model #assignLeaderInstructorModal [courses]="courseSelected" (modalClosed)="handleModalClose($event)" ></app-assign-leader-instructor-model>
+}
