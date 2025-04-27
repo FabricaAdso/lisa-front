@@ -13,7 +13,8 @@ import esLocale from '@fullcalendar/core/locales/es';
 import { CalendarEvent, SessionModel } from '@shared/models/session.model';
 import { SessionService } from '@shared/services/session.service';
 import { QueryUrl } from '@shared/models/query-url.model';
-import { log } from 'ng-zorro-antd/core/logger';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-calendar',
@@ -23,7 +24,7 @@ import { log } from 'ng-zorro-antd/core/logger';
     FullCalendarModule,
     NzModalModule,
     NzButtonModule,
-    NzTimelineModule,
+    NzTimelineModule,NzTagModule, NzIconModule
   ],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
@@ -118,19 +119,6 @@ export class CalendarComponent {
       error: (err: any) => console.error(err)
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

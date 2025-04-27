@@ -48,6 +48,11 @@ export class EditRolesModalComponent implements OnInit {
   loading = false;
   loadingData = false;
 
+  originalRoles: number[] = [];
+   // Nuevas propiedades para controlar el estado de los campos
+   isApprenticeLocked = false;
+   isInstructorLocked = false;
+
   // Estados
   apprenticeState = [
     { value: 'Formacion', label: 'Formación' },
@@ -79,27 +84,51 @@ export class EditRolesModalComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    // Si el formulario no está inicializado o es inválido
+    // Si el formulario no está inicializado o es inválido (excepto por campos deshabilitados)
     if (!this.form || this.form.invalid) {
-      return false;
+      // Verificar si la invalidez viene de campos deshabilitados
+      const invalidFromDisabled = this.checkInvalidFromDisabled();
+      if (!invalidFromDisabled) {
+        return false;
+      }
     }
-  
+
     const values = this.form.value;
-    
-    // Validación para aprendiz
-    if (this.isApprenticeSelected) {
+
+    // Validación para aprendiz (solo si no está bloqueado)
+    if (this.isApprenticeSelected && !this.isApprenticeLocked) {
       if (!values.course_id || !values.state) {
         return false;
       }
     }
-  
-    // Validación para instructor
-    if (this.isInstructorSelected) {
+
+    // Validación para instructor (solo si no está bloqueado)
+    if (this.isInstructorSelected && !this.isInstructorLocked) {
       if (!values.knowledge_network_id) {
         return false;
       }
     }
-  
+
+    return true;
+  }
+
+  // Añade este nuevo método para verificar si la invalidez viene de campos deshabilitados
+  private checkInvalidFromDisabled(): boolean {
+    const controls = this.form.controls;
+
+    // Si el formulario es inválido, verificar si los campos inválidos están deshabilitados
+    if (this.form.invalid) {
+      for (const key in controls) {
+        if (controls[key].invalid) {
+          // Si el campo está deshabilitado, ignoramos su invalidez
+          if (controls[key].disabled) {
+            continue;
+          }
+          // Si hay algún campo inválido que NO está deshabilitado
+          return false;
+        }
+      }
+    }
     return true;
   }
 
@@ -110,33 +139,103 @@ export class EditRolesModalComponent implements OnInit {
       state: [null],
       knowledge_network_id: [null]
     });
-  
+
     // Escuchar cambios en los roles para actualizar validaciones
-    this.form.get('role_ids')?.valueChanges.subscribe(() => {
+    this.form.get('role_ids')?.valueChanges.subscribe((roles: number[]) => {
+      this.validateRoleChanges(roles);
       this.updateConditionalValidators();
     });
   }
-  
+   /**
+   * Valida los cambios en los roles para evitar eliminación no permitida
+   * @param newRoles Nuevos roles seleccionados
+   */
+   private validateRoleChanges(newRoles: number[]): void {
+    const protectedRoles = this.getProtectedRoles();
+
+    protectedRoles.forEach(role => {
+      if (this.originalRoles.includes(role.id)) {
+        // Si el rol estaba originalmente y se intenta quitar
+        if (!newRoles.includes(role.id)) {
+          this.notification.warning(
+            'Acción no permitida',
+            `No puedes eliminar el rol ${role.name} una vez asignado`
+          );
+          newRoles.push(role.id);
+          this.form.get('role_ids')?.setValue([...new Set(newRoles)]);
+        }
+
+        // Bloquear campos relacionados si el rol está presente
+        if (role.name === 'Aprendiz') {
+          this.isApprenticeLocked = true;
+          this.lockApprenticeFields();
+        }
+
+        if (role.name === 'Instructor') {
+          this.isInstructorLocked = true;
+          this.lockInstructorFields();
+        }
+      }
+    });
+  }
+
+  private lockApprenticeFields(): void {
+    this.form.get('course_id')?.disable();
+    this.form.get('state')?.disable();
+  }
+
+  private lockInstructorFields(): void {
+    this.form.get('knowledge_network_id')?.disable();
+  }
+
+  private unlockAllFields(): void {
+    this.form.get('course_id')?.enable();
+    this.form.get('state')?.enable();
+    this.form.get('knowledge_network_id')?.enable();
+  }
+
+  /**
+   * Obtiene los roles protegidos (usuario, aprendiz, instructor)
+   */
+  private getProtectedRoles(): RolesModel[] {
+    return this.roles.filter(role =>
+      role.name === 'Usuario' ||
+      role.name === 'Aprendiz' ||
+      role.name === 'Instructor'
+    );
+  }
+
   private updateConditionalValidators(): void {
     const courseControl = this.form.get('course_id');
     const stateControl = this.form.get('state');
     const networkControl = this.form.get('knowledge_network_id');
-  
+
     // Resetear validadores
     courseControl?.clearValidators();
     stateControl?.clearValidators();
     networkControl?.clearValidators();
-  
+
+      // Aplicar validadores condicionales solo si no están bloqueados
+  if (this.isApprenticeSelected && !this.isApprenticeLocked) {
+    courseControl?.setValidators(Validators.required);
+    stateControl?.setValidators(Validators.required);
+  }
+
+  if (this.isInstructorSelected && !this.isInstructorLocked) {
+    networkControl?.setValidators(Validators.required);
+  }
+
+
     // Aplicar validadores condicionales
     if (this.isApprenticeSelected) {
       courseControl?.setValidators(Validators.required);
       stateControl?.setValidators(Validators.required);
     }
-  
+
     if (this.isInstructorSelected) {
       networkControl?.setValidators(Validators.required);
     }
-  
+
     // Actualizar estado de validación
     courseControl?.updateValueAndValidity();
     stateControl?.updateValueAndValidity();
@@ -166,18 +265,18 @@ export class EditRolesModalComponent implements OnInit {
   setData(user: UserModel): void {
     this.userData = user;
     this.loadingData = true;
+    this.isApprenticeLocked = false;
+    this.isInstructorLocked = false;
+    this.unlockAllFields();
 
-    // Obtener roles actuales del usuario (ahora vienen directamente en user.roles como strings)
     const roleNames = user.roles || [];
-
-    // Mapear nombres de roles a IDs (si es necesario)
     const currentRoleIds = this.roles
       .filter(role => roleNames.includes(role.name))
       .map(role => role.id);
 
     this.selectedRoles = currentRoleIds;
+    this.originalRoles = [...currentRoleIds];
 
-    // Inicializar formulario con valores base
     const formData: any = {
       role_ids: currentRoleIds,
       course_id: null,
@@ -185,30 +284,36 @@ export class EditRolesModalComponent implements OnInit {
       knowledge_network_id: null
     };
 
-    // Cargar datos adicionales si el usuario es aprendiz o instructor
-    if (this.isApprenticeSelected) {
+    // Verificar y bloquear campos si es necesario
+    const hasApprenticeRole = roleNames.includes('Aprendiz');
+    const hasInstructorRole = roleNames.includes('Instructor');
+
+    if (hasApprenticeRole) {
+      this.isApprenticeLocked = true;
       this.apprenticeService.getApprenticeByUserId(user.id).subscribe({
         next: (response) => {
           formData.course_id = response?.apprentice_data?.course_id;
           formData.state = response?.apprentice_data?.state;
           this.initializeForm(formData);
+          this.lockApprenticeFields();
         },
         error: (error) => console.error('Error loading apprentice data', error)
       });
     }
 
-    if (this.isInstructorSelected) {
+    if (hasInstructorRole) {
+      this.isInstructorLocked = true;
       this.instructorService.getInstructorByUserId(user.id).subscribe({
         next: (response) => {
           formData.knowledge_network_id = response?.instructor_data?.knowledge_network_id;
           this.initializeForm(formData);
+          this.lockInstructorFields();
         },
         error: (error) => console.error('Error loading instructor data', error)
       });
     }
 
-    // Si no hay roles adicionales, inicializar el formulario directamente
-    if (!this.isApprenticeSelected && !this.isInstructorSelected) {
+    if (!hasApprenticeRole && !hasInstructorRole) {
       this.initializeForm(formData);
     }
 
@@ -234,17 +339,17 @@ export class EditRolesModalComponent implements OnInit {
   onRolesChange(selectedRoles: number[]): void {
     this.selectedRoles = selectedRoles;
     this.updateConditionalValidators();
-  
+
     if (!this.isApprenticeSelected) {
       this.form.get('course_id')?.reset();
       this.form.get('state')?.reset();
     }
-  
+
     if (!this.isInstructorSelected) {
       this.form.get('knowledge_network_id')?.reset();
     }
   }
-  
+
 
   openModal(): void {
     this.isVisible = true;
@@ -260,10 +365,10 @@ export class EditRolesModalComponent implements OnInit {
       this.notification.error('Error', 'Datos de usuario no disponibles');
       return;
     }
-  
+
     this.loading = true;
     const formValue = this.form.value;
-  
+
     this.rolesService.assignRoles(
       this.userData.id.toString(),
       formValue.role_ids,
@@ -275,6 +380,8 @@ export class EditRolesModalComponent implements OnInit {
         this.updatedUsers.emit();
         this.notification.success('Éxito', 'Roles actualizados correctamente');
         this.isVisible = false;
+       // Actualizar los roles originales después de una actualización exitososa
+        this.originalRoles = [...formValue.role_ids];
       },
       error: (error) => {
         this.notification.error('Error', error.error?.message || 'Error al actualizar roles');

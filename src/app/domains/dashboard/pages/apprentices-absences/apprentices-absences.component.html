@@ -51,9 +51,13 @@
     </tr>
   </tbody>
 </nz-table>
+
+<div class="pagination">
 <nz-pagination (nzPageIndexChange)="changePage($event)" [nzTotal]="total_elements" [nzPageIndex]="page"
   [nzPageSize]="elements" [nzResponsive]="true" [nzHideOnSinglePage]="true">
 </nz-pagination>
+</div>
+
 
 <!-- Modal para Rechazadas -->
 <app-rejected-modal *ngIf="selectedJustification?.aprobation?.state === estadoJustificacionEnum.RECHAZADO"
