@@ -1,5 +1,5 @@
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Editar Roles de Usuario" (nzOnCancel)="handleCancel()"
-  (nzOnOk)="handleOk()" [nzOkLoading]="loading"  [nzOkDisabled]="!isFormValid()">
+  (nzOnOk)="handleOk()" [nzOkLoading]="loading"  [nzOkDisabled]="!isFormValid()|| loading">
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="form">
       <!-- Selección de roles -->
