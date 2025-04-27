@@ -115,15 +115,17 @@
             <nz-form-item style="display: block;">
                 <nz-form-label>Nuevo día de la semana</nz-form-label>
                 <nz-form-control>
-                    <nz-select nzMode="multiple" formControlName="new_day_of_week" nzPlaceHolder="Selecciona día">
-                        <nz-option *ngFor="let d of [0,1,2,3,4,5,6]" [nzValue]="d"
-                            [nzLabel]="['Dom','Lun','Mar','Mie','Jue','Vie','Sab'][d]">
-                        </nz-option>
+                    <nz-select nzMode="multiple" formControlName="new_days_of_week" nzPlaceHolder="Selecciona día">
+                      <nz-option
+                      *ngFor="let day of dayOptions"
+                      [nzValue]="day.value"
+                      [nzLabel]="day.label"
+                    ></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
 
-            
+
 
         </form>
     </ng-container>

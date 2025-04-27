@@ -31,6 +31,7 @@ export class UpdateSessionsRangeModalComponent {
     @Input() courseId!: number;
     @Output() updateConfirmed = new EventEmitter<void>();
     @Output() sessionCreated = new EventEmitter<SessionModel>();
+    @Output() sessionsUpdatedByRange = new EventEmitter<SessionModel[]>();
 
     get fieldStartTime(): FormControl {
       return this.sessionForm.get('start_time') as FormControl;
@@ -55,9 +56,19 @@ export class UpdateSessionsRangeModalComponent {
     isVisible = false;
     defaultOpenValue = new Date(1970, 0, 1, 0, 0);
     instructors: any[] = [];
-  
+
     private notification = inject(NzNotificationService);
     private submitSubject = new Subject<void>();
+
+    public dayOptions = [
+      { value: 1, label: 'Lunes' },
+      { value: 2, label: 'Martes' },
+      { value: 3, label: 'Miércoles' },
+      { value: 4, label: 'Jueves' },
+      { value: 5, label: 'Viernes' },
+      { value: 6, label: 'Sábado' },
+      { value: 7, label: 'Domingo' }
+    ];
 
     constructor(
       private cd: ChangeDetectorRef,
@@ -73,7 +84,7 @@ export class UpdateSessionsRangeModalComponent {
         this.submitForm();
       });
     }
-  
+
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['sessionId'] && changes['sessionId'].currentValue) {
         this.loadSessionData();
@@ -81,7 +92,7 @@ export class UpdateSessionsRangeModalComponent {
         this.loadSessionData();
       }
     }
-  
+
     todisabledDate = (current: Date): boolean => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -92,7 +103,7 @@ export class UpdateSessionsRangeModalComponent {
     loadSessionData(): void {
       console.log('Llamando a loadSessionData con sessionId:', this.sessionId);
       this.loading = true;
-      
+
       this.sessionService.getSessionShow(this.sessionId, {
         included: [
           'instructor',
@@ -119,22 +130,22 @@ export class UpdateSessionsRangeModalComponent {
     }
 
     populateForm(): void {
-  
+
       const [year, month, day] = this.sessionData.date.split('-').map(Number);
-  
+
       // Convertir el string de fecha a un objeto Date
       // const sessionDate = new Date(this.sessionData.date);
       const sessionDate = new Date(year, month - 1, day);
-  
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       // Convertir start_time y end_time a objetos Date con fecha base fija (1970-01-01)
       const [startHour, startMinute, startSecond] = this.sessionData.start_time.split(':');
       const startTimeDate = new Date(1970, 0, 1, Number(startHour), Number(startMinute), Number(startSecond));
-  
+
       const [endHour, endMinute, endSecond] = this.sessionData.end_time.split(':');
       const endTimeDate = new Date(1970, 0, 1, Number(endHour), Number(endMinute), Number(endSecond));
-  
+
       this.sessionForm.patchValue({
         network: this.sessionData.instructor?.knowledge_network?.name,
         instructor:this.sessionData.instructor?.id,
@@ -146,18 +157,18 @@ export class UpdateSessionsRangeModalComponent {
       });
 
       this.cd.markForCheck();
-  
+
       const networkId = this.sessionData.instructor?.knowledge_network?.id;
       if (networkId){
         this.loadInstructors(networkId);
-      }  
-  
+      }
+
     }
-  
+
     debounceSubmit(): void {
       this.submitSubject.next();
     }
-  
+
     buildForm(): void {
       this.sessionForm = this.fb.group({
         start_date: [null, Validators.required],
@@ -170,12 +181,12 @@ export class UpdateSessionsRangeModalComponent {
         start_time: [null, Validators.required],
         end_time: [null, Validators.required],
         percentage: [{ value: null, disabled: true }, Validators.required],
-        new_day_of_week: [[], [Validators.required, Validators.min(0), Validators.max(6)]],
-        // confirmed: [false, Validators.requiredTrue]  
+        new_days_of_week: [[], [Validators.required, Validators.min(1), Validators.max(7)]],
+        // confirmed: [false, Validators.requiredTrue]
 
       });
     }
-  
+
     loadInstructors(networkId:number):void{
       this.instructorService.getInstructorByKnowledgeNetwork(networkId).subscribe({
         next: (instructors: InstructorModel[]) =>{
@@ -186,15 +197,15 @@ export class UpdateSessionsRangeModalComponent {
         }
       })
     }
-  
+
     openModal(): void {
       this.isVisible = true;
     }
-  
+
     cancel(): void {
       this.isVisible = false;
     }
-  
+
     submitForm(): void {
   console.log('submitForm invoked')
       if (this.sessionForm.invalid) {
@@ -204,11 +215,11 @@ export class UpdateSessionsRangeModalComponent {
         });
         return;
       }
-  
+
       const formValues = this.sessionForm.getRawValue();
       console.log('Valores del formulario:', formValues);
 
-  
+
       const updatedSession = {
         start_date: this.convertDateToString(formValues.start_date),
         end_date:   this.convertDateToString(formValues.end_date),
@@ -217,8 +228,8 @@ export class UpdateSessionsRangeModalComponent {
         start_time: this.convertTimeToString(formValues.start_time),
         end_time:   this.convertTimeToString(formValues.end_time),
         instructor_id: formValues.instructor,
-        new_day_of_week: formValues.new_day_of_week,
-        confirmed: true 
+        new_days_of_week: formValues.new_days_of_week,
+        confirmed: true
       };
       console.log('Payload a enviar:', updatedSession);
 
@@ -228,7 +239,6 @@ export class UpdateSessionsRangeModalComponent {
                 this.sessionCreated.emit(response);
                 this.createBasicNotification();
                 this.loading = false;
-  
                 this.isVisible = false;
               },
               error: (err) => {
@@ -243,35 +253,32 @@ export class UpdateSessionsRangeModalComponent {
                 }
                 this.notification.create('error', 'Error', errorMessage);
                 this.loading = false;
-  
+
               }
       });
     }
-  
+
     private convertTimeToString(time: Date): string {
       const hours = time.getHours().toString().padStart(2, '0');
       const minutes = time.getMinutes().toString().padStart(2, '0');
      // const seconds = time.getSeconds().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
     }
-  
+
     private convertDateToString(date: Date): string {
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
       return `${year}-${month}-${day}`;
     }
- 
+
     createBasicNotification(): void {
-      this.notification.blank(
-        'Se ha creado la sesión correctamente',
-        'Ahora puede tomar asistencia de su sesión'
-      );
+
     }
-  
+
   public loadSessionDataFromParent(sessionId: number): void {
     this.sessionId = sessionId;
     this.loadSessionData();
   }
-  
+
 }
