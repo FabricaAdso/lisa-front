@@ -151,8 +151,8 @@ export class EditRolesModalComponent implements OnInit {
     });
 
     // Cargar cursos
-    this.coursesService.getCourses().subscribe({
-      next: (data) => this.courses = data,
+    this.coursesService.getCoursesPage().subscribe({
+      next: (data) => this.courses = data.data,
       error: (error) => console.error('Error loading courses', error)
     });
 
