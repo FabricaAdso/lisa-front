@@ -20,12 +20,15 @@ import { RegionalModel } from '@shared/models/regional.model';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { TrainingCenterModel } from '@shared/models/training-center.model';
 import { TrainingCentreService } from '@shared/services/training-centre.service';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule, NzSelectModule],
+  imports: [NzFormModule, CommonModule, FormsModule, ReactiveFormsModule, NzInputModule, NzIconModule, NzButtonModule, NzSelectModule, NzModalModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -42,6 +45,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   private regional_service = inject(RegionalService);
   private password_email_service = inject(PasswordEmailService);
   private training_center_service = inject(TrainingCentreService);
+  private notificacion = inject(NzNotificationService)
 
 
   regional: RegionalModel[] = [];
@@ -129,7 +133,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   });
 
   formEmail = new FormGroup({
-    email: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
   })
 
   get fieldTrainingCenter() {
@@ -206,6 +210,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     this.errorMessageLogin = null; // Reiniciar el mensaje
     this.showModal = false; // Ocultar el modal
     this.errorMessage = null; // Reiniciar el mensaje
+    this.fieldEmail.setValue('')
   }
 
   password() {
@@ -213,22 +218,49 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   }
 
   loadOne(): void {
-    this.isLoadingOne = true;
-    setTimeout(() => {
-      this.isLoadingOne = false;
-      alert('correo enviado')
-      this.sendEmail()
-    }, 5000);
+    if(this.formLogin.value) {
+
+      this.isLoadingOne = true;
+      setTimeout(() => {
+        this.isLoadingOne = false;
+        this.showModal = false
+        this.notificacion.create(
+          'success',
+          'Correo enviado',
+          'Se ha enviado un correo a su bandeja de entrada, por favor revise su correo electrónico para restablecer su contraseña.'
+        )
+        this.fieldEmail.setValue('')
+      }, 5000);
+
+    }
   }
 
   sendEmail() {
     let emailData: PasswordEmailDTO = {
-      email: this.formLogin.get('email')!.value!
+      email: this.fieldEmail.value
     }
 
-    this.password_email_service.postEmail(emailData).subscribe({
+    if (this.fieldEmail.invalid) {
+      this.fieldEmail.setValue('')
+      this.fieldEmail.markAsTouched();
+      return;
+    }
+
+    const data_sub = this.password_email_service.postEmail(emailData).subscribe({
       next: (response) => {
-        console.log(response);
+        this.loadOne();
+      },complete(){
+        data_sub.unsubscribe();
+      },error:(err: HttpErrorResponse) => {
+
+        if(err.status === 404){
+          
+          this.notificacion.create(
+            'error',
+            'Error',
+            err.error.error
+          )
+        }
       }
     })
   }
