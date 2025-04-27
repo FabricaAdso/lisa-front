@@ -87,10 +87,10 @@ export class SessionService {
       start_time: string;
       end_time: string;
       instructor_id: number;
-      new_day_of_week: number;
+      new_days_of_week: number;
       confirmed: boolean;
     }): Observable<any> {
       return this.http.put('sessions/update-by-date-range', updatedSession);
     }
-  
+
 }
