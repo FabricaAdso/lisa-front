@@ -11,7 +11,7 @@
   
         <nz-page-header-content>
           <nz-descriptions nzSize="default" [nzColumn]="2"  nzSize="default">
-            <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.instructor?.user?.name || 'N/A '}} {{listOfData2?.instructor?.user?.last_name || 'N/A'}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Líder de ficha">{{listOfData2?.course?.course_leader?.user?.name}} {{listOfData2?.course?.course_leader?.user?.last_name}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Ficha">{{listOfData2?.course?.code || 'N/A'}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Duración del programa">{{listOfData2?.course?.date_start || 'N/A '}} - {{listOfData2?.course?.date_end || 'N/A'}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="Sede">{{listOfData2?.course?.environment?.headquarters?.name || 'N/A'}}</nz-descriptions-item>
@@ -28,6 +28,7 @@
       nz-button
       nzType="primary"
       (click)="toggleTable()"
+      [disabled]="buttonAssitance"
     >
       {{ showDefaultTable ? 'Tomar asistencia' : 'Volver a tabla original' }}
     </button>

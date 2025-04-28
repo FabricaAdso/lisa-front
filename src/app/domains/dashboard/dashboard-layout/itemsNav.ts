@@ -8,7 +8,7 @@ export const menuItems: MenuItem[] = [
     route: 'roles',
     theme: 'outline',
     state: false,
-    Role: ['Usuario',]
+    Role: ['Administrador'],
   },
   {
     title: 'Centro Formativo',
@@ -16,7 +16,7 @@ export const menuItems: MenuItem[] = [
     route: 'training-centers',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Administrador'],
   },
   {
     title: 'Sedes',
@@ -24,7 +24,7 @@ export const menuItems: MenuItem[] = [
     route: 'environments',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Administrador'],
   },
   {
     title: 'Sesiones',
@@ -32,7 +32,7 @@ export const menuItems: MenuItem[] = [
     route: 'session',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Instructor'],
   },
   {
     title: 'Fichas',
@@ -40,7 +40,7 @@ export const menuItems: MenuItem[] = [
     route: 'courses',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Administrador'],
   },
   {
     title: 'Gestion',
@@ -48,7 +48,7 @@ export const menuItems: MenuItem[] = [
     route: 'managesession',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Instructor'],
   },
   {
     title: 'Calendario',
@@ -56,7 +56,7 @@ export const menuItems: MenuItem[] = [
     route: 'session-calendar',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Instructor'],
   },
   {
     title: 'Inasistencias',
@@ -64,7 +64,7 @@ export const menuItems: MenuItem[] = [
     route: 'absences',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Instructor'],
   },
   {
     title: 'Justificaciones',
@@ -72,6 +72,6 @@ export const menuItems: MenuItem[] = [
     route: 'justification',
     theme: 'outline',
     state: false,
-    Role: ['Usuario'],
+    Role: ['Aprendiz'],
   }
 ];
