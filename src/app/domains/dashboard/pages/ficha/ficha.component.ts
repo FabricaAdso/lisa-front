@@ -142,32 +142,27 @@ export class FichaComponent implements OnInit, OnDestroy {
 
   }
 
-  openModal(){
-    if(this.isVisibleAssignLeaderModal){
-      setTimeout(() => {
+  openModalAssignLeader(){
         if (this.assignLeaderInstructorModal) {
           this.assignLeaderInstructorModal.openModal();
         }
-      });
-    }if(this.isVisibleCourseStateModal){
-      setTimeout(() => {
+    
+  }
+  openModalCourseState(){
         if (this.courseStateModal) {
           this.courseStateModal.openModal();
         }
-      });
-    }
-
   }
 
   assignLeaderInstructor(event: number){  
     this.isVisibleAssignLeaderModal = true;
-    this.openModal()
+    this.openModalAssignLeader()
     this.courseSelected = this.courses_model.find(item => item.id == event)
   }
 
   courseState(event: number){
     this.isVisibleCourseStateModal = true;
-    this.openModal()
+    this.openModalCourseState()
     this.courseSelected = this.courses_model.find(item => item.id == event)
   }
 
@@ -188,10 +183,18 @@ export class FichaComponent implements OnInit, OnDestroy {
     this.getData()
   }
 
-  handleModalClose(shouldReset: boolean) {
-
-    this.isVisibleAssignLeaderModal = false;
+  handleModalCloseCourseState(shouldReset: boolean) {
     this.isVisibleCourseStateModal = false;
+    
+    
+    if (shouldReset) {
+      this.getData();
+      return;
+    }
+  }
+
+  handleModalCloseLeaderCourse(shouldReset: boolean) {
+    this.isVisibleAssignLeaderModal = false;
     
     
     if (shouldReset) {

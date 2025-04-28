@@ -74,8 +74,6 @@
   </nz-pagination>
 </div>
 
-@if(isVisibleAssignLeaderModal){
-  <app-assign-leader-instructor-model #assignLeaderInstructorModal [courses]="courseSelected" (modalClosed)="handleModalClose($event)" ></app-assign-leader-instructor-model>
-}@if(isVisibleCourseStateModal){
-  <app-course-state-modal #courseStateModal [courses]="courseSelected" (modalClosed)="handleModalClose($event)"></app-course-state-modal>
-}
+
+  <app-assign-leader-instructor-model #assignLeaderInstructorModal [courses]="courseSelected" (modalClosedAssignLeader)="handleModalCloseLeaderCourse($event)" ></app-assign-leader-instructor-model>
+  <app-course-state-modal #courseStateModal [courses]="courseSelected" (modalClosedCourseState)="handleModalCloseCourseState($event)"></app-course-state-modal>

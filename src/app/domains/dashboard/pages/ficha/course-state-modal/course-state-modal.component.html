@@ -6,9 +6,10 @@
     >
     <ng-container *nzModalContent>
         <form nz-form [formGroup]="form">
+            <div class="min-h-[64px]"> 
             <nz-form-item class="flex flex-col justify-start items-start w-full">
                 <nz-form-label nzFor="course_name" [nzRequired]="true">Estado</nz-form-label>
-            <nz-form-control class="w-full" [nzErrorTip]="errorTpl">
+            <nz-form-control class="w-full" nzErrorTip="Por favor, selecciona un estado">
                 <nz-select nzPlaceHolder="Seleccione un estado para el curso" [formControl]="fieldCourseCode" class="w-full">
                     @for (item of state; track $index) {
                    <nz-option
@@ -17,13 +18,9 @@
                    ></nz-option>
                     }
                </nz-select>
-               <ng-template #errorTpl let-control>
-                <ng-container *ngIf="control.hasError('required')">
-                    Por favor selecciona el estado de la ficha
-                </ng-container>
-            </ng-template>
             </nz-form-control>
             </nz-form-item>
+        </div>
         </form>
     </ng-container>
     <ng-template #modalFooter>

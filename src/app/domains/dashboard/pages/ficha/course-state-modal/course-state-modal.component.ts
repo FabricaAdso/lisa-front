@@ -25,7 +25,7 @@ export class CourseStateModalComponent implements OnInit{
   }
 
   @Input() courses:CourseModel | null = null;
-  @Output() modalClosed = new EventEmitter<boolean>();
+  @Output() modalClosedCourseState = new EventEmitter<boolean>();
 
   private courseService = inject(CourseService)
   private notification = inject(NzNotificationService)  
@@ -53,7 +53,16 @@ export class CourseStateModalComponent implements OnInit{
   }
 
   saveData(){
-    if(this.fieldCourseCode.value){
+    if(this.form.invalid){
+      this.form.markAllAsTouched()
+      this.notification.create(
+        'error',
+        'Error',
+        'Por favor, selecciona al menos un estado'
+      )
+      return;
+    }
+
       const data_sub = forkJoin([
         this.courseService.deleteCourse(this.courses?.id!)
       ]).subscribe({
@@ -64,7 +73,6 @@ export class CourseStateModalComponent implements OnInit{
             'Curso eliminado',
             `El curso ${this.courses?.code} ha sido eliminado correctamente`
           )
-          this.closeModal();
         },complete(){
           data_sub.unsubscribe()
         },
@@ -72,14 +80,7 @@ export class CourseStateModalComponent implements OnInit{
           console.log(error);
         }
       })
-    }else{
-      this.notification.create(
-        'error',
-        'Error',
-        `El curso ${this.courses?.code} no ha sido eliminado`
-      )
-      this.fieldCourseCode.setErrors({ required: true });
-    }
+      this.closeModal();
     
   }
 
@@ -92,11 +93,11 @@ export class CourseStateModalComponent implements OnInit{
 
   if (this.form && this.form.get('course_name')) {
     const hasCourseName = !!this.form.get('course_name')?.touched;
-    this.modalClosed.emit(hasCourseName);
+    this.modalClosedCourseState.emit(hasCourseName);
     console.log(hasCourseName); //devuelve true
     
   } else {
-    this.modalClosed.emit(false);
+    this.modalClosedCourseState.emit(false);
   }
 
     
