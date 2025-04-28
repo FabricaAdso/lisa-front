@@ -1,8 +1,7 @@
 .paginate{
-  margin-top: 15px;
+  margin-top: 16px;
   display: flex;
   justify-content: end;
-  margin-right: 20px;
 }
 .buscador{
 
@@ -35,8 +34,7 @@ button, html [type=button], [type=reset], [type=submit] {
 
   cursor: pointer;
   padding: 5px 10px;
- 
-  margin-right: 15px;
+  margin-right: 16px;
 }
 .table {
   width: 98%;

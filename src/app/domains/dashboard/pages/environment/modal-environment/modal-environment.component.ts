@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -35,7 +35,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
   templateUrl: './modal-environment.component.html',
   styleUrl: './modal-environment.component.css',
 })
-export class ModalEnvironmentComponent {
+export class ModalEnvironmentComponent implements OnInit {
 
   //eventos
   @Output() updateEnvironment: EventEmitter<void> = new EventEmitter;
@@ -47,6 +47,7 @@ export class ModalEnvironmentComponent {
   isEdit = false;
   headquarterList: HeadquarterModel[] = [];
   knowlwdegeList: KnowledgeNetworkByInstructorModel[] = [];
+  titleEnviroment = '';
 
   //injeccion de servicios
   private environmentService = inject(EnvironmentService)
@@ -100,8 +101,7 @@ export class ModalEnvironmentComponent {
     } else {
       this.formEnvironment.get('headquarters_id')?.enable();
       data.headquarters_id = this.formEnvironment.get('headquarters_id')?.value;
-      this.formEnvironment.get('headquarters_id')?.disable();
-      
+      this.formEnvironment.get('headquarters_id')?.disable();     
       this.environmentService.create(data).subscribe({
         next: () => {
           this.updateEnvironment.emit();
@@ -116,14 +116,24 @@ export class ModalEnvironmentComponent {
     }
   }
 
+  changeTitle(){
+    if(!this.isEdit){
+      return this.titleEnviroment = 'Crear Ambiente'
+    }else{
+      return this.titleEnviroment = 'Editar Ambiente'
+    }
+  }
+
 
 
   //Metodo envirar la sede   
-  setSelectedHeadquarter(id: number): void {
-    this.formEnvironment.patchValue({
-      headquarters_id: id
-    })
+  setSelectedHeadquarter(data: HeadquarterModel): void {
 
+    this.headquarterList = [data];
+
+    this.formEnvironment.patchValue({
+      headquarters_id: data.id,
+    })  
   }
 
 
@@ -169,8 +179,9 @@ export class ModalEnvironmentComponent {
   }
 
   //Metodo para abrir el modal 
-  openModal() {
+    openModal() {
     this.isVisible = true;
+    this.changeTitle()
   }
 
   //Metodo para cerrar el modal 

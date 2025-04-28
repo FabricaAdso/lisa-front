@@ -30,7 +30,7 @@ export const routes: Routes = [
         title:'Administrar Sesiones',
         data: { breadcrumb: 'Sesiones ' },
         canActivate: [authGuard],
-        loadComponent:()=>import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
+        loadComponent:()=>import('@domains/dashboard/pages/session/session.component').then(c => c.SessionComponent)
       },
       {
         path: 'justification',
@@ -73,15 +73,13 @@ export const routes: Routes = [
         loadComponent: () => import('@domains/dashboard/pages/session/manage-session/manage-session.component').then(c =>c.ManageSessionComponent)
 
       },
-
-    
-
-       {
-        path: 'file',
-        title: 'Fichas',
-        data: { breadcrumb: 'Fichas' },
+      {
+        path: 'courses',
+        title: 'Administrar Fichas',
+        data: { breadcrumb: 'Administrar Fichas' },
         canActivate: [authGuard],
-        loadComponent: () => import('@domains/dashboard/pages/session/ficha.component').then(c => c.FichaComponent)
+        loadComponent: () => import('@domains/dashboard/pages/ficha/ficha.component').then(c =>c.FichaComponent)
+
       },
       {
         path: 'absences',

@@ -13,11 +13,11 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { CourseModel } from '@shared/models/course.model';
 import { SessionModel } from '@shared/models/session.model';
-import { CourseService } from '@shared/services/program/course.service';
-import { SessionService } from '@shared/services/program/session.service';
+import { CourseService } from '@shared/services/course.service';
+import { SessionService } from '@shared/services/session.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { RapService } from '@shared/services/program/rap.service';
-import { SubjectService } from '@shared/services/program/subject.service';
+import { RapService } from '@shared/services/rap.service';
+import { SubjectService } from '@shared/services/subject.service';
 import { SubjectModel } from '@shared/models/subject-model';
 import { RapModel } from '@shared/models/rap-model';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
@@ -39,10 +39,10 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     FormsModule,
     NzInputNumberModule,
   ],
-  templateUrl: './session.component.html',
-  styleUrl: './session.component.css',
+  templateUrl: './session-modal.component.html',
+  styleUrl: './session-modal.component.css',
 })
-export class SessionComponent implements OnInit, OnDestroy {
+export class SessionModalComponent implements OnInit, OnDestroy {
   disabledDate = (current: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);

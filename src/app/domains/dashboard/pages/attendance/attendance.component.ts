@@ -1,11 +1,11 @@
-import { Component, HostListener, inject, ViewChild, Input } from '@angular/core';
+import { Component, HostListener, inject, ViewChild, Input, OnInit } from '@angular/core';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { forkJoin } from 'rxjs';
 import { AssistanceModel } from '@shared/models/assistance.model';
@@ -13,11 +13,11 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceTableComponent } from "./attendance-table/attendance-table.component";
 import { NzTabSetComponent, NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
-import { CourseService } from '@shared/services/program/course.service';
+import { CourseService } from '@shared/services/course.service';
 import { CourseModel } from '@shared/models/course.model';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { RegisterAssistanceModel } from '@shared/models/register-assistance.model';
-import { SessionService } from '@shared/services/program/session.service';
+import { SessionService } from '@shared/services/session.service';
 import { GeneralAssistanceData } from '@shared/models/generalDataAssistance-model';
 import { SessionModel } from '@shared/models/session.model';
 
@@ -44,12 +44,13 @@ import { SessionModel } from '@shared/models/session.model';
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
 })
-export class AttendanceComponent {
+export class AttendanceComponent implements OnInit{
 
   @ViewChild('attendanceTable') attendanceTable:any = AttendanceTableComponent;
 
   private course_service = inject(CourseService);
   private session_service = inject(SessionService);
+  private datePipe = inject(DatePipe)
   
   @Input() course_code?:number;
   @Input() session_id?:number;
@@ -65,6 +66,7 @@ export class AttendanceComponent {
   rowsPerTable = 5; 
   tablesPerPage = 3; 
   currentPage = 1; 
+  buttonAssitance = false;
 
   isVisible = false;
 
@@ -99,18 +101,34 @@ export class AttendanceComponent {
     return date ? new Date(date).toLocaleDateString('es-ES') : 'Fecha no disponible';
   }
 
-  getData() {
+  dateToday(){
+    const today = new Date();
+    const formatDate = this.datePipe.transform(today, 'yyyy-MM-dd');
+
+    console.log('Fecha de hoy:', formatDate);
+    console.log('Fecha de asistencia:', this.listOfData2?.date);
     
 
+    if(formatDate === this.listOfData2?.date){
+      this.buttonAssitance = false;
+      return;
+    }else{
+      this.buttonAssitance = true;
+    }
+
+    console.log('Botón de asistencia:', this.buttonAssitance);
+    
+    
+  }
+
+  getData() {
     const data_sub = forkJoin([
       this.session_service.getSessionShow(this.session_id!,{ included: ['course.course_leader.user','course.representative.user','course.co_representative.user','course.apprentices.user','assistances.apprentice.user', 'instructor.user', 'course.environment.headquarters','course.program'] }),
     ]).subscribe({
       next: ([assistance]) => {
-
         this.listOfData = assistance.assistances.map((item) => this.mapToAssistance(item));// Agrupa los datos para multiples tablas
         this.listOfData2 = assistance
-        console.log(this.listOfData2);
-        
+        this.dateToday();
       },
       complete(){
         data_sub.unsubscribe()

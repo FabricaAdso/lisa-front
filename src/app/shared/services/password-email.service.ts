@@ -18,7 +18,7 @@ export class PasswordEmailService {
     return this.http.get<PasswordEmailModel[]>(`${this.url}`);
   }
 
-  postEmail(data:PasswordEmailDTO){
+  postEmail(data:PasswordEmailDTO): Observable<any> {
     return this.http.post<PasswordEmailModel>(`${this.url}`, data);
   }
 

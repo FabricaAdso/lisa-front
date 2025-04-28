@@ -87,7 +87,7 @@ export class DropDownMenuComponent {
     this.router.navigate(['auth/login']);
   }
   Items(){
-    return this.menuItems.filter(item => this.filterItems.filterItems(item.Role!));
+    return this.menuItems.filter(item => item.Role?.some(role => this.filterItems.filterItems(role)))
   }
 
 

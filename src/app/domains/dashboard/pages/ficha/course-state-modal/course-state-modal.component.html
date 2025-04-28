@@ -1,0 +1,46 @@
+<nz-modal
+    nzTitle="Estado del curso"
+    [(nzVisible)]="isVisible"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="closeModal()"
+    >
+    <ng-container *nzModalContent>
+        <form nz-form [formGroup]="form">
+            <div class="min-h-[64px]"> 
+            <nz-form-item class="flex flex-col justify-start items-start w-full">
+                <nz-form-label nzFor="course_name" [nzRequired]="true">Estado</nz-form-label>
+            <nz-form-control class="w-full" nzErrorTip="Por favor, selecciona un estado">
+                <nz-select nzPlaceHolder="Seleccione un estado para el curso" [formControl]="fieldCourseCode" class="w-full">
+                    @for (item of state; track $index) {
+                   <nz-option
+                       [nzValue]="item"
+                       [nzLabel]="item"
+                   ></nz-option>
+                    }
+               </nz-select>
+            </nz-form-control>
+            </nz-form-item>
+        </div>
+        </form>
+    </ng-container>
+    <ng-template #modalFooter>
+        <div class="flex justify-end">
+          <button 
+            nz-button 
+            nzType="default" 
+            (click)="closeModal()"
+          >
+            Cerrar
+          </button>
+          <button 
+            nz-button 
+            nzType="primary" 
+            nz-popconfirm 
+            nzPopconfirmTitle="Seguro que quieres eliminar esta ficha"
+            (nzOnConfirm)="saveData()" 
+          >
+            Enviar
+          </button>
+        </div>
+      </ng-template>
+</nz-modal>

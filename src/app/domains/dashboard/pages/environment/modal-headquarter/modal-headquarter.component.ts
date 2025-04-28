@@ -46,9 +46,10 @@ export class ModalHeadquarterComponent {
   trainingCentersList: TrainingCenterModel[] = [];
   formHeadquarter!: FormGroup;
   isVisibleHeadquarter = false;
-  isEdit: boolean = false;
+  isEdit = false;
   defaultOpenValue = new Date(0, 0, 0, 0, 0);
   private date_pipe = inject(DatePipe)
+  titleHeadquarter = '';
 
   @Output() updatedHeadquarter: EventEmitter<void> = new EventEmitter();
   @Input() headquarterData?: HeadquarterModel | null;
@@ -117,12 +118,26 @@ export class ModalHeadquarterComponent {
   setData(data: HeadquarterModel): void {
     this.headquarterData = data;
     this.isEdit = true; // Activamos el modo edición
+    this.changeTitle()
+
+    const formData = {...data}
+
+      
+      const [hours, minutes] = formData.opening_time.split(':').map(Number);
+      const [hours2, minutes2] = formData.closing_time.split(':').map(Number);
+
+      const startTime = new Date()
+      const endTime = new Date()
+
+      startTime.setHours(hours, minutes, 0, 0);
+      endTime.setHours(hours2, minutes2, 0, 0);
+
 
     this.formHeadquarter.patchValue({
       name: data.name,
       adress: data.adress,
-      opening_time: data.opening_time,
-      closing_time: data.closing_time,
+      opening_time: startTime,
+      closing_time: endTime,
       municipality: data.municipality,
       id: data.id,
       training_center_id: data.training_center_id,
@@ -132,10 +147,18 @@ export class ModalHeadquarterComponent {
    
   }
 
+  changeTitle() {
+    if (!this.isEdit) {
+      return this.titleHeadquarter = 'Crear Sede';
+    } else {
+      return this.titleHeadquarter = 'Editar Sede';
+    }
+  }
+
 
   //funcion pra guardar los datos, dependeindo si esta editando o creando una sede
 
-  saveHeadquarter(): void {
+    saveHeadquarter(): void {
 
     const data = this.formHeadquarter.value;
 
@@ -198,11 +221,12 @@ export class ModalHeadquarterComponent {
     }
   }
 
-  //funcion para remover los segundos de la hora dejando solo la hora y los minutos
-  removeSeconds(time: string): string {
-    if (!time) return '';
-    return time.substring(0, 5);
+  //Metodo para abrir el modal 
+  openModal() {
+    this.isVisibleHeadquarter = true;
+    this.changeTitle()
   }
+
 
   //funcion pra cerrar el modal
 

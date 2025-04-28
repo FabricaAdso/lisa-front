@@ -27,7 +27,7 @@ export interface CourseModel {
     program_id?:number;
     program?:ProgramModel;
     course_leader_id:number
-    course_leader:InstructorModel
+    course_leader?:InstructorModel
 
 }
 

@@ -6,7 +6,7 @@ export function getQueryUrl(url: string, data?: QueryUrl): string {
   if (data) {
     // almacena un array pra cada paremetro
     let params: string[] = [];
-    const { included, filter, page, elements,  ...rest  } = data;
+    const { included, filter, filterNormal, page, elements,  ...rest  } = data;
 
      // Procesamos las propiedades adicionales (ejemplo: month)
      Object.keys(rest).forEach(key => {
@@ -30,6 +30,21 @@ export function getQueryUrl(url: string, data?: QueryUrl): string {
 
         // si tiwne una función de normalización
         filter_value = normalizeString(filter_value).replace(/ /g, '-').toLowerCase();
+        params.push(`filter[${key}]=${filter_value}`);
+      });
+    }
+    if(filterNormal){
+      // itera cada clave dek objeto
+      Object.keys(filterNormal).forEach((key) => {
+        let filter_value: string = '';
+        if (typeof filterNormal[key] === 'number') {
+          filter_value = filterNormal[key].toString();
+        } else {
+          filter_value = filterNormal[key] as string;
+        }
+
+        // si tiwne una función de normalización
+        filter_value = normalizeString(filter_value)
         params.push(`filter[${key}]=${filter_value}`);
       });
     }
